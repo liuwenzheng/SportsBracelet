@@ -16,6 +16,6 @@ public class SplashActivity extends BaseActivity {
 		setContentView(R.layout.splash);
 		circleView = (CircleProgressView) findViewById(R.id.circleView);
 		circleView.setMaxValue(100);
-		circleView.setValueAnimated(35);
+		circleView.setValueAnimated(40);
 	}
 }
