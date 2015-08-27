@@ -27,4 +27,12 @@ public class Utils {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (pxValue / scale + 0.5f);
 	}
+
+	public static boolean isEmpty(String s) {
+		return s == null || s.length() == 0 || s.trim().equals("") || s.trim().equals("null");
+	}
+
+	public static boolean isNotEmpty(String s) {
+		return s != null && s.length() != 0 && !s.trim().equals("") && !s.trim().equals("null");
+	}
 }
