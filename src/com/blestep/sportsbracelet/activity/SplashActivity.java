@@ -1,9 +1,10 @@
 package com.blestep.sportsbracelet.activity;
 
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 	private CircleProgressView circleView;
 	private boolean mIsStartScan = false;
 	private static final long SCAN_PERIOD = 10000;
+
+	private BluetoothGatt mBluetoothGatt;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,29 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 		}, SCAN_PERIOD);
 	}
 
+	private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+			LogModule.i("onConnectionStateChange...newState:" + newState);
+			mBluetoothGatt.discoverServices();
+		};
+
+		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+			LogModule.i("onServicesDiscovered...status:" + status);
+		};
+
+		public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+			LogModule.i("onCharacteristicRead...");
+		};
+
+		public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+			LogModule.i("onCharacteristicWrite...");
+		};
+
+		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+			LogModule.i("onCharacteristicChanged...");
+		};
+	};
+
 	@Override
 	public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
 		if (device != null && Utils.isNotEmpty(device.getName()) && device.getName().equals(BtModule.BARCELET_BT_NAME)) {
@@ -78,10 +104,20 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 				public void run() {
 					// tv_device_name.setText(device.getName());
 					((TextView) findViewById(R.id.tv_device_name)).setText(device.getName());
+					mBluetoothGatt = device.connectGatt(SplashActivity.this, false, mGattCallback);
 				}
 			});
 			BtModule.mBluetoothAdapter.stopLeScan(this);
 			mIsStartScan = false;
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		if (mBluetoothGatt != null) {
+			mBluetoothGatt.close();
+			mBluetoothGatt = null;
+		}
+		super.onDestroy();
 	}
 }
