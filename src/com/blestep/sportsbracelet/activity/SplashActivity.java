@@ -81,7 +81,7 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 			LogModule.i("onServicesDiscovered...status:" + status);
 			BtModule.setCurrentTime(mBluetoothGatt);
 			BtModule.getCurrentStepData(mBluetoothGatt);
-			
+			// BtModule.shakeBand(mBluetoothGatt);			
 		};
 
 		public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {

@@ -19,11 +19,19 @@ public class BtModule {
 	public static final int REQUEST_ENABLE_BT = 1001;
 	public static final String BARCELET_BT_NAME = "J-Band";
 	public static final UUID SERVIE_UUID = UUID.fromString("0000ffc0-0000-1000-8000-00805f9b34fb");
-	public static final UUID RED_LIGHT_CONTROL_UUID = UUID.fromString("0000ffc2-0000-1000-8000-00805f9b34fb");
-	public static final UUID RED_LIGHT_CONTROL_UUID_TWO = UUID.fromString("0000ffc1-0000-1000-8000-00805f9b34fb");
+
+	/**
+	 * Write, APP send command to wristbands using this characteristic
+	 */
+	// 测试没有什么用
+	// public static final UUID CHARACTERISTIC_UUID_WRITE =
+	// UUID.fromString("0000ffc2-0000-1000-8000-00805f9b34fb");
+	/**
+	 * Notify, wristbands send data to APP using this characteristic
+	 */
+	public static final UUID CHARACTERISTIC_UUID_NOTIFY = UUID.fromString("0000ffc1-0000-1000-8000-00805f9b34fb");
 	public static Handler mHandler = new Handler();
 
-	// Stops scanning after 10 seconds.
 	/**
 	 * 
 	 * @return
@@ -96,7 +104,22 @@ public class BtModule {
 		byteArray[0] = 0x16;
 		byteArray[1] = 0x01;
 		writeLlsAlertLevel(mBluetoothGatt, byteArray);
+	}
 
+	/**
+	 * 震动
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void shakeBand(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[5];
+		byteArray[0] = 0x17;
+		byteArray[1] = 0x02;
+		byteArray[2] = 0x02;
+		byteArray[3] = 0x01;
+		byteArray[4] = 0x01;
+		writeLlsAlertLevel(mBluetoothGatt, byteArray);
 	}
 
 	public static void writeLlsAlertLevel(BluetoothGatt mBluetoothGatt, byte[] byteArray) {
@@ -115,7 +138,7 @@ public class BtModule {
 		// linkLossService.getCharacteristic(RED_LIGHT_CONTROL_UUID);
 		// break;
 		// case 2:
-		alertLevel = linkLossService.getCharacteristic(RED_LIGHT_CONTROL_UUID_TWO);
+		alertLevel = linkLossService.getCharacteristic(CHARACTERISTIC_UUID_NOTIFY);
 		// break;
 		// }
 		if (alertLevel == null) {
