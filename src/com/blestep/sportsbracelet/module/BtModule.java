@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.module;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -11,7 +12,6 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.text.format.Time;
 import android.util.Log;
 
 public class BtModule {
@@ -58,30 +58,48 @@ public class BtModule {
 		mBluetoothAdapter.startLeScan(mLeScanCallback);
 	}
 
-	// send current date time;
-	public void sendDate(BluetoothGatt mBluetoothGatt) {
-
-		Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料。
-		t.setToNow(); // 取得系统时间。
-		int year = t.year - 2000;
-		int month = t.month + 1;
-		int date = t.monthDay;
-		int hour = t.hour; // 0-23
-		int minute = t.minute;
-		int second = t.second;
-		byte[] bb = new byte[7];
-		bb[0] = 0x11;
-		bb[1] = (byte) year;
-		bb[2] = (byte) month;
-		bb[3] = (byte) date;
-		bb[4] = (byte) hour;
-		bb[5] = (byte) minute;
-		bb[6] = (byte) second;
-		writeLlsAlertLevel(mBluetoothGatt, bb);
+	/**
+	 * 设置手环当前时间
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void setCurrentTime(BluetoothGatt mBluetoothGatt) {
+		// 取得手机当前时间，并设置到手环上
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH) + 1;
+		int date = calendar.get(Calendar.DATE);
+		int hour = calendar.get(Calendar.HOUR);
+		int minute = calendar.get(Calendar.MINUTE);
+		int second = calendar.get(Calendar.SECOND);
+		byte[] byteArray = new byte[7];
+		byteArray[0] = 0x11;
+		byteArray[1] = (byte) (year - 2000);
+		byteArray[2] = (byte) month;
+		byteArray[3] = (byte) date;
+		byteArray[4] = (byte) hour;
+		byteArray[5] = (byte) minute;
+		byteArray[6] = (byte) second;
+		writeLlsAlertLevel(mBluetoothGatt, byteArray);
 
 	}
 
-	public void writeLlsAlertLevel(BluetoothGatt mBluetoothGatt, byte[] bb) {
+	/**
+	 * 获取当前步数
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void getCurrentStepData(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[2];
+		byteArray[0] = 0x16;
+		byteArray[1] = 0x01;
+		writeLlsAlertLevel(mBluetoothGatt, byteArray);
+
+	}
+
+	public static void writeLlsAlertLevel(BluetoothGatt mBluetoothGatt, byte[] byteArray) {
 
 		// Log.i("iDevice", iDevice);
 		BluetoothGattService linkLossService = mBluetoothGatt.getService(SERVIE_UUID);
@@ -103,12 +121,13 @@ public class BtModule {
 		if (alertLevel == null) {
 			return;
 		}
-		boolean status = false;
-		int storedLevel = alertLevel.getWriteType();
+		// boolean status = false;
+		// int storedLevel = alertLevel.getWriteType();
 
-		alertLevel.setValue(bb);
+		alertLevel.setValue(byteArray);
 
 		alertLevel.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-		status = mBluetoothGatt.writeCharacteristic(alertLevel);
+		// status = mBluetoothGatt.writeCharacteristic(alertLevel);
+		mBluetoothGatt.writeCharacteristic(alertLevel);
 	}
 }
