@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.R;
@@ -36,6 +38,15 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 		} else {
 			scanDevice();
 		}
+		findViewById(R.id.refresh).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// BtModule.setCurrentTime(mBluetoothGatt);
+				BtModule.getCurrentStepData(mBluetoothGatt);
+				// BtModule.shakeBand(mBluetoothGatt);
+			}
+		});
 	}
 
 	@Override
@@ -79,9 +90,7 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 			LogModule.i("onServicesDiscovered...status:" + status);
-			BtModule.setCurrentTime(mBluetoothGatt);
-			BtModule.getCurrentStepData(mBluetoothGatt);
-			// BtModule.shakeBand(mBluetoothGatt);			
+			BtModule.setCharacteristicNotify(mBluetoothGatt);
 		};
 
 		public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
@@ -94,6 +103,25 @@ public class SplashActivity extends BaseActivity implements LeScanCallback {
 
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 			LogModule.i("onCharacteristicChanged...");
+			byte[] data = characteristic.getValue();
+			if (data != null && data.length > 0) {
+				final StringBuilder stringBuilder = new StringBuilder(data.length);
+				for (byte byteChar : data)
+					stringBuilder.append(String.format("%02X ", byteChar));
+				LogModule.d(stringBuilder.toString());
+			} else {
+				int flag = characteristic.getProperties();
+				int format = -1;
+				if ((flag & 0x01) != 0) {
+					format = BluetoothGattCharacteristic.FORMAT_UINT16;
+					LogModule.d("Heart rate format UINT16.");
+				} else {
+					format = BluetoothGattCharacteristic.FORMAT_UINT8;
+					LogModule.d("Heart rate format UINT8.");
+				}
+				int heartRate = characteristic.getIntValue(format, 1);
+				LogModule.d(String.format("Received heart rate: %d", heartRate));
+			}
 		};
 	};
 
