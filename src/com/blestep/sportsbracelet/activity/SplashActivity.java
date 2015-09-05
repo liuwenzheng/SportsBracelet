@@ -1,154 +1,120 @@
 package com.blestep.sportsbracelet.activity;
 
-import android.bluetooth.BluetoothAdapter.LeScanCallback;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
-import com.blestep.sportsbracelet.module.BtModule;
-import com.blestep.sportsbracelet.module.LogModule;
-import com.blestep.sportsbracelet.utils.Utils;
-import com.blestep.sportsbracelet.view.CircleProgressView;
 
-public class SplashActivity extends BaseActivity implements LeScanCallback {
-
-	private CircleProgressView circleView;
-	private boolean mIsStartScan = false;
-	private static final long SCAN_PERIOD = 10000;
-
-	private BluetoothGatt mBluetoothGatt;
+public class SplashActivity extends BaseActivity implements OnPageChangeListener, OnClickListener {
+	private ViewPager vp_splash;
+	private RadioGroup rg_splash;
+	private SplashPagerAdapter mAdapter;
+	private View splash_item_one, splash_item_two, splash_item_three, splash_item_four;
+	private ArrayList<View> mViews;
+	private Button btn_enter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		circleView = (CircleProgressView) findViewById(R.id.circleView);
-		circleView.setMaxValue(100);
-		circleView.setValueAnimated(45);
-		if (!BtModule.isBluetoothOpen()) {
-			BtModule.openBluetooth(this);
-		} else {
-			scanDevice();
-		}
-		findViewById(R.id.refresh).setOnClickListener(new OnClickListener() {
+		initView();
+		initData();
+		initListener();
+	}
 
-			@Override
-			public void onClick(View v) {
-				// BtModule.setCurrentTime(mBluetoothGatt);
-				BtModule.getCurrentStepData(mBluetoothGatt);
-				// BtModule.shakeBand(mBluetoothGatt);
-			}
-		});
+	private void initListener() {
+		vp_splash.setOnPageChangeListener(this);
+		btn_enter.setOnClickListener(this);
+	}
+
+	private void initData() {
+		mViews = new ArrayList<View>();
+		mViews.add(splash_item_one);
+		mViews.add(splash_item_two);
+		mViews.add(splash_item_three);
+		mViews.add(splash_item_four);
+		mAdapter = new SplashPagerAdapter();
+		vp_splash.setAdapter(mAdapter);
+	}
+
+	private void initView() {
+		vp_splash = (ViewPager) findViewById(R.id.vp_splash);
+		rg_splash = (RadioGroup) findViewById(R.id.rg_splash);
+		((RadioButton) rg_splash.getChildAt(0)).setChecked(true);
+		splash_item_one = LayoutInflater.from(this).inflate(R.layout.splash_item_one, null);
+		splash_item_two = LayoutInflater.from(this).inflate(R.layout.splash_item_two, null);
+		splash_item_three = LayoutInflater.from(this).inflate(R.layout.splash_item_three, null);
+		splash_item_four = LayoutInflater.from(this).inflate(R.layout.splash_item_four, null);
+		btn_enter = (Button) splash_item_four.findViewById(R.id.btn_enter);
+
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-			case BtModule.REQUEST_ENABLE_BT:
-				scanDevice();
-				break;
+	public void onPageScrollStateChanged(int arg0) {
 
-			default:
-				break;
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	/**
-	 * 搜索手环
-	 */
-	private void scanDevice() {
-		BtModule.scanDevice(this);
-		// Stops scanning after a pre-defined scan period.
-		BtModule.mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (mIsStartScan) {
-					// TODO 没找到手环，继续找呗
-					BtModule.mBluetoothAdapter.stopLeScan(SplashActivity.this);
-					mIsStartScan = false;
-				}
-			}
-		}, SCAN_PERIOD);
-	}
-
-	private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
-		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-			LogModule.i("onConnectionStateChange...newState:" + newState);
-			mBluetoothGatt.discoverServices();
-		};
-
-		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-			LogModule.i("onServicesDiscovered...status:" + status);
-			BtModule.setCharacteristicNotify(mBluetoothGatt);
-		};
-
-		public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-			LogModule.i("onCharacteristicRead...");
-		};
-
-		public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-			LogModule.i("onCharacteristicWrite...");
-		};
-
-		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-			LogModule.i("onCharacteristicChanged...");
-			byte[] data = characteristic.getValue();
-			if (data != null && data.length > 0) {
-				final StringBuilder stringBuilder = new StringBuilder(data.length);
-				for (byte byteChar : data)
-					stringBuilder.append(String.format("%02X ", byteChar));
-				LogModule.d(stringBuilder.toString());
-			} else {
-				int flag = characteristic.getProperties();
-				int format = -1;
-				if ((flag & 0x01) != 0) {
-					format = BluetoothGattCharacteristic.FORMAT_UINT16;
-					LogModule.d("Heart rate format UINT16.");
-				} else {
-					format = BluetoothGattCharacteristic.FORMAT_UINT8;
-					LogModule.d("Heart rate format UINT8.");
-				}
-				int heartRate = characteristic.getIntValue(format, 1);
-				LogModule.d(String.format("Received heart rate: %d", heartRate));
-			}
-		};
-	};
-
-	@Override
-	public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-		if (device != null && Utils.isNotEmpty(device.getName()) && device.getName().equals(BtModule.BARCELET_BT_NAME)) {
-			// TODO 找到设备
-			LogModule.e("找到手环！");
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					// tv_device_name.setText(device.getName());
-					((TextView) findViewById(R.id.tv_device_name)).setText(device.getName());
-					mBluetoothGatt = device.connectGatt(SplashActivity.this, false, mGattCallback);
-				}
-			});
-			BtModule.mBluetoothAdapter.stopLeScan(this);
-			mIsStartScan = false;
-		}
 	}
 
 	@Override
-	protected void onDestroy() {
-		if (mBluetoothGatt != null) {
-			mBluetoothGatt.close();
-			mBluetoothGatt = null;
-		}
-		super.onDestroy();
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+
 	}
+
+	@Override
+	public void onPageSelected(int position) {
+		((RadioButton) rg_splash.getChildAt(position)).setChecked(true);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_enter:
+			Intent intent = new Intent(this, StepActivity.class);
+			startActivity(intent);
+			this.finish();
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
+	class SplashPagerAdapter extends PagerAdapter {
+
+		@Override
+		public int getCount() {
+			return mViews.size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0 == arg1;
+		}
+
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			((ViewPager) vp_splash).addView(mViews.get(position));
+			return mViews.get(position);
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			((ViewPager) vp_splash).removeView(mViews.get(position));
+		}
+
+	}
+
 }

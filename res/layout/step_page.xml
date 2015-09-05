@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_conn_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="..."
+        android:textSize="18sp" />
+
+    <ListView
+        android:id="@+id/lv_devices"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_conn_status" >
+    </ListView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.blestep.sportsbracelet.view.CircleProgressView
+            android:id="@+id/circleView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            CircleProgressView:barColor="@color/primary_color"
+            CircleProgressView:barColor1="@color/red_FF4400"
+            CircleProgressView:barWidth="15dp"
+            CircleProgressView:contourSize="0dp"
+            CircleProgressView:outerBarColor="@color/red_FF4400"
+            CircleProgressView:outerBarWidth="5dp"
+            CircleProgressView:outerPadding="20dp"
+            CircleProgressView:rimWidth="15dp"
+            CircleProgressView:unitColor="@color/primary_color"
+            android:background="@color/grey_d1cfd0"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</RelativeLayout>

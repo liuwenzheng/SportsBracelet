@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.blestep.sportsbracelet.view.CircleProgressView
-        android:id="@+id/circleView"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        CircleProgressView:barColor="@color/primary_color"
-        CircleProgressView:barColor1="@color/red_FF4400"
-        CircleProgressView:barWidth="15dp"
-        CircleProgressView:contourSize="0dp"
-        CircleProgressView:outerBarColor="@color/red_FF4400"
-        CircleProgressView:outerBarWidth="5dp"
-        CircleProgressView:outerPadding="20dp"
-        CircleProgressView:rimWidth="15dp"
-        CircleProgressView:unitColor="@color/primary_color"
-        android:background="@color/grey_d1cfd0" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </android.support.v4.view.ViewPager>
 
-    <TextView
-        android:id="@+id/tv_device_name"
+    <RadioGroup
+        android:id="@+id/rg_splash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/app_name" />
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:text="刷新" />
+        <RadioButton
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/splash_index_point_bg"
+            android:button="@null" />
+
+        <RadioButton
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/splash_index_point_bg"
+            android:button="@null" />
+
+        <RadioButton
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/splash_index_point_bg"
+            android:button="@null" />
+
+        <RadioButton
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/splash_index_point_bg"
+            android:button="@null" />
+    </RadioGroup>
 
 </FrameLayout>

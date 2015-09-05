@@ -13,7 +13,8 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
+
+import com.blestep.sportsbracelet.AppConstants;
 
 public class BtModule {
 	public static BluetoothAdapter mBluetoothAdapter;
@@ -31,7 +32,6 @@ public class BtModule {
 	 * Notify, wristbands send data to APP using this characteristic
 	 */
 	public static final UUID CHARACTERISTIC_UUID_NOTIFY = UUID.fromString("0000ffc2-0000-1000-8000-00805f9b34fb");
-	public static Handler mHandler = new Handler();
 
 	/**
 	 * 
@@ -79,7 +79,7 @@ public class BtModule {
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1;
 		int date = calendar.get(Calendar.DATE);
-		int hour = calendar.get(Calendar.HOUR);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
 		int second = calendar.get(Calendar.SECOND);
 		byte[] byteArray = new byte[7];
@@ -95,15 +95,41 @@ public class BtModule {
 	}
 
 	/**
-	 * 获取当前步数
+	 * 获取当前电量
 	 * 
 	 * @param mBluetoothGatt
 	 * 
 	 */
-	public static void getCurrentStepData(BluetoothGatt mBluetoothGatt) {
+	public static void getBatteryData(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[2];
+		byteArray[0] = 0x16;
+		byteArray[1] = 0x00;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 获取步数
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void getStepData(BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[2];
 		byteArray[0] = 0x16;
 		byteArray[1] = 0x01;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 获取睡眠记录
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void getSleepData(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[2];
+		byteArray[0] = 0x16;
+		byteArray[1] = 0x02;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 
@@ -123,6 +149,11 @@ public class BtModule {
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 
+	/**
+	 * 将所有手环特征设置为notify方式
+	 * 
+	 * @param mBluetoothGatt
+	 */
 	public static void setCharacteristicNotify(BluetoothGatt mBluetoothGatt) {
 		List<BluetoothGattService> gattServices = mBluetoothGatt.getServices();
 		if (gattServices == null)
@@ -198,22 +229,21 @@ public class BtModule {
 		mBluetoothGatt.writeCharacteristic(characteristic);
 	}
 
-	// public static void readCharacteristicData(BluetoothGatt mBluetoothGatt,
-	// byte[] byteArray) {
-	// BluetoothGattService service = mBluetoothGatt.getService(SERVIE_UUID);
-	// LogModule.i("readCharacteristicData...service:" + service);
-	// if (service == null) {
-	// return;
-	// }
-	// BluetoothGattCharacteristic characteristic = null;
-	// characteristic = service.getCharacteristic(CHARACTERISTIC_UUID_NOTIFY);
-	// LogModule.i("readCharacteristicData...characteristic:" + characteristic);
-	// if (characteristic == null) {
-	// return;
-	// }
-	// characteristic.setValue(byteArray);
-	// characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-	// mBluetoothGatt.readCharacteristic(characteristic);
-	// }
+	/**
+	 * 根据不同命令头保存数据
+	 * 
+	 * @param formatDatas
+	 */
+	public static void saveBleData(String[] formatDatas) {
+		int header = Integer.valueOf(formatDatas[0]);
+		switch (header) {
+		case AppConstants.HEADER_BACK_STEP:
+			// 保存步数
 
+			break;
+
+		default:
+			break;
+		}
+	}
 }
