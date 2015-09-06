@@ -62,7 +62,7 @@ public class Utils {
 	}
 
 	/**
-	 * 16进制转10进制
+	 * 16进制数组转10进制数组
 	 * 
 	 * @param data
 	 * @return
@@ -74,6 +74,28 @@ public class Utils {
 			stringDatas[i] = Integer.toString(Integer.valueOf(datas[i], 16));
 		}
 		return stringDatas;
+	}
+
+	/**
+	 * 10进制转16进制
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String decodeToHex(String data) {
+		String string = Integer.toHexString(Integer.valueOf(data));
+		return string;
+	}
+
+	/**
+	 * 16进制转10进制
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String decodeToString(String data) {
+		String string = Integer.toString(Integer.valueOf(data, 16));
+		return string;
 	}
 
 	public static boolean isEmpty(String s) {

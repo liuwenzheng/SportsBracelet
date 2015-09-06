@@ -1,6 +1,8 @@
 package com.blestep.sportsbracelet.module;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.utils.Utils;
 
 public class BtModule {
 	public static BluetoothAdapter mBluetoothAdapter;
@@ -239,7 +242,30 @@ public class BtModule {
 		switch (header) {
 		case AppConstants.HEADER_BACK_STEP:
 			// 保存步数
-
+			String year = formatDatas[2];
+			String month = formatDatas[3];
+			String day = formatDatas[4];
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(2000 + Integer.valueOf(year), Integer.valueOf(month) - 1, Integer.valueOf(day));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = calendar.getTime();
+			LogModule.e("日期：" + sdf.format(date));
+			String step3 = Utils.decodeToHex(formatDatas[5]);
+			String step2 = Utils.decodeToHex(formatDatas[6]);
+			String step1 = Utils.decodeToHex(formatDatas[7]);
+			String step0 = Utils.decodeToHex(formatDatas[8]);
+			StringBuilder sb = new StringBuilder();
+			sb.append(step3).append(step2).append(step1).append(step0);
+			LogModule.e("步数：" + Utils.decodeToString(sb.toString()));
+			String duration1 = Utils.decodeToHex(formatDatas[9]);
+			String duration0 = Utils.decodeToHex(formatDatas[10]);
+			LogModule.e("时长：" + Utils.decodeToString(duration1 + duration0));
+			String distance1 = Utils.decodeToHex(formatDatas[11]);
+			String distance0 = Utils.decodeToHex(formatDatas[12]);
+			LogModule.e("距离：" + Utils.decodeToString(distance1 + distance0));
+			String calories1 = Utils.decodeToHex(formatDatas[13]);
+			String calories0 = Utils.decodeToHex(formatDatas[14]);
+			LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
 			break;
 
 		default:
