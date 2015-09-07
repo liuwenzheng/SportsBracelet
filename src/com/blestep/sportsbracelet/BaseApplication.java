@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.blestep.sportsbracelet.db.DBTools;
-import com.blestep.sportsbracelet.module.BtModule;
+import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 
@@ -23,6 +23,6 @@ public class BaseApplication extends Application {
 		// 初始化蓝牙适配器
 		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
 				Context.BLUETOOTH_SERVICE);
-		BtModule.mBluetoothAdapter = bluetoothManager.getAdapter();
+		BTModule.mBluetoothAdapter = bluetoothManager.getAdapter();
 	}
 }

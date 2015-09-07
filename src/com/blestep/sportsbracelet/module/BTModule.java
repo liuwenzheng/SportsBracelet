@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.module;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,9 +18,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.db.DBTools;
+import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.utils.Utils;
 
-public class BtModule {
+public class BTModule {
 	public static BluetoothAdapter mBluetoothAdapter;
 	public static BluetoothGattCharacteristic mNotifyCharacteristic;
 	public static final int REQUEST_ENABLE_BT = 1001;
@@ -60,7 +63,7 @@ public class BtModule {
 		((Activity) context).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 	}
 
-	public BtModule() {
+	public BTModule() {
 	}
 
 	/**
@@ -236,12 +239,15 @@ public class BtModule {
 	 * 根据不同命令头保存数据
 	 * 
 	 * @param formatDatas
+	 * @param context
+	 * @param index
 	 */
-	public static void saveBleData(String[] formatDatas) {
+	public static void saveBleData(String[] formatDatas, Context context, int index) {
 		int header = Integer.valueOf(formatDatas[0]);
 		switch (header) {
 		case AppConstants.HEADER_BACK_STEP:
 			// 保存步数
+			// 日期
 			String year = formatDatas[2];
 			String month = formatDatas[3];
 			String day = formatDatas[4];
@@ -249,23 +255,50 @@ public class BtModule {
 			calendar.set(2000 + Integer.valueOf(year), Integer.valueOf(month) - 1, Integer.valueOf(day));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = calendar.getTime();
-			LogModule.e("日期：" + sdf.format(date));
+			// 步数
 			String step3 = Utils.decodeToHex(formatDatas[5]);
 			String step2 = Utils.decodeToHex(formatDatas[6]);
 			String step1 = Utils.decodeToHex(formatDatas[7]);
 			String step0 = Utils.decodeToHex(formatDatas[8]);
 			StringBuilder sb = new StringBuilder();
 			sb.append(step3).append(step2).append(step1).append(step0);
-			LogModule.e("步数：" + Utils.decodeToString(sb.toString()));
+			// 时长
 			String duration1 = Utils.decodeToHex(formatDatas[9]);
 			String duration0 = Utils.decodeToHex(formatDatas[10]);
-			LogModule.e("时长：" + Utils.decodeToString(duration1 + duration0));
+			// 距离
 			String distance1 = Utils.decodeToHex(formatDatas[11]);
 			String distance0 = Utils.decodeToHex(formatDatas[12]);
-			LogModule.e("距离：" + Utils.decodeToString(distance1 + distance0));
+			// 卡路里
 			String calories1 = Utils.decodeToHex(formatDatas[13]);
 			String calories0 = Utils.decodeToHex(formatDatas[14]);
+			String dateStr = sdf.format(date);
+			LogModule.e("日期：" + dateStr);
+
+			String count = Utils.decodeToString(sb.toString());
+			LogModule.e("步数：" + count);
+
+			String duration = Utils.decodeToString(duration1 + duration0);
+			LogModule.e("时长：" + duration);
+
+			String distance = new DecimalFormat()
+					.format(Integer.valueOf(Utils.decodeToString(distance1 + distance0)) * 0.01);
+			LogModule.e("距离：" + distance);
+
+			String calories = Utils.decodeToString(calories1 + calories0);
 			LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
+
+			Step step = new Step();
+			step.date = dateStr;
+			step.count = count;
+			step.duration = duration;
+			step.distance = distance;
+			step.calories = calories;
+			if (!DBTools.getInstance(context).isStepExist(step.date)) {
+				DBTools.getInstance(context).insertStep(step);
+				// 更新最新记录
+			} else if (index == 0) {
+				DBTools.getInstance(context).updateStep(step);
+			}
 			break;
 
 		default:
