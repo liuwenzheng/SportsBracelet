@@ -21,8 +21,10 @@ import android.widget.TextView;
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
+import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.BleDevice;
-import com.blestep.sportsbracelet.module.BtModule;
+import com.blestep.sportsbracelet.entity.Step;
+import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
@@ -63,6 +65,12 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 				} else if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
 					int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
 					tv_conn_status.setText("电量为" + battery + "%");
+					Step step = DBTools.getInstance(StepActivity.this).selectCurrentStep();
+					if (step != null) {
+						circleView.setMaxValue(5000);
+						circleView.setValueAnimated(Float.valueOf(step.count));
+					}
+
 				}
 			}
 
@@ -110,7 +118,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case BtModule.REQUEST_ENABLE_BT:
+			case BTModule.REQUEST_ENABLE_BT:
 				tv_conn_status.setText("开始扫描...");
 				mBtService.scanDevice();
 				break;
@@ -138,8 +146,8 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 			LogModule.d("连接服务onServiceConnected...");
 			mBtService = ((LocalBinder) service).getService();
 			// 开启蓝牙
-			if (!BtModule.isBluetoothOpen()) {
-				BtModule.openBluetooth(StepActivity.this);
+			if (!BTModule.isBluetoothOpen()) {
+				BTModule.openBluetooth(StepActivity.this);
 			} else {
 				tv_conn_status.setText("开始扫描...");
 				mBtService.scanDevice();

@@ -43,13 +43,15 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	private static final String CREATE_TABLE_STEP = "CREATE TABLE " + DBConstants.TABLE_NAME_STEP
 	// id
 			+ " (" + DBConstants.STEP_FIELD_ID + " INTEGER primary key autoincrement, "
-			// 步数日期
+			// 日期
 			+ DBConstants.STEP_FIELD_DATE + " TEXT,"
-			// 步数总数
+			// 总数
 			+ DBConstants.STEP_FIELD_COUNT + " TEXT,"
-			// 步数距离
-			+ DBConstants.STEP_FIELD_DISTANCE + "TEXT,"
-			// 步数卡路里
+			// 时长
+			+ DBConstants.STEP_FIELD_DURATION + " TEXT,"
+			// 距离
+			+ DBConstants.STEP_FIELD_DISTANCE + " TEXT,"
+			// 卡路里
 			+ DBConstants.STEP_FIELD_CALORIES + " TEXT);";
 
 	// // 睡眠表

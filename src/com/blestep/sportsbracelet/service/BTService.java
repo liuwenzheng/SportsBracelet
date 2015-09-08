@@ -16,7 +16,7 @@ import android.os.IBinder;
 
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.entity.BleDevice;
-import com.blestep.sportsbracelet.module.BtModule;
+import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
@@ -59,14 +59,14 @@ public class BTService extends Service implements LeScanCallback {
 		} else {
 			if (!mIsStartScan) {
 				mIsStartScan = true;
-				BtModule.scanDevice(this);
+				BTModule.scanDevice(this);
 				// Stops scanning after a pre-defined scan period.
 				mHandler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						if (mIsStartScan) {
 							LogModule.i("10s后停止扫描,将找到的设备返回给前端");
-							BtModule.mBluetoothAdapter.stopLeScan(BTService.this);
+							BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
 							mIsStartScan = false;
 							Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA);
 							intent.putExtra("devices", mDevices);
@@ -85,7 +85,7 @@ public class BTService extends Service implements LeScanCallback {
 	 * 连接手环
 	 */
 	public boolean connectBle(String address) {
-		BluetoothDevice device = BtModule.mBluetoothAdapter.getRemoteDevice(address);
+		BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(address);
 		if (device == null) {
 			return false;
 		} else {
@@ -129,14 +129,14 @@ public class BTService extends Service implements LeScanCallback {
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				Intent intent = new Intent(AppConstants.ACTION_DISCOVER_SUCCESS);
 				sendBroadcast(intent);
-				BtModule.setCharacteristicNotify(mBluetoothGatt);
+				BTModule.setCharacteristicNotify(mBluetoothGatt);
 				// 延迟1s发送请求
 				mHandler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						BtModule.setCurrentTime(mBluetoothGatt);
-						BtModule.getBatteryData(mBluetoothGatt);
-						BtModule.getStepData(mBluetoothGatt);
+						BTModule.setCurrentTime(mBluetoothGatt);
+						BTModule.getBatteryData(mBluetoothGatt);
+						BTModule.getStepData(mBluetoothGatt);
 					}
 				}, 1000);
 			} else {
@@ -177,7 +177,7 @@ public class BTService extends Service implements LeScanCallback {
 				return;
 			}
 			count--;
-			BtModule.saveBleData(formatDatas);
+			BTModule.saveBleData(formatDatas, getApplicationContext(), count);
 			LogModule.i(count + "...");
 			if (count == 0) {
 				LogModule.i("延迟1s发送广播更新数据");
