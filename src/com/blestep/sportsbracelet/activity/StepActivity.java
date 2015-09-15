@@ -30,11 +30,11 @@ import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.view.CircleProgressView;
+import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 
-public class StepActivity extends BaseActivity implements OnItemClickListener {
-
+public class StepActivity extends BaseActivity implements OnItemClickListener,ICircleProgressValue {
 	private CircleProgressView circleView;
-	private TextView tv_conn_status;
+	private TextView tv_conn_status, tv_current_value;
 	private ListView lv_devices;
 	private SimpleAdapter mAdapter;
 	private ArrayList<HashMap<String, String>> mDevices;
@@ -71,6 +71,14 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 						circleView.setValueAnimated(Float.valueOf(step.count));
 					}
 
+				} else if (AppConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())) {
+					tv_conn_status.setText("无法连接到设备");
+					Step step = DBTools.getInstance(StepActivity.this).selectCurrentStep();
+					if (step != null) {
+						circleView.setVisibility(View.VISIBLE);
+						circleView.setMaxValue(5000);
+						circleView.setValueAnimated(Float.valueOf(step.count));
+					}
 				}
 			}
 
@@ -84,15 +92,16 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 		circleView = (CircleProgressView) findViewById(R.id.circleView);
 		circleView.setMaxValue(100);
 		circleView.setValueAnimated(45);
+		circleView.setmProgressValue(this);
 		tv_conn_status = (TextView) findViewById(R.id.tv_conn_status);
 		lv_devices = (ListView) findViewById(R.id.lv_devices);
+		tv_current_value = (TextView) findViewById(R.id.tv_current_value);
 		mDevices = new ArrayList<HashMap<String, String>>();
 		mAdapter = new SimpleAdapter(this, mDevices, R.layout.devices_list_item, new String[] { "name", "address" },
 				new int[] { R.id.tv_device_name, R.id.tv_device_address });
 		lv_devices.setAdapter(mAdapter);
 		lv_devices.setOnItemClickListener(this);
 		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
-
 	}
 
 	@Override
@@ -103,6 +112,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 		filter.addAction(AppConstants.ACTION_DISCOVER_SUCCESS);
 		filter.addAction(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
 		filter.addAction(AppConstants.ACTION_REFRESH_DATA);
+		filter.addAction(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
 		registerReceiver(mReceiver, filter);
 		super.onResume();
 	}
@@ -166,5 +176,12 @@ public class StepActivity extends BaseActivity implements OnItemClickListener {
 		lv_devices.setVisibility(View.GONE);
 		circleView.setVisibility(View.VISIBLE);
 		mBtService.connectBle(mDevices.get(position).get("address"));
+	}
+
+	@Override
+	public void getProgressValue(int value) {
+		tv_current_value.setVisibility(View.VISIBLE);
+		tv_current_value.setText(value + "");
+		
 	}
 }

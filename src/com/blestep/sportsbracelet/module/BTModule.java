@@ -26,6 +26,7 @@ public class BTModule {
 	public static BluetoothAdapter mBluetoothAdapter;
 	public static BluetoothGattCharacteristic mNotifyCharacteristic;
 	public static final int REQUEST_ENABLE_BT = 1001;
+	
 	public static final String BARCELET_BT_NAME = "J-Band";
 	public static final UUID SERVIE_UUID = UUID.fromString("0000ffc0-0000-1000-8000-00805f9b34fb");
 	public static final UUID CHARACTERISTIC_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");

@@ -24,6 +24,8 @@ import com.blestep.sportsbracelet.utils.Utils;
 public class BTService extends Service implements LeScanCallback {
 	private boolean mIsStartScan = false;
 	private static final long SCAN_PERIOD = 10000;
+	private static final int GATT_ERROR_TIMEOUT = 133;
+
 	public static Handler mHandler = new Handler();
 	private ArrayList<BleDevice> mDevices;
 	private BluetoothGatt mBluetoothGatt;
@@ -112,10 +114,15 @@ public class BTService extends Service implements LeScanCallback {
 		private int count;
 
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-			LogModule.d("onConnectionStateChange...newState:" + newState);
+			LogModule.d("onConnectionStateChange...status:" + status + "...newState:" + newState);
 			switch (newState) {
 			case BluetoothProfile.STATE_CONNECTED:
-				mBluetoothGatt.discoverServices();
+				if (status == GATT_ERROR_TIMEOUT) {
+					Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
+					sendBroadcast(intent);
+				} else {
+					mBluetoothGatt.discoverServices();
+				}
 				break;
 			case BluetoothProfile.STATE_DISCONNECTED:
 				Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);

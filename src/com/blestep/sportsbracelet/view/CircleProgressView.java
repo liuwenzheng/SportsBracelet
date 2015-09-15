@@ -156,6 +156,8 @@ public class CircleProgressView extends View {
 	 */
 	private float mRelativeUniteSize = 0.3f;
 
+	private ICircleProgressValue mProgressValue;
+
 	// endregion members
 
 	/**
@@ -166,7 +168,6 @@ public class CircleProgressView extends View {
 	 */
 	public CircleProgressView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
 		parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.CircleProgressView));
 	}
 
@@ -931,8 +932,9 @@ public class CircleProgressView extends View {
 			canvas.drawRect(mTextBounds, rectPaint);
 		}
 
-		// canvas.drawText(text, mTextBounds.left - (mTextPaint.getTextSize() * 0.09f), mTextBounds.bottom, mTextPaint);
-
+		// canvas.drawText(text, mTextBounds.left - (mTextPaint.getTextSize() *
+		// 0.09f), mTextBounds.bottom, mTextPaint);
+		mProgressValue.getProgressValue((int) mCurrentValue);
 		if (mShowUnit) {
 
 			if (mUnitColor == -1) // undefined
@@ -1063,6 +1065,14 @@ public class CircleProgressView extends View {
 
 	public void setmOuterWidth(int mOuterWidth) {
 		this.mOuterWidth = mOuterWidth;
+	}
+
+	public ICircleProgressValue getmProgressValue() {
+		return mProgressValue;
+	}
+
+	public void setmProgressValue(ICircleProgressValue mProgressValue) {
+		this.mProgressValue = mProgressValue;
 	}
 
 	private enum AnimationState {
@@ -1421,4 +1431,14 @@ public class CircleProgressView extends View {
 
 	// endregion Animation stuff
 	// ----------------------------------
+	/**
+	 * 手环数值变换的回调函数
+	 * 
+	 * @author wenzheng.liu
+	 * 
+	 */
+	public interface ICircleProgressValue {
+		public void getProgressValue(int value);
+	}
+
 }

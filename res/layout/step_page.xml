@@ -39,6 +39,15 @@
             CircleProgressView:unitColor="@color/primary_color"
             android:background="@color/grey_d1cfd0"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_current_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="..."
+            android:textSize="18sp"
+            android:visibility="gone" />
     </FrameLayout>
 
 </RelativeLayout>
