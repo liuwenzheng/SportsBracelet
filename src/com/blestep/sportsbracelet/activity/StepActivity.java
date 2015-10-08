@@ -91,7 +91,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,IC
 		setContentView(R.layout.step_page);
 		circleView = (CircleProgressView) findViewById(R.id.circleView);
 		circleView.setMaxValue(100);
-		circleView.setValueAnimated(45);
+		circleView.setValueAnimated(0);
 		circleView.setmProgressValue(this);
 		tv_conn_status = (TextView) findViewById(R.id.tv_conn_status);
 		lv_devices = (ListView) findViewById(R.id.lv_devices);

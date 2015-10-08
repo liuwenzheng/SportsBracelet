@@ -1,5 +1,12 @@
 <resources>
 
     <string name="app_name">运动手环</string>
+    <string name="splash_one_item_pass">跳过</string>
+    <string name="splash_one_item_1">心率自动监测</string>
+    <string name="splash_one_item_2">智能记步，准确了解运动\n量自动计算里程和卡路里</string>
+    <string name="splash_one_item_3">24小时全天候\n实时了解健康状态</string>
+    <string name="splash_two_item_1">智能闹钟\n根据人体睡眠特征\n唤醒每一天</string>
+    <string name="splash_two_item_2">蓝牙4.0技术\n手机电量消耗极少</string>
+    <string name="splash_two_item_3">来电提醒\n与手机联系人同步\n过滤骚扰电话</string>
 
 </resources>

@@ -24,7 +24,7 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 	private SplashPagerAdapter mAdapter;
 	private View splash_item_one, splash_item_two, splash_item_three, splash_item_four;
 	private ArrayList<View> mViews;
-	private Button btn_enter;
+	private Button btn_enter, btn_splash_item_one_pass, btn_splash_item_two_pass;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +37,17 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 
 	private void initListener() {
 		vp_splash.setOnPageChangeListener(this);
-		btn_enter.setOnClickListener(this);
+		// btn_enter.setOnClickListener(this);
+		btn_splash_item_one_pass.setOnClickListener(this);
+		btn_splash_item_two_pass.setOnClickListener(this);
 	}
 
 	private void initData() {
 		mViews = new ArrayList<View>();
 		mViews.add(splash_item_one);
 		mViews.add(splash_item_two);
-		mViews.add(splash_item_three);
-		mViews.add(splash_item_four);
+		// mViews.add(splash_item_three);
+		// mViews.add(splash_item_four);
 		mAdapter = new SplashPagerAdapter();
 		vp_splash.setAdapter(mAdapter);
 	}
@@ -55,10 +57,14 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 		rg_splash = (RadioGroup) findViewById(R.id.rg_splash);
 		((RadioButton) rg_splash.getChildAt(0)).setChecked(true);
 		splash_item_one = LayoutInflater.from(this).inflate(R.layout.splash_item_one, null);
+		btn_splash_item_one_pass = (Button) splash_item_one.findViewById(R.id.btn_splash_item_one_pass);
 		splash_item_two = LayoutInflater.from(this).inflate(R.layout.splash_item_two, null);
-		splash_item_three = LayoutInflater.from(this).inflate(R.layout.splash_item_three, null);
-		splash_item_four = LayoutInflater.from(this).inflate(R.layout.splash_item_four, null);
-		btn_enter = (Button) splash_item_four.findViewById(R.id.btn_enter);
+		btn_splash_item_two_pass = (Button) splash_item_two.findViewById(R.id.btn_splash_item_two_pass);
+		// splash_item_three =
+		// LayoutInflater.from(this).inflate(R.layout.splash_item_three, null);
+		// splash_item_four =
+		// LayoutInflater.from(this).inflate(R.layout.splash_item_four, null);
+		// btn_enter = (Button) splash_item_four.findViewById(R.id.btn_enter);
 
 	}
 
@@ -79,9 +85,21 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 
 	@Override
 	public void onClick(View v) {
+		Intent intent = null;
 		switch (v.getId()) {
-		case R.id.btn_enter:
-			Intent intent = new Intent(this, StepActivity.class);
+		// case R.id.btn_enter:
+		// Intent intent = new Intent(this, StepActivity.class);
+		// startActivity(intent);
+		// this.finish();
+		// break;
+		case R.id.btn_splash_item_one_pass:
+			intent = new Intent(this, StepActivity.class);
+			startActivity(intent);
+			this.finish();
+			break;
+
+		case R.id.btn_splash_item_two_pass:
+			intent = new Intent(this, StepActivity.class);
 			startActivity(intent);
 			this.finish();
 			break;

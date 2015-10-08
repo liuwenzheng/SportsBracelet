@@ -4,6 +4,10 @@
     <color name="primary_dark_color">#66009688</color>
     <color name="primary_color">#ff009688</color>
     <color name="secondary_color">#ff37474f</color>
+    <color name="blue_c3e4ed">#c3e4ed</color>
+    <color name="blue_17779d">#17779d</color>
+    <color name="black_373737">#373737</color>
+    
     <!-- test -->
     <color name="black_000000">#000000</color>
     <color name="white_ffffff">#ffffff</color>
