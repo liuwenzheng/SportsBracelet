@@ -93,13 +93,13 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 		// this.finish();
 		// break;
 		case R.id.btn_splash_item_one_pass:
-			intent = new Intent(this, StepActivity.class);
+			intent = new Intent(this, SettingTargetActivity.class);
 			startActivity(intent);
 			this.finish();
 			break;
 
 		case R.id.btn_splash_item_two_pass:
-			intent = new Intent(this, StepActivity.class);
+			intent = new Intent(this, SettingTargetActivity.class);
 			startActivity(intent);
 			this.finish();
 			break;
