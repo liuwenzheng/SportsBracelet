@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
+
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2.0"
+        android:gravity="left"
+        android:text="测试测试"
+        android:textColor="@color/black_000000"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_device_mac"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4.0"
+        android:gravity="center"
+        android:text="12:23:32:13:D3:C1:24:32"
+        android:textColor="@color/black_000000"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/iv_device_checked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/setting_device_checked_false"
+        android:checked="true"
+        android:gravity="right" />
+
+</LinearLayout>

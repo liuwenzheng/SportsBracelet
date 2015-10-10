@@ -1,7 +1,5 @@
 package com.blestep.sportsbracelet.service;
 
-import java.util.ArrayList;
-
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
 import android.bluetooth.BluetoothDevice;
@@ -23,11 +21,11 @@ import com.blestep.sportsbracelet.utils.Utils;
 
 public class BTService extends Service implements LeScanCallback {
 	private boolean mIsStartScan = false;
-	private static final long SCAN_PERIOD = 10000;
+	private static final long SCAN_PERIOD = 5000;
 	private static final int GATT_ERROR_TIMEOUT = 133;
 
 	public static Handler mHandler = new Handler();
-	private ArrayList<BleDevice> mDevices;
+	// private ArrayList<BleDevice> mDevices;
 	private BluetoothGatt mBluetoothGatt;
 
 	@Override
@@ -55,7 +53,7 @@ public class BTService extends Service implements LeScanCallback {
 	 */
 	public void scanDevice() {
 		String address = SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, "");
-		mDevices = new ArrayList<BleDevice>();
+		// mDevices = new ArrayList<BleDevice>();
 		if (Utils.isNotEmpty(address) && connectBle(address)) {
 			// 连接到设备
 		} else {
@@ -67,11 +65,11 @@ public class BTService extends Service implements LeScanCallback {
 					@Override
 					public void run() {
 						if (mIsStartScan) {
-							LogModule.i("10s后停止扫描,将找到的设备返回给前端");
+							LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
 							BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
 							mIsStartScan = false;
-							Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA);
-							intent.putExtra("devices", mDevices);
+							Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA_END);
+							// intent.putExtra("devices", mDevices);
 							sendBroadcast(intent);
 						}
 					}
@@ -103,10 +101,16 @@ public class BTService extends Service implements LeScanCallback {
 	@Override
 	public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
 		if (device != null) {
+			if (Utils.isEmpty(device.getName())) {
+				return;
+			}
 			BleDevice bleDevice = new BleDevice();
 			bleDevice.name = device.getName();
 			bleDevice.address = device.getAddress();
-			mDevices.add(bleDevice);
+			Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA);
+			intent.putExtra("device", bleDevice);
+			sendBroadcast(intent);
+			// mDevices.add(bleDevice);
 		}
 	}
 

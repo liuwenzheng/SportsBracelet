@@ -6,6 +6,7 @@ public class AppConstants {
 	 */
 	// 搜索到的设备信息数据
 	public static final String ACTION_BLE_DEVICES_DATA = "action_ble_devices_data";
+	public static final String ACTION_BLE_DEVICES_DATA_END = "action_ble_devices_data_end";
 	// 发现状态
 	public static final String ACTION_DISCOVER_SUCCESS = "action_discover_success";
 	// 断开连接

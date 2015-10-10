@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">运动手环</string>
+    <!-- splash -->
     <string name="splash_one_item_pass">跳过</string>
     <string name="splash_one_item_1">心率自动监测</string>
     <string name="splash_one_item_2">智能记步，准确了解运动\n量自动计算里程和卡路里</string>
@@ -8,5 +9,15 @@
     <string name="splash_two_item_1">智能闹钟\n根据人体睡眠特征\n唤醒每一天</string>
     <string name="splash_two_item_2">蓝牙4.0技术\n手机电量消耗极少</string>
     <string name="splash_two_item_3">来电提醒\n与手机联系人同步\n过滤骚扰电话</string>
+    <!-- setting -->
+    <string name="setting_bluetooth">打开手机蓝牙</string>
+    <string name="setting_pre">上一步</string>
+    <string name="setting_next">下一步</string>
+    <string name="setting_bracelet">打开手环</string>
+    <string name="setting_bracelet_tips">长按手环上的触摸点5秒，直到屏幕变亮</string>
+    <string name="setting_device">手机与手环正在配对</string>
+    <string name="setting_userinfo_name_hint">昵称</string>
+    <string name="setting_userinfo_sex">性别</string>
+    <string name="setting_userinfo_">性别</string>
 
 </resources>

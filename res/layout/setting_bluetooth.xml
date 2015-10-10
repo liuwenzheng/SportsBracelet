@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@color/blue_c3e4ed" >
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/setting_bluetooth" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
+        android:text="@string/setting_bluetooth"
+        android:textColor="@color/black_000000"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_setting_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="15dp"
+        android:paddingLeft="34dp"
+        android:paddingRight="34dp"
+        android:paddingTop="15dp"
+        android:text="@string/setting_next"
+        android:textColor="@color/black_000000"
+        android:textSize="18sp" />
+
+</RelativeLayout>
