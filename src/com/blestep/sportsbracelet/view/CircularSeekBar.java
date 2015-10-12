@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.module.LogModule;
 
 /**
  * The Class CircularSeekBar.
@@ -218,7 +217,7 @@ public class CircularSeekBar extends View {
 	public void initDrawable() {
 		progressMark = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.scrubber_control_normal_holo);
 		progressMarkPressed = BitmapFactory.decodeResource(mContext.getResources(),
-				R.drawable.scrubber_control_pressed_holo);
+				R.drawable.scrubber_control_normal_holo);
 	}
 
 	/*
@@ -254,7 +253,8 @@ public class CircularSeekBar extends View {
 		startPointX = cx; // 12 O'clock X coordinate
 		startPointY = cy - outerRadius;// 12 O'clock Y coordinate
 		markPointX = startPointX;// Initial locatino of the marker X coordinate
-		markPointY = startPointY;// Initial locatino of the marker Y coordinate
+		markPointY = startPointY;// Initial locatino of the
+									// marker Y coordinate
 
 		rect.set(left, top, right, bottom); // assign size to rect
 	}

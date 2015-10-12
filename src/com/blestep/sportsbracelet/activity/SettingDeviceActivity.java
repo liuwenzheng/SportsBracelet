@@ -96,7 +96,8 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 		switch (v.getId()) {
 		case R.id.tv_setting_next:
 			// 将选中地址缓存
-			SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, mDevices.get(mPosition).address);
+			// SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS,
+			// mDevices.get(mPosition).address);
 			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
 			startActivity(new Intent(this, SettingUserInfoActivity.class));
 			break;

@@ -10,6 +10,7 @@ public class SPUtiles {
 	public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";
 	public static final String SP_KEY_BATTERY = "sp_key_battery";
 	public static final String SP_KEY_STEP_AIM = "sp_key_aim";
+	public static final String SP_KEY_USER_NAME = "sp_key_name";
 	public static final String SP_KEY_USER_GENDER = "sp_key_gender";
 	public static final String SP_KEY_USER_AGE = "sp_key_age";
 	public static final String SP_KEY_USER_HEIGHT = "sp_key_height";

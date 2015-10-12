@@ -18,6 +18,20 @@
     <string name="setting_device">手机与手环正在配对</string>
     <string name="setting_userinfo_name_hint">昵称</string>
     <string name="setting_userinfo_sex">性别</string>
-    <string name="setting_userinfo_">性别</string>
+    <string name="setting_userinfo_birthday">年龄</string>
+    <string name="setting_userinfo_height">身高</string>
+    <string name="setting_userinfo_height_unit">厘米</string>
+    <string name="setting_userinfo_weight">体重</string>
+    <string name="setting_userinfo_weight_unit">公斤</string>
+    <string name="setting_target_title">设置目标</string>
+    <string name="setting_target_relaxed">轻松</string>
+    <string name="setting_target_recommend">推荐</string>
+    <string name="setting_target_active">活跃</string>
+    <string name="setting_target_step">步</string>
+    <string name="setting_target_calorie">千卡</string>
+    <string name="setting_target_tips">建议：每天运动10000步是积极健康的生活方式</string>
+    <string name="setting_target_amount_to">相当于</string>
+    <string name="setting_target_minutes">%1$s分钟</string>
+    <string name="setting_target_finish">完成</string>
 
 </resources>
