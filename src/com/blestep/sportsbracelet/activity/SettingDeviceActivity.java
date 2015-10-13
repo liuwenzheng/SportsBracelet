@@ -30,8 +30,7 @@ import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
-import com.blestep.sportsbracelet.utils.SPUtiles;
-import com.blestep.sportsbracelet.utils.Utils;
+import com.blestep.sportsbracelet.utils.ToastUtils;
 
 public class SettingDeviceActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
 	private ListView lv_setting_device;
@@ -98,6 +97,10 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			// 将选中地址缓存
 			// SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS,
 			// mDevices.get(mPosition).address);
+			if (mDevices != null && mDevices.size() == 0) {
+				ToastUtils.showToast(this, "没有选中设备!");
+				return;
+			}
 			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
 			startActivity(new Intent(this, SettingUserInfoActivity.class));
 			break;
