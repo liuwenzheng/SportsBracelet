@@ -2,10 +2,13 @@ package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -55,6 +58,10 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AppConstants.ACTION_BLE_DEVICES_DATA);
 		filter.addAction(AppConstants.ACTION_BLE_DEVICES_DATA_END);
+		filter.addAction(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
+		filter.addAction(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
+		filter.addAction(AppConstants.ACTION_DISCOVER_SUCCESS);
+		filter.addAction(AppConstants.ACTION_DISCOVER_FAILURE);
 		registerReceiver(mReceiver, filter);
 		super.onResume();
 	}
@@ -94,15 +101,31 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_setting_next:
-			// 将选中地址缓存
-			// SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS,
-			// mDevices.get(mPosition).address);
+
 			if (mDevices != null && mDevices.size() == 0) {
-				ToastUtils.showToast(this, "没有选中设备!");
+				AlertDialog.Builder builder = new Builder(this);
+				builder.setMessage(R.string.setting_device_search_repeat);
+				builder.setPositiveButton(R.string.setting_device_search_confirm,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								mBtService.scanDevice();
+								mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
+										getString(R.string.setting_device_search), false, false);
+								dialog.dismiss();
+							}
+						});
+				builder.show();
 				return;
 			}
 			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
-			startActivity(new Intent(this, SettingUserInfoActivity.class));
+			// 将选中地址缓存
+			// SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS,
+			// mDevices.get(mPosition).address);
+			mBtService.connectBle(mDevices.get(mPosition).address);
+			mDialog = ProgressDialog.show(SettingDeviceActivity.this, null, getString(R.string.setting_device), false,
+					false);
 			break;
 		case R.id.tv_setting_pre:
 			this.finish();
@@ -191,6 +214,23 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 						mDialog.dismiss();
 					}
 				}
+				if (AppConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())
+						|| AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
+						|| AppConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
+					LogModule.d("配对失败...");
+					ToastUtils.showToast(SettingDeviceActivity.this, R.string.setting_device_conn_failure);
+					if (mDialog != null) {
+						mDialog.dismiss();
+					}
+				}
+				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
+					LogModule.d("配对成功...");
+					ToastUtils.showToast(SettingDeviceActivity.this, R.string.setting_device_conn_success);
+					if (mDialog != null) {
+						mDialog.dismiss();
+					}
+					startActivity(new Intent(SettingDeviceActivity.this, SettingUserInfoActivity.class));
+				}
 			}
 
 		}
@@ -207,8 +247,8 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			} else {
 				LogModule.d("开始扫描...");
 				mBtService.scanDevice();
-				mDialog = ProgressDialog.show(SettingDeviceActivity.this, null, getString(R.string.setting_device),
-						false, false);
+				mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
+						getString(R.string.setting_device_search), false, false);
 			}
 		}
 

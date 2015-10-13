@@ -151,7 +151,8 @@ public class BTService extends Service implements LeScanCallback {
 					}
 				}, 1000);
 			} else {
-
+				Intent intent = new Intent(AppConstants.ACTION_DISCOVER_FAILURE);
+				sendBroadcast(intent);
 			}
 		};
 

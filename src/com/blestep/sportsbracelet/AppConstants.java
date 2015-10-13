@@ -9,6 +9,7 @@ public class AppConstants {
 	public static final String ACTION_BLE_DEVICES_DATA_END = "action_ble_devices_data_end";
 	// 发现状态
 	public static final String ACTION_DISCOVER_SUCCESS = "action_discover_success";
+	public static final String ACTION_DISCOVER_FAILURE = "action_discover_failure";
 	// 断开连接
 	public static final String ACTION_CONN_STATUS_DISCONNECTED = "action_conn_status_success";
 	// 刷新数据

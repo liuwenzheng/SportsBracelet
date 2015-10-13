@@ -16,6 +16,11 @@
     <string name="setting_bracelet">打开手环</string>
     <string name="setting_bracelet_tips">长按手环上的触摸点5秒，直到屏幕变亮</string>
     <string name="setting_device">手机与手环正在配对</string>
+    <string name="setting_device_search">正在搜索手环</string>
+    <string name="setting_device_search_repeat">重新搜索手环</string>
+    <string name="setting_device_search_confirm">确认</string>
+    <string name="setting_device_conn_success">配对成功</string>
+    <string name="setting_device_conn_failure">配对失败</string>
     <string name="setting_userinfo_name_hint">昵称</string>
     <string name="setting_userinfo_sex">性别</string>
     <string name="setting_userinfo_birthday">年龄</string>
@@ -23,6 +28,12 @@
     <string name="setting_userinfo_height_unit">厘米</string>
     <string name="setting_userinfo_weight">体重</string>
     <string name="setting_userinfo_weight_unit">公斤</string>
+    <string name="setting_userinfo_name_not_null">昵称不能为空！</string>
+    <string name="setting_userinfo_weight_not_null">昵称不能为空！</string>
+    <string name="setting_userinfo_height_not_null">昵称不能为空！</string>
+    <string name="setting_userinfo_height_size">身高应在100-200cm范围内</string>
+    <string name="setting_userinfo_weight_size">体重应在30-150kg范围内</string>
+    <string name="setting_userinfo_age_size">年龄应在5-99岁范围内</string>
     <string name="setting_target_title">设置目标</string>
     <string name="setting_target_relaxed">轻松</string>
     <string name="setting_target_recommend">推荐</string>

@@ -1,7 +1,9 @@
 package com.blestep.sportsbracelet.activity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -32,6 +34,7 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 	private Button btn_setting_next;
 	private DatePickerDialog mDialog;
 	private Calendar mCalendar;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,6 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 				mCalendar.set(Calendar.YEAR, year);
 				mCalendar.set(Calendar.MONTH, monthOfYear);
 				mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				tv_setting_userinfo_birthday.setText(sdf.format(mCalendar.getTime()));
 			}
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
@@ -82,27 +84,43 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 		case R.id.btn_setting_next:
 			// TODO 判断，存储，跳转
 			if (Utils.isEmpty(et_setting_userinfo_name.getText().toString())) {
-				ToastUtils.showToast(this, "昵称不能为空！");
+				ToastUtils.showToast(this, R.string.setting_userinfo_name_not_null);
 				return;
 			}
 			if (Utils.isEmpty(et_setting_userinfo_height.getText().toString())) {
-				ToastUtils.showToast(this, "身高不能为空！");
+				ToastUtils.showToast(this, R.string.setting_userinfo_height_not_null);
 				return;
 			}
 			if (Integer.valueOf(et_setting_userinfo_height.getText().toString()) < 100
 					|| Integer.valueOf(et_setting_userinfo_height.getText().toString()) > 200) {
-				ToastUtils.showToast(this, "身高应在100-200cm范围内");
+				ToastUtils.showToast(this, R.string.setting_userinfo_height_size);
 				return;
 			}
 			if (Utils.isEmpty(et_setting_userinfo_weight.getText().toString())) {
-				ToastUtils.showToast(this, "体重不能为空！");
+				ToastUtils.showToast(this, R.string.setting_userinfo_weight_not_null);
 				return;
 			}
 			if (Integer.valueOf(et_setting_userinfo_weight.getText().toString()) < 30
 					|| Integer.valueOf(et_setting_userinfo_weight.getText().toString()) > 150) {
-				ToastUtils.showToast(this, "体重应在30-150kg范围内");
+				ToastUtils.showToast(this, R.string.setting_userinfo_weight_size);
 				return;
 			}
+			// 计算年龄
+			Calendar current = Calendar.getInstance();
+			try {
+				Date birthday = sdf.parse(tv_setting_userinfo_birthday.getText().toString());
+				Calendar birthdayCalendar = Calendar.getInstance();
+				birthdayCalendar.setTime(birthday);
+				int age = current.get(Calendar.YEAR) - birthdayCalendar.get(Calendar.YEAR);
+				if (age < 5 || age > 99) {
+					ToastUtils.showToast(this, R.string.setting_userinfo_age_size);
+					return;
+				}
+				SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_AGE, age);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
 			SPUtiles.setStringValue(SPUtiles.SP_KEY_USER_NAME, et_setting_userinfo_name.getText().toString());
 			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_HEIGHT,
 					Integer.valueOf(et_setting_userinfo_height.getText().toString()));
