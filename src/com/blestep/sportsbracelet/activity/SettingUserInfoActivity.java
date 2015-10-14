@@ -130,6 +130,7 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_GENDER,
 					Integer.valueOf((String) findViewById(rg_setting_userinfo_sex.getCheckedRadioButtonId()).getTag()));
 			startActivity(new Intent(this, SettingTargetActivity.class));
+			this.finish();
 			break;
 
 		default:

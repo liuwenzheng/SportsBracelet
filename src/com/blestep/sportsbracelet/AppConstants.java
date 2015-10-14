@@ -28,6 +28,6 @@ public class AppConstants {
 	public static final int HEADER_BACK_RECORD = 145;
 	// 记步记录
 	public static final int HEADER_BACK_STEP = 146;
-	// 记步记录
+	// ACK
 	public static final int HEADER_BACK_ACK = 150;
 }

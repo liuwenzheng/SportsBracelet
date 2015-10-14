@@ -35,8 +35,10 @@ public class SettingBraceletActivity extends BaseActivity implements OnClickList
 		switch (v.getId()) {
 		case R.id.tv_setting_next:
 			startActivity(new Intent(this, SettingDeviceActivity.class));
+			this.finish();
 			break;
 		case R.id.tv_setting_pre:
+			startActivity(new Intent(this, SettingBluetoothActivity.class));
 			this.finish();
 			break;
 

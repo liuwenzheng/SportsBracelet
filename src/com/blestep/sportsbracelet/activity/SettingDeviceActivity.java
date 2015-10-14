@@ -33,6 +33,7 @@ import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
+import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 
 public class SettingDeviceActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
@@ -121,13 +122,12 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			}
 			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
 			// 将选中地址缓存
-			// SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS,
-			// mDevices.get(mPosition).address);
 			mBtService.connectBle(mDevices.get(mPosition).address);
 			mDialog = ProgressDialog.show(SettingDeviceActivity.this, null, getString(R.string.setting_device), false,
 					false);
 			break;
 		case R.id.tv_setting_pre:
+			startActivity(new Intent(this, SettingBraceletActivity.class));
 			this.finish();
 			break;
 
@@ -229,7 +229,9 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
+					SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, mDevices.get(mPosition).address);
 					startActivity(new Intent(SettingDeviceActivity.this, SettingUserInfoActivity.class));
+					SettingDeviceActivity.this.finish();
 				}
 			}
 

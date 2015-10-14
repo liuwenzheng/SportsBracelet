@@ -6,7 +6,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -138,16 +140,12 @@ public class BTService extends Service implements LeScanCallback {
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 			LogModule.d("onServicesDiscovered...status:" + status);
 			if (status == BluetoothGatt.GATT_SUCCESS) {
-				Intent intent = new Intent(AppConstants.ACTION_DISCOVER_SUCCESS);
-				sendBroadcast(intent);
 				BTModule.setCharacteristicNotify(mBluetoothGatt);
-				// 延迟1s发送请求
 				mHandler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						BTModule.setCurrentTime(mBluetoothGatt);
-						BTModule.getBatteryData(mBluetoothGatt);
-						BTModule.getStepData(mBluetoothGatt);
+						Intent intent = new Intent(AppConstants.ACTION_DISCOVER_SUCCESS);
+						sendBroadcast(intent);
 					}
 				}, 1000);
 			} else {
@@ -203,6 +201,45 @@ public class BTService extends Service implements LeScanCallback {
 			}
 		};
 	};
+
+	/**
+	 * 同步时间
+	 */
+	public void synTimeData() {
+		BTModule.setCurrentTime(mBluetoothGatt);
+	}
+
+	/**
+	 * 同步用户数据
+	 */
+	public void synUserInfoData() {
+		BTModule.setUserInfo(mBluetoothGatt);
+	}
+
+	/**
+	 * 获取手环数据
+	 */
+	public void getSportData() {
+		BTModule.getBatteryData(mBluetoothGatt);
+		BTModule.getStepData(mBluetoothGatt);
+	}
+
+	/**
+	 * 是否连接手环
+	 * 
+	 * @return
+	 */
+	public boolean isConnDevice() {
+		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
+				Context.BLUETOOTH_SERVICE);
+		int connState = bluetoothManager.getConnectionState(BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles
+				.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null)), BluetoothProfile.GATT);
+		if (connState == BluetoothProfile.STATE_CONNECTED) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Override
 	public boolean onUnbind(Intent intent) {

@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.activity;
 
 import java.math.BigDecimal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +23,6 @@ public class SettingTargetActivity extends BaseActivity implements OnClickListen
 	private Button btn_target_finish;
 
 	private static final int STEP_UNIT = 200;
-	private static final int WEIGHT = 75;
 
 	private static final int RECOMMEND_MIN = 7000;
 	private static final int RECOMMEND_MAX = 15000;
@@ -89,14 +89,17 @@ public class SettingTargetActivity extends BaseActivity implements OnClickListen
 		tv_target_run = (TextView) findViewById(R.id.tv_target_run);
 		tv_target_bike = (TextView) findViewById(R.id.tv_target_bike);
 		btn_target_finish = (Button) findViewById(R.id.btn_target_finish);
-
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_target_finish:
-			ToastUtils.showToast(this, "设置目标为：" + tv_step.getText().toString());
+			// ToastUtils.showToast(this, "设置目标为：" + tv_step.getText().toString());
+			SPUtiles.setIntValue(SPUtiles.SP_KEY_STEP_AIM, Integer.valueOf(tv_step.getText().toString()));
+			SPUtiles.setBooleanValue(SPUtiles.SP_KEY_IS_FIRST_OPEN, false);
+			startActivity(new Intent(this, MainActivity.class));
+			this.finish();
 			break;
 
 		default:

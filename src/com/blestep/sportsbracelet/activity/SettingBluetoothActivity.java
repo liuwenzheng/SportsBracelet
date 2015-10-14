@@ -42,6 +42,7 @@ public class SettingBluetoothActivity extends BaseActivity implements OnClickLis
 				BTModule.openBluetooth(SettingBluetoothActivity.this);
 			} else {
 				startActivity(new Intent(this, SettingBraceletActivity.class));
+				this.finish();
 			}
 			break;
 

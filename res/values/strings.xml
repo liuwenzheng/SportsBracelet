@@ -44,5 +44,7 @@
     <string name="setting_target_amount_to">相当于</string>
     <string name="setting_target_minutes">%1$s分钟</string>
     <string name="setting_target_finish">完成</string>
+    <!-- step -->
+    <string name="step_syncdata_waiting">正在同步数据</string>
 
 </resources>

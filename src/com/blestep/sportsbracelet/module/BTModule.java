@@ -20,13 +20,14 @@ import android.content.Intent;
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
+import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 
 public class BTModule {
 	public static BluetoothAdapter mBluetoothAdapter;
 	public static BluetoothGattCharacteristic mNotifyCharacteristic;
 	public static final int REQUEST_ENABLE_BT = 1001;
-	
+
 	public static final String BARCELET_BT_NAME = "J-Band";
 	public static final UUID SERVIE_UUID = UUID.fromString("0000ffc0-0000-1000-8000-00805f9b34fb");
 	public static final UUID CHARACTERISTIC_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -99,6 +100,25 @@ public class BTModule {
 		byteArray[6] = (byte) second;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 
+	}
+
+	/**
+	 * 设置用户信息
+	 * 
+	 * @param mBluetoothGatt
+	 */
+	public static void setUserInfo(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[7];
+		int weight = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 30);
+		int height = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_HEIGHT, 100);
+		int age = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_AGE, 5);
+		int gender = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 0);
+		byteArray[0] = 0x12;
+		byteArray[1] = (byte) weight;
+		byteArray[2] = (byte) height;
+		byteArray[3] = (byte) age;
+		byteArray[4] = (byte) gender;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 
 	/**
