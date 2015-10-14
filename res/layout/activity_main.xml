@@ -2,42 +2,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/title_bar" >
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4" >
 
-        <ImageButton
+        <ImageView
             android:id="@+id/id_iv_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
-            android:background="@drawable/showright_selector"
-            android:onClick="showLeftMenu" />
+            android:layout_marginLeft="17dp"
+            android:onClick="showLeftMenu"
+            android:scaleType="fitCenter"
+            android:src="@drawable/main_left_button" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:text="微信"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ImageButton
+        <ImageView
             android:id="@+id/id_iv_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="3dp"
-            android:background="@drawable/showleft_selector"
-            android:onClick="showRightMenu" />
+            android:layout_marginRight="17dp"
+            android:onClick="showRightMenu"
+            android:scaleType="fitCenter"
+            android:src="@drawable/main_right_button" />
     </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_main_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_main_tab_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:drawableBottom="@drawable/main_tab_selector"
+            android:drawablePadding="5dp"
+            android:gravity="left|center_vertical"
+            android:padding="17dp"
+            android:text="@string/main_tab_step"
+            android:textColor="@drawable/main_tab_text_selector"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/rb_main_tab_sleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableBottom="@drawable/main_tab_selector"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:padding="17dp"
+            android:text="@string/main_tab_sleep"
+            android:textColor="@drawable/main_tab_text_selector"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1.0" />
+
+        <RadioButton
+            android:id="@+id/rb_main_tab_run"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableBottom="@drawable/main_tab_selector"
+            android:drawablePadding="5dp"
+            android:gravity="right|center_vertical"
+            android:padding="17dp"
+            android:text="@string/main_tab_run"
+            android:textColor="@drawable/main_tab_text_selector"
+            android:textSize="20sp" />
+    </RadioGroup>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/id_viewpager"

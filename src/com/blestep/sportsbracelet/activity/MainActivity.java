@@ -142,17 +142,17 @@ public class MainActivity extends SlidingFragmentActivity {
 				BTModule.openBluetooth(MainActivity.this);
 			} else {
 				LogModule.d("连接手环or同步数据？");
-				if (mBtService.isConnDevice()) {
-					mBtService.synTimeData();
-					mBtService.synUserInfoData();
-					mBtService.getSportData();
-					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.step_syncdata_waiting),
-							false, false);
-				} else {
-					mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
-					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false,
-							false);
-				}
+//				if (mBtService.isConnDevice()) {
+//					mBtService.synTimeData();
+//					mBtService.synUserInfoData();
+//					mBtService.getSportData();
+//					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.step_syncdata_waiting),
+//							false, false);
+//				} else {
+//					mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
+//					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false,
+//							false);
+//				}
 
 			}
 		}

@@ -77,7 +77,7 @@ public class CircleProgressView extends View {
 	private float mContourSize = 1;
 	private float mTextScale = 1;
 	private float mUnitScale = 1;
-	private int mOuterWidth = 10;
+	private int mOuterWidth = 0;
 
 	// Padding (with defaults)
 	private int mPaddingTop = 10;
@@ -756,10 +756,10 @@ public class CircleProgressView extends View {
 		mContourPaint.setStyle(Style.STROKE);
 		mContourPaint.setStrokeWidth(mContourSize);
 
-		mOuterPaint.setColor(mOuterColor);
-		mOuterPaint.setAntiAlias(true);
-		mOuterPaint.setStyle(Style.STROKE);
-		mOuterPaint.setStrokeWidth(mOuterWidth);
+		 mOuterPaint.setColor(mOuterColor);
+		 mOuterPaint.setAntiAlias(true);
+		 mOuterPaint.setStyle(Style.STROKE);
+		 mOuterPaint.setStrokeWidth(mOuterWidth);
 	}
 
 	/**
@@ -934,7 +934,9 @@ public class CircleProgressView extends View {
 
 		// canvas.drawText(text, mTextBounds.left - (mTextPaint.getTextSize() *
 		// 0.09f), mTextBounds.bottom, mTextPaint);
-		mProgressValue.getProgressValue((int) mCurrentValue);
+		if (mProgressValue != null) {
+			mProgressValue.getProgressValue((int) mCurrentValue);
+		}
 		if (mShowUnit) {
 
 			if (mUnitColor == -1) // undefined

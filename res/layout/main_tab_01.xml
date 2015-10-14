@@ -1,19 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ly_main_weixin"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#fcfcfc"
-    android:orientation="vertical" >
+    android:background="@color/white_ffffff" >
 
-   	<TextView 
-   	    android:layout_width="fill_parent"
-   	    android:layout_height="0dp"
-   	    android:layout_weight="1"
-   	    android:gravity="center"
-   	    android:text="this is first tab !"
-   	    android:textColor="#000000"
-   	    android:textSize="30sp"
-   	    />
+    <RelativeLayout
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" >
 
-</LinearLayout>
+        <com.blestep.sportsbracelet.view.CircleProgressView
+            android:id="@+id/circleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            CircleProgressView:barColor="@color/blue_97e5fb"
+            CircleProgressView:barColor1="@color/red_FF4400"
+            CircleProgressView:barWidth="10dp"
+            CircleProgressView:contourSize="0dp"
+            CircleProgressView:outerBarColor="#00000000"
+            CircleProgressView:outerBarWidth="0dp"
+            CircleProgressView:outerPadding="0dp"
+            CircleProgressView:rimColor="@color/grey_f2f2f2"
+            CircleProgressView:rimWidth="10dp"
+            CircleProgressView:unitColor="@color/grey_f2f2f2"
+            android:background="@color/white_ffffff" />
+
+        <RelativeLayout
+            android:id="@+id/rl_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" >
+
+            <TextView
+                android:id="@+id/tv_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/red_ec4300"
+                android:textSize="36sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tv_step"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/tv_step"
+                android:gravity="center"
+                android:text="@string/setting_target_step"
+                android:textColor="@color/grey_545454"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_calorie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_step"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/tv_calorie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/blue_2eb7dd"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tv_calorie"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/tv_calorie"
+                android:gravity="center"
+                android:text="@string/setting_target_calorie"
+                android:textColor="@color/grey_545454"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/rl_step"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/step_icon" />
+
+        <View
+            style="@style/divider_line"
+            android:layout_width="170dp"
+            android:layout_below="@id/rl_calorie"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_calorie"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:src="@drawable/step_heart_rate" />
+
+            <TextView
+                android:id="@+id/step_heart_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:text="0"
+                android:textColor="@color/grey_545454"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/step_heart_rate_unit"
+                android:textColor="@color/grey_545454"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_step_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/step_bottom_history"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="3dp"
+        android:text="@string/step_history"
+        android:textColor="@color/white_ffffff"
+        android:textSize="18sp" />
+
+</RelativeLayout>
