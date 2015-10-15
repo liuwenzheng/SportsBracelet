@@ -37,7 +37,8 @@
         android:id="@+id/rg_main_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <RadioButton
             android:id="@+id/rb_main_tab_step"
@@ -89,6 +90,16 @@
             android:textColor="@drawable/main_tab_text_selector"
             android:textSize="20sp" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_main_conn_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_d5d5d5"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/main_conn_tips"
+        android:textSize="18sp" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/id_viewpager"

@@ -12,4 +12,10 @@
         <item name="android:background">@color/grey_dddddd</item>
     </style>
 
+    <style name="divider_line_vertical">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/grey_dddddd</item>
+    </style>
+
 </resources>

@@ -14,12 +14,14 @@
     <color name="grey_323232">#323232</color>
     <color name="grey_f4f4f4">#f4f4f4</color>
     <color name="grey_545454">#545454</color>
+    <color name="grey_d5d5d5">#d5d5d5</color>
     <color name="grey_dddddd">#dddddd</color>
     <color name="grey_8b8b8b">#8b8b8b</color>
     <color name="blue_97e5fb">#97e5fb</color>
     <color name="blue_2eb7dd">#2eb7dd</color>
     <color name="blue_20bac0">#20bac0</color>
     <color name="red_ec4300">#ec4300</color>
+    <color name="red_e05b5e">#e05b5e</color>
 
     <!-- test -->
     <color name="black_000000">#000000</color>

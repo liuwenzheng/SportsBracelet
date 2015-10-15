@@ -251,7 +251,8 @@ public class CircularSeekBar extends View {
 		bottom = cy + outerRadius;// Calculate bottom bound of our rect
 
 		startPointX = cx; // 12 O'clock X coordinate
-		startPointY = cy - outerRadius;// 12 O'clock Y coordinate
+		startPointY = cy - outerRadius + getBarWidth() / 2;// 12 O'clock Y
+															// coordinate
 		markPointX = startPointX;// Initial locatino of the marker X coordinate
 		markPointY = startPointY;// Initial locatino of the
 									// marker Y coordinate
@@ -546,8 +547,10 @@ public class CircularSeekBar extends View {
 		if (distance < outerRadius + adjustmentFactor && distance > innerRadius - adjustmentFactor && !up) {
 			IS_PRESSED = true;
 
-			markPointX = (float) (cx + outerRadius * Math.cos(Math.atan2(x - cx, cy - y) - (Math.PI / 2)));
-			markPointY = (float) (cy + outerRadius * Math.sin(Math.atan2(x - cx, cy - y) - (Math.PI / 2)));
+			markPointX = (float) (cx + (outerRadius - getBarWidth() / 2)
+					* Math.cos(Math.atan2(x - cx, cy - y) - (Math.PI / 2)));
+			markPointY = (float) (cy + (outerRadius - getBarWidth() / 2)
+					* Math.sin(Math.atan2(x - cx, cy - y) - (Math.PI / 2)));
 
 			float degrees = (float) ((float) ((Math.toDegrees(Math.atan2(x - cx, cy - y)) + 360.0)) % 360.0);
 

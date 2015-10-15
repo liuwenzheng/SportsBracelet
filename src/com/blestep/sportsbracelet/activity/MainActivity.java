@@ -16,6 +16,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.R;
@@ -30,13 +32,17 @@ import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class MainActivity extends SlidingFragmentActivity {
+public class MainActivity extends SlidingFragmentActivity implements OnClickListener {
 
 	private ViewPager mViewPager;
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private ProgressDialog mDialog;
 	private BTService mBtService;
+	private TextView tv_main_conn_tips;
+	private MainTab01 tab01;
+	private MainTab02 tab02;
+	private MainTab03 tab03;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,10 +58,12 @@ public class MainActivity extends SlidingFragmentActivity {
 		initRightMenu();
 		// 初始化ViewPager
 		initViewPager();
+		tv_main_conn_tips = (TextView) findViewById(R.id.tv_main_conn_tips);
+		tv_main_conn_tips.setVisibility(View.GONE);
 	}
 
 	private void initListener() {
-
+		tv_main_conn_tips.setOnClickListener(this);
 	}
 
 	private void initData() {
@@ -98,6 +106,7 @@ public class MainActivity extends SlidingFragmentActivity {
 						|| AppConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
 					LogModule.d("配对失败...");
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
+					tv_main_conn_tips.setVisibility(View.VISIBLE);
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
@@ -105,6 +114,7 @@ public class MainActivity extends SlidingFragmentActivity {
 				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
 					LogModule.d("配对成功...");
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
+					tv_main_conn_tips.setVisibility(View.GONE);
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
@@ -115,14 +125,11 @@ public class MainActivity extends SlidingFragmentActivity {
 							false, false);
 				}
 				if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
+					if (tab01 != null && tab01.isVisible()) {
+						tab01.updateView();
+					}
 					int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
 					LogModule.i("电量为" + battery + "%");
-					Step step = DBTools.getInstance(MainActivity.this).selectCurrentStep();
-					if (step != null) {
-						LogModule.i(Float.valueOf(step.count) + "");
-						// circleView.setMaxValue(5000);
-						// circleView.setValueAnimated(Float.valueOf(step.count));
-					}
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
@@ -142,17 +149,17 @@ public class MainActivity extends SlidingFragmentActivity {
 				BTModule.openBluetooth(MainActivity.this);
 			} else {
 				LogModule.d("连接手环or同步数据？");
-//				if (mBtService.isConnDevice()) {
-//					mBtService.synTimeData();
-//					mBtService.synUserInfoData();
-//					mBtService.getSportData();
-//					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.step_syncdata_waiting),
-//							false, false);
-//				} else {
-//					mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
-//					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false,
-//							false);
-//				}
+				if (mBtService.isConnDevice()) {
+					mBtService.synTimeData();
+					mBtService.synUserInfoData();
+					mBtService.getSportData();
+					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.step_syncdata_waiting),
+							false, false);
+				} else {
+					mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
+					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false,
+							false);
+				}
 
 			}
 		}
@@ -181,9 +188,9 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	private void initViewPager() {
 		mViewPager = (ViewPager) findViewById(R.id.id_viewpager);
-		MainTab01 tab01 = new MainTab01();
-		MainTab02 tab02 = new MainTab02();
-		MainTab03 tab03 = new MainTab03();
+		tab01 = new MainTab01();
+		tab02 = new MainTab02();
+		tab03 = new MainTab03();
 		mFragments.add(tab01);
 		mFragments.add(tab02);
 		mFragments.add(tab03);
@@ -235,4 +242,19 @@ public class MainActivity extends SlidingFragmentActivity {
 	public void showRightMenu(View view) {
 		getSlidingMenu().showSecondaryMenu();
 	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.tv_main_conn_tips:
+			mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
+			mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false, false);
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
 }

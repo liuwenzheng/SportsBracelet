@@ -40,6 +40,7 @@
     <string name="setting_target_active">活跃</string>
     <string name="setting_target_step">步</string>
     <string name="setting_target_calorie">千卡</string>
+    <string name="setting_target_calorie_unit">卡路里</string>
     <string name="setting_target_tips">建议：每天运动10000步是积极健康的生活方式</string>
     <string name="setting_target_amount_to">相当于</string>
     <string name="setting_target_minutes">%1$s分钟</string>
@@ -56,5 +57,6 @@
     <string name="main_tab_step">计步</string>
     <string name="main_tab_sleep">睡眠</string>
     <string name="main_tab_run">跑步</string>
+    <string name="main_conn_tips">当前未连接手环，请点击进行连接</string>
 
 </resources>
