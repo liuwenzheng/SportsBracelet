@@ -54,6 +54,12 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 	private void initData() {
 		((RadioButton) rg_setting_userinfo_sex.getChildAt(0)).setChecked(true);
 		mCalendar = Calendar.getInstance();
+		try {
+			Date date = sdf.parse(tv_setting_userinfo_birthday.getText().toString());
+			mCalendar.setTime(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		mDialog = new DatePickerDialog(this, R.style.AppTheme_Dialog, new OnDateSetListener() {
 
 			@Override
@@ -117,6 +123,8 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 					return;
 				}
 				SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_AGE, age);
+				SPUtiles.setStringValue(SPUtiles.SP_KEY_USER_BIRTHDAT, tv_setting_userinfo_birthday.getText()
+						.toString());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

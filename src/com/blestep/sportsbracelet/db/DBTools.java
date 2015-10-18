@@ -82,6 +82,10 @@ public class DBTools {
 		db.update(DBConstants.TABLE_NAME_STEP, cv, where, whereValue);
 	}
 
+	public void deleteAllData() {
+		db.delete(DBConstants.TABLE_NAME_STEP, null, null);
+	}
+
 	// drop table;
 	public void droptable(String tablename) {
 		db.execSQL("DROP TABLE IF EXISTS " + tablename);

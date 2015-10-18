@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4" >
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/target_title"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_ffffff" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="300dp" >
+
+                <com.blestep.sportsbracelet.view.CircularSeekBar
+                    android:id="@+id/csb_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" >
+
+                    <TextView
+                        android:id="@+id/tv_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/red_ec4300"
+                        android:textSize="36sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/tv_step"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/tv_step"
+                        android:gravity="center"
+                        android:text="@string/setting_target_step"
+                        android:textColor="@color/grey_545454"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <View
+                    style="@style/divider_line"
+                    android:layout_width="200dp"
+                    android:layout_below="@id/rl_step"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_calorie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_step"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp" >
+
+                    <TextView
+                        android:id="@+id/tv_calorie"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/blue_2eb7dd"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/tv_calorie"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/tv_calorie"
+                        android:gravity="center"
+                        android:text="@string/setting_target_calorie"
+                        android:textColor="@color/grey_545454"
+                        android:textSize="10sp" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_target_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/rl_step"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="30dp"
+                    android:text="@string/setting_target_relaxed"
+                    android:textColor="@color/blue_2eb7dd"
+                    android:textSize="25sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/setting_target_tips"
+                android:textColor="@color/grey_8b8b8b"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <View
+                    style="@style/divider_line"
+                    android:layout_width="100dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1.0"
+                    android:text="@string/setting_target_amount_to"
+                    android:textColor="@color/grey_3a3a3a"
+                    android:textSize="15sp" />
+
+                <View
+                    style="@style/divider_line"
+                    android:layout_width="100dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/setting_target_walk" />
+
+                    <TextView
+                        android:id="@+id/tv_target_walk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="0分钟"
+                        android:textColor="@color/grey_3a3a3a"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/setting_target_amount_to" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/setting_target_run" />
+
+                    <TextView
+                        android:id="@+id/tv_target_run"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="0分钟"
+                        android:textColor="@color/grey_3a3a3a"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/setting_target_amount_to" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/setting_target_bike" />
+
+                    <TextView
+                        android:id="@+id/tv_target_bike"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="0分钟"
+                        android:textColor="@color/grey_3a3a3a"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_target_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/setting_userinfo_next"
+                android:gravity="center"
+                android:text="@string/setting_target_finish"
+                android:textColor="@color/white_ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

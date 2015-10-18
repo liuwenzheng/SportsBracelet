@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4" >
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/userinfo_title"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_userinfo_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:text="@string/userinfo_confirm"
+            android:textColor="@color/blue_40acaf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <EditText
+            android:id="@+id/et_userinfo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:background="@null"
+            android:hint="@string/setting_userinfo_name_hint"
+            android:textColor="@color/black_000000"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_userinfo_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_userinfo_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/setting_userinfo_icon" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_userinfo_icon"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:layout_marginTop="40dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_userinfo_sex"
+                    android:textColor="@color/black_000000"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/rg_userinfo_sex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/rb_userinfo_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/setting_userinfo_male"
+                        android:tag="0" />
+
+                    <RadioButton
+                        android:id="@+id/rb_userinfo_female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:button="@drawable/setting_userinfo_female"
+                        android:tag="1" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userinfo_birthday"
+                    android:textColor="@color/black_000000"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_userinfo_birthday"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/setting_userinfo_text_bg"
+                    android:gravity="center"
+                    android:text="1989-01-01"
+                    android:textColor="@color/blue_2ea6c9"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userinfo_height"
+                    android:textColor="@color/black_000000"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_userinfo_height"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:background="@drawable/setting_userinfo_text_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:text="175"
+                    android:textColor="@color/blue_2ea6c9"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/userinfo_height_unit"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userinfo_weight"
+                    android:textColor="@color/black_000000"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_userinfo_weight"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:background="@drawable/setting_userinfo_text_bg"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:text="75"
+                    android:textColor="@color/blue_2ea6c9"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/userinfo_weight_unit"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

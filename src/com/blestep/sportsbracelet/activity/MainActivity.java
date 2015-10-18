@@ -14,32 +14,30 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.db.DBTools;
-import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
+import com.blestep.sportsbracelet.view.ControlScrollViewPager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity implements OnClickListener {
 
-	private ViewPager mViewPager;
+	private ControlScrollViewPager mViewPager;
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private ProgressDialog mDialog;
 	private BTService mBtService;
-	private TextView tv_main_conn_tips;
+	private TextView tv_main_conn_tips, tv_main_tips;
 	private MainTab01 tab01;
 	private MainTab02 tab02;
 	private MainTab03 tab03;
@@ -60,6 +58,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		initViewPager();
 		tv_main_conn_tips = (TextView) findViewById(R.id.tv_main_conn_tips);
 		tv_main_conn_tips.setVisibility(View.GONE);
+		tv_main_tips = (TextView) findViewById(R.id.tv_main_tips);
+		tv_main_tips.setVisibility(View.GONE);
 	}
 
 	private void initListener() {
@@ -67,7 +67,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	}
 
 	private void initData() {
+	}
+
+	@Override
+	protected void onStart() {
 		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
+		super.onStart();
 	}
 
 	@Override
@@ -91,8 +96,13 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onStop() {
 		unbindService(mServiceConnection);
+		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
 		super.onDestroy();
 	}
 
@@ -107,22 +117,27 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					LogModule.d("配对失败...");
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
 					tv_main_conn_tips.setVisibility(View.VISIBLE);
-					if (mDialog != null) {
-						mDialog.dismiss();
-					}
+					tv_main_tips.setVisibility(View.GONE);
+					// if (mDialog != null) {
+					// mDialog.dismiss();
+					// }
 				}
 				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
 					LogModule.d("配对成功...");
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
 					tv_main_conn_tips.setVisibility(View.GONE);
-					if (mDialog != null) {
-						mDialog.dismiss();
-					}
+					tv_main_tips.setVisibility(View.GONE);
+					// if (mDialog != null) {
+					// mDialog.dismiss();
+					// }
 					mBtService.synTimeData();
 					mBtService.synUserInfoData();
 					mBtService.getSportData();
-					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.step_syncdata_waiting),
-							false, false);
+					tv_main_tips.setText(R.string.step_syncdata_waiting);
+					tv_main_tips.setVisibility(View.VISIBLE);
+					// mDialog = ProgressDialog.show(MainActivity.this, null,
+					// getString(R.string.step_syncdata_waiting),
+					// false, false);
 				}
 				if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
 					if (tab01 != null && tab01.isVisible()) {
@@ -130,9 +145,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					}
 					int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
 					LogModule.i("电量为" + battery + "%");
-					if (mDialog != null) {
-						mDialog.dismiss();
-					}
+					tv_main_tips.setVisibility(View.GONE);
+					// if (mDialog != null) {
+					// mDialog.dismiss();
+					// }
 				}
 			}
 
@@ -153,12 +169,18 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					mBtService.synTimeData();
 					mBtService.synUserInfoData();
 					mBtService.getSportData();
-					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.step_syncdata_waiting),
-							false, false);
+					tv_main_tips.setText(R.string.step_syncdata_waiting);
+					tv_main_tips.setVisibility(View.VISIBLE);
+					// mDialog = ProgressDialog.show(MainActivity.this, null,
+					// getString(R.string.step_syncdata_waiting),
+					// false, false);
 				} else {
 					mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
-					mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false,
-							false);
+					tv_main_tips.setText(R.string.setting_device);
+					tv_main_tips.setVisibility(View.VISIBLE);
+					// mDialog = ProgressDialog.show(MainActivity.this, null,
+					// getString(R.string.setting_device), false,
+					// false);
 				}
 
 			}
@@ -177,8 +199,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 			switch (requestCode) {
 			case BTModule.REQUEST_ENABLE_BT:
 				mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
-				mDialog = ProgressDialog
-						.show(MainActivity.this, null, getString(R.string.setting_device), false, false);
+				tv_main_tips.setText(R.string.setting_device);
+				tv_main_tips.setVisibility(View.VISIBLE);
+				// mDialog = ProgressDialog
+				// .show(MainActivity.this, null,
+				// getString(R.string.setting_device), false, false);
 
 				break;
 			}
@@ -187,13 +212,14 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	}
 
 	private void initViewPager() {
-		mViewPager = (ViewPager) findViewById(R.id.id_viewpager);
+		mViewPager = (ControlScrollViewPager) findViewById(R.id.id_viewpager);
+		mViewPager.setScrollable(false);
 		tab01 = new MainTab01();
 		tab02 = new MainTab02();
 		tab03 = new MainTab03();
 		mFragments.add(tab01);
-		mFragments.add(tab02);
-		mFragments.add(tab03);
+		// mFragments.add(tab02);
+		// mFragments.add(tab03);
 		/**
 		 * 初始化Adapter
 		 */
@@ -248,7 +274,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		switch (v.getId()) {
 		case R.id.tv_main_conn_tips:
 			mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
-			mDialog = ProgressDialog.show(MainActivity.this, null, getString(R.string.setting_device), false, false);
+			tv_main_conn_tips.setVisibility(View.GONE);
+			tv_main_tips.setText(R.string.setting_device);
+			tv_main_tips.setVisibility(View.VISIBLE);
+			// mDialog = ProgressDialog.show(MainActivity.this, null,
+			// getString(R.string.setting_device), false, false);
 			break;
 
 		default:

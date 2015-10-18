@@ -31,7 +31,7 @@
         android:layout_below="@id/iv_setting_userinfo_icon"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="70dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical" >
 
         <LinearLayout

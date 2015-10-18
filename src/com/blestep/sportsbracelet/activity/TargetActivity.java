@@ -1,0 +1,118 @@
+package com.blestep.sportsbracelet.activity;
+
+import java.math.BigDecimal;
+
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.base.BaseActivity;
+import com.blestep.sportsbracelet.module.LogModule;
+import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.blestep.sportsbracelet.view.CircularSeekBar;
+import com.blestep.sportsbracelet.view.CircularSeekBar.OnSeekChangeListener;
+
+public class TargetActivity extends BaseActivity implements OnClickListener {
+
+	private CircularSeekBar circularSeekbar;
+	private TextView tv_target_status, tv_calorie, tv_step, tv_target_walk, tv_target_run, tv_target_bike;
+	private Button btn_target_finish;
+	private ImageView iv_back;
+
+	private static final int STEP_UNIT = 200;
+
+	private static final int RECOMMEND_MIN = 7000;
+	private static final int RECOMMEND_MAX = 15000;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.target_page);
+		initView();
+		initListener();
+		initData();
+	}
+
+	private void initView() {
+		circularSeekbar = (CircularSeekBar) findViewById(R.id.csb_target);
+		circularSeekbar.setMaxProgress(100);
+		circularSeekbar.setProgress(0);
+		circularSeekbar.setBarWidth(20);
+		circularSeekbar.setRingBackgroundColor(getResources().getColor(R.color.grey_f2f2f2));
+		circularSeekbar.setProgressColor(getResources().getColor(R.color.blue_97e5fb));
+		circularSeekbar.setBackGroundColor(getResources().getColor(R.color.white_ffffff));
+		circularSeekbar.invalidate();
+		tv_target_status = (TextView) findViewById(R.id.tv_target_status);
+		tv_calorie = (TextView) findViewById(R.id.tv_calorie);
+		tv_step = (TextView) findViewById(R.id.tv_step);
+		tv_target_walk = (TextView) findViewById(R.id.tv_target_walk);
+		tv_target_run = (TextView) findViewById(R.id.tv_target_run);
+		tv_target_bike = (TextView) findViewById(R.id.tv_target_bike);
+		btn_target_finish = (Button) findViewById(R.id.btn_target_finish);
+	}
+
+	private void initListener() {
+
+		circularSeekbar.setSeekBarChangeListener(new OnSeekChangeListener() {
+
+			@Override
+			public void onProgressChange(CircularSeekBar view, int newProgress) {
+				LogModule.d("Progress:" + view.getProgress() * STEP_UNIT + "/" + view.getMaxProgress() * STEP_UNIT);
+				float activity_consumed = (0.000693f * (SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 75) - 15) + 0.005895f)
+						* (view.getProgress() * STEP_UNIT);
+				int result = new BigDecimal(activity_consumed).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+
+				tv_step.setText(view.getProgress() * STEP_UNIT + "");
+				tv_calorie.setText(result + "");
+				// 状态
+				if (view.getProgress() * STEP_UNIT < RECOMMEND_MIN) {
+					tv_target_status.setText(getString(R.string.setting_target_relaxed));
+				} else if (view.getProgress() * STEP_UNIT > RECOMMEND_MAX) {
+					tv_target_status.setText(getString(R.string.setting_target_active));
+				} else {
+					tv_target_status.setText(getString(R.string.setting_target_recommend));
+				}
+
+				tv_target_walk.setText(getString(R.string.setting_target_minutes, new BigDecimal(result / 255f * 60)
+						.setScale(0, BigDecimal.ROUND_HALF_UP).intValue()));
+				tv_target_run.setText(getString(R.string.setting_target_minutes, new BigDecimal(result / 500f * 60)
+						.setScale(0, BigDecimal.ROUND_HALF_UP).intValue()));
+				tv_target_bike.setText(getString(R.string.setting_target_minutes, new BigDecimal(result / 655f * 60)
+						.setScale(0, BigDecimal.ROUND_HALF_UP).intValue()));
+
+			}
+		});
+		btn_target_finish.setOnClickListener(this);
+		findViewById(R.id.iv_back).setOnClickListener(this);
+	}
+
+	private void initData() {
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onClick(final View v) {
+		switch (v.getId()) {
+		case R.id.btn_target_finish:
+			// ToastUtils.showToast(this, "设置目标为：" +
+			// tv_step.getText().toString());
+			SPUtiles.setIntValue(SPUtiles.SP_KEY_STEP_AIM, Integer.valueOf(tv_step.getText().toString()));
+			this.finish();
+			break;
+		case R.id.iv_back:
+			this.finish();
+			break;
+		default:
+			break;
+		}
+	}
+
+}

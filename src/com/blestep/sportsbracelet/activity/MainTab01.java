@@ -33,6 +33,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 	@Override
 	public void onResume() {
 		LogModule.i("onResume");
+		initData();
 		super.onResume();
 	}
 
@@ -49,11 +50,15 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 		return mView;
 	}
 
+	private void initData() {
+		circleView.setMaxValue(SPUtiles.getIntValue(SPUtiles.SP_KEY_STEP_AIM, 100));
+		circleView.setValue(0);
+		circleView.setmProgressValue(this);
+	}
+
 	private void initView() {
 		circleView = (CircleProgressView) mView.findViewById(R.id.circleView);
-		circleView.setMaxValue(SPUtiles.getIntValue(SPUtiles.SP_KEY_STEP_AIM, 100));
-		circleView.setValueAnimated(0);
-		circleView.setmProgressValue(this);
+
 		btn_step_history = (Button) mView.findViewById(R.id.btn_step_history);
 		tv_step = (TextView) mView.findViewById(R.id.tv_step);
 		tv_calorie = (TextView) mView.findViewById(R.id.tv_calorie);

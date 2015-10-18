@@ -239,10 +239,14 @@ public class CircularSeekBar extends View {
 
 		cx = width / 2; // Center X for circle
 		cy = height / 2; // Center Y for circle
-		outerRadius = size / 2 - progressMark.getWidth() / 2; // Radius of the
-																// outer
-																// circle
-
+		if (progressMark == null) {
+			outerRadius = size / 2;
+		} else {
+			outerRadius = size / 2 - progressMark.getWidth() / 2; // Radius of
+																	// the
+																	// outer
+																	// circle
+		}
 		innerRadius = outerRadius - barWidth; // Radius of the inner circle
 
 		left = cx - outerRadius; // Calculate left bound of our rect

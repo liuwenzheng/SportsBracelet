@@ -108,7 +108,7 @@ public class BTModule {
 	 * @param mBluetoothGatt
 	 */
 	public static void setUserInfo(BluetoothGatt mBluetoothGatt) {
-		byte[] byteArray = new byte[7];
+		byte[] byteArray = new byte[5];
 		int weight = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 30);
 		int height = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_HEIGHT, 100);
 		int age = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_AGE, 5);
@@ -144,6 +144,18 @@ public class BTModule {
 		byte[] byteArray = new byte[2];
 		byteArray[0] = 0x16;
 		byteArray[1] = 0x01;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 清空手环数据
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void clearData(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[1];
+		byteArray[0] = 0x15;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 

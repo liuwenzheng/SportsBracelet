@@ -225,6 +225,13 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	/**
+	 * 清空手环数据
+	 */
+	public void clearData() {
+		BTModule.clearData(mBluetoothGatt);
+	}
+
+	/**
 	 * 是否连接手环
 	 * 
 	 * @return

@@ -29,8 +29,8 @@
     <string name="setting_userinfo_weight">体重</string>
     <string name="setting_userinfo_weight_unit">公斤</string>
     <string name="setting_userinfo_name_not_null">昵称不能为空！</string>
-    <string name="setting_userinfo_weight_not_null">昵称不能为空！</string>
-    <string name="setting_userinfo_height_not_null">昵称不能为空！</string>
+    <string name="setting_userinfo_weight_not_null">体重不能为空！</string>
+    <string name="setting_userinfo_height_not_null">身高不能为空！</string>
     <string name="setting_userinfo_height_size">身高应在100-200cm范围内</string>
     <string name="setting_userinfo_weight_size">体重应在30-150kg范围内</string>
     <string name="setting_userinfo_age_size">年龄应在5-99岁范围内</string>
@@ -45,6 +45,12 @@
     <string name="setting_target_amount_to">相当于</string>
     <string name="setting_target_minutes">%1$s分钟</string>
     <string name="setting_target_finish">完成</string>
+
+    <!-- main -->
+    <string name="main_tab_step">计步</string>
+    <string name="main_tab_sleep">睡眠</string>
+    <string name="main_tab_run">跑步</string>
+    <string name="main_conn_tips">当前未连接手环，请点击进行连接</string>
     <!-- step -->
     <string name="step_syncdata_waiting">正在同步数据</string>
     <string name="step_history">历史</string>
@@ -53,10 +59,40 @@
     <string name="step_duration_unit">分</string>
     <string name="step_distance_unit">公里</string>
     <string name="step_heart_rate_unit">/分</string>
-    <!-- main -->
-    <string name="main_tab_step">计步</string>
-    <string name="main_tab_sleep">睡眠</string>
-    <string name="main_tab_run">跑步</string>
-    <string name="main_conn_tips">当前未连接手环，请点击进行连接</string>
-
+    <!-- mycenter -->
+    <string name="center_title">个人中心</string>
+    <string name="center_name">昵称</string>
+    <string name="center_info">个人信息</string>
+    <string name="center_info_tips">个人的性别年龄等信息</string>
+    <string name="center_target">设置运动目标</string>
+    <string name="center_target_tips">设定每日的运动目标，包括步数、卡路里等</string>
+    <string name="center_clear">清空数据</string>
+    <string name="center_clear_tips">清空APP和手环中的运动数据</string>
+    <!-- clear -->
+    <string name="clear_title">清除数据</string>
+    <string name="clear_bracelet">清空手环</string>
+    <string name="clear_phone">清空手机</string>
+    <string name="clear_tips">是否确定清空数据？</string>
+    <string name="clear_tips_confirm">确定</string>
+    <string name="clear_tips_cancel">取消</string>
+    <string name="clear_fail_conn_device">请先连接手环！</string>
+    <string name="clear_success">清除成功！</string>
+    <!-- userinfo -->
+    <string name="userinfo_title">个人信息</string>
+    <string name="userinfo_confirm">确认</string>
+    <string name="userinfo_name_hint">昵称</string>
+    <string name="userinfo_sex">性别</string>
+    <string name="userinfo_birthday">年龄</string>
+    <string name="userinfo_height">身高</string>
+    <string name="userinfo_height_unit">厘米</string>
+    <string name="userinfo_weight">体重</string>
+    <string name="userinfo_weight_unit">公斤</string>
+    <string name="userinfo_name_not_null">昵称不能为空！</string>
+    <string name="userinfo_weight_not_null">昵称不能为空！</string>
+    <string name="userinfo_height_not_null">昵称不能为空！</string>
+    <string name="userinfo_height_size">身高应在100-200cm范围内</string>
+    <string name="userinfo_weight_size">体重应在30-150kg范围内</string>
+    <string name="userinfo_age_size">年龄应在5-99岁范围内</string>
+	<!-- target -->
+	<string name="target_title">设置目标</string>
 </resources>

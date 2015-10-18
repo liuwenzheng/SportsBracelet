@@ -86,7 +86,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="10dp"
-        android:text="@string/splash_one_item_pass"
+        android:text="@string/setting_next"
         android:textColor="@color/white_ffffff"
         android:textSize="17sp" />
 
