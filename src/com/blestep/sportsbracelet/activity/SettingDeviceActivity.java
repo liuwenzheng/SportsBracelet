@@ -230,6 +230,7 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 						mDialog.dismiss();
 					}
 					SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, mDevices.get(mPosition).address);
+					SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_NAME, mDevices.get(mPosition).name);
 					startActivity(new Intent(SettingDeviceActivity.this, SettingUserInfoActivity.class));
 					SettingDeviceActivity.this.finish();
 				}

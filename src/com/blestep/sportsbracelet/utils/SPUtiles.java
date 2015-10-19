@@ -8,6 +8,7 @@ public class SPUtiles {
 	public static final String SP_NAME = "sp_name_sportsbracelet";
 	public static SharedPreferences sp;
 	public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";
+	public static final String SP_KEY_DEVICE_NAME = "sp_key_device_NAME";
 	public static final String SP_KEY_BATTERY = "sp_key_battery";
 	public static final String SP_KEY_STEP_AIM = "sp_key_aim";
 	public static final String SP_KEY_USER_NAME = "sp_key_name";

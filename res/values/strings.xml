@@ -93,6 +93,19 @@
     <string name="userinfo_height_size">身高应在100-200cm范围内</string>
     <string name="userinfo_weight_size">体重应在30-150kg范围内</string>
     <string name="userinfo_age_size">年龄应在5-99岁范围内</string>
-	<!-- target -->
-	<string name="target_title">设置目标</string>
+    <!-- target -->
+    <string name="target_title">设置目标</string>
+    <!-- left -->
+    <string name="alert_low_battery">低电量提醒</string>
+    <string name="alert_low_battery_tips">手环电量低于25%时，进行提醒</string>
+    <string name="alert_coming_call">来电提醒</string>
+    <string name="alert_coming_call_tips">手机来电时，手环进行提醒</string>
+    <string name="alert_alarm">闹钟提醒</string>
+    <string name="alert_alarm_tips">设置手环闹钟提醒时间</string>
+    <string name="bind_bracelet">绑定手环</string>
+    <string name="bind_bracelet_tips">进入配对和绑定手环的设置</string>
+    <string name="bracelet_reset">恢复出场设置</string>
+    <string name="bracelet_reset_tips">将所有配置信息恢复到出厂设置</string>
+    <string name="about">关于</string>
+
 </resources>

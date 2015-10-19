@@ -41,6 +41,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	private MainTab01 tab01;
 	private MainTab02 tab02;
 	private MainTab03 tab03;
+	private Fragment leftMenuFragment, rightMenuFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,6 +147,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
 					LogModule.i("电量为" + battery + "%");
 					tv_main_tips.setVisibility(View.GONE);
+					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
+						((MenuLeftFragment)leftMenuFragment).updateView(mBtService);
+					}
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
@@ -239,7 +243,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 	private void initRightMenu() {
 
-		Fragment leftMenuFragment = new MenuLeftFragment();
+		leftMenuFragment = new MenuLeftFragment();
 		setBehindContentView(R.layout.left_menu_frame);
 		getSupportFragmentManager().beginTransaction().replace(R.id.id_left_menu_frame, leftMenuFragment).commit();
 		SlidingMenu menu = getSlidingMenu();
@@ -257,7 +261,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		menu.setSecondaryShadowDrawable(R.drawable.shadow_right);
 		// 设置右边（二级）侧滑菜单
 		menu.setSecondaryMenu(R.layout.right_menu_frame);
-		Fragment rightMenuFragment = new MenuRightFragment();
+		rightMenuFragment = new MenuRightFragment();
 		getSupportFragmentManager().beginTransaction().replace(R.id.id_right_menu_frame, rightMenuFragment).commit();
 	}
 

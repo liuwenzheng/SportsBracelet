@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * 可控制滑动的viewpager
@@ -15,7 +18,7 @@ import android.view.MotionEvent;
 public class ControlScrollViewPager extends ViewPager {
 
 	private boolean scrollable = true;
-
+	
 	public ControlScrollViewPager(Context context) {
 		super(context);
 	}
