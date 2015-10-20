@@ -42,7 +42,7 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 	private DeviceAdapter mAdapter;
 	private ArrayList<BleDevice> mDevices;
 	private ProgressDialog mDialog;
-	private int mPosition;
+	private int mPosition = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +118,10 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 							}
 						});
 				builder.show();
+				return;
+			}
+			if (mPosition == -1) {
+				ToastUtils.showToast(this, R.string.setting_device_select_tips);
 				return;
 			}
 			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);

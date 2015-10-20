@@ -65,13 +65,13 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		tv_main_tips.setVisibility(View.GONE);
 		log = (TextView) findViewById(R.id.log);
 		sv_log = (ScrollView) findViewById(R.id.sv_log);
-		if (LogModule.debug) {
-			sv_log.setVisibility(View.VISIBLE);
-			log.setVisibility(View.VISIBLE);
-		} else {
-			sv_log.setVisibility(View.GONE);
-			log.setVisibility(View.GONE);
-		}
+		// if (LogModule.debug) {
+		// sv_log.setVisibility(View.VISIBLE);
+		// log.setVisibility(View.VISIBLE);
+		// } else {
+		sv_log.setVisibility(View.GONE);
+		log.setVisibility(View.GONE);
+		// }
 	}
 
 	private void initListener() {
@@ -106,6 +106,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 	@Override
 	protected void onDestroy() {
+		stopService(new Intent(this, BTService.class));
 		super.onDestroy();
 	}
 
@@ -150,7 +151,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					LogModule.i("电量为" + battery + "%");
 					tv_main_tips.setVisibility(View.GONE);
 					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
-						((MenuLeftFragment)leftMenuFragment).updateView(mBtService);
+						((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
 					}
 					// if (mDialog != null) {
 					// mDialog.dismiss();

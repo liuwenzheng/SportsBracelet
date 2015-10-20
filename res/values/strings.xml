@@ -18,6 +18,7 @@
     <string name="setting_device">手机与手环正在配对</string>
     <string name="setting_device_search">正在搜索手环</string>
     <string name="setting_device_search_repeat">重新搜索手环</string>
+    <string name="setting_device_select_tips">请选择手环</string>
     <string name="setting_device_search_confirm">确认</string>
     <string name="setting_device_conn_success">配对成功</string>
     <string name="setting_device_conn_failure">配对失败</string>

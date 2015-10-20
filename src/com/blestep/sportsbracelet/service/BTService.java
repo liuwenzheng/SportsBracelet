@@ -26,12 +26,13 @@ public class BTService extends Service implements LeScanCallback {
 	private static final long SCAN_PERIOD = 5000;
 	private static final int GATT_ERROR_TIMEOUT = 133;
 
-	public static Handler mHandler = new Handler();
+	public static Handler mHandler;
 	// private ArrayList<BleDevice> mDevices;
 	private BluetoothGatt mBluetoothGatt;
 
 	@Override
 	public void onCreate() {
+		mHandler = new Handler(getApplicationContext().getMainLooper());
 		LogModule.d("创建BTService...onCreate");
 		super.onCreate();
 	}
@@ -54,49 +55,47 @@ public class BTService extends Service implements LeScanCallback {
 	 * 搜索手环
 	 */
 	public void scanDevice() {
-		String address = SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, "");
+		// String address =
+		// SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, "");
 		// mDevices = new ArrayList<BleDevice>();
-		if (Utils.isNotEmpty(address) && connectBle(address)) {
-			// 连接到设备
-		} else {
-			if (!mIsStartScan) {
-				mIsStartScan = true;
-				BTModule.scanDevice(this);
-				// Stops scanning after a pre-defined scan period.
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						if (mIsStartScan) {
-							LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
-							BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
-							mIsStartScan = false;
-							Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA_END);
-							// intent.putExtra("devices", mDevices);
-							sendBroadcast(intent);
-						}
+		if (!mIsStartScan) {
+			mIsStartScan = true;
+			BTModule.scanDevice(this);
+			// Stops scanning after a pre-defined scan period.
+			mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (mIsStartScan) {
+						LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
+						BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
+						mIsStartScan = false;
+						Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA_END);
+						// intent.putExtra("devices", mDevices);
+						sendBroadcast(intent);
 					}
-				}, SCAN_PERIOD);
-			} else {
-				LogModule.i("正在扫描中...");
-			}
-
+				}
+			}, SCAN_PERIOD);
+		} else {
+			LogModule.i("正在扫描中...");
 		}
+
 	}
 
 	/**
 	 * 连接手环
 	 */
-	public boolean connectBle(String address) {
-		BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(address);
+	public void connectBle(String address) {
+		final BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(address);
 		if (device == null) {
-			return false;
+			return;
 		} else {
-			mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
-			if (mBluetoothGatt != null) {
-				SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, address);
-				return true;
-			}
-			return false;
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
+				}
+			});
+
 		}
 	}
 
@@ -124,6 +123,10 @@ public class BTService extends Service implements LeScanCallback {
 			switch (newState) {
 			case BluetoothProfile.STATE_CONNECTED:
 				if (status == GATT_ERROR_TIMEOUT) {
+					if (mBluetoothGatt != null) {
+						mBluetoothGatt.close();
+						mBluetoothGatt = null;
+					}
 					Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
 					sendBroadcast(intent);
 				} else {
@@ -131,6 +134,10 @@ public class BTService extends Service implements LeScanCallback {
 				}
 				break;
 			case BluetoothProfile.STATE_DISCONNECTED:
+				if (mBluetoothGatt != null) {
+					mBluetoothGatt.close();
+					mBluetoothGatt = null;
+				}
 				Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
 				sendBroadcast(intent);
 				break;
@@ -164,6 +171,7 @@ public class BTService extends Service implements LeScanCallback {
 
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 			LogModule.d("onCharacteristicChanged...");
+			BTModule.setCharacteristicNotify(mBluetoothGatt);
 			byte[] data = characteristic.getValue();
 			String[] formatDatas = Utils.formatData(data, characteristic);
 			StringBuilder stringBuilder = new StringBuilder(formatDatas.length);

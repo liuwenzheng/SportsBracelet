@@ -342,7 +342,8 @@ public class BTModule {
 			if (!DBTools.getInstance(context).isStepExist(step.date)) {
 				DBTools.getInstance(context).insertStep(step);
 				// 更新最新记录
-			} else if (Utils.isNotEmpty(dateStr) && dateStr.equals(sdf.format(Calendar.getInstance().getTime()))) {
+			}
+			if (Utils.isNotEmpty(dateStr) && dateStr.equals(sdf.format(Calendar.getInstance().getTime()))) {
 				DBTools.getInstance(context).updateStep(step);
 				BTService.mHandler.postDelayed(new Runnable() {
 					@Override
