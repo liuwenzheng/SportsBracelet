@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.AppConstants;
@@ -37,11 +38,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private ProgressDialog mDialog;
 	private BTService mBtService;
-	private TextView tv_main_conn_tips, tv_main_tips;
+	private TextView tv_main_conn_tips, tv_main_tips, log;
 	private MainTab01 tab01;
 	private MainTab02 tab02;
 	private MainTab03 tab03;
 	private Fragment leftMenuFragment, rightMenuFragment;
+	private ScrollView sv_log;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,15 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		tv_main_conn_tips.setVisibility(View.GONE);
 		tv_main_tips = (TextView) findViewById(R.id.tv_main_tips);
 		tv_main_tips.setVisibility(View.GONE);
+		log = (TextView) findViewById(R.id.log);
+		sv_log = (ScrollView) findViewById(R.id.sv_log);
+		if (LogModule.debug) {
+			sv_log.setVisibility(View.VISIBLE);
+			log.setVisibility(View.VISIBLE);
+		} else {
+			sv_log.setVisibility(View.GONE);
+			log.setVisibility(View.GONE);
+		}
 	}
 
 	private void initListener() {
@@ -72,12 +83,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 	@Override
 	protected void onStart() {
-		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
-		super.onStart();
-	}
-
-	@Override
-	protected void onResume() {
 		// 注册广播接收器
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
@@ -85,20 +90,17 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		filter.addAction(AppConstants.ACTION_DISCOVER_SUCCESS);
 		filter.addAction(AppConstants.ACTION_DISCOVER_FAILURE);
 		filter.addAction(AppConstants.ACTION_REFRESH_DATA);
+		filter.addAction(AppConstants.ACTION_LOG);
 		registerReceiver(mReceiver, filter);
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		// 注销广播接收器
-		unregisterReceiver(mReceiver);
-		super.onPause();
+		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
+		super.onStart();
 	}
 
 	@Override
 	protected void onStop() {
 		unbindService(mServiceConnection);
+		// 注销广播接收器
+		unregisterReceiver(mReceiver);
 		super.onStop();
 	}
 
@@ -153,6 +155,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
+				}
+				if (AppConstants.ACTION_LOG.equals(intent.getAction())) {
+					String strLog = intent.getStringExtra("log");
+					log.setText(log.getText().toString() + "\n" + strLog);
 				}
 			}
 

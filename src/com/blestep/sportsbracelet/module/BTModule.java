@@ -16,10 +16,12 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
+import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 
@@ -275,7 +277,7 @@ public class BTModule {
 	 * @param context
 	 * @param index
 	 */
-	public static void saveBleData(String[] formatDatas, Context context, int index) {
+	public static void saveBleData(String[] formatDatas, final Context context) {
 		int header = Integer.valueOf(formatDatas[0]);
 		switch (header) {
 		case AppConstants.HEADER_BACK_STEP:
@@ -306,19 +308,30 @@ public class BTModule {
 			String calories0 = Utils.decodeToHex(formatDatas[14]);
 			String dateStr = sdf.format(date);
 			LogModule.e("日期：" + dateStr);
+			Intent intent = new Intent(AppConstants.ACTION_LOG);
+			intent.putExtra("log", "日期：" + dateStr);
+			context.sendBroadcast(intent);
 
 			String count = Utils.decodeToString(sb.toString());
 			LogModule.e("步数：" + count);
+			intent.putExtra("log", "步数：" + count);
+			context.sendBroadcast(intent);
 
 			String duration = Utils.decodeToString(duration1 + duration0);
 			LogModule.e("时长：" + duration);
+			intent.putExtra("log", "时长：" + duration);
+			context.sendBroadcast(intent);
 
 			String distance = new DecimalFormat()
 					.format(Integer.valueOf(Utils.decodeToString(distance1 + distance0)) * 0.01);
 			LogModule.e("距离：" + distance);
+			intent.putExtra("log", "距离：" + distance);
+			context.sendBroadcast(intent);
 
 			String calories = Utils.decodeToString(calories1 + calories0);
 			LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
+			intent.putExtra("log", "卡路里：" + Utils.decodeToString(calories1 + calories0));
+			context.sendBroadcast(intent);
 
 			Step step = new Step();
 			step.date = dateStr;
@@ -329,8 +342,15 @@ public class BTModule {
 			if (!DBTools.getInstance(context).isStepExist(step.date)) {
 				DBTools.getInstance(context).insertStep(step);
 				// 更新最新记录
-			} else if (index == 0) {
+			} else if (Utils.isNotEmpty(dateStr) && dateStr.equals(sdf.format(Calendar.getInstance().getTime()))) {
 				DBTools.getInstance(context).updateStep(step);
+				BTService.mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						Intent intent = new Intent(AppConstants.ACTION_REFRESH_DATA);
+						context.sendBroadcast(intent);
+					}
+				}, 1000);
 			}
 			break;
 
