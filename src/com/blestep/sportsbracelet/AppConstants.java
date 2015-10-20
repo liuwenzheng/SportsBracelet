@@ -16,6 +16,9 @@ public class AppConstants {
 	public static final String ACTION_REFRESH_DATA = "action_refresh_data";
 	// 连接超时
 	public static final String ACTION_CONN_STATUS_TIMEOUT = "action_conn_status_timeout";
+	// log
+	public static final String ACTION_LOG = "action_log";
+
 	/**
 	 * intent传值key
 	 */

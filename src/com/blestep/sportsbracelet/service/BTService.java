@@ -117,7 +117,7 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
-		private int count;
+		// private int count;
 
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 			LogModule.d("onConnectionStateChange...status:" + status + "...newState:" + newState);
@@ -176,29 +176,32 @@ public class BTService extends Service implements LeScanCallback {
 				return;
 			}
 			if (header == AppConstants.HEADER_BACK_RECORD) {
-				count = 0;
-				int stepRecord = Integer.valueOf(formatDatas[1]);
-				int sleepRecord = Integer.valueOf(formatDatas[2]);
+				// count = 0;
+				// int stepRecord = Integer.valueOf(formatDatas[1]);
+				// int sleepRecord = Integer.valueOf(formatDatas[2]);
 				// 保存电量
 				int battery = Integer.valueOf(formatDatas[3]);
 				SPUtiles.setIntValue(SPUtiles.SP_KEY_BATTERY, battery);
-				count = stepRecord;
-				LogModule.i("手环中的记录总数为：" + count);
+				// count = stepRecord;
+				// LogModule.i("手环中的记录总数为：" + count);
+				// Intent intent = new Intent(AppConstants.ACTION_LOG);
+				// intent.putExtra("log", "手环中的记录总数为：" + count);
+				// sendBroadcast(intent);
 				return;
 			}
-			count--;
-			BTModule.saveBleData(formatDatas, getApplicationContext(), count);
-			LogModule.i(count + "...");
-			if (count == 0) {
-				LogModule.i("延迟1s发送广播更新数据");
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						Intent intent = new Intent(AppConstants.ACTION_REFRESH_DATA);
-						sendBroadcast(intent);
-					}
-				}, 1000);
-			}
+			// count--;
+			BTModule.saveBleData(formatDatas, getApplicationContext());
+			// LogModule.i(count + "...");
+			// if (count == 0) {
+			// LogModule.i("延迟1s发送广播更新数据");
+			// mHandler.postDelayed(new Runnable() {
+			// @Override
+			// public void run() {
+			// Intent intent = new Intent(AppConstants.ACTION_REFRESH_DATA);
+			// sendBroadcast(intent);
+			// }
+			// }, 1000);
+			// }
 		};
 	};
 
