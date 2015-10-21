@@ -278,7 +278,7 @@ public class BTModule {
 	 * @param index
 	 */
 	public static void saveBleData(String[] formatDatas, final Context context) {
-		int header = Integer.valueOf(formatDatas[0]);
+		int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
 		switch (header) {
 		case AppConstants.HEADER_BACK_STEP:
 			// 保存步数
@@ -287,25 +287,26 @@ public class BTModule {
 			String month = formatDatas[3];
 			String day = formatDatas[4];
 			Calendar calendar = Calendar.getInstance();
-			calendar.set(2000 + Integer.valueOf(year), Integer.valueOf(month) - 1, Integer.valueOf(day));
+			calendar.set(2000 + Integer.valueOf(Utils.decodeToString(year)),
+					Integer.valueOf(Utils.decodeToString(month)) - 1, Integer.valueOf(Utils.decodeToString(day)));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = calendar.getTime();
 			// 步数
-			String step3 = Utils.decodeToHex(formatDatas[5]);
-			String step2 = Utils.decodeToHex(formatDatas[6]);
-			String step1 = Utils.decodeToHex(formatDatas[7]);
-			String step0 = Utils.decodeToHex(formatDatas[8]);
+			String step3 = formatDatas[5];
+			String step2 = formatDatas[6];
+			String step1 = formatDatas[7];
+			String step0 = formatDatas[8];
 			StringBuilder sb = new StringBuilder();
 			sb.append(step3).append(step2).append(step1).append(step0);
 			// 时长
-			String duration1 = Utils.decodeToHex(formatDatas[9]);
-			String duration0 = Utils.decodeToHex(formatDatas[10]);
+			String duration1 = formatDatas[9];
+			String duration0 = formatDatas[10];
 			// 距离
-			String distance1 = Utils.decodeToHex(formatDatas[11]);
-			String distance0 = Utils.decodeToHex(formatDatas[12]);
+			String distance1 = formatDatas[11];
+			String distance0 = formatDatas[12];
 			// 卡路里
-			String calories1 = Utils.decodeToHex(formatDatas[13]);
-			String calories0 = Utils.decodeToHex(formatDatas[14]);
+			String calories1 = formatDatas[13];
+			String calories0 = formatDatas[14];
 			String dateStr = sdf.format(date);
 			LogModule.e("日期：" + dateStr);
 			Intent intent = new Intent(AppConstants.ACTION_LOG);
@@ -323,7 +324,7 @@ public class BTModule {
 			context.sendBroadcast(intent);
 
 			String distance = new DecimalFormat()
-					.format(Integer.valueOf(Utils.decodeToString(distance1 + distance0)) * 0.01);
+					.format(Integer.valueOf(Utils.decodeToString(distance1 + distance0)) * 0.1);
 			LogModule.e("距离：" + distance);
 			intent.putExtra("log", "距离：" + distance);
 			context.sendBroadcast(intent);

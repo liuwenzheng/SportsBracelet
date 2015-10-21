@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4" >
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/phone_coming_alert_title"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="13dp"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:paddingTop="13dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/phone_coming_alert"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/cb_allow_phone_coming_alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="true" />
+        </LinearLayout>
+
+        <View style="@style/divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="13dp"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:paddingTop="13dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/phone_coming_alert_contacts"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/cb_allow_phone_coming_alert_contacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false" />
+        </LinearLayout>
+
+        <View style="@style/divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="13dp"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:paddingTop="13dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/phone_coming_nodisturb_time"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/cb_allow_phone_coming_nodisturb_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_allow_phone_coming_nodisturb_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="17dp" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_coming_nodisturb_start_time"
+                    android:textColor="@color/grey_ababab"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_coming_nodisturb_start_time"
+                    android:layout_width="111dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center"
+                    android:text="00:00"
+                    android:textColor="@color/blue_40acaf"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="6dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="@string/phone_coming_nodisturb_to"
+                android:textColor="@color/grey_ababab"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_coming_nodisturb_end_time"
+                    android:textColor="@color/grey_ababab"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_coming_nodisturb_end_time"
+                    android:layout_width="111dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center"
+                    android:text="00:00"
+                    android:textColor="@color/blue_40acaf"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -43,8 +43,9 @@ public class Utils {
 			StringBuilder stringBuilder = new StringBuilder(data.length);
 			for (byte byteChar : data)
 				stringBuilder.append(String.format("%02X ", byteChar));
-			LogModule.i("转化前：" + stringBuilder.toString());
-			return decode(stringBuilder.toString());
+			LogModule.i("16位进制数：" + stringBuilder.toString());
+			String[] datas = stringBuilder.toString().split(" ");
+			return datas;
 		} else {
 			int flag = characteristic.getProperties();
 			int format = -1;

@@ -108,5 +108,13 @@
     <string name="bracelet_reset">恢复出场设置</string>
     <string name="bracelet_reset_tips">将所有配置信息恢复到出厂设置</string>
     <string name="about">关于</string>
+    <!-- phone_coming -->
+    <string name="phone_coming_alert_title">来电提醒</string>
+    <string name="phone_coming_alert">手机来电提醒</string>
+    <string name="phone_coming_alert_contacts">只允许联系人来电</string>
+    <string name="phone_coming_nodisturb_time">设置来电勿扰时段</string>
+    <string name="phone_coming_nodisturb_start_time">开始时间</string>
+    <string name="phone_coming_nodisturb_end_time">结束时间</string>
+    <string name="phone_coming_nodisturb_to">至</string>
 
 </resources>

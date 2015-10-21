@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -85,7 +86,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.rl_alert_coming_call:
-
+			startActivity(new Intent(mainActivity, PhoneComingActivity.class));
 			break;
 		case R.id.rl_alert_alarm:
 

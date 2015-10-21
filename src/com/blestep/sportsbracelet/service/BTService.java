@@ -174,12 +174,13 @@ public class BTService extends Service implements LeScanCallback {
 			// BTModule.setCharacteristicNotify(mBluetoothGatt);
 			byte[] data = characteristic.getValue();
 			String[] formatDatas = Utils.formatData(data, characteristic);
-			StringBuilder stringBuilder = new StringBuilder(formatDatas.length);
-			for (String string : formatDatas)
-				stringBuilder.append(string + " ");
-			LogModule.i("转化后：" + stringBuilder.toString());
+			// StringBuilder stringBuilder = new
+			// StringBuilder(formatDatas.length);
+			// for (String string : formatDatas)
+			// stringBuilder.append(string + " ");
+			// LogModule.i("转化后：" + stringBuilder.toString());
 			// 获取总记录数
-			int header = Integer.valueOf(formatDatas[0]);
+			int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
 			if (header == AppConstants.HEADER_BACK_ACK) {
 				return;
 			}
@@ -188,7 +189,7 @@ public class BTService extends Service implements LeScanCallback {
 				// int stepRecord = Integer.valueOf(formatDatas[1]);
 				// int sleepRecord = Integer.valueOf(formatDatas[2]);
 				// 保存电量
-				int battery = Integer.valueOf(formatDatas[3]);
+				int battery = Integer.valueOf(Utils.decodeToString(formatDatas[3]));
 				SPUtiles.setIntValue(SPUtiles.SP_KEY_BATTERY, battery);
 				// count = stepRecord;
 				// LogModule.i("手环中的记录总数为：" + count);
