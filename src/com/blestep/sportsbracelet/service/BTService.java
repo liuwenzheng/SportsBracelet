@@ -171,7 +171,7 @@ public class BTService extends Service implements LeScanCallback {
 
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 			LogModule.d("onCharacteristicChanged...");
-			BTModule.setCharacteristicNotify(mBluetoothGatt);
+			// BTModule.setCharacteristicNotify(mBluetoothGatt);
 			byte[] data = characteristic.getValue();
 			String[] formatDatas = Utils.formatData(data, characteristic);
 			StringBuilder stringBuilder = new StringBuilder(formatDatas.length);
