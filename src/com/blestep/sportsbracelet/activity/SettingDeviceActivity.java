@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.entity.BleDevice;
@@ -233,8 +234,8 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
-					SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, mDevices.get(mPosition).address);
-					SPUtiles.setStringValue(SPUtiles.SP_KEY_DEVICE_NAME, mDevices.get(mPosition).name);
+					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, mDevices.get(mPosition).address);
+					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME, mDevices.get(mPosition).name);
 					startActivity(new Intent(SettingDeviceActivity.this, SettingUserInfoActivity.class));
 					SettingDeviceActivity.this.finish();
 				}

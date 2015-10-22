@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
@@ -106,7 +107,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 	@Override
 	protected void onDestroy() {
-		stopService(new Intent(this, BTService.class));
+		// stopService(new Intent(this, BTService.class));
 		super.onDestroy();
 	}
 
@@ -147,7 +148,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					if (tab01 != null && tab01.isVisible()) {
 						tab01.updateView();
 					}
-					int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
+					int battery = SPUtiles.getIntValue(BTConstants.SP_KEY_BATTERY, 0);
 					LogModule.i("电量为" + battery + "%");
 					tv_main_tips.setVisibility(View.GONE);
 					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
@@ -186,7 +187,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					// getString(R.string.step_syncdata_waiting),
 					// false, false);
 				} else {
-					mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
+					mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 					tv_main_tips.setText(R.string.setting_device);
 					tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -209,7 +210,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case BTModule.REQUEST_ENABLE_BT:
-				mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
+				mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 				tv_main_tips.setText(R.string.setting_device);
 				tv_main_tips.setVisibility(View.VISIBLE);
 				// mDialog = ProgressDialog
@@ -284,7 +285,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_main_conn_tips:
-			mBtService.connectBle(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, null));
+			mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 			tv_main_conn_tips.setVisibility(View.GONE);
 			tv_main_tips.setText(R.string.setting_device);
 			tv_main_tips.setVisibility(View.VISIBLE);

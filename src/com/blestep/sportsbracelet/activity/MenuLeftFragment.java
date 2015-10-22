@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
@@ -18,7 +19,7 @@ import com.blestep.sportsbracelet.utils.SPUtiles;
 public class MenuLeftFragment extends Fragment implements OnClickListener {
 	private View mView;
 	private MainActivity mainActivity;
-	private TextView tv_bracelet_name;
+	private TextView tv_bracelet_name, tv_alert_coming_call_state;
 	private ImageView iv_battery_state, iv_conn_state;
 	private CheckBox cb_alert_low_battery;
 
@@ -39,8 +40,15 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 		return mView;
 	}
 
+	@Override
+	public void onResume() {
+		initData();
+		super.onResume();
+	}
+
 	private void initView() {
 		tv_bracelet_name = (TextView) mView.findViewById(R.id.tv_bracelet_name);
+		tv_alert_coming_call_state = (TextView) mView.findViewById(R.id.tv_alert_coming_call_state);
 		iv_battery_state = (ImageView) mView.findViewById(R.id.iv_battery_state);
 		iv_conn_state = (ImageView) mView.findViewById(R.id.iv_conn_state);
 		cb_alert_low_battery = (CheckBox) mView.findViewById(R.id.cb_alert_low_battery);
@@ -55,7 +63,12 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initData() {
-		tv_bracelet_name.setText(SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_NAME, ""));
+		tv_bracelet_name.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_NAME, ""));
+		if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, true)) {
+			tv_alert_coming_call_state.setText(getString(R.string.alert_coming_call_open));
+		} else {
+			tv_alert_coming_call_state.setText(getString(R.string.alert_coming_call_close));
+		}
 	}
 
 	public void updateView(BTService mBtService) {
@@ -64,7 +77,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 		} else {
 			iv_conn_state.setImageResource(R.drawable.conn_state_failure);
 		}
-		int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
+		int battery = SPUtiles.getIntValue(BTConstants.SP_KEY_BATTERY, 0);
 		if (battery == 0) {
 			iv_battery_state.setImageResource(R.drawable.battery_one);
 		}

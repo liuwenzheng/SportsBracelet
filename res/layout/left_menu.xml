@@ -101,6 +101,17 @@
             android:textColor="@color/grey_d5d5d5"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/tv_alert_coming_call_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:text="@string/alert_coming_call_open"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

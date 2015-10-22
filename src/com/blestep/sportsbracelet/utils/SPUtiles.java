@@ -1,26 +1,17 @@
 package com.blestep.sportsbracelet.utils;
 
+import com.blestep.sportsbracelet.BTConstants;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class SPUtiles {
-	public static final String SP_NAME = "sp_name_sportsbracelet";
 	public static SharedPreferences sp;
-	public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";
-	public static final String SP_KEY_DEVICE_NAME = "sp_key_device_NAME";
-	public static final String SP_KEY_BATTERY = "sp_key_battery";
-	public static final String SP_KEY_STEP_AIM = "sp_key_aim";
-	public static final String SP_KEY_USER_NAME = "sp_key_name";
-	public static final String SP_KEY_USER_GENDER = "sp_key_gender";
-	public static final String SP_KEY_USER_AGE = "sp_key_age";
-	public static final String SP_KEY_USER_BIRTHDAT = "sp_key_birthday";
-	public static final String SP_KEY_USER_HEIGHT = "sp_key_height";
-	public static final String SP_KEY_USER_WEIGHT = "sp_key_weight";
-	public static final String SP_KEY_IS_FIRST_OPEN = "sp_key_is_first_open";
+	
 
 	public static SharedPreferences getInstance(Context context) {
-		sp = context.getSharedPreferences(SP_NAME, context.MODE_PRIVATE);
+		sp = context.getSharedPreferences(BTConstants.SP_NAME, context.MODE_PRIVATE);
 		return sp;
 	}
 

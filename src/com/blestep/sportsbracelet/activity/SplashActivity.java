@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.utils.SPUtiles;
@@ -31,7 +32,7 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		if (!SPUtiles.getBooleanValue(SPUtiles.SP_KEY_IS_FIRST_OPEN, true)) {
+		if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, true)) {
 			startActivity(new Intent(this, MainActivity.class));
 			this.finish();
 			return;

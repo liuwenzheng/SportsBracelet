@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.module.LogModule;
@@ -62,7 +63,7 @@ public class TargetActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onProgressChange(CircularSeekBar view, int newProgress) {
 				LogModule.d("Progress:" + view.getProgress() * STEP_UNIT + "/" + view.getMaxProgress() * STEP_UNIT);
-				float activity_consumed = (0.000693f * (SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 75) - 15) + 0.005895f)
+				float activity_consumed = (0.000693f * (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 75) - 15) + 0.005895f)
 						* (view.getProgress() * STEP_UNIT);
 				int result = new BigDecimal(activity_consumed).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
 
@@ -104,7 +105,7 @@ public class TargetActivity extends BaseActivity implements OnClickListener {
 		case R.id.btn_target_finish:
 			// ToastUtils.showToast(this, "设置目标为：" +
 			// tv_step.getText().toString());
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_STEP_AIM, Integer.valueOf(tv_step.getText().toString()));
+			SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_step.getText().toString()));
 			this.finish();
 			break;
 		case R.id.iv_back:

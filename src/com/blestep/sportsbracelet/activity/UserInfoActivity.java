@@ -22,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.module.LogModule;
@@ -40,7 +41,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 	private RadioGroup rg_userinfo_sex;
 	private DatePickerDialog mDialog;
 	private Calendar mCalendar;
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +88,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 
 	private void initData() {
 		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
-		et_userinfo_name.setText(SPUtiles.getStringValue(SPUtiles.SP_KEY_USER_NAME, ""));
-		int gender = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_GENDER, 0);
+		et_userinfo_name.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_USER_NAME, ""));
+		int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, 0);
 		if (gender == 0) {
 			iv_userinfo_icon.setImageResource(R.drawable.pic_male);
 			((RadioButton) rg_userinfo_sex.getChildAt(0)).setChecked(true);
@@ -97,7 +98,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			((RadioButton) rg_userinfo_sex.getChildAt(1)).setChecked(true);
 		}
 
-		tv_userinfo_birthday.setText(SPUtiles.getStringValue(SPUtiles.SP_KEY_USER_BIRTHDAT, "1989-01-01"));
+		tv_userinfo_birthday.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_USER_BIRTHDAT, "1989-01-01"));
 		mCalendar = Calendar.getInstance();
 		Date date;
 		try {
@@ -116,8 +117,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 				tv_userinfo_birthday.setText(sdf.format(mCalendar.getTime()));
 			}
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
-		et_userinfo_height.setText(SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_HEIGHT, 175) + "");
-		et_userinfo_weight.setText(SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 75) + "");
+		et_userinfo_height.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 175) + "");
+		et_userinfo_weight.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 75) + "");
 	}
 
 	@Override
@@ -181,16 +182,16 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 					ToastUtils.showToast(this, R.string.userinfo_age_size);
 					return;
 				}
-				SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_AGE, age);
+				SPUtiles.setIntValue(BTConstants.SP_KEY_USER_AGE, age);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 
-			SPUtiles.setStringValue(SPUtiles.SP_KEY_USER_NAME, et_userinfo_name.getText().toString());
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_HEIGHT, Integer.valueOf(et_userinfo_height.getText().toString()));
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_WEIGHT, Integer.valueOf(et_userinfo_weight.getText().toString()));
+			SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME, et_userinfo_name.getText().toString());
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_HEIGHT, Integer.valueOf(et_userinfo_height.getText().toString()));
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT, Integer.valueOf(et_userinfo_weight.getText().toString()));
 
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_GENDER,
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_GENDER,
 					Integer.valueOf((String) findViewById(rg_userinfo_sex.getCheckedRadioButtonId()).getTag()));
 			this.finish();
 			break;

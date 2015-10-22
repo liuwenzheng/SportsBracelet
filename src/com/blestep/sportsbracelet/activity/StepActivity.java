@@ -19,6 +19,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.db.DBTools;
@@ -63,7 +64,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,IC
 				} else if (AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())) {
 					tv_conn_status.setText("断开连接...");
 				} else if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
-					int battery = SPUtiles.getIntValue(SPUtiles.SP_KEY_BATTERY, 0);
+					int battery = SPUtiles.getIntValue(BTConstants.SP_KEY_BATTERY, 0);
 					tv_conn_status.setText("电量为" + battery + "%");
 					Step step = DBTools.getInstance(StepActivity.this).selectCurrentStep();
 					if (step != null) {

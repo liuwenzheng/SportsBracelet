@@ -16,9 +16,9 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.service.BTService;
@@ -111,10 +111,10 @@ public class BTModule {
 	 */
 	public static void setUserInfo(BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[5];
-		int weight = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 30);
-		int height = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_HEIGHT, 100);
-		int age = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_AGE, 5);
-		int gender = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_WEIGHT, 0);
+		int weight = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 30);
+		int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
+		int age = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_AGE, 5);
+		int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0);
 		byteArray[0] = 0x12;
 		byteArray[1] = (byte) weight;
 		byteArray[2] = (byte) height;
@@ -184,9 +184,42 @@ public class BTModule {
 		byte[] byteArray = new byte[5];
 		byteArray[0] = 0x17;
 		byteArray[1] = 0x02;
-		byteArray[2] = 0x02;
-		byteArray[3] = 0x01;
-		byteArray[4] = 0x01;
+		byteArray[2] = 0x03;
+		byteArray[3] = 0x03;
+		byteArray[4] = 0x03;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 来电震动
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void phoneComingShakeBand(BluetoothGatt mBluetoothGatt) {
+		LogModule.d("来电震动...");
+		byte[] byteArray = new byte[5];
+		byteArray[0] = 0x17;
+		byteArray[1] = 0x00;
+		byteArray[2] = 0x03;
+		byteArray[3] = 0x03;
+		byteArray[4] = 0x03;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 来短信震动
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void smsComingShakeBand(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[5];
+		byteArray[0] = 0x17;
+		byteArray[1] = 0x01;
+		byteArray[2] = 0x03;
+		byteArray[3] = 0x03;
+		byteArray[4] = 0x03;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 

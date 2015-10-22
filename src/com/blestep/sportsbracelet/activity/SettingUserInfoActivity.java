@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.utils.SPUtiles;
@@ -34,7 +35,7 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 	private Button btn_setting_next;
 	private DatePickerDialog mDialog;
 	private Calendar mCalendar;
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,20 +123,20 @@ public class SettingUserInfoActivity extends BaseActivity implements OnClickList
 					ToastUtils.showToast(this, R.string.setting_userinfo_age_size);
 					return;
 				}
-				SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_AGE, age);
-				SPUtiles.setStringValue(SPUtiles.SP_KEY_USER_BIRTHDAT, tv_setting_userinfo_birthday.getText()
+				SPUtiles.setIntValue(BTConstants.SP_KEY_USER_AGE, age);
+				SPUtiles.setStringValue(BTConstants.SP_KEY_USER_BIRTHDAT, tv_setting_userinfo_birthday.getText()
 						.toString());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 
-			SPUtiles.setStringValue(SPUtiles.SP_KEY_USER_NAME, et_setting_userinfo_name.getText().toString());
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_HEIGHT,
+			SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME, et_setting_userinfo_name.getText().toString());
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_HEIGHT,
 					Integer.valueOf(et_setting_userinfo_height.getText().toString()));
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_WEIGHT,
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT,
 					Integer.valueOf(et_setting_userinfo_weight.getText().toString()));
 
-			SPUtiles.setIntValue(SPUtiles.SP_KEY_USER_GENDER,
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_GENDER,
 					Integer.valueOf((String) findViewById(rg_setting_userinfo_sex.getCheckedRadioButtonId()).getTag()));
 			startActivity(new Intent(this, SettingTargetActivity.class));
 			this.finish();

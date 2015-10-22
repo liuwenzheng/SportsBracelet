@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
@@ -51,7 +52,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 	}
 
 	private void initData() {
-		circleView.setMaxValue(SPUtiles.getIntValue(SPUtiles.SP_KEY_STEP_AIM, 100));
+		circleView.setMaxValue(SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100));
 		circleView.setValue(0);
 		circleView.setmProgressValue(this);
 	}

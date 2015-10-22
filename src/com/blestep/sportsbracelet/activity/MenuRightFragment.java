@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 
@@ -48,8 +49,8 @@ public class MenuRightFragment extends Fragment implements OnClickListener {
 	}
 
 	private void iniData() {
-		int gender = SPUtiles.getIntValue(SPUtiles.SP_KEY_USER_GENDER, 0);
-		String name = SPUtiles.getStringValue(SPUtiles.SP_KEY_USER_NAME, "");
+		int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, 0);
+		String name = SPUtiles.getStringValue(BTConstants.SP_KEY_USER_NAME, "");
 		switch (gender) {
 		case 0:
 			iv_user_pic.setImageResource(R.drawable.pic_male);

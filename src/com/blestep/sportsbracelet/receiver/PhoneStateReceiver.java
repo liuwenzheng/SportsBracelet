@@ -17,8 +17,9 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 		switch (tm.getCallState()) {
 		case TelephonyManager.CALL_STATE_RINGING:
 			// 来电
-			String incoming_number = intent.getStringExtra("incoming_number");
-			LogModule.d("来电号码:" + incoming_number);
+			// String incoming_number =
+			// intent.getStringExtra("incoming_number");
+			// LogModule.d("来电号码:" + incoming_number);
 			// log:来电号码:18801283616
 			break;
 		case TelephonyManager.CALL_STATE_OFFHOOK:
