@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.module;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import android.content.Intent;
 import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
+import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
@@ -120,6 +122,29 @@ public class BTModule {
 		byteArray[2] = (byte) height;
 		byteArray[3] = (byte) age;
 		byteArray[4] = (byte) gender;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 设置闹钟
+	 * 
+	 * @param mBluetoothGatt
+	 */
+	public static void setAlarm(Context context, BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[17];
+		byteArray[0] = 0x13;
+		byteArray[1] = 0x01;
+		ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
+		if (alarms.size() == 0) {
+			return;
+		}
+		for (int i = 0; i < alarms.size(); i++) {
+			Alarm alarm = alarms.get(i);
+			byteArray[i * 3 + 2] = Byte.valueOf(alarm.state);
+			byteArray[i * 3 + 3] = Byte.valueOf(alarm.time.split(":")[0]);
+			byteArray[i * 3 + 4] = Byte.valueOf(alarm.time.split(":")[1]);
+		}
+
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 

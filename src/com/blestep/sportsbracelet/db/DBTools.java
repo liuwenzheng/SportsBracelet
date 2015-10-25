@@ -1,10 +1,13 @@
 package com.blestep.sportsbracelet.db;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.entity.Step;
 
 public class DBTools {
@@ -40,6 +43,22 @@ public class DBTools {
 		return step;
 	}
 
+	public ArrayList<Alarm> selectAllAlarm() {
+		Cursor cursor = db.query(DBConstants.TABLE_NAME_ALARM, null, null, null, null, null, null);
+		ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+		while (cursor.moveToNext()) {
+			Alarm alarm = new Alarm();
+			alarm = new Alarm();
+			alarm.id = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_ID));
+			alarm.name = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_NAME));
+			alarm.time = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_TIME));
+			alarm.state = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_STATE));
+			alarms.add(alarm);
+			break;
+		}
+		return alarms;
+	}
+
 	public long insertStep(Step step) {
 		ContentValues cv = new ContentValues();
 		cv.put(DBConstants.STEP_FIELD_DATE, step.date);
@@ -51,10 +70,25 @@ public class DBTools {
 		return row;
 	}
 
+	public long insertAlarm(Alarm alarm) {
+		ContentValues cv = new ContentValues();
+		cv.put(DBConstants.ALARM_FIELD_NAME, alarm.name);
+		cv.put(DBConstants.ALARM_FIELD_TIME, alarm.time);
+		cv.put(DBConstants.ALARM_FIELD_STATE, alarm.state);
+		long row = db.insert(DBConstants.TABLE_NAME_ALARM, null, cv);
+		return row;
+	}
+
 	public void deleteStep(int id) {
 		String where = DBConstants.STEP_FIELD_ID + " = ?";
 		String[] whereValue = { Integer.toString(id) };
 		db.delete(DBConstants.TABLE_NAME_STEP, where, whereValue);
+	}
+
+	public void deleteAlarm(int id) {
+		String where = DBConstants.ALARM_FIELD_ID + " = ?";
+		String[] whereValue = { Integer.toString(id) };
+		db.delete(DBConstants.TABLE_NAME_ALARM, where, whereValue);
 	}
 
 	public boolean isStepExist(String date) {
@@ -82,8 +116,19 @@ public class DBTools {
 		db.update(DBConstants.TABLE_NAME_STEP, cv, where, whereValue);
 	}
 
+	public void updateAlarm(Alarm alarm) {
+		String where = DBConstants.ALARM_FIELD_ID + " = ?";
+		String[] whereValue = { alarm.id };
+		ContentValues cv = new ContentValues();
+		cv.put(DBConstants.ALARM_FIELD_NAME, alarm.name);
+		cv.put(DBConstants.ALARM_FIELD_TIME, alarm.time);
+		cv.put(DBConstants.ALARM_FIELD_STATE, alarm.state);
+		db.update(DBConstants.TABLE_NAME_ALARM, cv, where, whereValue);
+	}
+
 	public void deleteAllData() {
 		db.delete(DBConstants.TABLE_NAME_STEP, null, null);
+		db.delete(DBConstants.TABLE_NAME_ALARM, null, null);
 	}
 
 	// drop table;

@@ -102,7 +102,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 			startActivity(new Intent(mainActivity, PhoneComingActivity.class));
 			break;
 		case R.id.rl_alert_alarm:
-
+			startActivity(new Intent(mainActivity, AlarmActivity.class));
 			break;
 		case R.id.rl_bind_bracelet:
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4" >
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/alarm_edit"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_alarm_del"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:text="@string/alarm_del"
+            android:textColor="@color/red_e05b5e"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_alarm_edit"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:divider="@color/grey_dddddd"
+        android:dividerHeight="1px" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/tv_alarm_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="17dp"
+        android:drawablePadding="7dp"
+        android:drawableTop="@drawable/alarm_add"
+        android:gravity="center_horizontal"
+        android:text="@string/alarm_add"
+        android:textColor="@color/grey_3a3a3a"
+        android:textSize="15sp" />
+
+</LinearLayout>

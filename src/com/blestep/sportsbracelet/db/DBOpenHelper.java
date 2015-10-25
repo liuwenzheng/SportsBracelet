@@ -19,6 +19,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE_STEP);
+		db.execSQL(CREATE_TABLE_ALARM);
 		LogModule.i("创建数据库");
 	}
 
@@ -61,11 +62,15 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	// + "sleep_allsleeptime" + " text," + "sleep_lightsleeptime"
 	// + " text," + "sleep_deepsleeptime" + " text," + "sleep_index"
 	// + " text," + "fragment_index" + " text);";
-	// // 闹钟表
-	// private static final String alarm_creat_sql = "CREATE TABLE "
-	// + "alarm_table" + " (alarm_id"
-	// + " INTEGER primary key autoincrement, " + "alarm_num" + " text,"
-	// + "alarm_date1" + " text," + "alarm_date2" + " text, "
-	// + "alarm_state" + " text);";
+	// 闹钟表
+	private static final String CREATE_TABLE_ALARM = "CREATE TABLE " + DBConstants.TABLE_NAME_ALARM
+	// id
+			+ " (" + DBConstants.ALARM_FIELD_ID + " INTEGER primary key autoincrement, "
+			// 名称
+			+ DBConstants.ALARM_FIELD_NAME + " TEXT,"
+			// 时间
+			+ DBConstants.ALARM_FIELD_TIME + " TEXT,"
+			// 状态
+			+ DBConstants.ALARM_FIELD_STATE + " TEXT);";
 
 }

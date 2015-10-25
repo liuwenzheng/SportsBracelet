@@ -40,7 +40,6 @@ public class BTService extends Service implements LeScanCallback {
 	// private ArrayList<BleDevice> mDevices;
 	public BluetoothGatt mBluetoothGatt;
 
-
 	@Override
 	public void onCreate() {
 		mHandler = new Handler(getApplicationContext().getMainLooper());
@@ -147,7 +146,8 @@ public class BTService extends Service implements LeScanCallback {
 					sendBroadcast(intent);
 				} else {
 					if (mBluetoothGatt == null) {
-						BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+						BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles.getStringValue(
+								BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 						mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
 						return;
 					}
@@ -247,6 +247,13 @@ public class BTService extends Service implements LeScanCallback {
 	 */
 	public void synUserInfoData() {
 		BTModule.setUserInfo(mBluetoothGatt);
+	}
+
+	/**
+	 * 同步闹钟
+	 */
+	public void synAlarmData() {
+		BTModule.setAlarm(this, mBluetoothGatt);
 	}
 
 	/**

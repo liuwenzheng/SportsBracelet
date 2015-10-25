@@ -26,4 +26,6 @@ public class BTConstants {
 	public static final String SP_KEY_COMING_PHONE_NODISTURB_ALERT = "sp_key_coming_phone_nodisturb_alert";
 	public static final String SP_KEY_COMING_PHONE_NODISTURB_START_TIME = "sp_key_coming_phone_nodisturb_start_time";
 	public static final String SP_KEY_COMING_PHONE_NODISTURB_END_TIME = "sp_key_coming_phone_nodisturb_end_time";
+	// Extra_key
+	public static final String EXTRA_KEY_ALARM = "extra_key_alarm";
 }

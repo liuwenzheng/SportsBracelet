@@ -137,6 +137,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					// }
 					mBtService.synTimeData();
 					mBtService.synUserInfoData();
+					mBtService.synAlarmData();
 					mBtService.getSportData();
 					tv_main_tips.setText(R.string.step_syncdata_waiting);
 					tv_main_tips.setVisibility(View.VISIBLE);
@@ -180,6 +181,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 				if (mBtService.isConnDevice()) {
 					mBtService.synTimeData();
 					mBtService.synUserInfoData();
+					mBtService.synAlarmData();
 					mBtService.getSportData();
 					tv_main_tips.setText(R.string.step_syncdata_waiting);
 					tv_main_tips.setVisibility(View.VISIBLE);

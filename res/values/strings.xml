@@ -119,4 +119,19 @@
     <string name="phone_coming_nodisturb_end_time">结束时间</string>
     <string name="phone_coming_nodisturb_to">至</string>
 
+    <!-- alarm -->
+    <string name="alarm_title">闹钟</string>
+    <string name="alarm_edit">编辑闹钟</string>
+    <string name="alarm_del">删除</string>
+    <string name="alarm_del_tips">请选择删除的闹钟！</string>
+    <string name="alarm_finish">完成</string>
+    <string name="alarm_add">添加闹钟</string>
+    <string name="alarm_add_hint">闹钟名称</string>
+    <string name="alarm_add_time">时间</string>
+    <string name="alarm_add_name_null">闹钟名称不能为空！</string>
+    <string name="alarm_add_count_max">最多可添加5个闹钟！</string>
+    <string name="alarm_add_success">添加成功！</string>
+    <string name="alarm_awaken">智能唤醒</string>
+    <string name="alarm_awaken_tips">允许闹钟在目标时间之前30分钟将我从浅睡状态唤醒</string>
+
 </resources>
