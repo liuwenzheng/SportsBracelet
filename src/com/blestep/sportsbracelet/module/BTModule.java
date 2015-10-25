@@ -197,13 +197,12 @@ public class BTModule {
 	 * 
 	 */
 	public static void phoneComingShakeBand(BluetoothGatt mBluetoothGatt) {
-		LogModule.d("来电震动...");
 		byte[] byteArray = new byte[5];
 		byteArray[0] = 0x17;
 		byteArray[1] = 0x00;
 		byteArray[2] = 0x03;
-		byteArray[3] = 0x03;
-		byteArray[4] = 0x03;
+		byteArray[3] = 0x05;
+		byteArray[4] = 0x0A;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 
@@ -218,8 +217,8 @@ public class BTModule {
 		byteArray[0] = 0x17;
 		byteArray[1] = 0x01;
 		byteArray[2] = 0x03;
-		byteArray[3] = 0x03;
-		byteArray[4] = 0x03;
+		byteArray[3] = 0x05;
+		byteArray[4] = 0x0A;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 
@@ -287,7 +286,11 @@ public class BTModule {
 	}
 
 	public static void writeCharacteristicData(BluetoothGatt mBluetoothGatt, byte[] byteArray) {
+		if (mBluetoothGatt == null) {
+			return;
+		}
 		BluetoothGattService service = mBluetoothGatt.getService(SERVIE_UUID);
+
 		LogModule.i("writeCharacteristicData...service:" + service);
 		if (service == null) {
 			return;

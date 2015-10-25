@@ -16,6 +16,8 @@
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name="BaseApplication"
         android:allowBackup="true"

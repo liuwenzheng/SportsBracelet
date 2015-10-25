@@ -201,6 +201,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			LogModule.d("断开服务onServiceDisconnected...");
+			mBtService.mBluetoothGatt = null;
 			mBtService = null;
 		}
 	};

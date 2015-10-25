@@ -140,9 +140,12 @@ public class PhoneComingActivity extends BaseActivity implements OnClickListener
 			} else {
 				cb_allow_phone_coming_alert_contacts.setEnabled(false);
 				cb_allow_phone_coming_nodisturb_time.setEnabled(false);
+				cb_allow_phone_coming_alert_contacts.setChecked(isChecked);
+				cb_allow_phone_coming_nodisturb_time.setChecked(isChecked);
+				SPUtiles.setBooleanValue(BTConstants.SP_KEY_COMING_PHONE_CONTACTS_ALERT, isChecked);
+				SPUtiles.setBooleanValue(BTConstants.SP_KEY_COMING_PHONE_NODISTURB_ALERT, isChecked);
 			}
 			SPUtiles.setBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, isChecked);
-
 			break;
 		case R.id.cb_allow_phone_coming_alert_contacts:
 			SPUtiles.setBooleanValue(BTConstants.SP_KEY_COMING_PHONE_CONTACTS_ALERT, isChecked);
