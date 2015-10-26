@@ -2,6 +2,9 @@ package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -77,11 +80,29 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener, 
 				ToastUtils.showToast(this, R.string.alarm_del_tips);
 				return;
 			}
-			for (int i = 0; i < mDelIndexs.size(); i++) {
-				DBTools.getInstance(this).deleteAlarm(Integer.valueOf(mDelIndexs.get(i)));
-			}
-			mAlarms = DBTools.getInstance(this).selectAllAlarm();
-			mAdapter.notifyDataSetChanged();
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage(R.string.alarm_del_dialog);
+			builder.setPositiveButton(R.string.alarm_del_confirm, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					for (int i = 0; i < mDelIndexs.size(); i++) {
+						DBTools.getInstance(AlarmEditActivity.this).deleteAlarm(Integer.valueOf(mDelIndexs.get(i)));
+					}
+					mAlarms = DBTools.getInstance(AlarmEditActivity.this).selectAllAlarm();
+					mAdapter.notifyDataSetChanged();
+					dialog.dismiss();
+				}
+			});
+			builder.setNegativeButton(R.string.alarm_del_cancel, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			builder.show();
+
 			break;
 
 		default:

@@ -140,9 +140,9 @@ public class BTModule {
 		}
 		for (int i = 0; i < alarms.size(); i++) {
 			Alarm alarm = alarms.get(i);
-			byteArray[i * 3 + 2] = Byte.valueOf(alarm.state);
-			byteArray[i * 3 + 3] = Byte.valueOf(alarm.time.split(":")[0]);
-			byteArray[i * 3 + 4] = Byte.valueOf(alarm.time.split(":")[1]);
+			byteArray[i * 3 + 2] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.state)), 16);
+			byteArray[i * 3 + 3] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[0])), 16);
+			byteArray[i * 3 + 4] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[1])), 16);
 		}
 
 		writeCharacteristicData(mBluetoothGatt, byteArray);

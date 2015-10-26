@@ -54,7 +54,6 @@ public class DBTools {
 			alarm.time = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_TIME));
 			alarm.state = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_STATE));
 			alarms.add(alarm);
-			break;
 		}
 		return alarms;
 	}

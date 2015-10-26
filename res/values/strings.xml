@@ -124,6 +124,9 @@
     <string name="alarm_edit">编辑闹钟</string>
     <string name="alarm_del">删除</string>
     <string name="alarm_del_tips">请选择删除的闹钟！</string>
+    <string name="alarm_del_dialog">确定是否删除？</string>
+    <string name="alarm_del_confirm">确定</string>
+    <string name="alarm_del_cancel">取消</string>
     <string name="alarm_finish">完成</string>
     <string name="alarm_add">添加闹钟</string>
     <string name="alarm_add_hint">闹钟名称</string>
