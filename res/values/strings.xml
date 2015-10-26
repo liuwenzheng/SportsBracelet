@@ -99,6 +99,8 @@
     <!-- left -->
     <string name="alert_low_battery">低电量提醒</string>
     <string name="alert_low_battery_tips">手环电量低于25%时，进行提醒</string>
+    <string name="alert_find_band">寻找手环</string>
+    <string name="alert_find_band_tips">连接手环后，可让手环一直震动</string>
     <string name="alert_coming_call">来电提醒</string>
     <string name="alert_coming_call_open">开</string>
     <string name="alert_coming_call_close">关</string>
@@ -136,5 +138,8 @@
     <string name="alarm_add_success">添加成功！</string>
     <string name="alarm_awaken">智能唤醒</string>
     <string name="alarm_awaken_tips">允许闹钟在目标时间之前30分钟将我从浅睡状态唤醒</string>
+    <!-- device -->
+    <string name="bind_title">绑定手环</string>
+    <string name="bind_finish">完成</string>
 
 </resources>

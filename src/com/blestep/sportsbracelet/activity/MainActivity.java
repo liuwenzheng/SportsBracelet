@@ -39,6 +39,15 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private ProgressDialog mDialog;
 	private BTService mBtService;
+
+	public BTService getmBtService() {
+		return mBtService;
+	}
+
+	public void setmBtService(BTService mBtService) {
+		this.mBtService = mBtService;
+	}
+
 	private TextView tv_main_conn_tips, tv_main_tips, log;
 	private MainTab01 tab01;
 	private MainTab02 tab02;

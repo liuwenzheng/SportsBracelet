@@ -114,6 +114,16 @@ public class BTService extends Service implements LeScanCallback {
 		}
 	}
 
+	/**
+	 * 断开手环
+	 */
+	public void disConnectBle() {
+		if (mBluetoothGatt != null) {
+			mBluetoothGatt.close();
+			mBluetoothGatt = null;
+		}
+	}
+
 	@Override
 	public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
 		if (device != null) {
@@ -272,6 +282,13 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	/**
+	 * 寻找手环
+	 */
+	public void shakeFindBand() {
+		BTModule.shakeFindBand(mBluetoothGatt);
+	}
+
+	/**
 	 * 是否连接手环
 	 * 
 	 * @return
@@ -416,10 +433,7 @@ public class BTService extends Service implements LeScanCallback {
 	@Override
 	public void onDestroy() {
 		LogModule.d("销毁BTService...onDestroy");
-		if (mBluetoothGatt != null) {
-			mBluetoothGatt.close();
-			mBluetoothGatt = null;
-		}
+		disConnectBle();
 		unregisterReceiver(mReceiver);
 		super.onDestroy();
 	}

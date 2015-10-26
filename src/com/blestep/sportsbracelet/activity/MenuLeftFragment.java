@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +23,9 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 	private MainActivity mainActivity;
 	private TextView tv_bracelet_name, tv_alert_coming_call_state;
 	private ImageView iv_battery_state, iv_conn_state;
-	private CheckBox cb_alert_low_battery;
+	private CheckBox cb_alert_low_battery, cb_alert_find_band;
+	private BTService mBtService;
+	private boolean isContinue = false;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -52,6 +56,50 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 		iv_battery_state = (ImageView) mView.findViewById(R.id.iv_battery_state);
 		iv_conn_state = (ImageView) mView.findViewById(R.id.iv_conn_state);
 		cb_alert_low_battery = (CheckBox) mView.findViewById(R.id.cb_alert_low_battery);
+		cb_alert_find_band = (CheckBox) mView.findViewById(R.id.cb_alert_find_band);
+		// if (mainActivity.getmBtService() != null &&
+		// mainActivity.getmBtService().isConnDevice()) {
+		// cb_alert_find_band.setEnabled(true);
+		// } else {
+		// cb_alert_find_band.setEnabled(false);
+		// }
+		cb_alert_find_band.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					if (mainActivity.getmBtService() != null) {
+						mBtService = mainActivity.getmBtService();
+						if (mBtService.isConnDevice()) {
+							isContinue = true;
+							startFindBandShake();
+						} else {
+							cb_alert_find_band.setChecked(false);
+						}
+					} else {
+						cb_alert_find_band.setChecked(false);
+					}
+				} else {
+					isContinue = false;
+				}
+
+			}
+		});
+	}
+
+	private void startFindBandShake() {
+		new Thread() {
+			public void run() {
+				while (isContinue) {
+					mBtService.shakeFindBand();
+					try {
+						Thread.sleep(4000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+		}.start();
 	}
 
 	private void initListener() {
@@ -105,7 +153,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 			startActivity(new Intent(mainActivity, AlarmActivity.class));
 			break;
 		case R.id.rl_bind_bracelet:
-
+			startActivity(new Intent(mainActivity, BindDeviceActivity.class));
 			break;
 		case R.id.rl_bracelet_reset:
 

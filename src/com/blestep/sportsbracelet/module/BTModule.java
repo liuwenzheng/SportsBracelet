@@ -216,6 +216,22 @@ public class BTModule {
 	}
 
 	/**
+	 * 寻找手环震动
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void shakeFindBand(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[5];
+		byteArray[0] = 0x17;
+		byteArray[1] = 0x02;
+		byteArray[2] = 0x02;
+		byteArray[3] = 0x0A;
+		byteArray[4] = 0x0A;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
 	 * 来电震动
 	 * 
 	 * @param mBluetoothGatt
