@@ -95,34 +95,47 @@
                 android:textSize="20sp" />
         </RadioGroup>
 
-        <TextView
-            android:id="@+id/tv_main_conn_tips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_d5d5d5"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/main_conn_tips"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_main_tips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_d5d5d5"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text=""
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <com.blestep.sportsbracelet.view.ControlScrollViewPager
-            android:id="@+id/id_viewpager"
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
-        </com.blestep.sportsbracelet.view.ControlScrollViewPager>
+
+            <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+                xmlns:ptr="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ptrsv_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                ptr:ptrMode="pullFromStart" >
+
+                <ViewPager
+                    android:id="@+id/id_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+                </ViewPager>
+            </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
+            <TextView
+                android:id="@+id/tv_main_conn_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_d5d5d5"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/main_conn_tips"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_main_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_d5d5d5"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text=""
+                android:textSize="18sp"
+                android:visibility="gone" />
+        </RelativeLayout>
     </LinearLayout>
 
     <ScrollView

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ScrollView;
@@ -28,13 +29,15 @@ import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
-import com.blestep.sportsbracelet.view.ControlScrollViewPager;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity implements OnClickListener {
 
-	private ControlScrollViewPager mViewPager;
+	private ViewPager mViewPager;
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private ProgressDialog mDialog;
@@ -54,6 +57,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	private MainTab03 tab03;
 	private Fragment leftMenuFragment, rightMenuFragment;
 	private ScrollView sv_log;
+	private PullToRefreshScrollView ptrsv_main;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		tv_main_conn_tips.setVisibility(View.GONE);
 		tv_main_tips = (TextView) findViewById(R.id.tv_main_tips);
 		tv_main_tips.setVisibility(View.GONE);
+		ptrsv_main = (PullToRefreshScrollView) findViewById(R.id.ptrsv_main);
+
 		log = (TextView) findViewById(R.id.log);
 		sv_log = (ScrollView) findViewById(R.id.sv_log);
 		// if (LogModule.debug) {
@@ -86,6 +92,20 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 	private void initListener() {
 		tv_main_conn_tips.setOnClickListener(this);
+		ptrsv_main.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+				if (mBtService.isConnDevice()) {
+					mBtService.synTimeData();
+					mBtService.synUserInfoData();
+					mBtService.synAlarmData();
+					mBtService.getSportData();
+				} else {
+					ptrsv_main.onRefreshComplete();
+				}
+			}
+		});
 	}
 
 	private void initData() {
@@ -129,6 +149,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 						|| AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
 						|| AppConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
 					LogModule.d("配对失败...");
+					ptrsv_main.onRefreshComplete();
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
 					tv_main_conn_tips.setVisibility(View.VISIBLE);
 					tv_main_tips.setVisibility(View.GONE);
@@ -139,6 +160,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
 					LogModule.d("配对成功...");
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
+					ptrsv_main.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.step_syncdata_waiting));
 					tv_main_conn_tips.setVisibility(View.GONE);
 					tv_main_tips.setVisibility(View.GONE);
 					// if (mDialog != null) {
@@ -148,13 +170,14 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					mBtService.synUserInfoData();
 					mBtService.synAlarmData();
 					mBtService.getSportData();
-					tv_main_tips.setText(R.string.step_syncdata_waiting);
-					tv_main_tips.setVisibility(View.VISIBLE);
+					// tv_main_tips.setText(R.string.step_syncdata_waiting);
+					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
 					// getString(R.string.step_syncdata_waiting),
 					// false, false);
 				}
 				if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
+					ptrsv_main.onRefreshComplete();
 					if (tab01 != null && tab01.isVisible()) {
 						tab01.updateView();
 					}
@@ -188,19 +211,23 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 			} else {
 				LogModule.d("连接手环or同步数据？");
 				if (mBtService.isConnDevice()) {
+					ptrsv_main.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.step_syncdata_waiting));
+					ptrsv_main.setRefreshing();
 					mBtService.synTimeData();
 					mBtService.synUserInfoData();
 					mBtService.synAlarmData();
 					mBtService.getSportData();
-					tv_main_tips.setText(R.string.step_syncdata_waiting);
-					tv_main_tips.setVisibility(View.VISIBLE);
+					// tv_main_tips.setText(R.string.step_syncdata_waiting);
+					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
 					// getString(R.string.step_syncdata_waiting),
 					// false, false);
 				} else {
+					ptrsv_main.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.setting_device));
+					ptrsv_main.setRefreshing();
 					mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-					tv_main_tips.setText(R.string.setting_device);
-					tv_main_tips.setVisibility(View.VISIBLE);
+					// tv_main_tips.setText(R.string.setting_device);
+					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
 					// getString(R.string.setting_device), false,
 					// false);
@@ -222,9 +249,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case BTModule.REQUEST_ENABLE_BT:
+				ptrsv_main.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.setting_device));
+				ptrsv_main.setRefreshing();
 				mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-				tv_main_tips.setText(R.string.setting_device);
-				tv_main_tips.setVisibility(View.VISIBLE);
+				// tv_main_tips.setText(R.string.setting_device);
+				// tv_main_tips.setVisibility(View.VISIBLE);
 				// mDialog = ProgressDialog
 				// .show(MainActivity.this, null,
 				// getString(R.string.setting_device), false, false);
@@ -236,8 +265,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	}
 
 	private void initViewPager() {
-		mViewPager = (ControlScrollViewPager) findViewById(R.id.id_viewpager);
-		mViewPager.setScrollable(false);
+		mViewPager = (ViewPager) findViewById(R.id.id_viewpager);
 		tab01 = new MainTab01();
 		tab02 = new MainTab02();
 		tab03 = new MainTab03();
@@ -297,10 +325,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_main_conn_tips:
+			ptrsv_main.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.setting_device));
+			ptrsv_main.setRefreshing();
 			mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-			tv_main_conn_tips.setVisibility(View.GONE);
-			tv_main_tips.setText(R.string.setting_device);
-			tv_main_tips.setVisibility(View.VISIBLE);
+			// tv_main_conn_tips.setVisibility(View.GONE);
+			// tv_main_tips.setText(R.string.setting_device);
+			// tv_main_tips.setVisibility(View.VISIBLE);
 			// mDialog = ProgressDialog.show(MainActivity.this, null,
 			// getString(R.string.setting_device), false, false);
 			break;
