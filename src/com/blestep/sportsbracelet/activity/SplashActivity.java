@@ -31,12 +31,23 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash);
 		if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, true)) {
-			startActivity(new Intent(this, MainActivity.class));
-			this.finish();
+			setContentView(R.layout.splash_pass);
+			new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					startActivity(new Intent(SplashActivity.this, MainActivity.class));
+					SplashActivity.this.finish();
+				};
+			}.start();
 			return;
 		}
+		setContentView(R.layout.splash);
+
 		initView();
 		initData();
 		initListener();

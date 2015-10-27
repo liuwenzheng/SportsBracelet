@@ -83,6 +83,8 @@ public class BindDeviceActivity extends BaseActivity implements OnClickListener,
 
 	private void initListener() {
 		findViewById(R.id.btn_bind_finish).setOnClickListener(this);
+		findViewById(R.id.tv_bind_refresh).setOnClickListener(this);
+		findViewById(R.id.iv_back).setOnClickListener(this);
 		lv_setting_device.setOnItemClickListener(this);
 	}
 
@@ -101,6 +103,15 @@ public class BindDeviceActivity extends BaseActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.iv_back:
+			finish();
+			break;
+		case R.id.tv_bind_refresh:
+			mDevices.clear();
+			mBtService.scanDevice();
+			mDialog = ProgressDialog.show(BindDeviceActivity.this, null, getString(R.string.setting_device_search),
+					false, false);
+			break;
 		case R.id.btn_bind_finish:
 
 			if (mDevices != null && mDevices.size() == 0) {

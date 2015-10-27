@@ -4,14 +4,40 @@
     android:layout_height="match_parent"
     android:background="@drawable/setting_device" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
-        android:text="@string/bind_title"
-        android:textColor="@color/black_000000"
-        android:textSize="18sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4" >
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/bind_title"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_bind_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:text="@string/bind_refresh"
+            android:textColor="@color/blue_40acaf"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="wrap_content"

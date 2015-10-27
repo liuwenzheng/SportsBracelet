@@ -5,6 +5,7 @@
     <item name="gridview" type="id"/>
     <item name="webview" type="id"/>
     <item name="scrollview" type="id"/>
+    <item name="viewpager" type="id"/>
     <!-- ID used when defining the content layout in XML. -->
     <item name="mdContent" type="id"/>
 

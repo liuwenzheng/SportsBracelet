@@ -1,18 +1,23 @@
 package com.blestep.sportsbracelet.utils;
 
-import com.blestep.sportsbracelet.BTConstants;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.blestep.sportsbracelet.BTConstants;
+
 public class SPUtiles {
 	public static SharedPreferences sp;
-	
 
 	public static SharedPreferences getInstance(Context context) {
 		sp = context.getSharedPreferences(BTConstants.SP_NAME, context.MODE_PRIVATE);
 		return sp;
+	}
+
+	public static void clearAllData() {
+		Editor editor = sp.edit();
+		editor.clear();
+		editor.commit();
 	}
 
 	public static void setStringValue(String key, String value) {

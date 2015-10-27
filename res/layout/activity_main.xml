@@ -1,7 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -100,19 +101,15 @@
             android:layout_height="0dp"
             android:layout_weight="1" >
 
-            <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+            <com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager
                 xmlns:ptr="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/ptrsv_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                ptr:ptrMode="pullFromStart" >
-
-                <ViewPager
-                    android:id="@+id/id_viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </ViewPager>
-            </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+                android:id="@+id/pull_refresh_viewpager"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                ptr:ptrAnimationStyle="flip"
+                ptr:ptrHeaderBackground="@color/grey_f4f4f4"
+                ptr:ptrMode="both" >
+            </com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager>
 
             <TextView
                 android:id="@+id/tv_main_conn_tips"
@@ -150,4 +147,4 @@
             android:text="" />
     </ScrollView>
 
-</FrameLayout>
+</LinearLayout>

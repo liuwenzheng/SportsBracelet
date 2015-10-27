@@ -1,5 +1,8 @@
 package com.blestep.sportsbracelet.activity;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
@@ -159,7 +163,28 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 			startActivity(new Intent(mainActivity, BindDeviceActivity.class));
 			break;
 		case R.id.rl_bracelet_reset:
+			AlertDialog.Builder builder = new Builder(mainActivity);
+			builder.setMessage(R.string.bracelet_reset_alert);
+			builder.setPositiveButton(R.string.bracelet_reset_alert_confirm, new DialogInterface.OnClickListener() {
 
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					SPUtiles.clearAllData();
+					DBTools.getInstance(mainActivity).deleteAllData();
+					mainActivity.getmBtService().mBluetoothGatt.close();
+					mainActivity.getmBtService().mBluetoothGatt = null;
+					dialog.dismiss();
+					mainActivity.finish();
+				}
+			});
+			builder.setNegativeButton(R.string.bracelet_reset_alert_cancel, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+			builder.show();
 			break;
 		case R.id.rl_about:
 
