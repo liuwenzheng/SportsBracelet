@@ -101,6 +101,7 @@
     <string name="alert_low_battery_tips">手环电量低于25%时，进行提醒</string>
     <string name="alert_find_band">寻找手环</string>
     <string name="alert_find_band_tips">连接手环后，可让手环一直震动</string>
+    <string name="alert_find_band_conn_false">请先连接手环！</string>
     <string name="alert_coming_call">来电提醒</string>
     <string name="alert_coming_call_open">开</string>
     <string name="alert_coming_call_close">关</string>

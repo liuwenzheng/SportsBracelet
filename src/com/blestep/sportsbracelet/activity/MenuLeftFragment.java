@@ -17,6 +17,7 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.blestep.sportsbracelet.utils.ToastUtils;
 
 public class MenuLeftFragment extends Fragment implements OnClickListener {
 	private View mView;
@@ -74,9 +75,11 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 							isContinue = true;
 							startFindBandShake();
 						} else {
+							ToastUtils.showToast(mainActivity, R.string.alert_find_band_conn_false);
 							cb_alert_find_band.setChecked(false);
 						}
 					} else {
+						ToastUtils.showToast(mainActivity, R.string.alert_find_band_conn_false);
 						cb_alert_find_band.setChecked(false);
 					}
 				} else {
