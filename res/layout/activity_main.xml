@@ -109,7 +109,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 ptr:ptrAnimationStyle="flip"
-                ptr:ptrHeaderBackground="@color/grey_f4f4f4"
+                ptr:ptrHeaderBackground="@color/white_ffffff"
                 ptr:ptrMode="both" >
             </com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager>
 
