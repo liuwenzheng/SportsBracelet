@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SportsBracelet</string>
+
+    <string name="app_name">Blestep</string>
+    <!-- splash -->
+    <string name="splash_one_item_pass">Skip</string>
+    <string name="splash_one_item_1">Keep Fit</string>
+    <string name="splash_one_item_2">Smart pedometer, accurate understanding of exercise\n Automatic calculation of mileage and calories</string>
+    <string name="splash_one_item_3">Know about health \n status at any time</string>
+    <string name="splash_two_item_1">Smart alarm clock\n wake every new day\n according to sleep characteristics </string>
+    <string name="splash_two_item_2">Ble.4.0 Technology\n save more phone power</string>
+    <string name="splash_two_item_3">Call Reminder\nPhone contacts sync\nFiltered harassing phone calls</string>
+    <!-- setting -->
+    <string name="setting_bluetooth">Open the phone Bluetooth</string>
+    <string name="setting_pre">Back</string>
+    <string name="setting_next">Next</string>
+    <string name="setting_bracelet">Open bracelet</string>
+    <string name="setting_bracelet_tips">Long press the touch point on bracelet for 5 seconds until screen lights up</string>
+    <string name="setting_device">Pairing your phone with bracelet</string>
+    <string name="setting_device_search">Searching Bracelet</string>
+    <string name="setting_device_search_repeat">Research Bracelet</string>
+    <string name="setting_device_select_tips">Please choose bracelet</string>
+    <string name="setting_device_search_confirm">Confirm</string>
+    <string name="setting_device_conn_success">Pairing Successfully</string>
+    <string name="setting_device_conn_failure">Pairing failed</string>
+    <string name="setting_userinfo_name_hint">Nickname</string>
+    <string name="setting_userinfo_sex">Gender</string>
+    <string name="setting_userinfo_birthday">Age</string>
+    <string name="setting_userinfo_height">Height</string>
+    <string name="setting_userinfo_height_unit">cm</string>
+    <string name="setting_userinfo_weight">Weight</string>
+    <string name="setting_userinfo_weight_unit">Kg</string>
+    <string name="setting_userinfo_name_not_null">Nickname can not be empty</string>
+    <string name="setting_userinfo_weight_not_null">Weight can not be empty</string>
+    <string name="setting_userinfo_height_not_null">Height can not be empty</string>
+    <string name="setting_userinfo_height_size">Height should be in the range of 100-200cm</string>
+    <string name="setting_userinfo_weight_size">Weight should be within the range of 30-150kg</string>
+    <string name="setting_userinfo_age_size">Age should be in the range of 5-99 years</string>
+    <string name="setting_target_title">Set Goals</string>
+    <string name="setting_target_relaxed">Easy</string>
+    <string name="setting_target_recommend">Recommended</string>
+    <string name="setting_target_active">Active</string>
+    <string name="setting_target_step">Step</string>
+    <string name="setting_target_calorie">Kcal</string>
+    <string name="setting_target_calorie_unit">Calories</string>
+    <string name="setting_target_tips">Suggestion: Sport 10,000 steps a day to live a healthy and active lifestyle</string>
+    <string name="setting_target_amount_to">Equivalent</string>
+    <string name="setting_target_minutes">%1$sminutes</string>
+    <string name="setting_target_finish">Complete</string>
+
+    <!-- main -->
+    <string name="main_tab_step">Pedometer</string>
+    <string name="main_tab_sleep">Sleeping</string>
+    <string name="main_tab_run">Running</string>
+    <string name="main_conn_tips">Bracelet not connected currently, please connect by clicking the link</string>
+    <!-- step -->
+    <string name="step_syncdata_waiting">Syncing Data</string>
+    <string name="step_history">History</string>
+    <string name="step_duration">Time Cost</string>
+    <string name="step_distance">Mileage</string>
+    <string name="step_duration_unit">Min</string>
+    <string name="step_distance_unit">Km</string>
+    <string name="step_heart_rate_unit">/Min</string>
+    <!-- mycenter -->
+    <string name="center_title">Personal Center</string>
+    <string name="center_name">Nickname</string>
+    <string name="center_info">Personal Profile</string>
+    <string name="center_info_tips">Gender, Age information</string>
+    <string name="center_target">Set Sports Goal</string>
+    <string name="center_target_tips">Set daily sports goals, including steps, calories, etc.</string>
+    <string name="center_clear">Empty Data</string>
+    <string name="center_clear_tips">Empty APP and bracelet motion data</string>
+    <!-- clear -->
+    <string name="clear_title">Clear Data</string>
+    <string name="clear_bracelet">Empty Bracelet</string>
+    <string name="clear_phone">Empty phone </string>
+    <string name="clear_tips">Are you sure to empty the data?</string>
+    <string name="clear_tips_confirm">Confirm</string>
+    <string name="clear_tips_cancel">Cancel</string>
+    <string name="clear_fail_conn_device">Please connect bracelet</string>
+    <string name="clear_success">Clear successfully</string>
+    <!-- userinfo -->
+    <string name="userinfo_title">Personal Profile</string>
+    <string name="userinfo_confirm">Confirm</string>
+    <string name="userinfo_name_hint">Nickname</string>
+    <string name="userinfo_sex">Gender</string>
+    <string name="userinfo_birthday">Age</string>
+    <string name="userinfo_height">Height</string>
+    <string name="userinfo_height_unit">cm</string>
+    <string name="userinfo_weight">Weight</string>
+    <string name="userinfo_weight_unit">Kg</string>
+    <string name="userinfo_name_not_null">Nickname can not be empty</string>
+    <string name="userinfo_weight_not_null">Nickname can not be empty</string>
+    <string name="userinfo_height_not_null">Nickname can not be empty</string>
+    <string name="userinfo_height_size">Height should be in the range of 100-200cm</string>
+    <string name="userinfo_weight_size">Weight should be within the range of 30-150kg</string>
+    <string name="userinfo_age_size">Age should be in the range of 5-99 years</string>
+    <!-- target -->
+    <string name="target_title">Set Goal</string>
+    <!-- left -->
+    <string name="alert_low_battery">Low battery remind</string>
+    <string name="alert_low_battery_tips">To remind when Bracelet power is less than 25%</string>
+    <string name="alert_find_band">Searching for bracelet</string>
+    <string name="alert_find_band_tips">Bracelet keep shocking after connected with phone</string>
+    <string name="alert_find_band_conn_false">Please connect bracelet</string>
+    <string name="alert_coming_call">Calls reminder</string>
+    <string name="alert_coming_call_open">Open</string>
+    <string name="alert_coming_call_close">Close</string>
+    <string name="alert_coming_call_tips">Bracelet remind when phone call comes</string>
+    <string name="alert_alarm">Alarm reminder</string>
+    <string name="alert_alarm_tips">Set bracelet alarm time </string>
+    <string name="bind_bracelet">Bind bracelet</string>
+    <string name="bind_bracelet_tips">Go to pair and bind bracelet</string>
+    <string name="bracelet_reset">Restore factory settings</string>
+    <string name="bracelet_reset_tips">restore all the configuration information to the factory settings</string>
+    <string name="about">About</string>
+    <!-- phone_coming -->
+    <string name="phone_coming_alert_title">Calls Reminder</string>
+    <string name="phone_coming_alert">Phone calls reminder</string>
+    <string name="phone_coming_alert_contacts">Allow only contact to call</string>
+    <string name="phone_coming_nodisturb_time">Setting call not faze period</string>
+    <string name="phone_coming_nodisturb_start_time">Start Time</string>
+    <string name="phone_coming_nodisturb_end_time">End Time</string>
+    <string name="phone_coming_nodisturb_to">to</string>
+
+    <!-- alarm -->
+    <string name="alarm_title"></string>
+    <string name="alarm_edit">Edit the alarm</string>
+    <string name="alarm_del">Delete</string>
+    <string name="alarm_del_tips">Select alarm to delete</string>
+    <string name="alarm_del_dialog">Determine whether to delete</string>
+    <string name="alarm_del_confirm">Confirm</string>
+    <string name="alarm_del_cancel">Cancel</string>
+    <string name="alarm_finish">Complete</string>
+    <string name="alarm_add">Add alarm</string>
+    <string name="alarm_add_hint">Alarm Name</string>
+    <string name="alarm_add_time">Time</string>
+    <string name="alarm_add_name_null">Alarm Name can not be empty</string>
+    <string name="alarm_add_count_max">Can add up to five alarm clock at most</string>
+    <string name="alarm_add_success">Added Successfully</string>
+    <string name="alarm_awaken">Smart Wake</string>
+    <string name="alarm_awaken_tips">Allow the alarm wake me from light sleep state when 30 minutes before the target time </string>
+    <!-- device -->
+    <string name="bind_title">Bind bracelet</string>
+    <string name="bind_finish">Complete</string>
+
 </resources>

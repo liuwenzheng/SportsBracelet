@@ -1,6 +1,153 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">艾动</string>
+    <!-- splash -->
+    <string name="splash_one_item_pass">跳过</string>
+    <string name="splash_one_item_1">心率自动监测</string>
+    <string name="splash_one_item_2">智能记步，准确了解运动\n量自动计算里程和卡路里</string>
+    <string name="splash_one_item_3">24小时全天候\n实时了解健康状态</string>
+    <string name="splash_two_item_1">智能闹钟\n根据人体睡眠特征\n唤醒每一天</string>
+    <string name="splash_two_item_2">蓝牙4.0技术\n手机电量消耗极少</string>
+    <string name="splash_two_item_3">来电提醒\n与手机联系人同步\n过滤骚扰电话</string>
+    <!-- setting -->
+    <string name="setting_bluetooth">打开手机蓝牙</string>
+    <string name="setting_pre">上一步</string>
+    <string name="setting_next">下一步</string>
+    <string name="setting_bracelet">打开手环</string>
+    <string name="setting_bracelet_tips">长按手环上的触摸点5秒，直到屏幕变亮</string>
+    <string name="setting_device">手机与手环正在配对</string>
+    <string name="setting_device_search">正在搜索手环</string>
+    <string name="setting_device_search_repeat">重新搜索手环</string>
+    <string name="setting_device_select_tips">请选择手环</string>
+    <string name="setting_device_search_confirm">确认</string>
+    <string name="setting_device_conn_success">配对成功</string>
+    <string name="setting_device_conn_failure">配对失败</string>
+    <string name="setting_userinfo_name_hint">昵称</string>
+    <string name="setting_userinfo_sex">性别</string>
+    <string name="setting_userinfo_birthday">年龄</string>
+    <string name="setting_userinfo_height">身高</string>
+    <string name="setting_userinfo_height_unit">厘米</string>
+    <string name="setting_userinfo_weight">体重</string>
+    <string name="setting_userinfo_weight_unit">公斤</string>
+    <string name="setting_userinfo_name_not_null">昵称不能为空！</string>
+    <string name="setting_userinfo_weight_not_null">体重不能为空！</string>
+    <string name="setting_userinfo_height_not_null">身高不能为空！</string>
+    <string name="setting_userinfo_height_size">身高应在100-200cm范围内</string>
+    <string name="setting_userinfo_weight_size">体重应在30-150kg范围内</string>
+    <string name="setting_userinfo_age_size">年龄应在5-99岁范围内</string>
+    <string name="setting_target_title">设置目标</string>
+    <string name="setting_target_relaxed">轻松</string>
+    <string name="setting_target_recommend">推荐</string>
+    <string name="setting_target_active">活跃</string>
+    <string name="setting_target_step">步</string>
+    <string name="setting_target_calorie">千卡</string>
+    <string name="setting_target_calorie_unit">卡路里</string>
+    <string name="setting_target_tips">建议：每天运动10000步是积极健康的生活方式</string>
+    <string name="setting_target_amount_to">相当于</string>
+    <string name="setting_target_minutes">%1$s分钟</string>
+    <string name="setting_target_finish">完成</string>
 
+    <!-- main -->
+    <string name="main_tab_step">计步</string>
+    <string name="main_tab_sleep">睡眠</string>
+    <string name="main_tab_run">跑步</string>
+    <string name="main_conn_tips">当前未连接手环，请点击进行连接</string>
+    <string name="main_exit_tips">是否确定退出应用？</string>
+    <string name="main_exit_tips_confirm">确定</string>
+    <string name="main_exit_tips_cancel">取消</string>
+    <!-- step -->
+    <string name="step_syncdata_waiting">正在同步数据…</string>
+    <string name="step_history">历史</string>
+    <string name="step_duration">用时</string>
+    <string name="step_distance">距离</string>
+    <string name="step_duration_unit">分</string>
+    <string name="step_distance_unit">公里</string>
+    <string name="step_heart_rate_unit">/分</string>
+    <!-- mycenter -->
+    <string name="center_title">个人中心</string>
+    <string name="center_name">昵称</string>
+    <string name="center_info">个人信息</string>
+    <string name="center_info_tips">个人的性别年龄等信息</string>
+    <string name="center_target">设置运动目标</string>
+    <string name="center_target_tips">设定每日的运动目标，包括步数、卡路里等</string>
+    <string name="center_clear">清空数据</string>
+    <string name="center_clear_tips">清空APP和手环中的运动数据</string>
+    <!-- clear -->
+    <string name="clear_title">清除数据</string>
+    <string name="clear_bracelet">清空手环</string>
+    <string name="clear_phone">清空手机</string>
+    <string name="clear_tips">是否确定清空数据？</string>
+    <string name="clear_tips_confirm">确定</string>
+    <string name="clear_tips_cancel">取消</string>
+    <string name="clear_fail_conn_device">请先连接手环！</string>
+    <string name="clear_success">清除成功！</string>
+    <!-- userinfo -->
+    <string name="userinfo_title">个人信息</string>
+    <string name="userinfo_confirm">确认</string>
+    <string name="userinfo_name_hint">昵称</string>
+    <string name="userinfo_sex">性别</string>
+    <string name="userinfo_birthday">年龄</string>
+    <string name="userinfo_height">身高</string>
+    <string name="userinfo_height_unit">厘米</string>
+    <string name="userinfo_weight">体重</string>
+    <string name="userinfo_weight_unit">公斤</string>
+    <string name="userinfo_name_not_null">昵称不能为空！</string>
+    <string name="userinfo_weight_not_null">昵称不能为空！</string>
+    <string name="userinfo_height_not_null">昵称不能为空！</string>
+    <string name="userinfo_height_size">身高应在100-200cm范围内</string>
+    <string name="userinfo_weight_size">体重应在30-150kg范围内</string>
+    <string name="userinfo_age_size">年龄应在5-99岁范围内</string>
+    <!-- target -->
+    <string name="target_title">设置目标</string>
+    <!-- left -->
+    <string name="alert_low_battery">低电量提醒</string>
+    <string name="alert_low_battery_tips">手环电量低于25%时，进行提醒</string>
+    <string name="alert_find_band">寻找手环</string>
+    <string name="alert_find_band_tips">连接手环后，可让手环一直震动</string>
+    <string name="alert_find_band_conn_false">请先连接手环！</string>
+    <string name="alert_coming_call">来电提醒</string>
+    <string name="alert_coming_call_open">开</string>
+    <string name="alert_coming_call_close">关</string>
+    <string name="alert_coming_call_tips">手机来电时，手环进行提醒</string>
+    <string name="alert_alarm">闹钟提醒</string>
+    <string name="alert_alarm_tips">设置手环闹钟提醒时间</string>
+    <string name="bind_bracelet">绑定手环</string>
+    <string name="bind_bracelet_tips">进入配对和绑定手环的设置</string>
+    <string name="bracelet_reset">恢复出厂设置</string>
+    <string name="bracelet_reset_tips">将所有配置信息恢复到出厂设置</string>
+    <string name="bracelet_reset_alert">是否确定清空手机的所有设置？</string>
+    <string name="bracelet_reset_alert_confirm">确定</string>
+    <string name="bracelet_reset_alert_cancel">取消</string>
+    <string name="about">关于</string>
+    <!-- phone_coming -->
+    <string name="phone_coming_alert_title">来电提醒</string>
+    <string name="phone_coming_alert">手机来电提醒</string>
+    <string name="phone_coming_alert_contacts">只允许联系人来电</string>
+    <string name="phone_coming_nodisturb_time">设置来电勿扰时段</string>
+    <string name="phone_coming_nodisturb_start_time">开始时间</string>
+    <string name="phone_coming_nodisturb_end_time">结束时间</string>
+    <string name="phone_coming_nodisturb_to">至</string>
+
+    <!-- alarm -->
+    <string name="alarm_title">闹钟</string>
+    <string name="alarm_edit">编辑闹钟</string>
+    <string name="alarm_del">删除</string>
+    <string name="alarm_del_tips">请选择删除的闹钟！</string>
+    <string name="alarm_del_dialog">确定是否删除？</string>
+    <string name="alarm_del_confirm">确定</string>
+    <string name="alarm_del_cancel">取消</string>
+    <string name="alarm_finish">完成</string>
+    <string name="alarm_add">添加闹钟</string>
+    <string name="alarm_add_hint">闹钟名称</string>
+    <string name="alarm_add_time">时间</string>
+    <string name="alarm_add_name_null">闹钟名称不能为空！</string>
+    <string name="alarm_add_count_max">最多可添加5个闹钟！</string>
+    <string name="alarm_add_success">添加成功！</string>
+    <string name="alarm_awaken">智能唤醒</string>
+    <string name="alarm_awaken_tips">允许闹钟在目标时间之前30分钟将我从浅睡状态唤醒</string>
+    <!-- device -->
+    <string name="bind_title">绑定手环</string>
+    <string name="bind_finish">完成</string>
+    <string name="bind_refresh">刷新</string>
+    
 </resources>
