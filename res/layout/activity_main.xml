@@ -18,22 +18,24 @@
             <ImageView
                 android:id="@+id/id_iv_left"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="17dp"
                 android:onClick="showLeftMenu"
+                android:paddingLeft="17dp"
+                android:paddingRight="17dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/main_left_button" />
 
             <ImageView
                 android:id="@+id/id_iv_right"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="17dp"
                 android:onClick="showRightMenu"
+                android:paddingLeft="17dp"
+                android:paddingRight="17dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/main_right_button" />
         </RelativeLayout>

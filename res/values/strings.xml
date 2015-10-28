@@ -113,7 +113,7 @@
     <string name="alert_alarm_tips">设置手环闹钟提醒时间</string>
     <string name="bind_bracelet">绑定手环</string>
     <string name="bind_bracelet_tips">进入配对和绑定手环的设置</string>
-    <string name="bracelet_reset">恢复出场设置</string>
+    <string name="bracelet_reset">恢复出厂设置</string>
     <string name="bracelet_reset_tips">将所有配置信息恢复到出厂设置</string>
     <string name="bracelet_reset_alert">是否确定清空手机的所有设置？</string>
     <string name="bracelet_reset_alert_confirm">确定</string>

@@ -50,6 +50,6 @@ public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 		// return refreshableView.getCurrentItem() == adapter.getCount() - 1;
 		// }
 
-		return true;
+		return false;
 	}
 }
