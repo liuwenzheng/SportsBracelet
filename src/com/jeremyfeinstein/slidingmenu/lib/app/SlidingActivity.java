@@ -12,7 +12,9 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 
 	private SlidingActivityHelper mHelper;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 
@@ -22,7 +24,9 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		mHelper.onCreate(savedInstanceState);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onPostCreate(android.os.Bundle)
 	 */
 
@@ -31,7 +35,9 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		mHelper.onPostCreate(savedInstanceState);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#findViewById(int)
 	 */
 
@@ -42,7 +48,9 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		return mHelper.findViewById(id);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
 	 */
 
@@ -51,7 +59,9 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		mHelper.onSaveInstanceState(outState);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#setContentView(int)
 	 */
 
@@ -59,7 +69,9 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		setContentView(getLayoutInflater().inflate(id, null));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#setContentView(android.view.View)
 	 */
 
@@ -67,8 +79,11 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#setContentView(android.view.View, android.view.ViewGroup.LayoutParams)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#setContentView(android.view.View,
+	 * android.view.ViewGroup.LayoutParams)
 	 */
 
 	public void setContentView(View v, LayoutParams params) {
@@ -76,76 +91,108 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 		mHelper.registerAboveContentView(v, params);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#setBehindContentView(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#
+	 * setBehindContentView(int)
 	 */
 	public void setBehindContentView(int id) {
 		setBehindContentView(getLayoutInflater().inflate(id, null));
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#setBehindContentView(android.view.View)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#
+	 * setBehindContentView(android.view.View)
 	 */
 	public void setBehindContentView(View v) {
 		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#setBehindContentView(android.view.View, android.view.ViewGroup.LayoutParams)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#
+	 * setBehindContentView(android.view.View,
+	 * android.view.ViewGroup.LayoutParams)
 	 */
 	public void setBehindContentView(View v, LayoutParams params) {
 		mHelper.setBehindContentView(v, params);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#getSlidingMenu()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#getSlidingMenu
+	 * ()
 	 */
 	public SlidingMenu getSlidingMenu() {
 		return mHelper.getSlidingMenu();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#toggle()
 	 */
 	public void toggle() {
 		mHelper.toggle();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#showAbove()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#showAbove()
 	 */
 	public void showContent() {
 		mHelper.showContent();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#showBehind()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#showBehind()
 	 */
 	public void showMenu() {
 		mHelper.showMenu();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#showSecondaryMenu()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#showSecondaryMenu
+	 * ()
 	 */
 	public void showSecondaryMenu() {
 		mHelper.showSecondaryMenu();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#setSlidingActionBarEnabled(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivityBase#
+	 * setSlidingActionBarEnabled(boolean)
 	 */
 	public void setSlidingActionBarEnabled(boolean b) {
 		mHelper.setSlidingActionBarEnabled(b);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onKeyUp(int, android.view.KeyEvent)
 	 */
-	
+
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		boolean b = mHelper.onKeyUp(keyCode, event);
-		if (b) return b;
+		if (b)
+			return b;
 		return super.onKeyUp(keyCode, event);
 	}
 

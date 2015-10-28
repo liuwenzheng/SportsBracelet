@@ -20,28 +20,28 @@ public class CustomViewBehind extends ViewGroup {
 
 	private static final String TAG = "CustomViewBehind";
 
-	//边缘滑动的临界值
+	// 边缘滑动的临界值
 	private static final int MARGIN_THRESHOLD = 48; // dips
-	
-	//初始化触摸的模式
+
+	// 初始化触摸的模式
 	private int mTouchMode = SlidingMenu.TOUCHMODE_MARGIN;
 
-	//定义上方视图
+	// 定义上方视图
 	private CustomViewAbove mViewAbove;
 
-	//定义内容视图
+	// 定义内容视图
 	private View mContent;
 	private View mSecondaryContent;
-	
-	//定义滑动边缘的临界值
+
+	// 定义滑动边缘的临界值
 	private int mMarginThreshold;
-	
-	//宽度的偏移量
+
+	// 宽度的偏移量
 	private int mWidthOffset;
-	
+
 	private CanvasTransformer mTransformer;
-	
-	//是否能够使用子视图
+
+	// 是否能够使用子视图
 	private boolean mChildrenEnabled;
 
 	public CustomViewBehind(Context context) {
@@ -50,8 +50,8 @@ public class CustomViewBehind extends ViewGroup {
 
 	public CustomViewBehind(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mMarginThreshold = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
-				MARGIN_THRESHOLD, getResources().getDisplayMetrics());
+		mMarginThreshold = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MARGIN_THRESHOLD,
+				getResources().getDisplayMetrics());
 	}
 
 	public void setCustomViewAbove(CustomViewAbove customViewAbove) {
@@ -69,14 +69,14 @@ public class CustomViewBehind extends ViewGroup {
 		mWidthOffset = i;
 		requestLayout();
 	}
-	
+
 	/**
 	 * 设置边缘滑动的临界值
 	 */
 	public void setMarginThreshold(int marginThreshold) {
 		mMarginThreshold = marginThreshold;
 	}
-	
+
 	/**
 	 * 得到边缘滑动的临界值
 	 */
@@ -164,9 +164,9 @@ public class CustomViewBehind extends ViewGroup {
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		final int width = r - l;
 		final int height = b - t;
-		mContent.layout(0, 0, width-mWidthOffset, height);
+		mContent.layout(0, 0, width - mWidthOffset, height);
 		if (mSecondaryContent != null)
-			mSecondaryContent.layout(0, 0, width-mWidthOffset, height);
+			mSecondaryContent.layout(0, 0, width - mWidthOffset, height);
 	}
 
 	@Override
@@ -174,37 +174,37 @@ public class CustomViewBehind extends ViewGroup {
 		int width = getDefaultSize(0, widthMeasureSpec);
 		int height = getDefaultSize(0, heightMeasureSpec);
 		setMeasuredDimension(width, height);
-		final int contentWidth = getChildMeasureSpec(widthMeasureSpec, 0, width-mWidthOffset);
+		final int contentWidth = getChildMeasureSpec(widthMeasureSpec, 0, width - mWidthOffset);
 		final int contentHeight = getChildMeasureSpec(heightMeasureSpec, 0, height);
 		mContent.measure(contentWidth, contentHeight);
 		if (mSecondaryContent != null)
 			mSecondaryContent.measure(contentWidth, contentHeight);
 	}
 
-	//定义模式的值
+	// 定义模式的值
 	private int mMode;
-	
-	//是否能够使用渐入渐出效果
+
+	// 是否能够使用渐入渐出效果
 	private boolean mFadeEnabled;
-	
-	//定义渐入渐出的值
+
+	// 定义渐入渐出的值
 	private float mFadeDegree;
-	
-	//定义渐入渐出效果画笔
+
+	// 定义渐入渐出效果画笔
 	private final Paint mFadePaint = new Paint();
-	
-	//定义滑动缩放的值
+
+	// 定义滑动缩放的值
 	private float mScrollScale;
-	
-	//定义滑动菜单的阴影
+
+	// 定义滑动菜单的阴影
 	private Drawable mShadowDrawable;
-	
-	//定义右边滑动菜单的阴影图片
+
+	// 定义右边滑动菜单的阴影图片
 	private Drawable mSecondaryShadowDrawable;
-	
-	//定义阴影的宽度
+
+	// 定义阴影的宽度
 	private int mShadowWidth;
-	
+
 	/**
 	 * 设置模式的值
 	 */
@@ -297,23 +297,23 @@ public class CustomViewBehind extends ViewGroup {
 	 * 滑动下方视图到达的位置
 	 */
 	public void scrollBehindTo(View content, int x, int y) {
-		int vis = View.VISIBLE;		
+		int vis = View.VISIBLE;
 		if (mMode == SlidingMenu.LEFT) {
-			if (x >= content.getLeft()) vis = View.INVISIBLE;
-			scrollTo((int)((x + getBehindWidth())*mScrollScale), y);
+			if (x >= content.getLeft())
+				vis = View.INVISIBLE;
+			scrollTo((int) ((x + getBehindWidth()) * mScrollScale), y);
 		} else if (mMode == SlidingMenu.RIGHT) {
-			if (x <= content.getLeft()) vis = View.INVISIBLE;
-			scrollTo((int)(getBehindWidth() - getWidth() + 
-					(x-getBehindWidth())*mScrollScale), y);
+			if (x <= content.getLeft())
+				vis = View.INVISIBLE;
+			scrollTo((int) (getBehindWidth() - getWidth() + (x - getBehindWidth()) * mScrollScale), y);
 		} else if (mMode == SlidingMenu.LEFT_RIGHT) {
 			mContent.setVisibility(x >= content.getLeft() ? View.INVISIBLE : View.VISIBLE);
 			mSecondaryContent.setVisibility(x <= content.getLeft() ? View.INVISIBLE : View.VISIBLE);
 			vis = x == 0 ? View.INVISIBLE : View.VISIBLE;
 			if (x <= content.getLeft()) {
-				scrollTo((int)((x + getBehindWidth())*mScrollScale), y);				
+				scrollTo((int) ((x + getBehindWidth()) * mScrollScale), y);
 			} else {
-				scrollTo((int)(getBehindWidth() - getWidth() + 
-						(x-getBehindWidth())*mScrollScale), y);				
+				scrollTo((int) (getBehindWidth() - getWidth() + (x - getBehindWidth()) * mScrollScale), y);
 			}
 		}
 		if (vis == View.INVISIBLE)
@@ -337,7 +337,7 @@ public class CustomViewBehind extends ViewGroup {
 			case 0:
 				return content.getLeft();
 			case 2:
-				return content.getLeft() + getBehindWidth();	
+				return content.getLeft() + getBehindWidth();
 			}
 		} else if (mMode == SlidingMenu.LEFT_RIGHT) {
 			switch (page) {
@@ -385,8 +385,7 @@ public class CustomViewBehind extends ViewGroup {
 		} else if (mMode == SlidingMenu.RIGHT) {
 			return (x <= right && x >= right - mMarginThreshold);
 		} else if (mMode == SlidingMenu.LEFT_RIGHT) {
-			return (x >= left && x <= mMarginThreshold + left) || 
-					(x <= right && x >= right - mMarginThreshold);
+			return (x >= left && x <= mMarginThreshold + left) || (x <= right && x >= right - mMarginThreshold);
 		}
 		return false;
 	}
@@ -455,7 +454,8 @@ public class CustomViewBehind extends ViewGroup {
 	 * 画滑动菜单的阴影
 	 */
 	public void drawShadow(View content, Canvas canvas) {
-		if (mShadowDrawable == null || mShadowWidth <= 0) return;
+		if (mShadowDrawable == null || mShadowWidth <= 0)
+			return;
 		int left = 0;
 		if (mMode == SlidingMenu.LEFT) {
 			left = content.getLeft() - mShadowWidth;
@@ -477,8 +477,9 @@ public class CustomViewBehind extends ViewGroup {
 	 * 画出渐入渐出效果
 	 */
 	public void drawFade(View content, Canvas canvas, float openPercent) {
-		if (!mFadeEnabled) return;
-		final int alpha = (int) (mFadeDegree * 255 * Math.abs(1-openPercent));
+		if (!mFadeEnabled)
+			return;
+		final int alpha = (int) (mFadeDegree * 255 * Math.abs(1 - openPercent));
 		mFadePaint.setColor(Color.argb(alpha, 0, 0, 0));
 		int left = 0;
 		int right = 0;
@@ -487,26 +488,27 @@ public class CustomViewBehind extends ViewGroup {
 			right = content.getLeft();
 		} else if (mMode == SlidingMenu.RIGHT) {
 			left = content.getRight();
-			right = content.getRight() + getBehindWidth();			
+			right = content.getRight() + getBehindWidth();
 		} else if (mMode == SlidingMenu.LEFT_RIGHT) {
 			left = content.getLeft() - getBehindWidth();
 			right = content.getLeft();
 			canvas.drawRect(left, 0, right, getHeight(), mFadePaint);
 			left = content.getRight();
-			right = content.getRight() + getBehindWidth();			
+			right = content.getRight() + getBehindWidth();
 		}
 		canvas.drawRect(left, 0, right, getHeight(), mFadePaint);
 	}
-	
+
 	private boolean mSelectorEnabled = true;
 	private Bitmap mSelectorDrawable;
 	private View mSelectedView;
-	
+
 	public void drawSelector(View content, Canvas canvas, float openPercent) {
-		if (!mSelectorEnabled) return;
+		if (!mSelectorEnabled)
+			return;
 		if (mSelectorDrawable != null && mSelectedView != null) {
 			String tag = (String) mSelectedView.getTag(R.id.selected_view);
-			if (tag.equals(TAG+"SelectedView")) {
+			if (tag.equals(TAG + "SelectedView")) {
 				canvas.save();
 				int left, right, offset;
 				offset = (int) (mSelectorDrawable.getWidth() * openPercent);
@@ -514,7 +516,7 @@ public class CustomViewBehind extends ViewGroup {
 					right = content.getLeft();
 					left = right - offset;
 					canvas.clipRect(left, 0, right, getHeight());
-					canvas.drawBitmap(mSelectorDrawable, left, getSelectorTop(), null);		
+					canvas.drawBitmap(mSelectorDrawable, left, getSelectorTop(), null);
 				} else if (mMode == SlidingMenu.RIGHT) {
 					left = content.getRight();
 					right = left + offset;
@@ -525,7 +527,7 @@ public class CustomViewBehind extends ViewGroup {
 			}
 		}
 	}
-	
+
 	public void setSelectorEnabled(boolean b) {
 		mSelectorEnabled = b;
 	}
@@ -537,7 +539,7 @@ public class CustomViewBehind extends ViewGroup {
 		}
 		if (v != null && v.getParent() != null) {
 			mSelectedView = v;
-			mSelectedView.setTag(R.id.selected_view, TAG+"SelectedView");
+			mSelectedView.setTag(R.id.selected_view, TAG + "SelectedView");
 			invalidate();
 		}
 	}

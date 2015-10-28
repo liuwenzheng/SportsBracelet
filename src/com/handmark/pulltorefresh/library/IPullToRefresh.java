@@ -77,8 +77,10 @@ public interface IPullToRefresh<T extends View> {
 	 * You should not keep the result of this method any longer than you need
 	 * it.
 	 * 
-	 * @param includeStart - Whether to include the Start/Header Views
-	 * @param includeEnd - Whether to include the End/Footer Views
+	 * @param includeStart
+	 *            - Whether to include the Start/Header Views
+	 * @param includeEnd
+	 *            - Whether to include the End/Footer Views
 	 * @return Object which will proxy any calls you make on it, to the
 	 *         LoadingLayouts included.
 	 */
@@ -160,22 +162,24 @@ public interface IPullToRefresh<T extends View> {
 	 * ViewPager), but will restrict which types of finger scrolls will trigger
 	 * the View.
 	 * 
-	 * @param filterEvents - true if you want to filter Touch Events. Default is
-	 *            true.
+	 * @param filterEvents
+	 *            - true if you want to filter Touch Events. Default is true.
 	 */
 	public void setFilterTouchEvents(boolean filterEvents);
 
 	/**
 	 * Set the mode of Pull-to-Refresh that this view will use.
 	 * 
-	 * @param mode - Mode to set the View to
+	 * @param mode
+	 *            - Mode to set the View to
 	 */
 	public void setMode(Mode mode);
 
 	/**
 	 * Set OnPullEventListener for the Widget
 	 * 
-	 * @param listener - Listener to be used when the Widget has a pull event to
+	 * @param listener
+	 *            - Listener to be used when the Widget has a pull event to
 	 *            propogate.
 	 */
 	public void setOnPullEventListener(OnPullEventListener<T> listener);
@@ -183,14 +187,16 @@ public interface IPullToRefresh<T extends View> {
 	/**
 	 * Set OnRefreshListener for the Widget
 	 * 
-	 * @param listener - Listener to be used when the Widget is set to Refresh
+	 * @param listener
+	 *            - Listener to be used when the Widget is set to Refresh
 	 */
 	public void setOnRefreshListener(OnRefreshListener<T> listener);
 
 	/**
 	 * Set OnRefreshListener for the Widget
 	 * 
-	 * @param listener - Listener to be used when the Widget is set to Refresh
+	 * @param listener
+	 *            - Listener to be used when the Widget is set to Refresh
 	 */
 	public void setOnRefreshListener(OnRefreshListener2<T> listener);
 
@@ -199,7 +205,8 @@ public interface IPullToRefresh<T extends View> {
 	 * Android's standard Overscroll support (the edge-glow). This setting only
 	 * takes effect when running on device with Android v2.3 or greater.
 	 * 
-	 * @param enabled - true if you want Overscroll enabled
+	 * @param enabled
+	 *            - true if you want Overscroll enabled
 	 */
 	public void setPullToRefreshOverScrollEnabled(boolean enabled);
 
@@ -213,8 +220,8 @@ public interface IPullToRefresh<T extends View> {
 	 * Sets the Widget to be in the refresh state. The UI will be updated to
 	 * show the 'Refreshing' view.
 	 * 
-	 * @param doScroll - true if you want to force a scroll to the Refreshing
-	 *            view.
+	 * @param doScroll
+	 *            - true if you want to force a scroll to the Refreshing view.
 	 */
 	public void setRefreshing(boolean doScroll);
 
@@ -222,7 +229,8 @@ public interface IPullToRefresh<T extends View> {
 	 * Sets the Animation Interpolator that is used for animated scrolling.
 	 * Defaults to a DecelerateInterpolator
 	 * 
-	 * @param interpolator - Interpolator to use
+	 * @param interpolator
+	 *            - Interpolator to use
 	 */
 	public void setScrollAnimationInterpolator(Interpolator interpolator);
 
@@ -230,8 +238,8 @@ public interface IPullToRefresh<T extends View> {
 	 * By default the Widget disables scrolling on the Refreshable View while
 	 * refreshing. This method can change this behaviour.
 	 * 
-	 * @param scrollingWhileRefreshingEnabled - true if you want to enable
-	 *            scrolling while refreshing
+	 * @param scrollingWhileRefreshingEnabled
+	 *            - true if you want to enable scrolling while refreshing
 	 */
 	public void setScrollingWhileRefreshingEnabled(boolean scrollingWhileRefreshingEnabled);
 

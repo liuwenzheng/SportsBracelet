@@ -33,7 +33,7 @@ import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 
-public class StepActivity extends BaseActivity implements OnItemClickListener,ICircleProgressValue {
+public class StepActivity extends BaseActivity implements OnItemClickListener, ICircleProgressValue {
 	private CircleProgressView circleView;
 	private TextView tv_conn_status, tv_current_value;
 	private ListView lv_devices;
@@ -183,6 +183,6 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,IC
 	public void getProgressValue(int value) {
 		tv_current_value.setVisibility(View.VISIBLE);
 		tv_current_value.setText(value + "");
-		
+
 	}
 }

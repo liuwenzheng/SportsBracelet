@@ -188,8 +188,10 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			}
 
 			SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME, et_userinfo_name.getText().toString());
-			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_HEIGHT, Integer.valueOf(et_userinfo_height.getText().toString()));
-			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT, Integer.valueOf(et_userinfo_weight.getText().toString()));
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_HEIGHT,
+					Integer.valueOf(et_userinfo_height.getText().toString()));
+			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT,
+					Integer.valueOf(et_userinfo_weight.getText().toString()));
 
 			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_GENDER,
 					Integer.valueOf((String) findViewById(rg_userinfo_sex.getCheckedRadioButtonId()).getTag()));

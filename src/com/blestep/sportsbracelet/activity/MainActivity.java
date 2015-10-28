@@ -152,6 +152,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 				if (AppConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())
 						|| AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
 						|| AppConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
+					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
+						((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
+					}
 					LogModule.d("配对失败...");
 					pull_refresh_viewpager.onRefreshComplete();
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
@@ -163,6 +166,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 				}
 				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
 					LogModule.d("配对成功...");
+					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
+						((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
+					}
 					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
 					pull_refresh_viewpager.onRefreshComplete();
 					autoPullUpdate(getString(R.string.step_syncdata_waiting));

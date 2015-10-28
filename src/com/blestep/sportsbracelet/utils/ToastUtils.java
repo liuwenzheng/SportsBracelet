@@ -9,24 +9,19 @@ import android.widget.Toast;
  * toast方法
  * 
  * @author jianweiwang
- *
+ * 
  */
 final public class ToastUtils {
-	
-	
+
 	public static final void showToast(Context context, String tip) {
 		showToast(context, tip, true);
 	}
-	
-	
-	
+
 	public static final void showToast(Context context, int tipID) {
 		showToast(context, tipID, true);
 	}
-	
 
-	public static final void showToast(Context context, int tipID,
-			boolean isCenter) {
+	public static final void showToast(Context context, int tipID, boolean isCenter) {
 		String tip = (String) context.getResources().getText(tipID);
 		showToast(context, tip, isCenter);
 	}
@@ -38,8 +33,7 @@ final public class ToastUtils {
 	 * @param tip
 	 * @param isCenter
 	 */
-	public static final void showToast(Context context, String tip,
-			boolean isCenter) {
+	public static final void showToast(Context context, String tip, boolean isCenter) {
 		int duration = Toast.LENGTH_SHORT;
 		if (TextUtils.isEmpty(tip)) {
 			return;
@@ -53,8 +47,7 @@ final public class ToastUtils {
 		}
 		toast.show();
 	}
-	
-	
+
 	/**
 	 * 
 	 * @Title: showInfo

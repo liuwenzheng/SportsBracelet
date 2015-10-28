@@ -35,7 +35,6 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 		initData();
 	}
 
-
 	private void initListener() {
 		findViewById(R.id.tv_clear_bracelet).setOnClickListener(this);
 		findViewById(R.id.tv_clear_phone).setOnClickListener(this);

@@ -32,12 +32,14 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
 		initListener();
 		initData();
 	}
+
 	@Override
 	protected void onResume() {
 		mAlarms = DBTools.getInstance(this).selectAllAlarm();
 		mAdapter.notifyDataSetChanged();
 		super.onResume();
 	}
+
 	private void initView() {
 		lv_alarm = (ListView) findViewById(R.id.lv_alarm);
 	}

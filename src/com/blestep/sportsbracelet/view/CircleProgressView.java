@@ -756,10 +756,10 @@ public class CircleProgressView extends View {
 		mContourPaint.setStyle(Style.STROKE);
 		mContourPaint.setStrokeWidth(mContourSize);
 
-		 mOuterPaint.setColor(mOuterColor);
-		 mOuterPaint.setAntiAlias(true);
-		 mOuterPaint.setStyle(Style.STROKE);
-		 mOuterPaint.setStrokeWidth(mOuterWidth);
+		mOuterPaint.setColor(mOuterColor);
+		mOuterPaint.setAntiAlias(true);
+		mOuterPaint.setStyle(Style.STROKE);
+		mOuterPaint.setStrokeWidth(mOuterWidth);
 	}
 
 	/**

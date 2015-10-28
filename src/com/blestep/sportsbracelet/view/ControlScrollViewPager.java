@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class ControlScrollViewPager extends ViewPager {
 
 	private boolean scrollable = true;
-	
+
 	public ControlScrollViewPager(Context context) {
 		super(context);
 	}

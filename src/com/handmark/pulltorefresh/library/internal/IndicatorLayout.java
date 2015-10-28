@@ -56,27 +56,27 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 
 		int inAnimResId, outAnimResId;
 		switch (mode) {
-			case PULL_FROM_END:
-//				inAnimResId = R.anim.slide_in_from_bottom;
-//				outAnimResId = R.anim.slide_out_to_bottom;
-				inAnimResId = R.anim.base_slide_in_from_bottom;
-				outAnimResId = R.anim.base_slide_out_to_bottom;
-				setBackgroundResource(R.drawable.indicator_bg_bottom);
+		case PULL_FROM_END:
+			// inAnimResId = R.anim.slide_in_from_bottom;
+			// outAnimResId = R.anim.slide_out_to_bottom;
+			inAnimResId = R.anim.base_slide_in_from_bottom;
+			outAnimResId = R.anim.base_slide_out_to_bottom;
+			setBackgroundResource(R.drawable.indicator_bg_bottom);
 
-				// Rotate Arrow so it's pointing the correct way
-				mArrowImageView.setScaleType(ScaleType.MATRIX);
-				Matrix matrix = new Matrix();
-				matrix.setRotate(180f, arrowD.getIntrinsicWidth() / 2f, arrowD.getIntrinsicHeight() / 2f);
-				mArrowImageView.setImageMatrix(matrix);
-				break;
-			default:
-			case PULL_FROM_START:
-//				inAnimResId = R.anim.slide_in_from_top;
-//				outAnimResId = R.anim.slide_out_to_top;
-				inAnimResId = R.anim.base_slide_in_from_top;
-				outAnimResId = R.anim.base_slide_out_to_top;
-				setBackgroundResource(R.drawable.indicator_bg_top);
-				break;
+			// Rotate Arrow so it's pointing the correct way
+			mArrowImageView.setScaleType(ScaleType.MATRIX);
+			Matrix matrix = new Matrix();
+			matrix.setRotate(180f, arrowD.getIntrinsicWidth() / 2f, arrowD.getIntrinsicHeight() / 2f);
+			mArrowImageView.setImageMatrix(matrix);
+			break;
+		default:
+		case PULL_FROM_START:
+			// inAnimResId = R.anim.slide_in_from_top;
+			// outAnimResId = R.anim.slide_out_to_top;
+			inAnimResId = R.anim.base_slide_in_from_top;
+			outAnimResId = R.anim.base_slide_out_to_top;
+			setBackgroundResource(R.drawable.indicator_bg_top);
+			break;
 		}
 
 		mInAnim = AnimationUtils.loadAnimation(context, inAnimResId);
