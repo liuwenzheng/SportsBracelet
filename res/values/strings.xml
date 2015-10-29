@@ -155,5 +155,15 @@
     <string name="about_firmware">手环固件</string>
     <string name="about_company">深圳市华创恒达科技有限公司</string>
     <string name="about_company_english">moko technology limited</string>
+    <!-- pull -->
+    <string name="pull_to_refresh_pull_label">下拉刷新…</string>
+    <string name="pull_to_refresh_release_label">放开以刷新…</string>
+    <string name="pull_to_refresh_refreshing_label">正在同步数据…</string>
+
+    <!-- Just use standard Pull Down String when pulling up. These can be set for languages which require it -->
+    <string name="pull_to_refresh_from_bottom_pull_label">获取更多…</string>
+    <string name="pull_to_refresh_from_bottom_pull_without_data_label">亲，已经是最后一页了</string>
+    <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
 
 </resources>
