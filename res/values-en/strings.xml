@@ -1,23 +1,23 @@
 <resources>
 
-    <string name="app_name">Blestep</string>
+    <string name="app_name">Gofit</string>
     <!-- splash -->
     <string name="splash_one_item_pass">Skip</string>
     <string name="splash_one_item_1">Keep healthy</string>
     <string name="splash_one_item_2">Record sports data</string>
-    <string name="splash_one_item_3">Track your fitness </string>
+    <string name="splash_one_item_3">Track your fitness</string>
     <string name="splash_two_item_1">Health alarm</string>
     <string name="splash_two_item_2">Ble.4.0 save power</string>
     <string name="splash_two_item_3">Call Reminder</string>
     <!-- setting -->
-    <string name="setting_bluetooth"> Open the phone Bluetooth</string>
+    <string name="setting_bluetooth">Open the phone Bluetooth</string>
     <string name="setting_pre">Back</string>
     <string name="setting_next">Next</string>
     <string name="setting_bracelet">Turn on the bracelet</string>
     <string name="setting_bracelet_tips">Long press the touch point on bracelet for 5 seconds until screen lights up</string>
     <string name="setting_device">Pairing your phone with bracelet</string>
-    <string name="setting_device_search">Searching Bracelet</string>
-    <string name="setting_device_search_repeat">Research Bracelet</string>
+    <string name="setting_device_search">Searching for bracelet</string>
+    <string name="setting_device_search_repeat">Research for bracelet</string>
     <string name="setting_device_select_tips">Please choose bracelet</string>
     <string name="setting_device_search_confirm">Ok</string>
     <string name="setting_device_conn_success">Pairing Successfully</string>
@@ -28,7 +28,7 @@
     <string name="setting_userinfo_height">Height</string>
     <string name="setting_userinfo_height_unit">cm</string>
     <string name="setting_userinfo_weight">Weight</string>
-    <string name="setting_userinfo_weight_unit">Kg</string>
+    <string name="setting_userinfo_weight_unit">kg</string>
     <string name="setting_userinfo_name_not_null">Nickname can not be empty</string>
     <string name="setting_userinfo_weight_not_null">Weight can not be empty</string>
     <string name="setting_userinfo_height_not_null">Height can not be empty</string>
@@ -60,7 +60,7 @@
     <string name="step_history">History</string>
     <string name="step_duration">Time</string>
     <string name="step_distance">Mileage</string>
-    <string name="step_duration_unit">Min</string>
+    <string name="step_duration_unit">/Min</string>
     <string name="step_distance_unit">Km</string>
     <string name="step_heart_rate_unit">/Min</string>
     <!-- mycenter -->
@@ -90,7 +90,7 @@
     <string name="userinfo_height">Height</string>
     <string name="userinfo_height_unit">cm</string>
     <string name="userinfo_weight">Weight</string>
-    <string name="userinfo_weight_unit">Kg</string>
+    <string name="userinfo_weight_unit">kg</string>
     <string name="userinfo_name_not_null">Nickname can not be empty</string>
     <string name="userinfo_weight_not_null">Nickname can not be empty</string>
     <string name="userinfo_height_not_null">Nickname can not be empty</string>
@@ -105,12 +105,12 @@
     <string name="alert_find_band">Find the bracelet</string>
     <string name="alert_find_band_tips">Bracelet shocking when connecting with phone</string>
     <string name="alert_find_band_conn_false">Please connect bracelet</string>
-    <string name="alert_coming_call">Calls reminder</string>
+    <string name="alert_coming_call">Call reminder</string>
     <string name="alert_coming_call_open">On</string>
     <string name="alert_coming_call_close">Off</string>
     <string name="alert_coming_call_tips">Bracelet shock when phone call comes</string>
     <string name="alert_alarm">Alarm</string>
-    <string name="alert_alarm_tips">Set bracelet alarm time </string>
+    <string name="alert_alarm_tips">Set bracelet alarm time</string>
     <string name="bind_bracelet">Bind bracelet</string>
     <string name="bind_bracelet_tips">To pair and bind bracelet</string>
     <string name="bracelet_reset">Reset</string>
@@ -120,8 +120,8 @@
     <string name="bracelet_reset_alert_cancel">Cancel</string>
     <string name="about">About</string>
     <!-- phone_coming -->
-    <string name="phone_coming_alert_title">Calls Reminder</string>
-    <string name="phone_coming_alert">Phone calls reminder</string>
+    <string name="phone_coming_alert_title">Call Reminder</string>
+    <string name="phone_coming_alert">Phone call reminder</string>
     <string name="phone_coming_alert_contacts">Allow only contact to call</string>
     <string name="phone_coming_nodisturb_time">Setting call not faze period</string>
     <string name="phone_coming_nodisturb_start_time">Start Time</string>
@@ -129,11 +129,11 @@
     <string name="phone_coming_nodisturb_to">to</string>
 
     <!-- alarm -->
-    <string name="alarm_title"></string>
+    <string name="alarm_title">Alarm</string>
     <string name="alarm_edit">Edit Alarm</string>
     <string name="alarm_del">Delete</string>
     <string name="alarm_del_tips">Select alarm to delete</string>
-    <string name="alarm_del_dialog">Determine whether to delete</string>
+    <string name="alarm_del_dialog">Are you sure you want to delete?</string>
     <string name="alarm_del_confirm">Ok</string>
     <string name="alarm_del_cancel">Cancel</string>
     <string name="alarm_finish">Complete</string>
@@ -141,10 +141,10 @@
     <string name="alarm_add_hint">Alarm Name</string>
     <string name="alarm_add_time">Time</string>
     <string name="alarm_add_name_null">Alarm Name can not be empty</string>
-    <string name="alarm_add_count_max">Can add up to five alarm clock at most</string>
+    <string name="alarm_add_count_max">Could add up to five alarm clock at most</string>
     <string name="alarm_add_success">Added Successfully</string>
     <string name="alarm_awaken">Smart Wake</string>
-    <string name="alarm_awaken_tips">Allow the alarm wake me from light sleep state when 30 minutes before the target time </string>
+    <string name="alarm_awaken_tips">Allow the alarm wake me from light sleep state when 30 minutes before the target time</string>
     <!-- device -->
     <string name="bind_title">Bind bracelet</string>
     <string name="bind_finish">Complete</string>
@@ -152,13 +152,13 @@
     <!-- about -->
     <string name="about_title">About</string>
     <string name="about_app">App version</string>
-    <string name="about_firmware">Bracelet Firmware Version</string>
+    <string name="about_firmware">Firmware Version</string>
     <string name="about_company">Moko Technology Ltd  </string>
     <string name="about_company_english">moko technology limited</string>
     <!-- pull -->
-    <string name="pull_to_refresh_pull_label">Pull down to refresh</string>
-    <string name="pull_to_refresh_release_label">Release to refresh</string>
-    <string name="pull_to_refresh_refreshing_label">Syncing Data</string>
+    <string name="pull_to_refresh_pull_label">Pull down to refresh…</string>
+    <string name="pull_to_refresh_release_label">Release to refresh…</string>
+    <string name="pull_to_refresh_refreshing_label">Syncing Data…</string>
 
     <!-- Just use standard Pull Down String when pulling up. These can be set for languages which require it -->
     <string name="pull_to_refresh_from_bottom_pull_label">Know More</string>
