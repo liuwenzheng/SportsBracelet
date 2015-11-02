@@ -101,10 +101,24 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 			@Override
 			public void onRefresh(PullToRefreshBase<ViewPager> refreshView) {
 				if (mBtService.isConnDevice()) {
-					mBtService.synTimeData();
-					mBtService.synUserInfoData();
-					mBtService.synAlarmData();
-					mBtService.getSportData();
+					// 5s后若未获取数据自动结束刷新
+					BTService.mHandler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									if (pull_refresh_viewpager.isRefreshing()) {
+										LogModule.e("5s后未获得手环数据！！！");
+										pull_refresh_viewpager.onRefreshComplete();
+									}
+
+								}
+							});
+						}
+					}, 5000);
+					synData();
 				} else {
 					pull_refresh_viewpager.onRefreshComplete();
 				}
@@ -177,10 +191,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
-					mBtService.synTimeData();
-					mBtService.synUserInfoData();
-					mBtService.synAlarmData();
-					mBtService.getSportData();
+					synData();
 					// tv_main_tips.setText(R.string.step_syncdata_waiting);
 					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -223,10 +234,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 				LogModule.d("连接手环or同步数据？");
 				if (mBtService.isConnDevice()) {
 					autoPullUpdate(getString(R.string.step_syncdata_waiting));
-					mBtService.synTimeData();
-					mBtService.synUserInfoData();
-					mBtService.synAlarmData();
-					mBtService.getSportData();
+					synData();
 					// tv_main_tips.setText(R.string.step_syncdata_waiting);
 					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -252,6 +260,31 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 			mBtService = null;
 		}
 	};
+
+	/**
+	 * 同步数据
+	 */
+	private void synData() {
+		// 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
+		BTService.mHandler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					mBtService.synTimeData();
+					Thread.sleep(200);
+					mBtService.synUserInfoData();
+					Thread.sleep(200);
+					mBtService.synAlarmData();
+					Thread.sleep(200);
+					mBtService.getSportData();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 200);
+
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -39,10 +39,11 @@ public class BTService extends Service implements LeScanCallback {
 	public static Handler mHandler;
 	// private ArrayList<BleDevice> mDevices;
 	public BluetoothGatt mBluetoothGatt;
+	private BluetoothGattCallback mGattCallback;
 
 	@Override
 	public void onCreate() {
-		mHandler = new Handler(getApplicationContext().getMainLooper());
+		mHandler = new Handler(getApplication().getMainLooper());
 		LogModule.d("创建BTService...onCreate");
 		// 注册广播接收器
 		IntentFilter filter = new IntentFilter();
@@ -104,12 +105,120 @@ public class BTService extends Service implements LeScanCallback {
 		if (device == null) {
 			return;
 		} else {
-			mHandler.post(new Runnable() {
+
+			mGattCallback = new BluetoothGattCallback() {
+				// private int count;
+
+				public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+					LogModule.d("onConnectionStateChange...status:" + status + "...newState:" + newState);
+					switch (newState) {
+					case BluetoothProfile.STATE_CONNECTED:
+						if (status == GATT_ERROR_TIMEOUT) {
+							if (mBluetoothGatt != null) {
+								mBluetoothGatt.close();
+								mBluetoothGatt = null;
+							}
+							Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
+							sendBroadcast(intent);
+						} else {
+							if (mBluetoothGatt == null) {
+								BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles
+										.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+								mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
+								return;
+							}
+							mBluetoothGatt.discoverServices();
+						}
+						break;
+					case BluetoothProfile.STATE_DISCONNECTED:
+						if (mBluetoothGatt != null) {
+							mBluetoothGatt.close();
+							mBluetoothGatt = null;
+						}
+						Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
+						sendBroadcast(intent);
+						break;
+					}
+				};
+
+				public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+					LogModule.d("onServicesDiscovered...status:" + status);
+					if (status == BluetoothGatt.GATT_SUCCESS) {
+						BTModule.setCharacteristicNotify(mBluetoothGatt);
+						mHandler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								Intent intent = new Intent(AppConstants.ACTION_DISCOVER_SUCCESS);
+								sendBroadcast(intent);
+							}
+						}, 1000);
+					} else {
+						Intent intent = new Intent(AppConstants.ACTION_DISCOVER_FAILURE);
+						sendBroadcast(intent);
+					}
+				};
+
+				public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
+						int status) {
+					LogModule.d("onCharacteristicRead...");
+				};
+
+				public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
+						int status) {
+					LogModule.d("onCharacteristicWrite...");
+				};
+
+				public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+					LogModule.d("onCharacteristicChanged...");
+					// BTModule.setCharacteristicNotify(mBluetoothGatt);
+					byte[] data = characteristic.getValue();
+					String[] formatDatas = Utils.formatData(data, characteristic);
+					// StringBuilder stringBuilder = new
+					// StringBuilder(formatDatas.length);
+					// for (String string : formatDatas)
+					// stringBuilder.append(string + " ");
+					// LogModule.i("转化后：" + stringBuilder.toString());
+					// 获取总记录数
+					int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
+					if (header == AppConstants.HEADER_BACK_ACK) {
+						return;
+					}
+					if (header == AppConstants.HEADER_BACK_RECORD) {
+						// count = 0;
+						// int stepRecord = Integer.valueOf(formatDatas[1]);
+						// int sleepRecord = Integer.valueOf(formatDatas[2]);
+						// 保存电量
+						int battery = Integer.valueOf(Utils.decodeToString(formatDatas[3]));
+						SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
+						// count = stepRecord;
+						// LogModule.i("手环中的记录总数为：" + count);
+						// Intent intent = new Intent(AppConstants.ACTION_LOG);
+						// intent.putExtra("log", "手环中的记录总数为：" + count);
+						// sendBroadcast(intent);
+						return;
+					}
+					// count--;
+					BTModule.saveBleData(formatDatas, getApplicationContext());
+					// LogModule.i(count + "...");
+					// if (count == 0) {
+					// LogModule.i("延迟1s发送广播更新数据");
+					// mHandler.postDelayed(new Runnable() {
+					// @Override
+					// public void run() {
+					// Intent intent = new
+					// Intent(AppConstants.ACTION_REFRESH_DATA);
+					// sendBroadcast(intent);
+					// }
+					// }, 1000);
+					// }
+				};
+			};
+			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
 				}
-			});
+			}, 1000);
 
 		}
 	}
@@ -139,111 +248,6 @@ public class BTService extends Service implements LeScanCallback {
 			// mDevices.add(bleDevice);
 		}
 	}
-
-	private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
-		// private int count;
-
-		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-			LogModule.d("onConnectionStateChange...status:" + status + "...newState:" + newState);
-			switch (newState) {
-			case BluetoothProfile.STATE_CONNECTED:
-				if (status == GATT_ERROR_TIMEOUT) {
-					if (mBluetoothGatt != null) {
-						mBluetoothGatt.close();
-						mBluetoothGatt = null;
-					}
-					Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
-					sendBroadcast(intent);
-				} else {
-					if (mBluetoothGatt == null) {
-						BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles.getStringValue(
-								BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-						mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
-						return;
-					}
-					mBluetoothGatt.discoverServices();
-				}
-				break;
-			case BluetoothProfile.STATE_DISCONNECTED:
-				if (mBluetoothGatt != null) {
-					mBluetoothGatt.close();
-					mBluetoothGatt = null;
-				}
-				Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
-				sendBroadcast(intent);
-				break;
-			}
-		};
-
-		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-			LogModule.d("onServicesDiscovered...status:" + status);
-			if (status == BluetoothGatt.GATT_SUCCESS) {
-				BTModule.setCharacteristicNotify(mBluetoothGatt);
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						Intent intent = new Intent(AppConstants.ACTION_DISCOVER_SUCCESS);
-						sendBroadcast(intent);
-					}
-				}, 1000);
-			} else {
-				Intent intent = new Intent(AppConstants.ACTION_DISCOVER_FAILURE);
-				sendBroadcast(intent);
-			}
-		};
-
-		public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-			LogModule.d("onCharacteristicRead...");
-		};
-
-		public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-			LogModule.d("onCharacteristicWrite...");
-		};
-
-		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-			LogModule.d("onCharacteristicChanged...");
-			// BTModule.setCharacteristicNotify(mBluetoothGatt);
-			byte[] data = characteristic.getValue();
-			String[] formatDatas = Utils.formatData(data, characteristic);
-			// StringBuilder stringBuilder = new
-			// StringBuilder(formatDatas.length);
-			// for (String string : formatDatas)
-			// stringBuilder.append(string + " ");
-			// LogModule.i("转化后：" + stringBuilder.toString());
-			// 获取总记录数
-			int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
-			if (header == AppConstants.HEADER_BACK_ACK) {
-				return;
-			}
-			if (header == AppConstants.HEADER_BACK_RECORD) {
-				// count = 0;
-				// int stepRecord = Integer.valueOf(formatDatas[1]);
-				// int sleepRecord = Integer.valueOf(formatDatas[2]);
-				// 保存电量
-				int battery = Integer.valueOf(Utils.decodeToString(formatDatas[3]));
-				SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
-				// count = stepRecord;
-				// LogModule.i("手环中的记录总数为：" + count);
-				// Intent intent = new Intent(AppConstants.ACTION_LOG);
-				// intent.putExtra("log", "手环中的记录总数为：" + count);
-				// sendBroadcast(intent);
-				return;
-			}
-			// count--;
-			BTModule.saveBleData(formatDatas, getApplicationContext());
-			// LogModule.i(count + "...");
-			// if (count == 0) {
-			// LogModule.i("延迟1s发送广播更新数据");
-			// mHandler.postDelayed(new Runnable() {
-			// @Override
-			// public void run() {
-			// Intent intent = new Intent(AppConstants.ACTION_REFRESH_DATA);
-			// sendBroadcast(intent);
-			// }
-			// }, 1000);
-			// }
-		};
-	};
 
 	/**
 	 * 同步时间

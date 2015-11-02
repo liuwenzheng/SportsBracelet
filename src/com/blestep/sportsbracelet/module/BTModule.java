@@ -136,6 +136,10 @@ public class BTModule {
 		byteArray[1] = 0x01;
 		ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
 		if (alarms.size() == 0) {
+			byteArray[2] = 0x00;
+			byteArray[3] = 0x00;
+			byteArray[4] = 0x00;
+			writeCharacteristicData(mBluetoothGatt, byteArray);
 			return;
 		}
 		for (int i = 0; i < alarms.size(); i++) {
