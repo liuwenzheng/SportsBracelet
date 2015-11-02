@@ -60,7 +60,7 @@
     <string name="step_history">History</string>
     <string name="step_duration">Time</string>
     <string name="step_distance">Mileage</string>
-    <string name="step_duration_unit">/Min</string>
+    <string name="step_duration_unit">%1$sh%2$smin</string>
     <string name="step_distance_unit">Km</string>
     <string name="step_heart_rate_unit">/Min</string>
     <!-- mycenter -->

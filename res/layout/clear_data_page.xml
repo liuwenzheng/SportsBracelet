@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:drawableTop="@drawable/clear_bracelet_icon"
+            android:gravity="center_horizontal"
             android:text="@string/clear_bracelet"
             android:textColor="@color/grey_323232"
             android:textSize="18sp" />
@@ -55,6 +56,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:drawableTop="@drawable/clear_phone_icon"
+            android:gravity="center_horizontal"
             android:text="@string/clear_phone"
             android:textColor="@color/grey_323232"
             android:textSize="18sp" />

@@ -185,16 +185,6 @@
                 android:text="00:00"
                 android:textColor="@color/grey_3a3a3a"
                 android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_step_duration"
-                android:layout_marginLeft="75dp"
-                android:layout_toRightOf="@id/iv_step_duration"
-                android:text="@string/step_duration_unit"
-                android:textColor="@color/grey_d5d5d5"
-                android:textSize="18sp" />
         </RelativeLayout>
 
         <View

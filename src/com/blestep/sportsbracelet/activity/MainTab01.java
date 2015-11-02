@@ -14,6 +14,7 @@ import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 
@@ -75,7 +76,15 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 			circleView.setValueAnimated(Float.valueOf(step.count));
 			tv_step.setText(count + "");
 			String duration = step.duration;
-			tv_step_duration.setText(duration);
+			if (Utils.isNotEmpty(duration)) {
+				int hour = Integer.valueOf(duration) / 60;
+				int min = Integer.valueOf(duration) % 60;
+				int hourLength = (hour + "").length();
+				int minLength = (min + "").length();
+
+				tv_step_duration.setText(getString(R.string.step_duration_unit, Integer.valueOf(duration) / 60,
+						Integer.valueOf(duration) % 60));
+			}
 			String distance = step.distance;
 			tv_step_distance.setText(distance);
 			String calories = step.calories;
