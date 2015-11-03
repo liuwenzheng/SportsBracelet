@@ -2,7 +2,6 @@ package com.blestep.sportsbracelet.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -83,9 +82,10 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 			if (Utils.isNotEmpty(duration)) {
 				int hour = Integer.valueOf(duration) / 60;
 				int min = Integer.valueOf(duration) % 60;
-				int hourLength = (hour + "").length();
-				int minLength = (min + "").length();
-				SpannableString spannableString = new SpannableString(getString(R.string.step_duration_unit, hour, min));
+				int hourLength = (hour + " ").length();
+				int minLength = (" " + min + " ").length();
+				SpannableString spannableString = new SpannableString(getString(R.string.step_duration_unit,
+						hour + " ", " " + min + " "));
 				spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_d5d5d5)),
 						hourLength, hourLength + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 				spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_d5d5d5)),
