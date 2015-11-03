@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_ffffff"
+    android:background="@color/black_484848"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:background="@color/blue_40acaf"
+        android:background="@color/black_242424"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="17dp"
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alert_low_battery"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_below="@id/tv_alert_low_battery"
             android:layout_marginTop="6dp"
             android:text="@string/alert_low_battery_tips"
-            android:textColor="@color/grey_d5d5d5"
+            android:textColor="@color/grey_979797"
             android:textSize="12sp" />
 
         <CheckBox
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alert_find_band"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
@@ -97,7 +97,7 @@
             android:layout_below="@id/tv_alert_find_band"
             android:layout_marginTop="6dp"
             android:text="@string/alert_find_band_tips"
-            android:textColor="@color/grey_d5d5d5"
+            android:textColor="@color/grey_979797"
             android:textSize="12sp" />
 
         <CheckBox
@@ -125,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alert_coming_call"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
@@ -134,7 +134,7 @@
             android:layout_below="@id/tv_alert_coming_call"
             android:layout_marginTop="6dp"
             android:text="@string/alert_coming_call_tips"
-            android:textColor="@color/grey_d5d5d5"
+            android:textColor="@color/grey_979797"
             android:textSize="12sp" />
 
         <TextView
@@ -145,7 +145,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:text="@string/alert_coming_call_open"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <ImageView
@@ -173,7 +173,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alert_alarm"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
@@ -182,7 +182,7 @@
             android:layout_below="@id/tv_alert_alarm"
             android:layout_marginTop="6dp"
             android:text="@string/alert_alarm_tips"
-            android:textColor="@color/grey_d5d5d5"
+            android:textColor="@color/grey_979797"
             android:textSize="12sp" />
 
         <ImageView
@@ -210,7 +210,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bind_bracelet"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
@@ -219,7 +219,7 @@
             android:layout_below="@id/tv_bind_bracelet"
             android:layout_marginTop="6dp"
             android:text="@string/bind_bracelet_tips"
-            android:textColor="@color/grey_d5d5d5"
+            android:textColor="@color/grey_979797"
             android:textSize="12sp" />
 
         <ImageView
@@ -247,7 +247,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bracelet_reset"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
@@ -256,7 +256,7 @@
             android:layout_below="@id/tv_bracelet_reset"
             android:layout_marginTop="6dp"
             android:text="@string/bracelet_reset_tips"
-            android:textColor="@color/grey_d5d5d5"
+            android:textColor="@color/grey_979797"
             android:textSize="12sp" />
     </RelativeLayout>
 
@@ -275,7 +275,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about"
-            android:textColor="@color/grey_3a3a3a"
+            android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
     </RelativeLayout>
 

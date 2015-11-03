@@ -114,10 +114,7 @@ public class BTService extends Service implements LeScanCallback {
 					switch (newState) {
 					case BluetoothProfile.STATE_CONNECTED:
 						if (status == GATT_ERROR_TIMEOUT) {
-							if (mBluetoothGatt != null) {
-								mBluetoothGatt.close();
-								mBluetoothGatt = null;
-							}
+							disConnectBle();
 							Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
 							sendBroadcast(intent);
 						} else {
@@ -131,10 +128,7 @@ public class BTService extends Service implements LeScanCallback {
 						}
 						break;
 					case BluetoothProfile.STATE_DISCONNECTED:
-						if (mBluetoothGatt != null) {
-							mBluetoothGatt.close();
-							mBluetoothGatt = null;
-						}
+						disConnectBle();
 						Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
 						sendBroadcast(intent);
 						break;

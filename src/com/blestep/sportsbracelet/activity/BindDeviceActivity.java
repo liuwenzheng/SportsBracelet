@@ -217,6 +217,11 @@ public class BindDeviceActivity extends BaseActivity implements OnClickListener,
 			if (intent != null) {
 				if (AppConstants.ACTION_BLE_DEVICES_DATA.equals(intent.getAction())) {
 					BleDevice bleDevice = (BleDevice) intent.getExtras().getSerializable("device");
+					for (BleDevice device : mDevices) {
+						if (device.address.equals(bleDevice.address)) {
+							return;
+						}
+					}
 					mDevices.add(bleDevice);
 					mAdapter.notifyDataSetChanged();
 				}

@@ -69,6 +69,19 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 		tv_calorie = (TextView) mView.findViewById(R.id.tv_calorie);
 		step_heart_rate = (TextView) mView.findViewById(R.id.step_heart_rate);
 		tv_step_duration = (TextView) mView.findViewById(R.id.tv_step_duration);
+		setStepDuration(0, 0);
+	}
+
+	private void setStepDuration(int hour, int min) {
+		int hourLength = (hour + " ").length();
+		int minLength = (" " + min + " ").length();
+		SpannableString spannableString = new SpannableString(getString(R.string.step_duration_unit, hour + " ", " "
+				+ min + " "));
+		spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_d5d5d5)), hourLength,
+				hourLength + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_d5d5d5)), hourLength + 1
+				+ minLength, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tv_step_duration.setText(spannableString);
 		tv_step_distance = (TextView) mView.findViewById(R.id.tv_step_distance);
 	}
 
@@ -82,15 +95,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 			if (Utils.isNotEmpty(duration)) {
 				int hour = Integer.valueOf(duration) / 60;
 				int min = Integer.valueOf(duration) % 60;
-				int hourLength = (hour + " ").length();
-				int minLength = (" " + min + " ").length();
-				SpannableString spannableString = new SpannableString(getString(R.string.step_duration_unit,
-						hour + " ", " " + min + " "));
-				spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_d5d5d5)),
-						hourLength, hourLength + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-				spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_d5d5d5)),
-						hourLength + 1 + minLength, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				tv_step_duration.setText(spannableString);
+				setStepDuration(hour, min);
 			}
 			String distance = step.distance;
 			tv_step_distance.setText(distance);
