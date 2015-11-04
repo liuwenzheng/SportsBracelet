@@ -14,6 +14,13 @@ public class BTConstants {
 	public static final String SP_KEY_DEVICE_NAME = "sp_key_device_NAME";
 	public static final String SP_KEY_BATTERY = "sp_key_battery";
 	public static final String SP_KEY_STEP_AIM = "sp_key_aim";
+	public static final String SP_KEY_STEP_AIM_POINT_X = "sp_key_aim_point_x";
+	public static final String SP_KEY_STEP_AIM_POINT_Y = "sp_key_aim_point_y";
+	public static final String SP_KEY_STEP_AIM_CALORIE = "sp_key_aim_calorie";
+	public static final String SP_KEY_STEP_AIM_STATE = "sp_key_aim_state";
+	public static final String SP_KEY_STEP_AIM_CALORIE_WALK = "sp_key_aim_calorie_walk";
+	public static final String SP_KEY_STEP_AIM_CALORIE_RUN = "sp_key_aim_calorie_run";
+	public static final String SP_KEY_STEP_AIM_CALORIE_BIKE = "sp_key_aim_calorie_bike";
 	public static final String SP_KEY_USER_NAME = "sp_key_name";
 	public static final String SP_KEY_USER_GENDER = "sp_key_gender";
 	public static final String SP_KEY_USER_AGE = "sp_key_age";

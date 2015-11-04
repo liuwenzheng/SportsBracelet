@@ -98,6 +98,13 @@ public class SettingTargetActivity extends BaseActivity implements OnClickListen
 			// ToastUtils.showToast(this, "设置目标为：" +
 			// tv_step.getText().toString());
 			SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_step.getText().toString()));
+			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_X, circularSeekbar.markPointX);
+			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_Y, circularSeekbar.markPointY);
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE, tv_calorie.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_WALK, tv_target_walk.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_RUN, tv_target_run.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_BIKE, tv_target_bike.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_STATE, tv_target_status.getText().toString());
 			SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, false);
 			startActivity(new Intent(this, MainActivity.class));
 			this.finish();

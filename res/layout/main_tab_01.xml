@@ -132,14 +132,16 @@
                 android:paddingRight="7dp"
                 android:text="0"
                 android:textColor="@color/red_e05b5e"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/step_heart_rate_unit"
                 android:textColor="@color/grey_545454"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
 

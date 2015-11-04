@@ -41,11 +41,16 @@ public class TargetActivity extends BaseActivity implements OnClickListener {
 	private void initView() {
 		circularSeekbar = (CircularSeekBar) findViewById(R.id.csb_target);
 		circularSeekbar.setMaxProgress(100);
-		circularSeekbar.setProgress(0);
+		int aim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 0);
+		circularSeekbar.setProgress(aim / 200);
 		circularSeekbar.setBarWidth(20);
 		circularSeekbar.setRingBackgroundColor(getResources().getColor(R.color.grey_f2f2f2));
 		circularSeekbar.setProgressColor(getResources().getColor(R.color.blue_97e5fb));
 		circularSeekbar.setBackGroundColor(getResources().getColor(R.color.white_ffffff));
+		float pointX = SPUtiles.getFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_X, 0);
+		float pointY = SPUtiles.getFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_Y, 0);
+		circularSeekbar.markPointX = pointX;
+		circularSeekbar.markPointY = pointY;
 		circularSeekbar.invalidate();
 		tv_target_status = (TextView) findViewById(R.id.tv_target_status);
 		tv_calorie = (TextView) findViewById(R.id.tv_calorie);
@@ -54,6 +59,14 @@ public class TargetActivity extends BaseActivity implements OnClickListener {
 		tv_target_run = (TextView) findViewById(R.id.tv_target_run);
 		tv_target_bike = (TextView) findViewById(R.id.tv_target_bike);
 		btn_target_finish = (Button) findViewById(R.id.btn_target_finish);
+
+		tv_step.setText(aim + "");
+		tv_calorie.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE, "0"));
+		tv_target_walk.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_WALK, "0"));
+		tv_target_run.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_RUN, "0"));
+		tv_target_bike.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_BIKE, "0"));
+		tv_target_status.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_STEP_AIM_STATE,
+				getString(R.string.setting_target_relaxed)));
 	}
 
 	private void initListener() {
@@ -106,6 +119,13 @@ public class TargetActivity extends BaseActivity implements OnClickListener {
 			// ToastUtils.showToast(this, "设置目标为：" +
 			// tv_step.getText().toString());
 			SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_step.getText().toString()));
+			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_X, circularSeekbar.markPointX);
+			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_Y, circularSeekbar.markPointY);
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE, tv_calorie.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_WALK, tv_target_walk.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_RUN, tv_target_run.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_CALORIE_BIKE, tv_target_bike.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_STEP_AIM_STATE, tv_target_status.getText().toString());
 			this.finish();
 			break;
 		case R.id.iv_back:

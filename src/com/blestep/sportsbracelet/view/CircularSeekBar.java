@@ -102,13 +102,13 @@ public class CircularSeekBar extends View {
 	 * The X coordinate for the current position of the marker, pre adjustment
 	 * to center
 	 */
-	private float markPointX;
+	public float markPointX;
 
 	/**
 	 * The Y coordinate for the current position of the marker, pre adjustment
 	 * to center
 	 */
-	private float markPointY;
+	public float markPointY;
 
 	/**
 	 * The adjustment factor. This adds an adjustment of the specified size to
@@ -257,10 +257,12 @@ public class CircularSeekBar extends View {
 		startPointX = cx; // 12 O'clock X coordinate
 		startPointY = cy - outerRadius + getBarWidth() / 2;// 12 O'clock Y
 															// coordinate
-		markPointX = startPointX;// Initial locatino of the marker X coordinate
-		markPointY = startPointY;// Initial locatino of the
-									// marker Y coordinate
-
+		if (markPointX == 0.0) {
+			markPointX = startPointX;// Initial locatino of the marker X
+										// coordinate
+			markPointY = startPointY;// Initial locatino of the
+										// marker Y coordinate
+		}
 		rect.set(left, top, right, bottom); // assign size to rect
 	}
 
