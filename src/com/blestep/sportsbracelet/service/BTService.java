@@ -110,6 +110,7 @@ public class BTService extends Service implements LeScanCallback {
 				// private int count;
 
 				public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+					super.onConnectionStateChange(gatt, status, newState);
 					LogModule.d("onConnectionStateChange...status:" + status + "...newState:" + newState);
 					switch (newState) {
 					case BluetoothProfile.STATE_CONNECTED:
@@ -136,6 +137,7 @@ public class BTService extends Service implements LeScanCallback {
 				};
 
 				public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+					super.onServicesDiscovered(gatt, status);
 					LogModule.d("onServicesDiscovered...status:" + status);
 					if (status == BluetoothGatt.GATT_SUCCESS) {
 						BTModule.setCharacteristicNotify(mBluetoothGatt);
@@ -154,15 +156,18 @@ public class BTService extends Service implements LeScanCallback {
 
 				public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
 						int status) {
+					super.onCharacteristicRead(gatt, characteristic, status);
 					LogModule.d("onCharacteristicRead...");
 				};
 
 				public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
 						int status) {
+					super.onCharacteristicWrite(gatt, characteristic, status);
 					LogModule.d("onCharacteristicWrite...");
 				};
 
 				public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+					super.onCharacteristicChanged(gatt, characteristic);
 					LogModule.d("onCharacteristicChanged...");
 					// BTModule.setCharacteristicNotify(mBluetoothGatt);
 					byte[] data = characteristic.getValue();
@@ -238,6 +243,7 @@ public class BTService extends Service implements LeScanCallback {
 			bleDevice.address = device.getAddress();
 			Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA);
 			intent.putExtra("device", bleDevice);
+			LogModule.e("信号强度：" + rssi);
 			sendBroadcast(intent);
 			// mDevices.add(bleDevice);
 		}
