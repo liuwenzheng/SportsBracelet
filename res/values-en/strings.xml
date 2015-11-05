@@ -44,20 +44,20 @@
     <string name="setting_target_calorie_unit">Calories</string>
     <string name="setting_target_tips">10,000 steps per day to be healthier</string>
     <string name="setting_target_amount_to">Equivalent</string>
-    <string name="setting_target_minutes">%1$sminutes</string>
+    <string name="setting_target_minutes">%1$sMins</string>
     <string name="setting_target_finish">Complete</string>
 
     <!-- main -->
     <string name="main_tab_step">Pedometer</string>
     <string name="main_tab_sleep">Sleeping</string>
     <string name="main_tab_run">Running</string>
-    <string name="main_conn_tips">Bracelet is not conected with phone,  please click here</string>
+    <string name="main_conn_tips">Bracelet is not conected with phone, please click here</string>
     <string name="main_exit_tips">Are you sure you want to quit?</string>
     <string name="main_exit_tips_confirm">Ok</string>
     <string name="main_exit_tips_cancel">Cancel</string>
     <!-- step -->
     <string name="step_syncdata_waiting">Syncing data…</string>
-    <string name="step_history">History</string>
+    <string name="step_history"></string>
     <string name="step_duration">Time</string>
     <string name="step_distance">Mileage</string>
     <string name="step_duration_unit">%1$sh%2$smin</string>
@@ -69,7 +69,7 @@
     <string name="center_info">Personal Profile</string>
     <string name="center_info_tips">Gender, Age information</string>
     <string name="center_target">Set Sports Goal</string>
-    <string name="center_target_tips">Set daily sports goals: steps, calories, etc.</string>
+    <string name="center_target_tips">Daily steps goal</string>
     <string name="center_clear">Clear Data</string>
     <string name="center_clear_tips">Clear APP and bracelet motion data</string>
     <!-- clear -->
