@@ -76,8 +76,9 @@ public class BTModule {
 	 * 搜索手环
 	 */
 	public static void scanDevice(LeScanCallback mLeScanCallback) {
-		// mBluetoothAdapter.startLeScan(mLeScanCallback);
-		mBluetoothAdapter.startLeScan(new UUID[] { SERVIE_UUID }, mLeScanCallback);
+		mBluetoothAdapter.startLeScan(mLeScanCallback);
+		// mBluetoothAdapter.startLeScan(new UUID[] { SERVIE_UUID },
+		// mLeScanCallback);
 	}
 
 	/**

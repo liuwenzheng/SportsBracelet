@@ -47,4 +47,10 @@ public class SettingBraceletActivity extends BaseActivity implements OnClickList
 		}
 	}
 
+	@Override
+	public void onBackPressed() {
+		startActivity(new Intent(this, SettingBluetoothActivity.class));
+		this.finish();
+	}
+
 }

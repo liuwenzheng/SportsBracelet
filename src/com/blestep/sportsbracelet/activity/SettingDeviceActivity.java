@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -216,6 +217,16 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 						}
 					}
 					mDevices.add(bleDevice);
+					BleDevice[] bleDevices = new BleDevice[mDevices.size()];
+					for (int j = 0; j < mDevices.size(); j++) {
+						bleDevices[j] = mDevices.get(j);
+					}
+					Arrays.sort(bleDevices);
+					mDevices.clear();
+					for (int i = 0; i < bleDevices.length; i++) {
+						System.out.println("..." + bleDevices[i].rssi);
+						mDevices.add(bleDevices[i]);
+					}
 					mAdapter.notifyDataSetChanged();
 				}
 				if (AppConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent.getAction())) {
@@ -254,6 +265,9 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LogModule.d("连接服务onServiceConnected...");
 			mBtService = ((LocalBinder) service).getService();
+			if (mBtService.mBluetoothGatt != null) {
+				mBtService.disConnectBle();
+			}
 			// 开启蓝牙
 			if (!BTModule.isBluetoothOpen()) {
 				BTModule.openBluetooth(SettingDeviceActivity.this);
@@ -271,5 +285,11 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			mBtService = null;
 		}
 	};
+
+	@Override
+	public void onBackPressed() {
+		startActivity(new Intent(this, SettingBraceletActivity.class));
+		this.finish();
+	}
 
 }
