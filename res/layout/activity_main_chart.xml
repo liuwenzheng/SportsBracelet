@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eceff1"
+    android:orientation="vertical" >
+
+    <com.db.chart.view.BarChartView
+        xmlns:chart="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/barchart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".30"
+        android:paddingBottom="5dp"
+        chart:chart_axisBorderSpacing="25dp"
+        chart:chart_axisColor="@color/axis"
+        chart:chart_typeface="Roboto-Regular.ttf" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".10"
+        android:background="@drawable/button"
+        android:text="PLAY ME"
+        android:textColor="#ffffff"
+        android:textSize="25dp" />
+
+</LinearLayout>
