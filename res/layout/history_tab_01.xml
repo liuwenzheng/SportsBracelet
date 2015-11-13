@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical" >
+
+    <com.db.chart.view.BarChartView
+        xmlns:chart="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bcv_step"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:paddingBottom="5dp"
+        chart:chart_axisBorderSpacing="25dp"
+        chart:chart_axisColor="@color/axis"
+        chart:chart_typeface="Roboto-Regular.ttf" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" >
+
+            <ImageView
+                android:id="@+id/iv_step_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:src="@drawable/step_duration" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/iv_step_duration"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/iv_step_duration"
+                android:text="@string/step_duration"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_step_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_step_duration"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/iv_step_duration"
+                android:singleLine="true"
+                android:text="0 h 0 min"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <View
+            style="@style/divider_line_vertical"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="50dp" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_weight="1.0" >
+
+            <ImageView
+                android:id="@+id/iv_step_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:src="@drawable/step_distance" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/iv_step_distance"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/iv_step_distance"
+                android:text="@string/step_distance"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_step_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_step_distance"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/iv_step_distance"
+                android:text="0"
+                android:textColor="@color/grey_3a3a3a"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_step_distance"
+                android:layout_marginLeft="50dp"
+                android:layout_toRightOf="@id/iv_step_distance"
+                android:text="@string/step_distance_unit"
+                android:textColor="@color/grey_d5d5d5"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

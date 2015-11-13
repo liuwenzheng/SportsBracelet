@@ -1,4 +1,4 @@
-package com.blestep.sportsbracelet.activity;
+package com.blestep.sportsbracelet.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

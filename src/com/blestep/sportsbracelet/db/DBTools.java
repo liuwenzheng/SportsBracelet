@@ -43,6 +43,21 @@ public class DBTools {
 		return step;
 	}
 
+	public ArrayList<Step> selectAllStep() {
+		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null, null, null, null);
+		ArrayList<Step> steps = new ArrayList<Step>();
+		while (cursor.moveToNext()) {
+			Step step = new Step();
+			step.date = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DATE));
+			step.count = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_COUNT));
+			step.duration = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
+			step.distance = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
+			step.calories = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
+			steps.add(step);
+		}
+		return steps;
+	}
+
 	public ArrayList<Alarm> selectAllAlarm() {
 		Cursor cursor = db.query(DBConstants.TABLE_NAME_ALARM, null, null, null, null, null, null);
 		ArrayList<Alarm> alarms = new ArrayList<Alarm>();

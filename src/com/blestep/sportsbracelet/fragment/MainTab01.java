@@ -1,5 +1,6 @@
-package com.blestep.sportsbracelet.activity;
+package com.blestep.sportsbracelet.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
@@ -7,12 +8,15 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.activity.HistoryActivity;
+import com.blestep.sportsbracelet.activity.MainActivity;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.module.LogModule;
@@ -21,7 +25,7 @@ import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 
-public class MainTab01 extends Fragment implements ICircleProgressValue {
+public class MainTab01 extends Fragment implements ICircleProgressValue, OnClickListener {
 	private View mView;
 	private CircleProgressView circleView;
 	private Button btn_step_history;
@@ -107,6 +111,20 @@ public class MainTab01 extends Fragment implements ICircleProgressValue {
 	@Override
 	public void getProgressValue(int value) {
 		tv_step.setText(value + "");
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_step_history:
+			startActivity(new Intent(mainActivity, HistoryActivity.class));
+			mainActivity.overridePendingTransition(R.anim.page_down_in, R.anim.page_up_out);
+			break;
+
+		default:
+			break;
+		}
+
 	}
 
 }

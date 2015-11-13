@@ -4,6 +4,7 @@ public class BTConstants {
 	// data time pattern
 	public static final String PATTERN_HH_MM = "HH:mm";
 	public static final String PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
+	public static final String PATTERN_MM_DD = "MM/dd";
 	public static final String PATTERN_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
 	// action
 	public static final String ACTION_PHONE_STATE = "android.intent.action.PHONE_STATE";
