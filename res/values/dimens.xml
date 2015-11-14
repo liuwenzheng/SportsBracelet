@@ -14,7 +14,7 @@
 
 
     <!-- Distance from vertical label to vertical axis -->
-    <dimen name="axis_dist_from_label">5dp</dimen>
+    <dimen name="axis_dist_from_label">11dp</dimen>
     <!-- X Axis - Labels border spacing -->
     <dimen name="axis_border_spacing">10dp</dimen>
     <!-- Y Axis - Labels top spacing -->

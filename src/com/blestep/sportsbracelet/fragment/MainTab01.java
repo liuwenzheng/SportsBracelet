@@ -69,6 +69,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue, OnClick
 		circleView = (CircleProgressView) mView.findViewById(R.id.circleView);
 
 		btn_step_history = (Button) mView.findViewById(R.id.btn_step_history);
+		btn_step_history.setOnClickListener(this);
 		tv_step = (TextView) mView.findViewById(R.id.tv_step);
 		tv_calorie = (TextView) mView.findViewById(R.id.tv_calorie);
 		step_heart_rate = (TextView) mView.findViewById(R.id.step_heart_rate);
@@ -92,9 +93,9 @@ public class MainTab01 extends Fragment implements ICircleProgressValue, OnClick
 	public void updateView() {
 		Step step = DBTools.getInstance(mainActivity).selectCurrentStep();
 		if (step != null) {
-			float count = Float.valueOf(step.count);
+			int count = Integer.valueOf(step.count);
 			circleView.setValueAnimated(Float.valueOf(step.count));
-			tv_step.setText(count + "");
+			tv_step.setText(0 + "");
 			String duration = step.duration;
 			if (Utils.isNotEmpty(duration)) {
 				int hour = Integer.valueOf(duration) / 60;

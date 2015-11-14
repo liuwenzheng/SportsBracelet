@@ -7,7 +7,7 @@
 
     <com.db.chart.view.BarChartView
         xmlns:chart="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bcv_step"
+        android:id="@+id/bcv_distance"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2.0"
@@ -30,18 +30,18 @@
             android:layout_weight="1.0" >
 
             <TextView
-                android:id="@+id/history_step_daily"
+                android:id="@+id/history_distance_daily"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/history_step_daily"
+                android:text="@string/history_distance_daily"
                 android:textColor="@color/grey_d5d5d5"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tv_history_step_daily"
+                android:id="@+id/tv_history_distance_daily"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/history_step_daily"
+                android:layout_below="@id/history_distance_daily"
                 android:layout_marginTop="10dp"
                 android:text="0"
                 android:textColor="@color/red_e05b5e"
@@ -50,11 +50,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/tv_history_step_daily"
+                android:layout_alignBaseline="@id/tv_history_distance_daily"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/tv_history_step_daily"
+                android:layout_toRightOf="@id/tv_history_distance_daily"
                 android:singleLine="true"
-                android:text="@string/history_step_unit"
+                android:text="@string/history_distance_unit"
                 android:textColor="@color/grey_3a3a3a"
                 android:textSize="18sp" />
         </RelativeLayout>
@@ -73,18 +73,18 @@
             android:layout_weight="1.0" >
 
             <TextView
-                android:id="@+id/history_step_sum"
+                android:id="@+id/history_distance_sum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/history_step_sum"
+                android:text="@string/history_distance_sum"
                 android:textColor="@color/grey_d5d5d5"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tv_history_step_sum"
+                android:id="@+id/tv_history_distance_sum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/history_step_sum"
+                android:layout_below="@id/history_distance_sum"
                 android:layout_marginTop="10dp"
                 android:text="0"
                 android:textColor="@color/red_e05b5e"
@@ -93,11 +93,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/tv_history_step_sum"
+                android:layout_alignBaseline="@id/tv_history_distance_sum"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/tv_history_step_sum"
+                android:layout_toRightOf="@id/tv_history_distance_sum"
                 android:singleLine="true"
-                android:text="@string/history_step_unit"
+                android:text="@string/history_distance_unit"
                 android:textColor="@color/grey_3a3a3a"
                 android:textSize="18sp" />
         </RelativeLayout>

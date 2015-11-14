@@ -110,7 +110,7 @@ public abstract class ChartView extends RelativeLayout {
 			ChartView.this.getViewTreeObserver().removeOnPreDrawListener(this);
 
 			// Define chart frame
-			chartTop = getPaddingTop() + (int) Tools.fromDpToPx(50);
+			chartTop = getPaddingTop() + (int) Tools.fromDpToPx(40);
 			chartBottom = getMeasuredHeight() - getPaddingBottom();
 			chartLeft = getPaddingLeft();
 			chartRight = getMeasuredWidth() - getPaddingRight();

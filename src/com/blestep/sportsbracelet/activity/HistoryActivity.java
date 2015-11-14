@@ -15,8 +15,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.db.DBTools;
+import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.fragment.HistoryTab01;
+import com.blestep.sportsbracelet.fragment.HistoryTab02;
+import com.blestep.sportsbracelet.fragment.HistoryTab03;
 
 public class HistoryActivity extends FragmentActivity implements
 		OnClickListener, OnPageChangeListener, OnCheckedChangeListener {
@@ -24,10 +29,12 @@ public class HistoryActivity extends FragmentActivity implements
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private HistoryTab01 tab01;
-	private HistoryTab01 tab02;
-	private HistoryTab01 tab03;
+	private HistoryTab02 tab02;
+	private HistoryTab03 tab03;
 
 	private RadioGroup rg_history_tab;
+
+	private ArrayList<Step> mSteps;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,9 +61,17 @@ public class HistoryActivity extends FragmentActivity implements
 	}
 
 	private void initViewPager() {
+		mSteps = DBTools.getInstance(this).selectAllStep();
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(BTConstants.EXTRA_KEY_HISTORY, mSteps);
 		tab01 = new HistoryTab01();
-		tab02 = new HistoryTab01();
-		tab03 = new HistoryTab01();
+		tab02 = new HistoryTab02();
+		tab03 = new HistoryTab03();
+
+		tab01.setArguments(bundle);
+		tab02.setArguments(bundle);
+		tab03.setArguments(bundle);
+
 		mFragments.add(tab01);
 		mFragments.add(tab02);
 		mFragments.add(tab03);
@@ -106,6 +121,13 @@ public class HistoryActivity extends FragmentActivity implements
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+
+		super.onBackPressed();
+		overridePendingTransition(R.anim.page_up_in, R.anim.page_down_out);
 	}
 
 	@Override

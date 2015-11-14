@@ -168,8 +168,17 @@
 
     <!-- history -->
     <string name="history_step">步数</string>
+    <string name="history_step_daily">日均步数</string>
+    <string name="history_step_sum">总步数</string>
+    <string name="history_step_unit">步</string>
     <string name="history_calorie">热量</string>
+    <string name="history_calorie_daily">日均热量</string>
+    <string name="history_calorie_sum">总热量</string>
+    <string name="history_calorie_unit">卡路里</string>
     <string name="history_distance">里程</string>
+    <string name="history_distance_daily">日均里程</string>
+    <string name="history_distance_sum">总里程</string>
+    <string name="history_distance_unit">公里</string>
     <string name="history_today">今天</string>
     <string name="history_yesterday">昨天</string>
 

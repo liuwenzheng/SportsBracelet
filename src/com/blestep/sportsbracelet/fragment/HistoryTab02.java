@@ -21,7 +21,6 @@ import com.blestep.sportsbracelet.activity.HistoryActivity;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.DataRetriever;
-import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
@@ -31,16 +30,16 @@ import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
 
-public class HistoryTab01 extends Fragment implements OnEntryClickListener {
+public class HistoryTab02 extends Fragment implements OnEntryClickListener {
 	private String mLabels[];
 	private String mValues[];
-	private int BAR_STEP_MAX = 100;
-	private int BAR_STEP_AIM = 100;
+	private int BAR_CALORIE_MAX = 100;
+	// private int BAR_STEP_AIM = 0;
 	private ArrayList<Step> mSteps;
 	private ArrayList<Step> mStepsSort;
 	private SimpleDateFormat mSdf;
 	private Calendar mCalendar;
-	private TextView tv_history_step_daily, tv_history_step_sum;
+	private TextView tv_history_calorie_daily, tv_history_calorie_sum;
 
 	private static Runnable mEndAction = new Runnable() {
 		@Override
@@ -51,7 +50,7 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 
 	private View mView;
 	private HistoryActivity mActivity;
-	private BarChartView bcv_step;
+	private BarChartView bcv_calorie;
 	private TextView mBarTooltip;
 
 	@Override
@@ -76,7 +75,7 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.history_tab_01, container, false);
+		mView = inflater.inflate(R.layout.history_tab_02, container, false);
 		initView();
 		initData();
 		return mView;
@@ -87,16 +86,18 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 		mValues = new String[7];
 		mSteps = (ArrayList<Step>) getArguments().getSerializable(
 				BTConstants.EXTRA_KEY_HISTORY);
-		BAR_STEP_AIM = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
+		// BAR_STEP_AIM = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM,
+		// 100);
 		// 找到最大的，与目标值对比
 		mStepsSort = new ArrayList<Step>();
 		mStepsSort.addAll(mSteps);
 		Collections.sort(mStepsSort, new StepCompare());
-		if (Integer.valueOf(mStepsSort.get(0).count) >= BAR_STEP_AIM) {
-			BAR_STEP_MAX = Integer.valueOf(mStepsSort.get(0).count);
-		} else {
-			BAR_STEP_MAX = BAR_STEP_AIM;
+		if (Integer.valueOf(mStepsSort.get(0).calories) >= BAR_CALORIE_MAX) {
+			BAR_CALORIE_MAX = Integer.valueOf(mStepsSort.get(0).calories);
 		}
+		// else {
+		// BAR_CALORIE_MAX = BAR_CALORIE_MAX;
+		// }
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
 		mCalendar = Calendar.getInstance();
 
@@ -121,18 +122,18 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 				stepSum += Integer.valueOf(mValues[i]);
 			}
 		}
-		tv_history_step_sum.setText(stepSum + "");
-		tv_history_step_daily.setText((int) (stepSum / mValues.length) + "");
+		tv_history_calorie_sum.setText(stepSum + "");
+		tv_history_calorie_daily.setText((int) (stepSum / mValues.length) + "");
 
 	}
 
 	private void initView() {
-		bcv_step = (BarChartView) mView.findViewById(R.id.bcv_step);
-		tv_history_step_daily = (TextView) mView
-				.findViewById(R.id.tv_history_step_daily);
-		tv_history_step_sum = (TextView) mView
-				.findViewById(R.id.tv_history_step_sum);
-		bcv_step.setOnEntryClickListener(this);
+		bcv_calorie = (BarChartView) mView.findViewById(R.id.bcv_calorie);
+		tv_history_calorie_daily = (TextView) mView
+				.findViewById(R.id.tv_history_calorie_daily);
+		tv_history_calorie_sum = (TextView) mView
+				.findViewById(R.id.tv_history_calorie_sum);
+		bcv_calorie.setOnEntryClickListener(this);
 	}
 
 	@Override
@@ -145,7 +146,7 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 	}
 
 	public void updateBarChart(int nPoints) {
-		bcv_step.reset();
+		bcv_calorie.reset();
 		BarSet data = new BarSet();
 		int index = mSteps.size();
 		int start = 0;
@@ -163,12 +164,12 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 			} else {
 				if (index < nPoints) {
 					bar = new Bar(mLabels[j], Integer.valueOf(mSteps.get(j
-							- start).count));
-					mValues[j] = mSteps.get(j - start).count;
+							- start).calories));
+					mValues[j] = mSteps.get(j - start).calories;
 				} else {
 					bar = new Bar(mLabels[j], Integer.valueOf(mSteps.get(j
-							+ start).count));
-					mValues[j] = mSteps.get(j + start).count;
+							+ start).calories));
+					mValues[j] = mSteps.get(j + start).calories;
 				}
 			}
 			data.addBar(bar);
@@ -181,20 +182,20 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 		// data.addBar(bar);
 		// }
 		data.setColor(getResources().getColor(R.color.blue_b4efff));
-		bcv_step.addData(data);
+		bcv_calorie.addData(data);
 
-		bcv_step.setBarSpacing((int) Tools.fromDpToPx(50));
-		bcv_step.setSetSpacing(0);
-		bcv_step.setBarBackground(false);
-		bcv_step.setRoundCorners(0);
+		bcv_calorie.setBarSpacing((int) Tools.fromDpToPx(50));
+		bcv_calorie.setSetSpacing(0);
+		bcv_calorie.setBarBackground(false);
+		bcv_calorie.setRoundCorners(0);
 		// 运动目标值
-		bcv_step.setmThresholdText(BAR_STEP_AIM + "");
-		bcv_step.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+		// bcv_calorie.setmThresholdText(BAR_STEP_AIM + "");
+		bcv_calorie.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
 				.setVerticalGrid(null)
 				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(BAR_STEP_MAX, BAR_STEP_MAX / 10)
-				.setThresholdLine(BAR_STEP_AIM, DataRetriever.randPaint())
+				.setMaxAxisValue(BAR_CALORIE_MAX, 1)
+				// .setThresholdLine(BAR_STEP_AIM, DataRetriever.randPaint())
 				.animate(DataRetriever.randAnimation(mEndAction, nPoints));
 	}
 
@@ -210,13 +211,13 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 		layoutParams.topMargin = rect.top - (int) Tools.fromDpToPx(20);
 		mBarTooltip.setLayoutParams(layoutParams);
 
-		bcv_step.showTooltip(mBarTooltip);
-		bcv_step.invalidate();
+		bcv_calorie.showTooltip(mBarTooltip);
+		bcv_calorie.invalidate();
 	}
 
 	private void dismissBarTooltip(final int index, final Rect rect) {
 
-		bcv_step.dismissTooltip(mBarTooltip);
+		bcv_calorie.dismissTooltip(mBarTooltip);
 
 		mBarTooltip = null;
 		if (index != -1)
@@ -227,9 +228,10 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 
 		@Override
 		public int compare(Step lhs, Step rhs) {
-			if (Integer.valueOf(lhs.count) > Integer.valueOf(rhs.count)) {
+			if (Integer.valueOf(lhs.calories) > Integer.valueOf(rhs.calories)) {
 				return -1;
-			} else if (Integer.valueOf(lhs.count) < Integer.valueOf(rhs.count)) {
+			} else if (Integer.valueOf(lhs.calories) < Integer
+					.valueOf(rhs.calories)) {
 				return 1;
 			}
 			return 0;
