@@ -37,19 +37,22 @@ public class FlipLoadingLayout extends LoadingLayout {
 
 	private final Animation mRotateAnimation, mResetRotateAnimation;
 
-	public FlipLoadingLayout(Context context, final Mode mode, final Orientation scrollDirection, TypedArray attrs) {
+	public FlipLoadingLayout(Context context, final Mode mode,
+			final Orientation scrollDirection, TypedArray attrs) {
 		super(context, mode, scrollDirection, attrs);
 
 		final int rotateAngle = mode == Mode.PULL_FROM_START ? -180 : 180;
 
-		mRotateAnimation = new RotateAnimation(0, rotateAngle, Animation.RELATIVE_TO_SELF, 0.5f,
-				Animation.RELATIVE_TO_SELF, 0.5f);
+		mRotateAnimation = new RotateAnimation(0, rotateAngle,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
 		mRotateAnimation.setInterpolator(ANIMATION_INTERPOLATOR);
 		mRotateAnimation.setDuration(FLIP_ANIMATION_DURATION);
 		mRotateAnimation.setFillAfter(true);
 
-		mResetRotateAnimation = new RotateAnimation(rotateAngle, 0, Animation.RELATIVE_TO_SELF, 0.5f,
-				Animation.RELATIVE_TO_SELF, 0.5f);
+		mResetRotateAnimation = new RotateAnimation(rotateAngle, 0,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
 		mResetRotateAnimation.setInterpolator(ANIMATION_INTERPOLATOR);
 		mResetRotateAnimation.setDuration(FLIP_ANIMATION_DURATION);
 		mResetRotateAnimation.setFillAfter(true);
@@ -76,8 +79,10 @@ public class FlipLoadingLayout extends LoadingLayout {
 			 */
 			mHeaderImage.setScaleType(ScaleType.MATRIX);
 			Matrix matrix = new Matrix();
-			matrix.postTranslate((lp.width - dWidth) / 2f, (lp.height - dHeight) / 2f);
-			matrix.postRotate(getDrawableRotationAngle(), lp.width / 2f, lp.height / 2f);
+			matrix.postTranslate((lp.width - dWidth) / 2f,
+					(lp.height - dHeight) / 2f);
+			matrix.postRotate(getDrawableRotationAngle(), lp.width / 2f,
+					lp.height / 2f);
 			mHeaderImage.setImageMatrix(matrix);
 		}
 	}

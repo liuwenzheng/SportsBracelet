@@ -19,136 +19,105 @@ package com.db.chart.model;
 import java.util.ArrayList;
 
 /**
- * Data model containing {@link ChartEntry} elements to be used by {@link ChartView}.
+ * Data model containing {@link ChartEntry} elements to be used by
+ * {@link ChartView}.
  */
 public class ChartSet {
 
-	
 	/** Set with entries */
 	private ArrayList<ChartEntry> mEntries;
 
-	
 	/** Paint alpha value from 0 to 1 */
 	private float mAlpha;
-	
-	
-	
-	public ChartSet(){
+
+	public ChartSet() {
 		mEntries = new ArrayList<ChartEntry>();
 		mAlpha = 1;
 	}
-	
-	
-	
-	
-	public void addEntry(String label, float value){
+
+	public void addEntry(String label, float value) {
 		mEntries.add(new ChartEntry(label, value));
 	}
 
-	
-	
-	public void addEntry(ChartEntry e){
+	public void addEntry(ChartEntry e) {
 		mEntries.add(e);
 	}
 
-	
-	
 	/**
 	 * Updates set values.
+	 * 
 	 * @param newValues
 	 * @return float[] with Y coordinates of old values
 	 */
-	public float[] updateValues(float[] newValues){
+	public float[] updateValues(float[] newValues) {
 		float[] result = new float[size()];
-		for(int i = 0; i < size(); i++){
+		for (int i = 0; i < size(); i++) {
 			result[i] = getEntry(i).getY();
 			setValue(i, newValues[i]);
 		}
 		return result;
 	}
-	
-	
-	
-	
+
 	/*
-	 * --------
-	 * Getters
-	 * --------
+	 * -------- Getters --------
 	 */
-	
-	
-	public ArrayList<ChartEntry> getEntries(){
+
+	public ArrayList<ChartEntry> getEntries() {
 		return mEntries;
 	}
-	
-	
+
 	public ChartEntry getEntry(int i) {
 		return mEntries.get(i);
 	}
-	
-	
-	public float getValue(int i){
+
+	public float getValue(int i) {
 		return mEntries.get(i).getValue();
 	}
-	
-	
+
 	public String getLabel(int i) {
 		return mEntries.get(i).getLabel();
 	}
-	
-	
-	public float[] getXCoordinates(){
-		
+
+	public float[] getXCoordinates() {
+
 		float[] result = new float[size()];
-		for(int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++)
 			result[i] = getEntry(i).getX();
-		
+
 		return result;
 	}
-	
-	
-	public float[] getYCoordinates(){
-		
+
+	public float[] getYCoordinates() {
+
 		float[] result = new float[size()];
-		for(int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++)
 			result[i] = getEntry(i).getY();
-		
+
 		return result;
 	}
-	
-	
-	public float getAlpha(){
+
+	public float getAlpha() {
 		return mAlpha;
 	}
-	
-	
-	
-	
+
 	/*
-	 * --------
-	 * Setters
-	 * --------
+	 * -------- Setters --------
 	 */
-	
-	
-	private void setValue(int i, float value){
+
+	private void setValue(int i, float value) {
 		mEntries.get(i).setValue(value);
 	}
-	
-	
-	public void setAlpha(float alpha){
+
+	public void setAlpha(float alpha) {
 		mAlpha = (alpha < 1) ? alpha : 1;
 	}
-	
-	
-	
-	public String toString(){
+
+	public String toString() {
 		return mEntries.toString();
 	}
-	
-	
+
 	public int size() {
 		return mEntries.size();
 	}
-	
+
 }

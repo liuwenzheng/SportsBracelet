@@ -47,10 +47,12 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 		super(context);
 		mArrowImageView = new ImageView(context);
 
-		Drawable arrowD = getResources().getDrawable(R.drawable.indicator_arrow);
+		Drawable arrowD = getResources()
+				.getDrawable(R.drawable.indicator_arrow);
 		mArrowImageView.setImageDrawable(arrowD);
 
-		final int padding = getResources().getDimensionPixelSize(R.dimen.indicator_internal_padding);
+		final int padding = getResources().getDimensionPixelSize(
+				R.dimen.indicator_internal_padding);
 		mArrowImageView.setPadding(padding, padding, padding, padding);
 		addView(mArrowImageView);
 
@@ -66,7 +68,8 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 			// Rotate Arrow so it's pointing the correct way
 			mArrowImageView.setScaleType(ScaleType.MATRIX);
 			Matrix matrix = new Matrix();
-			matrix.setRotate(180f, arrowD.getIntrinsicWidth() / 2f, arrowD.getIntrinsicHeight() / 2f);
+			matrix.setRotate(180f, arrowD.getIntrinsicWidth() / 2f,
+					arrowD.getIntrinsicHeight() / 2f);
 			mArrowImageView.setImageMatrix(matrix);
 			break;
 		default:
@@ -86,14 +89,16 @@ public class IndicatorLayout extends FrameLayout implements AnimationListener {
 		mOutAnim.setAnimationListener(this);
 
 		final Interpolator interpolator = new LinearInterpolator();
-		mRotateAnimation = new RotateAnimation(0, -180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+		mRotateAnimation = new RotateAnimation(0, -180,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
 		mRotateAnimation.setInterpolator(interpolator);
 		mRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
 		mRotateAnimation.setFillAfter(true);
 
-		mResetRotateAnimation = new RotateAnimation(-180, 0, Animation.RELATIVE_TO_SELF, 0.5f,
-				Animation.RELATIVE_TO_SELF, 0.5f);
+		mResetRotateAnimation = new RotateAnimation(-180, 0,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
 		mResetRotateAnimation.setInterpolator(interpolator);
 		mResetRotateAnimation.setDuration(DEFAULT_ROTATION_ANIMATION_DURATION);
 		mResetRotateAnimation.setFillAfter(true);

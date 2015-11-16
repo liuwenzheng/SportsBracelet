@@ -54,8 +54,9 @@ public final class OverscrollHelper {
 	 *            - true if this scroll operation is the result of a touch
 	 *            event, passed through from from overScrollBy call
 	 */
-	public static void overScrollBy(final PullToRefreshBase<?> view, final int deltaX, final int scrollX,
-			final int deltaY, final int scrollY, final boolean isTouchEvent) {
+	public static void overScrollBy(final PullToRefreshBase<?> view,
+			final int deltaX, final int scrollX, final int deltaY,
+			final int scrollY, final boolean isTouchEvent) {
 		overScrollBy(view, deltaX, scrollX, deltaY, scrollY, 0, isTouchEvent);
 	}
 
@@ -84,9 +85,11 @@ public final class OverscrollHelper {
 	 *            - true if this scroll operation is the result of a touch
 	 *            event, passed through from from overScrollBy call
 	 */
-	public static void overScrollBy(final PullToRefreshBase<?> view, final int deltaX, final int scrollX,
-			final int deltaY, final int scrollY, final int scrollRange, final boolean isTouchEvent) {
-		overScrollBy(view, deltaX, scrollX, deltaY, scrollY, scrollRange, 0, DEFAULT_OVERSCROLL_SCALE, isTouchEvent);
+	public static void overScrollBy(final PullToRefreshBase<?> view,
+			final int deltaX, final int scrollX, final int deltaY,
+			final int scrollY, final int scrollRange, final boolean isTouchEvent) {
+		overScrollBy(view, deltaX, scrollX, deltaY, scrollY, scrollRange, 0,
+				DEFAULT_OVERSCROLL_SCALE, isTouchEvent);
 	}
 
 	/**
@@ -119,8 +122,9 @@ public final class OverscrollHelper {
 	 *            - true if this scroll operation is the result of a touch
 	 *            event, passed through from from overScrollBy call
 	 */
-	public static void overScrollBy(final PullToRefreshBase<?> view, final int deltaX, final int scrollX,
-			final int deltaY, final int scrollY, final int scrollRange, final int fuzzyThreshold,
+	public static void overScrollBy(final PullToRefreshBase<?> view,
+			final int deltaX, final int scrollX, final int deltaY,
+			final int scrollY, final int scrollRange, final int fuzzyThreshold,
 			final float scaleFactor, final boolean isTouchEvent) {
 
 		final int deltaValue, currentScrollValue, scrollValue;
@@ -149,8 +153,10 @@ public final class OverscrollHelper {
 				final int newScrollValue = (deltaValue + scrollValue);
 
 				if (PullToRefreshBase.DEBUG) {
-					Log.d(LOG_TAG, "OverScroll. DeltaX: " + deltaX + ", ScrollX: " + scrollX + ", DeltaY: " + deltaY
-							+ ", ScrollY: " + scrollY + ", NewY: " + newScrollValue + ", ScrollRange: " + scrollRange
+					Log.d(LOG_TAG, "OverScroll. DeltaX: " + deltaX
+							+ ", ScrollX: " + scrollX + ", DeltaY: " + deltaY
+							+ ", ScrollY: " + scrollY + ", NewY: "
+							+ newScrollValue + ", ScrollRange: " + scrollRange
 							+ ", CurrentScroll: " + currentScrollValue);
 				}
 
@@ -176,7 +182,8 @@ public final class OverscrollHelper {
 							view.setState(State.OVERSCROLLING);
 						}
 
-						view.setHeaderScroll((int) (scaleFactor * (currentScrollValue + newScrollValue - scrollRange)));
+						view.setHeaderScroll((int) (scaleFactor * (currentScrollValue
+								+ newScrollValue - scrollRange)));
 					}
 				} else if (Math.abs(newScrollValue) <= fuzzyThreshold
 						|| Math.abs(newScrollValue - scrollRange) <= fuzzyThreshold) {

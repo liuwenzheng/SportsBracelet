@@ -24,7 +24,6 @@ import android.view.View.OnClickListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.fragment.MainTab01;
@@ -42,7 +41,8 @@ import com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class MainActivity extends SlidingFragmentActivity implements OnClickListener {
+public class MainActivity extends SlidingFragmentActivity implements
+		OnClickListener {
 
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
@@ -99,34 +99,38 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 	private void initListener() {
 		tv_main_conn_tips.setOnClickListener(this);
-		pull_refresh_viewpager.setOnRefreshListener(new OnRefreshListener<ViewPager>() {
+		pull_refresh_viewpager
+				.setOnRefreshListener(new OnRefreshListener<ViewPager>() {
 
-			@Override
-			public void onRefresh(PullToRefreshBase<ViewPager> refreshView) {
-				if (mBtService.isConnDevice()) {
-					// 5s后若未获取数据自动结束刷新
-					BTService.mHandler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							runOnUiThread(new Runnable() {
-
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ViewPager> refreshView) {
+						if (mBtService.isConnDevice()) {
+							// 5s后若未获取数据自动结束刷新
+							BTService.mHandler.postDelayed(new Runnable() {
 								@Override
 								public void run() {
-									if (pull_refresh_viewpager.isRefreshing()) {
-										LogModule.e("5s后未获得手环数据！！！");
-										pull_refresh_viewpager.onRefreshComplete();
-									}
+									runOnUiThread(new Runnable() {
 
+										@Override
+										public void run() {
+											if (pull_refresh_viewpager
+													.isRefreshing()) {
+												LogModule.e("5s后未获得手环数据！！！");
+												pull_refresh_viewpager
+														.onRefreshComplete();
+											}
+
+										}
+									});
 								}
-							});
+							}, 10000);
+							synData();
+						} else {
+							pull_refresh_viewpager.onRefreshComplete();
 						}
-					}, 5000);
-					synData();
-				} else {
-					pull_refresh_viewpager.onRefreshComplete();
-				}
-			}
-		});
+					}
+				});
 	}
 
 	private void initData() {
@@ -136,14 +140,17 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	protected void onStart() {
 		// 注册广播接收器
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
-		filter.addAction(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
-		filter.addAction(AppConstants.ACTION_DISCOVER_SUCCESS);
-		filter.addAction(AppConstants.ACTION_DISCOVER_FAILURE);
-		filter.addAction(AppConstants.ACTION_REFRESH_DATA);
-		filter.addAction(AppConstants.ACTION_LOG);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
+		filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
+		filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA);
+		filter.addAction(BTConstants.ACTION_ACK);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
+		// filter.addAction(BTConstants.ACTION_LOG);
 		registerReceiver(mReceiver, filter);
-		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
+		bindService(new Intent(this, BTService.class), mServiceConnection,
+				BIND_AUTO_CREATE);
 		super.onStart();
 	}
 
@@ -166,27 +173,37 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
-				if (AppConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())
-						|| AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
-						|| AppConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
-					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
-						((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
+				if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent
+						.getAction())
+						|| BTConstants.ACTION_CONN_STATUS_DISCONNECTED
+								.equals(intent.getAction())
+						|| BTConstants.ACTION_DISCOVER_FAILURE.equals(intent
+								.getAction())) {
+					if (leftMenuFragment != null
+							&& leftMenuFragment.isVisible()) {
+						((MenuLeftFragment) leftMenuFragment)
+								.updateView(mBtService);
 					}
 					LogModule.d("配对失败...");
 					pull_refresh_viewpager.onRefreshComplete();
-					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
+					ToastUtils.showToast(MainActivity.this,
+							R.string.setting_device_conn_failure);
 					tv_main_conn_tips.setVisibility(View.VISIBLE);
 					tv_main_tips.setVisibility(View.GONE);
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
 				}
-				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
+				if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
+						.getAction())) {
 					LogModule.d("配对成功...");
-					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
-						((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
+					if (leftMenuFragment != null
+							&& leftMenuFragment.isVisible()) {
+						((MenuLeftFragment) leftMenuFragment)
+								.updateView(mBtService);
 					}
-					ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
+					ToastUtils.showToast(MainActivity.this,
+							R.string.setting_device_conn_success);
 					pull_refresh_viewpager.onRefreshComplete();
 					autoPullUpdate(getString(R.string.step_syncdata_waiting));
 					tv_main_conn_tips.setVisibility(View.GONE);
@@ -201,24 +218,52 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					// getString(R.string.step_syncdata_waiting),
 					// false, false);
 				}
-				if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
+				if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
 					pull_refresh_viewpager.onRefreshComplete();
 					if (tab01 != null && tab01.isVisible()) {
 						tab01.updateView();
 					}
-					int battery = SPUtiles.getIntValue(BTConstants.SP_KEY_BATTERY, 0);
+					int battery = SPUtiles.getIntValue(
+							BTConstants.SP_KEY_BATTERY, 0);
 					LogModule.i("电量为" + battery + "%");
 					tv_main_tips.setVisibility(View.GONE);
-					if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
-						((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
+					if (leftMenuFragment != null
+							&& leftMenuFragment.isVisible()) {
+						((MenuLeftFragment) leftMenuFragment)
+								.updateView(mBtService);
 					}
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
 				}
-				if (AppConstants.ACTION_LOG.equals(intent.getAction())) {
+				if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
 					String strLog = intent.getStringExtra("log");
 					log.setText(log.getText().toString() + "\n" + strLog);
+
+				}
+				if (BTConstants.ACTION_REFRESH_DATA_BATTERY.equals(intent
+						.getAction())) {
+					int battery = intent.getIntExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE, 0);
+					if (battery == 0) {
+						return;
+					}
+					SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
+					mBtService.getStepData();
+				}
+
+				if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
+					int ack = intent.getIntExtra(
+							BTConstants.EXTRA_KEY_ACK_VALUE, 0);
+					if (ack == 0) {
+						return;
+					}
+					if (ack == BTConstants.HEADER_SYNTIMEDATA) {
+						mBtService.synUserInfoData();
+					} else if (ack == BTConstants.HEADER_SYNUSERINFO) {
+						mBtService.synAlarmData();
+					} else if (ack == BTConstants.HEADER_SYNALARM) {
+						mBtService.getBatteryData();
+					}
 				}
 			}
 
@@ -244,7 +289,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 					// getString(R.string.step_syncdata_waiting),
 					// false, false);
 				} else {
-					mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+					mBtService.connectBle(SPUtiles.getStringValue(
+							BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 					autoPullUpdate(getString(R.string.setting_device));
 					// tv_main_tips.setText(R.string.setting_device);
 					// tv_main_tips.setVisibility(View.VISIBLE);
@@ -273,17 +319,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 			@Override
 			public void run() {
-				try {
-					mBtService.synTimeData();
-					Thread.sleep(200);
-					mBtService.synUserInfoData();
-					Thread.sleep(200);
-					mBtService.synAlarmData();
-					Thread.sleep(200);
-					mBtService.getSportData();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+
+				mBtService.synTimeData();
+
 			}
 		}, 200);
 
@@ -295,7 +333,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 			switch (requestCode) {
 			case BTModule.REQUEST_ENABLE_BT:
 				autoPullUpdate(getString(R.string.setting_device));
-				mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+				mBtService.connectBle(SPUtiles.getStringValue(
+						BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 				// tv_main_tips.setText(R.string.setting_device);
 				// tv_main_tips.setVisibility(View.VISIBLE);
 				// mDialog = ProgressDialog
@@ -337,7 +376,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
 		leftMenuFragment = new MenuLeftFragment();
 		setBehindContentView(R.layout.left_menu_frame);
-		getSupportFragmentManager().beginTransaction().replace(R.id.id_left_menu_frame, leftMenuFragment).commit();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.id_left_menu_frame, leftMenuFragment).commit();
 		SlidingMenu menu = getSlidingMenu();
 		menu.setMode(SlidingMenu.LEFT_RIGHT);
 		// 设置触摸屏幕的模式
@@ -354,7 +394,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 		// 设置右边（二级）侧滑菜单
 		menu.setSecondaryMenu(R.layout.right_menu_frame);
 		rightMenuFragment = new MenuRightFragment();
-		getSupportFragmentManager().beginTransaction().replace(R.id.id_right_menu_frame, rightMenuFragment).commit();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.id_right_menu_frame, rightMenuFragment).commit();
 	}
 
 	public void showLeftMenu(View view) {
@@ -374,7 +415,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 				BTModule.openBluetooth(MainActivity.this);
 				return;
 			}
-			mBtService.connectBle(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+			mBtService.connectBle(SPUtiles.getStringValue(
+					BTConstants.SP_KEY_DEVICE_ADDRESS, null));
 			autoPullUpdate(getString(R.string.setting_device));
 			// tv_main_tips.setText(R.string.setting_device);
 			// tv_main_tips.setVisibility(View.VISIBLE);
@@ -406,21 +448,23 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 	public void onBackPressed() {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setMessage(R.string.main_exit_tips);
-		builder.setPositiveButton(R.string.main_exit_tips_confirm, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.main_exit_tips_confirm,
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				MainActivity.this.finish();
-			}
-		});
-		builder.setNegativeButton(R.string.main_exit_tips_cancel, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						MainActivity.this.finish();
+					}
+				});
+		builder.setNegativeButton(R.string.main_exit_tips_cancel,
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 		builder.show();
 	}
 }

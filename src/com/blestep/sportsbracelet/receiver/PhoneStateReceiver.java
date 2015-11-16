@@ -12,7 +12,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// 如果是来电
-		TelephonyManager tm = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
+		TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Service.TELEPHONY_SERVICE);
 
 		switch (tm.getCallState()) {
 		case TelephonyManager.CALL_STATE_RINGING:

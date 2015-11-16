@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
@@ -38,7 +38,8 @@ import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 
-public class SettingDeviceActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
+public class SettingDeviceActivity extends BaseActivity implements
+		OnClickListener, OnItemClickListener {
 	private ListView lv_setting_device;
 	private BTService mBtService;
 	private DeviceAdapter mAdapter;
@@ -59,12 +60,12 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 	protected void onResume() {
 		// 注册广播接收器
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(AppConstants.ACTION_BLE_DEVICES_DATA);
-		filter.addAction(AppConstants.ACTION_BLE_DEVICES_DATA_END);
-		filter.addAction(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
-		filter.addAction(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
-		filter.addAction(AppConstants.ACTION_DISCOVER_SUCCESS);
-		filter.addAction(AppConstants.ACTION_DISCOVER_FAILURE);
+		filter.addAction(BTConstants.ACTION_BLE_DEVICES_DATA);
+		filter.addAction(BTConstants.ACTION_BLE_DEVICES_DATA_END);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
+		filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
+		filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
 		registerReceiver(mReceiver, filter);
 		super.onResume();
 	}
@@ -92,7 +93,8 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 		mDevices = new ArrayList<BleDevice>();
 		mAdapter = new DeviceAdapter();
 		lv_setting_device.setAdapter(mAdapter);
-		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
+		bindService(new Intent(this, BTService.class), mServiceConnection,
+				BIND_AUTO_CREATE);
 
 	}
 
@@ -108,14 +110,19 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			if (mDevices != null && mDevices.size() == 0) {
 				AlertDialog.Builder builder = new Builder(this);
 				builder.setMessage(R.string.setting_device_search_repeat);
-				builder.setPositiveButton(R.string.setting_device_search_confirm,
+				builder.setPositiveButton(
+						R.string.setting_device_search_confirm,
 						new DialogInterface.OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								mBtService.scanDevice();
-								mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
-										getString(R.string.setting_device_search), false, false);
+								mDialog = ProgressDialog
+										.show(SettingDeviceActivity.this,
+												null,
+												getString(R.string.setting_device_search),
+												false, false);
 								dialog.dismiss();
 							}
 						});
@@ -129,8 +136,8 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
 			// 将选中地址缓存
 			mBtService.connectBle(mDevices.get(mPosition).address);
-			mDialog = ProgressDialog.show(SettingDeviceActivity.this, null, getString(R.string.setting_device), false,
-					false);
+			mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
+					getString(R.string.setting_device), false, false);
 			break;
 		case R.id.tv_setting_pre:
 			startActivity(new Intent(this, SettingBraceletActivity.class));
@@ -143,7 +150,8 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 		mPosition = position;
 		for (int i = 0; i < mDevices.size(); i++) {
 			mDevices.get(i).isChecked = false;
@@ -178,11 +186,14 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			BleDevice bleDevice = mDevices.get(position);
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = LayoutInflater.from(SettingDeviceActivity.this).inflate(
-						R.layout.setting_device_list_item, null);
-				holder.tv_device_name = (TextView) convertView.findViewById(R.id.tv_device_name);
-				holder.tv_device_mac = (TextView) convertView.findViewById(R.id.tv_device_mac);
-				holder.iv_device_checked = (ImageView) convertView.findViewById(R.id.iv_device_checked);
+				convertView = LayoutInflater.from(SettingDeviceActivity.this)
+						.inflate(R.layout.setting_device_list_item, null);
+				holder.tv_device_name = (TextView) convertView
+						.findViewById(R.id.tv_device_name);
+				holder.tv_device_mac = (TextView) convertView
+						.findViewById(R.id.tv_device_mac);
+				holder.iv_device_checked = (ImageView) convertView
+						.findViewById(R.id.iv_device_checked);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -190,9 +201,11 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			holder.tv_device_name.setText(bleDevice.name);
 			holder.tv_device_mac.setText(bleDevice.address);
 			if (bleDevice.isChecked) {
-				holder.iv_device_checked.setImageResource(R.drawable.setting_device_checked_true);
+				holder.iv_device_checked
+						.setImageResource(R.drawable.setting_device_checked_true);
 			} else {
-				holder.iv_device_checked.setImageResource(R.drawable.setting_device_checked_false);
+				holder.iv_device_checked
+						.setImageResource(R.drawable.setting_device_checked_false);
 			}
 			return convertView;
 		}
@@ -209,8 +222,10 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
-				if (AppConstants.ACTION_BLE_DEVICES_DATA.equals(intent.getAction())) {
-					BleDevice bleDevice = (BleDevice) intent.getExtras().getSerializable("device");
+				if (BTConstants.ACTION_BLE_DEVICES_DATA.equals(intent
+						.getAction())) {
+					BleDevice bleDevice = (BleDevice) intent.getExtras()
+							.getSerializable("device");
 					for (BleDevice device : mDevices) {
 						if (device.address.equals(bleDevice.address)) {
 							return;
@@ -229,30 +244,40 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 					}
 					mAdapter.notifyDataSetChanged();
 				}
-				if (AppConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent.getAction())) {
+				if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent
+						.getAction())) {
 					LogModule.d("结束扫描...");
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
 				}
-				if (AppConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())
-						|| AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
-						|| AppConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
+				if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent
+						.getAction())
+						|| BTConstants.ACTION_CONN_STATUS_DISCONNECTED
+								.equals(intent.getAction())
+						|| BTConstants.ACTION_DISCOVER_FAILURE.equals(intent
+								.getAction())) {
 					LogModule.d("配对失败...");
-					ToastUtils.showToast(SettingDeviceActivity.this, R.string.setting_device_conn_failure);
+					ToastUtils.showToast(SettingDeviceActivity.this,
+							R.string.setting_device_conn_failure);
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
 				}
-				if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
+				if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
+						.getAction())) {
 					LogModule.d("配对成功...");
-					ToastUtils.showToast(SettingDeviceActivity.this, R.string.setting_device_conn_success);
+					ToastUtils.showToast(SettingDeviceActivity.this,
+							R.string.setting_device_conn_success);
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
-					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, mDevices.get(mPosition).address);
-					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME, mDevices.get(mPosition).name);
-					startActivity(new Intent(SettingDeviceActivity.this, SettingUserInfoActivity.class));
+					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS,
+							mDevices.get(mPosition).address);
+					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
+							mDevices.get(mPosition).name);
+					startActivity(new Intent(SettingDeviceActivity.this,
+							SettingUserInfoActivity.class));
 					SettingDeviceActivity.this.finish();
 				}
 			}
@@ -274,8 +299,10 @@ public class SettingDeviceActivity extends BaseActivity implements OnClickListen
 			} else {
 				LogModule.d("开始扫描...");
 				mBtService.scanDevice();
-				mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
-						getString(R.string.setting_device_search), false, false);
+				mDialog = ProgressDialog
+						.show(SettingDeviceActivity.this, null,
+								getString(R.string.setting_device_search),
+								false, false);
 			}
 		}
 

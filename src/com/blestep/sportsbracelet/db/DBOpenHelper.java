@@ -41,9 +41,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	}
 
 	// 步数表
-	private static final String CREATE_TABLE_STEP = "CREATE TABLE " + DBConstants.TABLE_NAME_STEP
-	// id
-			+ " (" + DBConstants.STEP_FIELD_ID + " INTEGER primary key autoincrement, "
+	private static final String CREATE_TABLE_STEP = "CREATE TABLE "
+			+ DBConstants.TABLE_NAME_STEP
+			// id
+			+ " (" + DBConstants.STEP_FIELD_ID
+			+ " INTEGER primary key autoincrement, "
 			// 日期
 			+ DBConstants.STEP_FIELD_DATE + " TEXT,"
 			// 总数
@@ -63,9 +65,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	// + " text," + "sleep_deepsleeptime" + " text," + "sleep_index"
 	// + " text," + "fragment_index" + " text);";
 	// 闹钟表
-	private static final String CREATE_TABLE_ALARM = "CREATE TABLE " + DBConstants.TABLE_NAME_ALARM
-	// id
-			+ " (" + DBConstants.ALARM_FIELD_ID + " INTEGER primary key autoincrement, "
+	private static final String CREATE_TABLE_ALARM = "CREATE TABLE "
+			+ DBConstants.TABLE_NAME_ALARM
+			// id
+			+ " (" + DBConstants.ALARM_FIELD_ID
+			+ " INTEGER primary key autoincrement, "
 			// 名称
 			+ DBConstants.ALARM_FIELD_NAME + " TEXT,"
 			// 时间

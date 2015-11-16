@@ -84,7 +84,8 @@ public interface IPullToRefresh<T extends View> {
 	 * @return Object which will proxy any calls you make on it, to the
 	 *         LoadingLayouts included.
 	 */
-	public ILoadingLayout getLoadingLayoutProxy(boolean includeStart, boolean includeEnd);
+	public ILoadingLayout getLoadingLayoutProxy(boolean includeStart,
+			boolean includeEnd);
 
 	/**
 	 * Get the mode that this view has been set to. If this returns
@@ -241,7 +242,8 @@ public interface IPullToRefresh<T extends View> {
 	 * @param scrollingWhileRefreshingEnabled
 	 *            - true if you want to enable scrolling while refreshing
 	 */
-	public void setScrollingWhileRefreshingEnabled(boolean scrollingWhileRefreshingEnabled);
+	public void setScrollingWhileRefreshingEnabled(
+			boolean scrollingWhileRefreshingEnabled);
 
 	/**
 	 * A mutator to enable/disable whether the 'Refreshing' View should be

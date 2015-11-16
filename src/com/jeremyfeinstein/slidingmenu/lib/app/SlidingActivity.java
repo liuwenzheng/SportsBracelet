@@ -76,7 +76,8 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 	 */
 
 	public void setContentView(View v) {
-		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*
@@ -108,7 +109,8 @@ public class SlidingActivity extends Activity implements SlidingActivityBase {
 	 * setBehindContentView(android.view.View)
 	 */
 	public void setBehindContentView(View v) {
-		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*

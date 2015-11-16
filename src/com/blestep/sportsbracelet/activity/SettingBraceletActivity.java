@@ -8,7 +8,8 @@ import android.view.View.OnClickListener;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 
-public class SettingBraceletActivity extends BaseActivity implements OnClickListener {
+public class SettingBraceletActivity extends BaseActivity implements
+		OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

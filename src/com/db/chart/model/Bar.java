@@ -16,51 +16,36 @@
 
 package com.db.chart.model;
 
-
 /**
  * Data model that represents a bar in {@link BarChartView}
  */
-public class Bar extends ChartEntry{
+public class Bar extends ChartEntry {
 
-	
 	/** Default bar color */
 	private static final int DEFAULT_COLOR = -16777216;
-	
-	
+
 	/** Bar color */
 	private int mColor;
-	
-	
-	
-	public Bar(String label, float value){
+
+	public Bar(String label, float value) {
 		super(label, value);
 		mColor = DEFAULT_COLOR;
 	}
 
-	
-	
-	
 	/*
-	 * --------
-	 * Getters
-	 * --------
+	 * -------- Getters --------
 	 */
-	
+
 	public int getColor() {
 		return mColor;
 	}
 
-	
-	
-	
 	/*
-	 * --------
-	 * Setters
-	 * --------
+	 * -------- Setters --------
 	 */
-	
+
 	public void setColor(int mColor) {
 		this.mColor = mColor;
 	}
-	
+
 }

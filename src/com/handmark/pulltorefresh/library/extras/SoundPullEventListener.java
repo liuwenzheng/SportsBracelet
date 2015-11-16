@@ -25,7 +25,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.State;
 
-public class SoundPullEventListener<V extends View> implements PullToRefreshBase.OnPullEventListener<V> {
+public class SoundPullEventListener<V extends View> implements
+		PullToRefreshBase.OnPullEventListener<V> {
 
 	private final Context mContext;
 	private final HashMap<State, Integer> mSoundMap;
@@ -44,7 +45,8 @@ public class SoundPullEventListener<V extends View> implements PullToRefreshBase
 	}
 
 	@Override
-	public final void onPullEvent(PullToRefreshBase<V> refreshView, State event, Mode direction) {
+	public final void onPullEvent(PullToRefreshBase<V> refreshView,
+			State event, Mode direction) {
 		Integer soundResIdObj = mSoundMap.get(event);
 		if (null != soundResIdObj) {
 			playSound(soundResIdObj.intValue());

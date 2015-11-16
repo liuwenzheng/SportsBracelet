@@ -39,7 +39,8 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = inflater.inflate(R.layout.left_menu, container, false);
 		}
@@ -57,41 +58,51 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 
 	private void initView() {
 		tv_bracelet_name = (TextView) mView.findViewById(R.id.tv_bracelet_name);
-		tv_alert_coming_call_state = (TextView) mView.findViewById(R.id.tv_alert_coming_call_state);
-		iv_battery_state = (ImageView) mView.findViewById(R.id.iv_battery_state);
+		tv_alert_coming_call_state = (TextView) mView
+				.findViewById(R.id.tv_alert_coming_call_state);
+		iv_battery_state = (ImageView) mView
+				.findViewById(R.id.iv_battery_state);
 		iv_conn_state = (ImageView) mView.findViewById(R.id.iv_conn_state);
-		cb_alert_low_battery = (CheckBox) mView.findViewById(R.id.cb_alert_low_battery);
-		cb_alert_find_band = (CheckBox) mView.findViewById(R.id.cb_alert_find_band);
+		cb_alert_low_battery = (CheckBox) mView
+				.findViewById(R.id.cb_alert_low_battery);
+		cb_alert_find_band = (CheckBox) mView
+				.findViewById(R.id.cb_alert_find_band);
 		// if (mainActivity.getmBtService() != null &&
 		// mainActivity.getmBtService().isConnDevice()) {
 		// cb_alert_find_band.setEnabled(true);
 		// } else {
 		// cb_alert_find_band.setEnabled(false);
 		// }
-		cb_alert_find_band.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		cb_alert_find_band
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					if (mainActivity.getmBtService() != null) {
-						mBtService = mainActivity.getmBtService();
-						if (mBtService.isConnDevice()) {
-							isContinue = true;
-							startFindBandShake();
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (isChecked) {
+							if (mainActivity.getmBtService() != null) {
+								mBtService = mainActivity.getmBtService();
+								if (mBtService.isConnDevice()) {
+									isContinue = true;
+									startFindBandShake();
+								} else {
+									ToastUtils
+											.showToast(
+													mainActivity,
+													R.string.alert_find_band_conn_false);
+									cb_alert_find_band.setChecked(false);
+								}
+							} else {
+								ToastUtils.showToast(mainActivity,
+										R.string.alert_find_band_conn_false);
+								cb_alert_find_band.setChecked(false);
+							}
 						} else {
-							ToastUtils.showToast(mainActivity, R.string.alert_find_band_conn_false);
-							cb_alert_find_band.setChecked(false);
+							isContinue = false;
 						}
-					} else {
-						ToastUtils.showToast(mainActivity, R.string.alert_find_band_conn_false);
-						cb_alert_find_band.setChecked(false);
-					}
-				} else {
-					isContinue = false;
-				}
 
-			}
-		});
+					}
+				});
 	}
 
 	private void startFindBandShake() {
@@ -118,11 +129,15 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initData() {
-		tv_bracelet_name.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_NAME, ""));
-		if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, true)) {
-			tv_alert_coming_call_state.setText(getString(R.string.alert_coming_call_open));
+		tv_bracelet_name.setText(SPUtiles.getStringValue(
+				BTConstants.SP_KEY_DEVICE_NAME, ""));
+		if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT,
+				true)) {
+			tv_alert_coming_call_state
+					.setText(getString(R.string.alert_coming_call_open));
 		} else {
-			tv_alert_coming_call_state.setText(getString(R.string.alert_coming_call_close));
+			tv_alert_coming_call_state
+					.setText(getString(R.string.alert_coming_call_close));
 		}
 	}
 
@@ -165,25 +180,27 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 		case R.id.rl_bracelet_reset:
 			AlertDialog.Builder builder = new Builder(mainActivity);
 			builder.setMessage(R.string.bracelet_reset_alert);
-			builder.setPositiveButton(R.string.bracelet_reset_alert_confirm, new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(R.string.bracelet_reset_alert_confirm,
+					new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					SPUtiles.clearAllData();
-					DBTools.getInstance(mainActivity).deleteAllData();
-					mainActivity.getmBtService().mBluetoothGatt.close();
-					mainActivity.getmBtService().mBluetoothGatt = null;
-					dialog.dismiss();
-					mainActivity.finish();
-				}
-			});
-			builder.setNegativeButton(R.string.bracelet_reset_alert_cancel, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							SPUtiles.clearAllData();
+							DBTools.getInstance(mainActivity).deleteAllData();
+							mainActivity.getmBtService().mBluetoothGatt.close();
+							mainActivity.getmBtService().mBluetoothGatt = null;
+							dialog.dismiss();
+							mainActivity.finish();
+						}
+					});
+			builder.setNegativeButton(R.string.bracelet_reset_alert_cancel,
+					new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
 			builder.show();
 			break;
 		case R.id.rl_about:

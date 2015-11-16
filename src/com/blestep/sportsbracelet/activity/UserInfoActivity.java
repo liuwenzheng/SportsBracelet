@@ -41,7 +41,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 	private RadioGroup rg_userinfo_sex;
 	private DatePickerDialog mDialog;
 	private Calendar mCalendar;
-	private SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD);
+	private SimpleDateFormat sdf = new SimpleDateFormat(
+			BTConstants.PATTERN_YYYY_MM_DD);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,29 +67,34 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		tv_userinfo_birthday.setOnClickListener(this);
 		findViewById(R.id.iv_back).setOnClickListener(this);
 		tv_userinfo_confirm.setOnClickListener(this);
-		rg_userinfo_sex.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		rg_userinfo_sex
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				switch (checkedId) {
-				case R.id.rb_userinfo_male:
-					iv_userinfo_icon.setImageResource(R.drawable.pic_male);
-					break;
-				case R.id.rb_userinfo_female:
-					iv_userinfo_icon.setImageResource(R.drawable.pic_female);
-					break;
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						switch (checkedId) {
+						case R.id.rb_userinfo_male:
+							iv_userinfo_icon
+									.setImageResource(R.drawable.pic_male);
+							break;
+						case R.id.rb_userinfo_female:
+							iv_userinfo_icon
+									.setImageResource(R.drawable.pic_female);
+							break;
 
-				default:
-					break;
-				}
+						default:
+							break;
+						}
 
-			}
-		});
+					}
+				});
 	}
 
 	private void initData() {
-		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
-		et_userinfo_name.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_USER_NAME, ""));
+		bindService(new Intent(this, BTService.class), mServiceConnection,
+				BIND_AUTO_CREATE);
+		et_userinfo_name.setText(SPUtiles.getStringValue(
+				BTConstants.SP_KEY_USER_NAME, ""));
 		int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, 0);
 		if (gender == 0) {
 			iv_userinfo_icon.setImageResource(R.drawable.pic_male);
@@ -98,7 +104,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			((RadioButton) rg_userinfo_sex.getChildAt(1)).setChecked(true);
 		}
 
-		tv_userinfo_birthday.setText(SPUtiles.getStringValue(BTConstants.SP_KEY_USER_BIRTHDAT, "1989-01-01"));
+		tv_userinfo_birthday.setText(SPUtiles.getStringValue(
+				BTConstants.SP_KEY_USER_BIRTHDAT, "1989-01-01"));
 		mCalendar = Calendar.getInstance();
 		Date date;
 		try {
@@ -107,18 +114,24 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		mDialog = new DatePickerDialog(this, R.style.AppTheme_Dialog, new OnDateSetListener() {
+		mDialog = new DatePickerDialog(this, R.style.AppTheme_Dialog,
+				new OnDateSetListener() {
 
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				mCalendar.set(Calendar.YEAR, year);
-				mCalendar.set(Calendar.MONTH, monthOfYear);
-				mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				tv_userinfo_birthday.setText(sdf.format(mCalendar.getTime()));
-			}
-		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
-		et_userinfo_height.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 175) + "");
-		et_userinfo_weight.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 75) + "");
+					@Override
+					public void onDateSet(DatePicker view, int year,
+							int monthOfYear, int dayOfMonth) {
+						mCalendar.set(Calendar.YEAR, year);
+						mCalendar.set(Calendar.MONTH, monthOfYear);
+						mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+						tv_userinfo_birthday.setText(sdf.format(mCalendar
+								.getTime()));
+					}
+				}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+				mCalendar.get(Calendar.DAY_OF_MONTH));
+		et_userinfo_height.setText(SPUtiles.getIntValue(
+				BTConstants.SP_KEY_USER_HEIGHT, 175) + "");
+		et_userinfo_weight.setText(SPUtiles.getIntValue(
+				BTConstants.SP_KEY_USER_WEIGHT, 75) + "");
 	}
 
 	@Override
@@ -174,10 +187,12 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 			// 计算年龄
 			Calendar current = Calendar.getInstance();
 			try {
-				Date birthday = sdf.parse(tv_userinfo_birthday.getText().toString());
+				Date birthday = sdf.parse(tv_userinfo_birthday.getText()
+						.toString());
 				Calendar birthdayCalendar = Calendar.getInstance();
 				birthdayCalendar.setTime(birthday);
-				int age = current.get(Calendar.YEAR) - birthdayCalendar.get(Calendar.YEAR);
+				int age = current.get(Calendar.YEAR)
+						- birthdayCalendar.get(Calendar.YEAR);
 				if (age < 5 || age > 99) {
 					ToastUtils.showToast(this, R.string.userinfo_age_size);
 					return;
@@ -187,14 +202,17 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener {
 				e.printStackTrace();
 			}
 
-			SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME, et_userinfo_name.getText().toString());
+			SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME,
+					et_userinfo_name.getText().toString());
 			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_HEIGHT,
 					Integer.valueOf(et_userinfo_height.getText().toString()));
 			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT,
 					Integer.valueOf(et_userinfo_weight.getText().toString()));
 
-			SPUtiles.setIntValue(BTConstants.SP_KEY_USER_GENDER,
-					Integer.valueOf((String) findViewById(rg_userinfo_sex.getCheckedRadioButtonId()).getTag()));
+			SPUtiles.setIntValue(
+					BTConstants.SP_KEY_USER_GENDER,
+					Integer.valueOf((String) findViewById(
+							rg_userinfo_sex.getCheckedRadioButtonId()).getTag()));
 			this.finish();
 			break;
 		case R.id.tv_userinfo_birthday:

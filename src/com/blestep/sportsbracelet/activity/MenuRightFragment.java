@@ -20,7 +20,8 @@ public class MenuRightFragment extends Fragment implements OnClickListener {
 	private MainActivity mainActivity;
 	private TextView tv_user_name;
 	private ImageView iv_user_pic;
-	private RelativeLayout rl_center_userinfo, rl_center_target, rl_center_clear;
+	private RelativeLayout rl_center_userinfo, rl_center_target,
+			rl_center_clear;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class MenuRightFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = inflater.inflate(R.layout.right_menu, container, false);
 		}

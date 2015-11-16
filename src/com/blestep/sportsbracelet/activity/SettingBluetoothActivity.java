@@ -9,7 +9,8 @@ import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.module.BTModule;
 
-public class SettingBluetoothActivity extends BaseActivity implements OnClickListener {
+public class SettingBluetoothActivity extends BaseActivity implements
+		OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

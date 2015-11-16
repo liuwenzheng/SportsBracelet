@@ -8,7 +8,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-public class SlidingPreferenceActivity extends PreferenceActivity implements SlidingActivityBase {
+public class SlidingPreferenceActivity extends PreferenceActivity implements
+		SlidingActivityBase {
 
 	private SlidingActivityHelper mHelper;
 
@@ -76,7 +77,8 @@ public class SlidingPreferenceActivity extends PreferenceActivity implements Sli
 	 */
 	@Override
 	public void setContentView(View v) {
-		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*
@@ -108,7 +110,8 @@ public class SlidingPreferenceActivity extends PreferenceActivity implements Sli
 	 * setBehindContentView(android.view.View)
 	 */
 	public void setBehindContentView(View v) {
-		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*

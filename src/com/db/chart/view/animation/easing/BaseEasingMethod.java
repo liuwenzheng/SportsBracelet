@@ -19,17 +19,19 @@ package com.db.chart.view.animation.easing;
 import com.db.chart.view.animation.Animation;
 
 /**
- * Interface that gives the abstract methods to any possible 
- * interpolator/easing function
+ * Interface that gives the abstract methods to any possible interpolator/easing
+ * function
  */
 public interface BaseEasingMethod {
 
 	/**
-	 * Method that gives the next interpolated value to be processed by 
-	 * the {@link Animation} object.
-	 * @param normalizedTime - time normalized between 0 and 1.
+	 * Method that gives the next interpolated value to be processed by the
+	 * {@link Animation} object.
+	 * 
+	 * @param normalizedTime
+	 *            - time normalized between 0 and 1.
 	 * @return the next interpolation.
 	 */
 	public abstract float next(float normalizedTime);
-	
+
 }

@@ -45,7 +45,8 @@ public class SlidingActivityHelper {
 	 *            the saved instance state (unused)
 	 */
 	public void onCreate(Bundle savedInstanceState) {
-		mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(R.layout.slidingmenumain, null);
+		mSlidingMenu = (SlidingMenu) LayoutInflater.from(mActivity).inflate(
+				R.layout.slidingmenumain, null);
 	}
 
 	/**
@@ -57,20 +58,23 @@ public class SlidingActivityHelper {
 	 */
 	public void onPostCreate(Bundle savedInstanceState) {
 		if (mViewBehind == null || mViewAbove == null) {
-			throw new IllegalStateException("Both setBehindContentView must be called "
-					+ "in onCreate in addition to setContentView.");
+			throw new IllegalStateException(
+					"Both setBehindContentView must be called "
+							+ "in onCreate in addition to setContentView.");
 		}
 
 		mOnPostCreateCalled = true;
 
-		mSlidingMenu.attachToActivity(mActivity, mEnableSlide ? SlidingMenu.SLIDING_WINDOW
-				: SlidingMenu.SLIDING_CONTENT);
+		mSlidingMenu.attachToActivity(mActivity,
+				mEnableSlide ? SlidingMenu.SLIDING_WINDOW
+						: SlidingMenu.SLIDING_CONTENT);
 
 		final boolean open;
 		final boolean secondary;
 		if (savedInstanceState != null) {
 			open = savedInstanceState.getBoolean("SlidingActivityHelper.open");
-			secondary = savedInstanceState.getBoolean("SlidingActivityHelper.secondary");
+			secondary = savedInstanceState
+					.getBoolean("SlidingActivityHelper.secondary");
 		} else {
 			open = false;
 			secondary = false;
@@ -100,7 +104,8 @@ public class SlidingActivityHelper {
 	 */
 	public void setSlidingActionBarEnabled(boolean slidingActionBarEnabled) {
 		if (mOnPostCreateCalled)
-			throw new IllegalStateException("enableSlidingActionBar must be called in onCreate.");
+			throw new IllegalStateException(
+					"enableSlidingActionBar must be called in onCreate.");
 		mEnableSlide = slidingActionBarEnabled;
 	}
 
@@ -132,8 +137,10 @@ public class SlidingActivityHelper {
 	 *            Bundle in which to place your saved state.
 	 */
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean("SlidingActivityHelper.open", mSlidingMenu.isMenuShowing());
-		outState.putBoolean("SlidingActivityHelper.secondary", mSlidingMenu.isSecondaryMenuShowing());
+		outState.putBoolean("SlidingActivityHelper.open",
+				mSlidingMenu.isMenuShowing());
+		outState.putBoolean("SlidingActivityHelper.secondary",
+				mSlidingMenu.isSecondaryMenuShowing());
 	}
 
 	/**

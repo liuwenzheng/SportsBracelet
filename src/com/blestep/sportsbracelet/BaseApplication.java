@@ -21,8 +21,8 @@ public class BaseApplication extends Application {
 		// 启动蓝牙服务
 		startService(new Intent(this, BTService.class));
 		// 初始化蓝牙适配器
-		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
-				Context.BLUETOOTH_SERVICE);
+		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext()
+				.getSystemService(Context.BLUETOOTH_SERVICE);
 		BTModule.mBluetoothAdapter = bluetoothManager.getAdapter();
 	}
 }

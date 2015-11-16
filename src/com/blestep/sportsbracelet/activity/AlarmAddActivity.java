@@ -54,7 +54,8 @@ public class AlarmAddActivity extends BaseActivity implements OnClickListener {
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_HH_MM);
 
 		if (getIntent() != null && getIntent().getExtras() != null) {
-			mAlarm = (Alarm) getIntent().getExtras().getSerializable(BTConstants.EXTRA_KEY_ALARM);
+			mAlarm = (Alarm) getIntent().getExtras().getSerializable(
+					BTConstants.EXTRA_KEY_ALARM);
 			mIsEdit = true;
 		} else {
 			mAlarm = new Alarm();
@@ -97,16 +98,20 @@ public class AlarmAddActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_alarm_add_time:
 			String alarm_time = tv_alarm_add_time.getText().toString();
 			if (Utils.isNotEmpty(alarm_time)) {
-				mDialog = new TimePickerDialog(this, R.style.AppTheme_Dialog, new OnTimeSetListener() {
+				mDialog = new TimePickerDialog(this, R.style.AppTheme_Dialog,
+						new OnTimeSetListener() {
 
-					@Override
-					public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-						mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-						mCalendar.set(Calendar.MINUTE, minute);
-						tv_alarm_add_time.setText(mSdf.format(mCalendar.getTime()));
-						mDialog.dismiss();
-					}
-				}, Integer.valueOf(alarm_time.split(":")[0]), Integer.valueOf(alarm_time.split(":")[1]), true);
+							@Override
+							public void onTimeSet(TimePicker view,
+									int hourOfDay, int minute) {
+								mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+								mCalendar.set(Calendar.MINUTE, minute);
+								tv_alarm_add_time.setText(mSdf.format(mCalendar
+										.getTime()));
+								mDialog.dismiss();
+							}
+						}, Integer.valueOf(alarm_time.split(":")[0]),
+						Integer.valueOf(alarm_time.split(":")[1]), true);
 				mDialog.show();
 			}
 			break;

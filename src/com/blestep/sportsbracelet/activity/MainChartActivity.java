@@ -28,8 +28,10 @@ import com.db.chart.view.YController;
 
 public class MainChartActivity extends Activity {
 
-	private final static String[] mLabels = { "11/02", "11/03", "11/04", "11/05", "11/06", "11/07", "11/08", "11/09" };
-	private final TimeInterpolator enterInterpolator = new DecelerateInterpolator(1.5f);
+	private final static String[] mLabels = { "11/02", "11/03", "11/04",
+			"11/05", "11/06", "11/07", "11/08", "11/09" };
+	private final TimeInterpolator enterInterpolator = new DecelerateInterpolator(
+			1.5f);
 	private final TimeInterpolator exitInterpolator = new AccelerateInterpolator();
 
 	private final static float BAR_MAX = 10;
@@ -54,7 +56,8 @@ public class MainChartActivity extends Activity {
 		setContentView(R.layout.activity_main_chart);
 
 		mButton = (Button) findViewById(R.id.button);
-		mButton.setTypeface(Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf"));
+		mButton.setTypeface(Typeface.createFromAsset(getAssets(),
+				"Roboto-Regular.ttf"));
 
 		mButton.setOnClickListener(new OnClickListener() {
 
@@ -135,21 +138,24 @@ public class MainChartActivity extends Activity {
 		mBarChart.setBarBackgroundColor(Color.parseColor("#37474f"));
 		mBarChart.setRoundCorners(0);
 
-		mBarChart.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null).setVerticalGrid(null)
+		mBarChart.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+				.setVerticalGrid(null)
 				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setThresholdLine(4, DataRetriever.randPaint()).setMaxAxisValue((int) BAR_MAX, 2)
+				.setThresholdLine(4, DataRetriever.randPaint())
+				.setMaxAxisValue((int) BAR_MAX, 2)
 				.animate(DataRetriever.randAnimation(mEndAction, nPoints));
 	}
 
 	@SuppressLint("NewApi")
 	private void showBarTooltip(int index, Rect rect) {
 
-		mBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip, null);
+		mBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip,
+				null);
 		mBarTooltip.setText("" + mLabels[index]);
 
-		LayoutParams layoutParams = new LayoutParams(rect.width() + (int) Tools.fromDpToPx(40),
-				LayoutParams.WRAP_CONTENT);
+		LayoutParams layoutParams = new LayoutParams(rect.width()
+				+ (int) Tools.fromDpToPx(40), LayoutParams.WRAP_CONTENT);
 		layoutParams.leftMargin = rect.left - (int) Tools.fromDpToPx(20);
 		layoutParams.topMargin = rect.top - (int) Tools.fromDpToPx(40);
 		mBarTooltip.setLayoutParams(layoutParams);

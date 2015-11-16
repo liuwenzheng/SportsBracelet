@@ -146,12 +146,13 @@ public abstract class ChartView extends RelativeLayout {
 	public ChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		horController = new XController(this, context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs,
-				0, 0));
-		verController = new YController(this, context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs,
-				0, 0));
+		horController = new XController(this, context.getTheme()
+				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+		verController = new YController(this, context.getTheme()
+				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
 
-		style = new Style(context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+		style = new Style(context.getTheme().obtainStyledAttributes(attrs,
+				R.styleable.ChartAttrs, 0, 0));
 
 		init();
 	}
@@ -206,8 +207,8 @@ public abstract class ChartView extends RelativeLayout {
 
 		for (ChartSet set : data) {
 			for (int i = 0; i < set.size(); i++) {
-				set.getEntry(i)
-						.setCoordinates(horController.labelsPos.get(i), verController.parseYPos(set.getValue(i)));
+				set.getEntry(i).setCoordinates(horController.labelsPos.get(i),
+						verController.parseYPos(set.getValue(i)));
 			}
 		}
 	}
@@ -232,7 +233,8 @@ public abstract class ChartView extends RelativeLayout {
 	 *         passed by the user. This ensures that onTouchEvent will return
 	 *         the correct index.
 	 */
-	protected ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	protected ArrayList<ArrayList<Region>> defineRegions(
+			ArrayList<ChartSet> data) {
 		return mRegions;
 	};
 
@@ -251,7 +253,8 @@ public abstract class ChartView extends RelativeLayout {
 	public void addData(ChartSet set) {
 
 		if (!data.isEmpty() && set.size() != data.get(0).size())
-			Log.e(TAG, "", new ChartException("The number of labels between " + "sets doesn't match."));
+			Log.e(TAG, "", new ChartException("The number of labels between "
+					+ "sets doesn't match."));
 		data.add(set);
 	}
 
@@ -299,7 +302,8 @@ public abstract class ChartView extends RelativeLayout {
 
 		try {
 			if (values.length != data.get(setIndex).size())
-				throw new ChartException("New values size doesn't match " + "current dataset size.");
+				throw new ChartException("New values size doesn't match "
+						+ "current dataset size.");
 		} catch (ChartException e) {
 			Log.e(TAG, "", e);
 			System.exit(1);
@@ -322,7 +326,8 @@ public abstract class ChartView extends RelativeLayout {
 		final ArrayList<float[]> oldValues = new ArrayList<float[]>(data.size());
 		final ArrayList<float[]> xValues = new ArrayList<float[]>(data.size());
 		for (int i = 0; i < toUpdateValues.size(); i++) {
-			oldValues.add(data.get(toUpdateValues.get(i).first).updateValues(toUpdateValues.get(i).second));
+			oldValues.add(data.get(toUpdateValues.get(i).first).updateValues(
+					toUpdateValues.get(i).second));
 			xValues.add(data.get(i).getXCoordinates());
 		}
 
@@ -347,7 +352,8 @@ public abstract class ChartView extends RelativeLayout {
 	public void showTooltip(View tooltip, boolean bool) {
 
 		if (bool) {
-			final LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
+			final LayoutParams layoutParams = (LayoutParams) tooltip
+					.getLayoutParams();
 
 			// if (layoutParams.leftMargin < chartLeft - getPaddingLeft())
 			// layoutParams.leftMargin = (int) chartLeft - getPaddingLeft();
@@ -441,12 +447,14 @@ public abstract class ChartView extends RelativeLayout {
 
 	private void drawThresholdLine(Canvas canvas) {
 
-		canvas.drawLine(getInnerChartLeft(), mThresholdValue, getInnerChartRight(), mThresholdValue,
-				style.thresholdPaint);
+		canvas.drawLine(getInnerChartLeft(), mThresholdValue,
+				getInnerChartRight(), mThresholdValue, style.thresholdPaint);
 
 		if (!TextUtils.isEmpty(mThresholdText)) {
-			canvas.drawText(mThresholdText, getInnerChartRight() - (int) Tools.fromDpToPx(25), mThresholdValue
-					- (int) Tools.fromDpToPx(10), style.labelPaint);
+			canvas.drawText(mThresholdText,
+					getInnerChartRight() - (int) Tools.fromDpToPx(25),
+					mThresholdValue - (int) Tools.fromDpToPx(10),
+					style.labelPaint);
 		}
 	}
 
@@ -454,17 +462,20 @@ public abstract class ChartView extends RelativeLayout {
 
 		// Draw vertical grid lines
 		for (int i = 0; i < horController.labelsPos.size(); i++) {
-			canvas.drawLine(horController.labelsPos.get(i), getInnerChartBottom(), horController.labelsPos.get(i),
+			canvas.drawLine(horController.labelsPos.get(i),
+					getInnerChartBottom(), horController.labelsPos.get(i),
 					getInnerChartTop(), style.gridPaint);
 		}
 
 		// If border diff than 0 inner chart sides must have lines
-		if (horController.borderSpacing != 0 || horController.mandatoryBorderSpacing != 0) {
+		if (horController.borderSpacing != 0
+				|| horController.mandatoryBorderSpacing != 0) {
 			if (verController.labelsPositioning == YController.LabelPosition.NONE)
-				canvas.drawLine(getInnerChartLeft(), getInnerChartBottom(), getInnerChartLeft(), getInnerChartTop(),
+				canvas.drawLine(getInnerChartLeft(), getInnerChartBottom(),
+						getInnerChartLeft(), getInnerChartTop(),
 						style.gridPaint);
-			canvas.drawLine(getInnerChartRight(), getInnerChartBottom(), getInnerChartRight(), getInnerChartTop(),
-					style.gridPaint);
+			canvas.drawLine(getInnerChartRight(), getInnerChartBottom(),
+					getInnerChartRight(), getInnerChartTop(), style.gridPaint);
 		}
 	}
 
@@ -472,13 +483,15 @@ public abstract class ChartView extends RelativeLayout {
 
 		// Draw horizontal grid lines
 		for (int i = 0; i < verController.labelsPos.size(); i++) {
-			canvas.drawLine(getInnerChartLeft(), verController.labelsPos.get(i), getInnerChartRight(),
+			canvas.drawLine(getInnerChartLeft(),
+					verController.labelsPos.get(i), getInnerChartRight(),
 					verController.labelsPos.get(i), style.gridPaint);
 		}
 
 		// If there's no axis
 		if (!horController.hasAxis)
-			canvas.drawLine(getInnerChartLeft(), getInnerChartBottom(), getInnerChartRight(), getInnerChartBottom(),
+			canvas.drawLine(getInnerChartLeft(), getInnerChartBottom(),
+					getInnerChartRight(), getInnerChartBottom(),
 					style.gridPaint);
 	}
 
@@ -496,14 +509,19 @@ public abstract class ChartView extends RelativeLayout {
 
 		if (mAnim == null || !mAnim.isPlaying())
 
-			if (event.getAction() == MotionEvent.ACTION_DOWN && mEntryListener != null && mRegions != null) {
+			if (event.getAction() == MotionEvent.ACTION_DOWN
+					&& mEntryListener != null && mRegions != null) {
 
 				// Check if ACTION_DOWN over any ScreenPoint region.
 				for (int i = 0; i < mRegions.size(); i++) {
 
 					for (int j = 0; j < mRegions.get(i).size(); j++) {
 
-						if (mRegions.get(i).get(j).contains((int) event.getX(), (int) event.getY())) {
+						if (mRegions
+								.get(i)
+								.get(j)
+								.contains((int) event.getX(),
+										(int) event.getY())) {
 							mClickedIndex = -1;
 							mSetClicked = i;
 							mIndexClicked = j;
@@ -512,17 +530,26 @@ public abstract class ChartView extends RelativeLayout {
 				}
 
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				if (mEntryListener != null && mSetClicked != -1 && mIndexClicked != -1) {
-					if (mRegions.get(mSetClicked).get(mIndexClicked).contains((int) event.getX(), (int) event.getY())) {
+				if (mEntryListener != null && mSetClicked != -1
+						&& mIndexClicked != -1) {
+					if (mRegions.get(mSetClicked).get(mIndexClicked)
+							.contains((int) event.getX(), (int) event.getY())) {
 
-						mEntryListener.onClick(mSetClicked, mIndexClicked,
-								new Rect(mRegions.get(mSetClicked).get(mIndexClicked).getBounds().left
-										- getPaddingLeft(),
-										mRegions.get(mSetClicked).get(mIndexClicked).getBounds().top - getPaddingTop(),
-										mRegions.get(mSetClicked).get(mIndexClicked).getBounds().right
-												- getPaddingLeft(), mRegions.get(mSetClicked).get(mIndexClicked)
-												.getBounds().bottom
-												- getPaddingTop()));
+						mEntryListener.onClick(
+								mSetClicked,
+								mIndexClicked,
+								new Rect(mRegions.get(mSetClicked)
+										.get(mIndexClicked).getBounds().left
+										- getPaddingLeft(), mRegions
+										.get(mSetClicked).get(mIndexClicked)
+										.getBounds().top
+										- getPaddingTop(), mRegions
+										.get(mSetClicked).get(mIndexClicked)
+										.getBounds().right
+										- getPaddingLeft(), mRegions
+										.get(mSetClicked).get(mIndexClicked)
+										.getBounds().bottom
+										- getPaddingTop()));
 						mClickedIndex = mIndexClicked;
 					}
 					mSetClicked = -1;
@@ -661,7 +688,8 @@ public abstract class ChartView extends RelativeLayout {
 
 		try {
 			if (maxAxisValue % step != 0)
-				throw new ChartException("Step value must be a divisor of maxAxisValue");
+				throw new ChartException(
+						"Step value must be a divisor of maxAxisValue");
 		} catch (ChartException e) {
 			Log.e(TAG, "", e);
 			System.exit(1);
@@ -881,7 +909,8 @@ public abstract class ChartView extends RelativeLayout {
 			hasVerticalGrid = false;
 
 			axisColor = DEFAULT_COLOR;
-			axisThickness = (float) getResources().getDimension(R.dimen.grid_thickness);
+			axisThickness = (float) getResources().getDimension(
+					R.dimen.grid_thickness);
 
 			labelColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
@@ -893,17 +922,23 @@ public abstract class ChartView extends RelativeLayout {
 			hasHorizontalGrid = false;
 			hasVerticalGrid = false;
 
-			axisColor = attrs.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
-			axisThickness = attrs.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
-					getResources().getDimension(R.dimen.axis_thickness));
+			axisColor = attrs.getColor(R.styleable.ChartAttrs_chart_axisColor,
+					DEFAULT_COLOR);
+			axisThickness = attrs.getDimension(
+					R.styleable.ChartAttrs_chart_axisThickness, getResources()
+							.getDimension(R.dimen.axis_thickness));
 
-			labelColor = attrs.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
-			fontSize = attrs.getDimension(R.styleable.ChartAttrs_chart_fontSize,
-					getResources().getDimension(R.dimen.font_size));
+			labelColor = attrs.getColor(
+					R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
+			fontSize = attrs.getDimension(
+					R.styleable.ChartAttrs_chart_fontSize, getResources()
+							.getDimension(R.dimen.font_size));
 
-			final String typefaceName = attrs.getString(R.styleable.ChartAttrs_chart_typeface);
+			final String typefaceName = attrs
+					.getString(R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null)
-				typeface = Typeface.createFromAsset(getResources().getAssets(), typefaceName);
+				typeface = Typeface.createFromAsset(getResources().getAssets(),
+						typefaceName);
 		}
 
 		private void init() {

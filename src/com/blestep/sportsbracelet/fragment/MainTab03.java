@@ -11,8 +11,10 @@ import com.blestep.sportsbracelet.R;
 public class MainTab03 extends Fragment {
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View newsLayout = inflater.inflate(R.layout.main_tab_03, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View newsLayout = inflater.inflate(R.layout.main_tab_03, container,
+				false);
 		return newsLayout;
 	}
 

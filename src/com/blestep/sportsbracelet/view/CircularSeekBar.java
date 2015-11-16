@@ -215,8 +215,10 @@ public class CircularSeekBar extends View {
 	 * Inits the drawable.
 	 */
 	public void initDrawable() {
-		progressMark = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.scrubber_control_normal_holo);
-		progressMarkPressed = BitmapFactory.decodeResource(mContext.getResources(),
+		progressMark = BitmapFactory.decodeResource(mContext.getResources(),
+				R.drawable.scrubber_control_normal_holo);
+		progressMarkPressed = BitmapFactory.decodeResource(
+				mContext.getResources(),
 				R.drawable.scrubber_control_normal_holo);
 	}
 
@@ -549,8 +551,10 @@ public class CircularSeekBar extends View {
 	 *            the up
 	 */
 	private void moved(float x, float y, boolean up) {
-		float distance = (float) Math.sqrt(Math.pow((x - cx), 2) + Math.pow((y - cy), 2));
-		if (distance < outerRadius + adjustmentFactor && distance > innerRadius - adjustmentFactor && !up) {
+		float distance = (float) Math.sqrt(Math.pow((x - cx), 2)
+				+ Math.pow((y - cy), 2));
+		if (distance < outerRadius + adjustmentFactor
+				&& distance > innerRadius - adjustmentFactor && !up) {
 			IS_PRESSED = true;
 
 			markPointX = (float) (cx + (outerRadius - getBarWidth() / 2)
@@ -558,7 +562,8 @@ public class CircularSeekBar extends View {
 			markPointY = (float) (cy + (outerRadius - getBarWidth() / 2)
 					* Math.sin(Math.atan2(x - cx, cy - y) - (Math.PI / 2)));
 
-			float degrees = (float) ((float) ((Math.toDegrees(Math.atan2(x - cx, cy - y)) + 360.0)) % 360.0);
+			float degrees = (float) ((float) ((Math.toDegrees(Math.atan2(
+					x - cx, cy - y)) + 360.0)) % 360.0);
 
 			// and to make it count 0-360
 			if (degrees < 0) {

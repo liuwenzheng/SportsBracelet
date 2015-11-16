@@ -21,7 +21,8 @@ final public class ToastUtils {
 		showToast(context, tipID, true);
 	}
 
-	public static final void showToast(Context context, int tipID, boolean isCenter) {
+	public static final void showToast(Context context, int tipID,
+			boolean isCenter) {
 		String tip = (String) context.getResources().getText(tipID);
 		showToast(context, tip, isCenter);
 	}
@@ -33,7 +34,8 @@ final public class ToastUtils {
 	 * @param tip
 	 * @param isCenter
 	 */
-	public static final void showToast(Context context, String tip, boolean isCenter) {
+	public static final void showToast(Context context, String tip,
+			boolean isCenter) {
 		int duration = Toast.LENGTH_SHORT;
 		if (TextUtils.isEmpty(tip)) {
 			return;

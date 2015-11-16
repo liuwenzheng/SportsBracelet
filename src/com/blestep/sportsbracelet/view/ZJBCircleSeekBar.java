@@ -89,7 +89,8 @@ public class ZJBCircleSeekBar extends View {
 	private String color_attr;
 	private SweepGradient s;
 	private Paint mArcColor;
-	private String wheel_color_attr, wheel_unactive_color_attr, pointer_color_attr, pointer_halo_color_attr;
+	private String wheel_color_attr, wheel_unactive_color_attr,
+			pointer_color_attr, pointer_halo_color_attr;
 	private int init_position;
 	private boolean block_end = false;
 	private float lastX;
@@ -124,7 +125,8 @@ public class ZJBCircleSeekBar extends View {
 	}
 
 	private void init(AttributeSet attrs, int defStyle) {
-		final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.HoloCircleSeekBar, defStyle, 0);
+		final TypedArray a = getContext().obtainStyledAttributes(attrs,
+				R.styleable.HoloCircleSeekBar, defStyle, 0);
 
 		initAttributes(a);
 
@@ -149,7 +151,8 @@ public class ZJBCircleSeekBar extends View {
 		mPointerHaloPaint.setStrokeWidth(mPointerRadius + 10);
 		// mPointerHaloPaint.setAlpha(150);
 		// 游标图片
-		pointerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.scrubber_control_normal_holo);
+		pointerBitmap = BitmapFactory.decodeResource(this.getResources(),
+				R.drawable.scrubber_control_normal_holo);
 
 		mPointerColor = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPointerColor.setStrokeWidth(mPointerRadius);
@@ -167,7 +170,8 @@ public class ZJBCircleSeekBar extends View {
 
 		if (arc_finish_radians > end_wheel)
 			arc_finish_radians = end_wheel;
-		mAngle = calculateAngleFromRadians(arc_finish_radians > end_wheel ? end_wheel : arc_finish_radians);
+		mAngle = calculateAngleFromRadians(arc_finish_radians > end_wheel ? end_wheel
+				: arc_finish_radians);
 		text = String.valueOf(calculateTextFromAngle(arc_finish_radians));
 
 		invalidate();
@@ -178,16 +182,21 @@ public class ZJBCircleSeekBar extends View {
 		max = a.getInteger(R.styleable.HoloCircleSeekBar_max, 100);
 
 		color_attr = a.getString(R.styleable.HoloCircleSeekBar_color);
-		wheel_color_attr = a.getString(R.styleable.HoloCircleSeekBar_wheel_active_color);
-		wheel_unactive_color_attr = a.getString(R.styleable.HoloCircleSeekBar_wheel_unactive_color);
-		pointer_color_attr = a.getString(R.styleable.HoloCircleSeekBar_pointer_color);
-		pointer_halo_color_attr = a.getString(R.styleable.HoloCircleSeekBar_pointer_halo_color);
+		wheel_color_attr = a
+				.getString(R.styleable.HoloCircleSeekBar_wheel_active_color);
+		wheel_unactive_color_attr = a
+				.getString(R.styleable.HoloCircleSeekBar_wheel_unactive_color);
+		pointer_color_attr = a
+				.getString(R.styleable.HoloCircleSeekBar_pointer_color);
+		pointer_halo_color_attr = a
+				.getString(R.styleable.HoloCircleSeekBar_pointer_halo_color);
 
 		a.getString(R.styleable.HoloCircleSeekBar_text_color);
 
 		a.getInteger(R.styleable.HoloCircleSeekBar_text_size, 95);
 
-		init_position = a.getInteger(R.styleable.HoloCircleSeekBar_init_position, 0);
+		init_position = a.getInteger(
+				R.styleable.HoloCircleSeekBar_init_position, 0);
 
 		start_arc = a.getInteger(R.styleable.HoloCircleSeekBar_start_angle, 0);
 		end_wheel = a.getInteger(R.styleable.HoloCircleSeekBar_end_angle, 360);
@@ -252,11 +261,13 @@ public class ZJBCircleSeekBar extends View {
 		canvas.translate(mTranslationOffset, mTranslationOffset);
 
 		// 滑过的弧
-		canvas.drawArc(mColorWheelRectangle, start_arc + 270, end_wheel - (start_arc), false, mColorWheelPaint);
+		canvas.drawArc(mColorWheelRectangle, start_arc + 270, end_wheel
+				- (start_arc), false, mColorWheelPaint);
 
 		// 背景弧
-		canvas.drawArc(mColorWheelRectangle, start_arc + 270, (arc_finish_radians) > (end_wheel) ? end_wheel
-				- (start_arc) : arc_finish_radians - start_arc, false, mArcColor);
+		canvas.drawArc(mColorWheelRectangle, start_arc + 270,
+				(arc_finish_radians) > (end_wheel) ? end_wheel - (start_arc)
+						: arc_finish_radians - start_arc, false, mArcColor);
 		// 游标为圆形
 		// canvas.drawCircle(pointerPosition[0], pointerPosition[1],
 		// mPointerRadius, mPointerHaloPaint);
@@ -269,19 +280,22 @@ public class ZJBCircleSeekBar extends View {
 		// pointerPosition[0] + 50, pointerPosition[1] + 30, mPointerColor);
 
 		// 游标为图片
-		canvas.drawBitmap(pointerBitmap, pointerPosition[0] - 50, pointerPosition[1] - 115, null);
+		canvas.drawBitmap(pointerBitmap, pointerPosition[0] - 50,
+				pointerPosition[1] - 115, null);
 
 		// 添加游标上的文字
 		Paint pai = new Paint();
 		pai.setColor(Color.BLACK);
 		pai.setTextSize(50);
-		canvas.drawText(text, pointerPosition[0] - 30, pointerPosition[1] - 40, pai);
+		canvas.drawText(text, pointerPosition[0] - 30, pointerPosition[1] - 40,
+				pai);
 
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+		int height = getDefaultSize(getSuggestedMinimumHeight(),
+				heightMeasureSpec);
 		int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
 		int min = Math.min(width, height);
 		setMeasuredDimension(min, min);
@@ -289,9 +303,11 @@ public class ZJBCircleSeekBar extends View {
 		mTranslationOffset = min * 0.5f;
 		mColorWheelRadius = mTranslationOffset - mPointerRadius;
 
-		mColorWheelRectangle.set(-mColorWheelRadius, -mColorWheelRadius, mColorWheelRadius, mColorWheelRadius);
+		mColorWheelRectangle.set(-mColorWheelRadius, -mColorWheelRadius,
+				mColorWheelRadius, mColorWheelRadius);
 
-		mColorCenterHaloRectangle.set(-mColorWheelRadius / 2, -mColorWheelRadius / 2, mColorWheelRadius / 2,
+		mColorCenterHaloRectangle.set(-mColorWheelRadius / 2,
+				-mColorWheelRadius / 2, mColorWheelRadius / 2,
 				mColorWheelRadius / 2);
 
 		pointerPosition = calculatePointerPosition(mAngle);
@@ -370,7 +386,8 @@ public class ZJBCircleSeekBar extends View {
 			}
 
 			if (!block_end && !block_start) {
-				text = String.valueOf(calculateTextFromAngle(arc_finish_radians));
+				text = String
+						.valueOf(calculateTextFromAngle(arc_finish_radians));
 				pointerPosition = calculatePointerPosition(mAngle);
 				invalidate();
 			}
@@ -381,23 +398,29 @@ public class ZJBCircleSeekBar extends View {
 
 				int radians = calculateRadiansFromAngle(mAngle);
 
-				if (last_radians > radians && radians < (360 / 6) && x > lastX && last_radians > (360 / 6)) {
+				if (last_radians > radians && radians < (360 / 6) && x > lastX
+						&& last_radians > (360 / 6)) {
 
 					if (!block_end && !block_start)
 						block_end = true;
 
-				} else if (last_radians >= start_arc && last_radians <= (360 / 4) && radians <= (360 - 1)
+				} else if (last_radians >= start_arc
+						&& last_radians <= (360 / 4) && radians <= (360 - 1)
 						&& radians >= ((360 / 4) * 3) && x < lastX) {
 					if (!block_start && !block_end)
 						block_start = true;
 
-				} else if (radians >= end_wheel && !block_start && last_radians < radians) {
+				} else if (radians >= end_wheel && !block_start
+						&& last_radians < radians) {
 					block_end = true;
-				} else if (radians < end_wheel && block_end && last_radians > end_wheel) {
+				} else if (radians < end_wheel && block_end
+						&& last_radians > end_wheel) {
 					block_end = false;
-				} else if (radians < start_arc && last_radians > radians && !block_end) {
+				} else if (radians < start_arc && last_radians > radians
+						&& !block_end) {
 					block_start = true;
-				} else if (block_start && last_radians < radians && radians > start_arc && radians < end_wheel) {
+				} else if (block_start && last_radians < radians
+						&& radians > start_arc && radians < end_wheel) {
 					block_start = false;
 				}
 
@@ -416,12 +439,14 @@ public class ZJBCircleSeekBar extends View {
 				} else {
 					// text = String.valueOf(calculateTextFromAngle(mAngle));
 					arc_finish_radians = calculateRadiansFromAngle(mAngle);
-					text = String.valueOf(calculateTextFromAngle(arc_finish_radians));
+					text = String
+							.valueOf(calculateTextFromAngle(arc_finish_radians));
 					pointerPosition = calculatePointerPosition(mAngle);
 				}
 				invalidate();
 				if (mOnCircleSeekBarChangeListener != null)
-					mOnCircleSeekBarChangeListener.onProgressChanged(this, Integer.parseInt(text), true);
+					mOnCircleSeekBarChangeListener.onProgressChanged(this,
+							Integer.parseInt(text), true);
 
 				last_radians = radians;
 
@@ -489,7 +514,8 @@ public class ZJBCircleSeekBar extends View {
 
 	public interface OnCircleSeekBarChangeListener {
 
-		public abstract void onProgressChanged(ZJBCircleSeekBar seekBar, int progress, boolean fromUser);
+		public abstract void onProgressChanged(ZJBCircleSeekBar seekBar,
+				int progress, boolean fromUser);
 
 	}
 

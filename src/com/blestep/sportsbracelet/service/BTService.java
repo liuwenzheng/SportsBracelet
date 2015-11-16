@@ -23,7 +23,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.telephony.TelephonyManager;
 
-import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.entity.BleDevice;
 import com.blestep.sportsbracelet.module.BTModule;
@@ -85,7 +84,8 @@ public class BTService extends Service implements LeScanCallback {
 						LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
 						BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
 						mIsStartScan = false;
-						Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA_END);
+						Intent intent = new Intent(
+								BTConstants.ACTION_BLE_DEVICES_DATA_END);
 						// intent.putExtra("devices", mDevices);
 						sendBroadcast(intent);
 					}
@@ -101,7 +101,8 @@ public class BTService extends Service implements LeScanCallback {
 	 * 连接手环
 	 */
 	public void connectBle(String address) {
-		final BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(address);
+		final BluetoothDevice device = BTModule.mBluetoothAdapter
+				.getRemoteDevice(address);
 		if (device == null) {
 			return;
 		} else {
@@ -109,20 +110,27 @@ public class BTService extends Service implements LeScanCallback {
 			mGattCallback = new BluetoothGattCallback() {
 				// private int count;
 
-				public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+				public void onConnectionStateChange(BluetoothGatt gatt,
+						int status, int newState) {
 					super.onConnectionStateChange(gatt, status, newState);
-					LogModule.d("onConnectionStateChange...status:" + status + "...newState:" + newState);
+					LogModule.d("onConnectionStateChange...status:" + status
+							+ "...newState:" + newState);
 					switch (newState) {
 					case BluetoothProfile.STATE_CONNECTED:
 						if (status == GATT_ERROR_TIMEOUT) {
 							disConnectBle();
-							Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
+							Intent intent = new Intent(
+									BTConstants.ACTION_CONN_STATUS_TIMEOUT);
 							sendBroadcast(intent);
 						} else {
 							if (mBluetoothGatt == null) {
-								BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles
-										.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-								mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
+								BluetoothDevice device = BTModule.mBluetoothAdapter
+										.getRemoteDevice(SPUtiles
+												.getStringValue(
+														BTConstants.SP_KEY_DEVICE_ADDRESS,
+														null));
+								mBluetoothGatt = device.connectGatt(
+										BTService.this, false, mGattCallback);
 								return;
 							}
 							mBluetoothGatt.discoverServices();
@@ -130,7 +138,8 @@ public class BTService extends Service implements LeScanCallback {
 						break;
 					case BluetoothProfile.STATE_DISCONNECTED:
 						disConnectBle();
-						Intent intent = new Intent(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
+						Intent intent = new Intent(
+								BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
 						sendBroadcast(intent);
 						break;
 					}
@@ -144,56 +153,73 @@ public class BTService extends Service implements LeScanCallback {
 						mHandler.postDelayed(new Runnable() {
 							@Override
 							public void run() {
-								Intent intent = new Intent(AppConstants.ACTION_DISCOVER_SUCCESS);
+								Intent intent = new Intent(
+										BTConstants.ACTION_DISCOVER_SUCCESS);
 								sendBroadcast(intent);
 							}
 						}, 1000);
 					} else {
-						Intent intent = new Intent(AppConstants.ACTION_DISCOVER_FAILURE);
+						Intent intent = new Intent(
+								BTConstants.ACTION_DISCOVER_FAILURE);
 						sendBroadcast(intent);
 					}
 				};
 
-				public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
-						int status) {
+				public void onCharacteristicRead(BluetoothGatt gatt,
+						BluetoothGattCharacteristic characteristic, int status) {
 					super.onCharacteristicRead(gatt, characteristic, status);
 					LogModule.d("onCharacteristicRead...");
 				};
 
-				public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
-						int status) {
+				public void onCharacteristicWrite(BluetoothGatt gatt,
+						BluetoothGattCharacteristic characteristic, int status) {
 					super.onCharacteristicWrite(gatt, characteristic, status);
 					LogModule.d("onCharacteristicWrite...");
+					if (status == BluetoothGatt.GATT_SUCCESS) {
+						LogModule.d("onCharacteristicWrite...success");
+					} else {
+						LogModule.d("onCharacteristicWrite...failure");
+					}
 				};
 
-				public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+				public void onCharacteristicChanged(BluetoothGatt gatt,
+						BluetoothGattCharacteristic characteristic) {
 					super.onCharacteristicChanged(gatt, characteristic);
 					LogModule.d("onCharacteristicChanged...");
 					// BTModule.setCharacteristicNotify(mBluetoothGatt);
 					byte[] data = characteristic.getValue();
-					String[] formatDatas = Utils.formatData(data, characteristic);
+					String[] formatDatas = Utils.formatData(data,
+							characteristic);
 					// StringBuilder stringBuilder = new
 					// StringBuilder(formatDatas.length);
 					// for (String string : formatDatas)
 					// stringBuilder.append(string + " ");
 					// LogModule.i("转化后：" + stringBuilder.toString());
 					// 获取总记录数
-					int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
-					if (header == AppConstants.HEADER_BACK_ACK) {
+					int header = Integer.valueOf(Utils
+							.decodeToString(formatDatas[0]));
+					if (header == BTConstants.HEADER_BACK_ACK) {
+						int ack = Integer.valueOf(Utils
+								.decodeToString(formatDatas[1]));
+						Intent intent = new Intent(BTConstants.ACTION_ACK);
+						intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
+						BTService.this.sendBroadcast(intent);
 						return;
 					}
-					if (header == AppConstants.HEADER_BACK_RECORD) {
+					if (header == BTConstants.HEADER_BACK_RECORD) {
 						// count = 0;
 						// int stepRecord = Integer.valueOf(formatDatas[1]);
 						// int sleepRecord = Integer.valueOf(formatDatas[2]);
 						// 保存电量
-						int battery = Integer.valueOf(Utils.decodeToString(formatDatas[3]));
-						SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
+						int battery = Integer.valueOf(Utils
+								.decodeToString(formatDatas[3]));
 						// count = stepRecord;
 						// LogModule.i("手环中的记录总数为：" + count);
-						// Intent intent = new Intent(AppConstants.ACTION_LOG);
-						// intent.putExtra("log", "手环中的记录总数为：" + count);
-						// sendBroadcast(intent);
+						Intent intent = new Intent(
+								BTConstants.ACTION_REFRESH_DATA_BATTERY);
+						intent.putExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE,
+								battery);
+						sendBroadcast(intent);
 						return;
 					}
 					// count--;
@@ -205,7 +231,7 @@ public class BTService extends Service implements LeScanCallback {
 					// @Override
 					// public void run() {
 					// Intent intent = new
-					// Intent(AppConstants.ACTION_REFRESH_DATA);
+					// Intent(BTConstants.ACTION_REFRESH_DATA);
 					// sendBroadcast(intent);
 					// }
 					// }, 1000);
@@ -215,7 +241,8 @@ public class BTService extends Service implements LeScanCallback {
 			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
+					mBluetoothGatt = device.connectGatt(BTService.this, false,
+							mGattCallback);
 				}
 			}, 1000);
 
@@ -233,7 +260,8 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	@Override
-	public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+	public void onLeScan(final BluetoothDevice device, int rssi,
+			byte[] scanRecord) {
 		if (device != null) {
 			if (Utils.isEmpty(device.getName())) {
 				return;
@@ -242,7 +270,7 @@ public class BTService extends Service implements LeScanCallback {
 			bleDevice.name = device.getName();
 			bleDevice.address = device.getAddress();
 			bleDevice.rssi = rssi;
-			Intent intent = new Intent(AppConstants.ACTION_BLE_DEVICES_DATA);
+			Intent intent = new Intent(BTConstants.ACTION_BLE_DEVICES_DATA);
 			intent.putExtra("device", bleDevice);
 			sendBroadcast(intent);
 			// mDevices.add(bleDevice);
@@ -271,11 +299,17 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	/**
-	 * 获取手环数据
+	 * 获取手环记步
 	 */
-	public void getSportData() {
-		BTModule.getBatteryData(mBluetoothGatt);
+	public void getStepData() {
 		BTModule.getStepData(mBluetoothGatt);
+	}
+
+	/**
+	 * 获取手环电量数据
+	 */
+	public void getBatteryData() {
+		BTModule.getBatteryData(mBluetoothGatt);
 	}
 
 	/**
@@ -298,10 +332,13 @@ public class BTService extends Service implements LeScanCallback {
 	 * @return
 	 */
 	public boolean isConnDevice() {
-		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(
-				Context.BLUETOOTH_SERVICE);
-		int connState = bluetoothManager.getConnectionState(BTModule.mBluetoothAdapter.getRemoteDevice(SPUtiles
-				.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null)), BluetoothProfile.GATT);
+		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext()
+				.getSystemService(Context.BLUETOOTH_SERVICE);
+		int connState = bluetoothManager
+				.getConnectionState(BTModule.mBluetoothAdapter
+						.getRemoteDevice(SPUtiles.getStringValue(
+								BTConstants.SP_KEY_DEVICE_ADDRESS, null)),
+						BluetoothProfile.GATT);
 		if (connState == BluetoothProfile.STATE_CONNECTED) {
 			return true;
 		} else {
@@ -315,30 +352,47 @@ public class BTService extends Service implements LeScanCallback {
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(BTConstants.ACTION_PHONE_STATE)) {
 				// 如果是来电
-				TelephonyManager tm = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
+				TelephonyManager tm = (TelephonyManager) context
+						.getSystemService(Service.TELEPHONY_SERVICE);
 
 				switch (tm.getCallState()) {
 				case TelephonyManager.CALL_STATE_RINGING:
 					// 来电
-					String incoming_number = intent.getStringExtra("incoming_number");
+					String incoming_number = intent
+							.getStringExtra("incoming_number");
 					LogModule.d("来电号码:" + incoming_number);
 					// log:来电号码:18801283616
-					if (isConnDevice() && SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, true)) {
-						if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_NODISTURB_ALERT, false)) {
+					if (isConnDevice()
+							&& SPUtiles
+									.getBooleanValue(
+											BTConstants.SP_KEY_COMING_PHONE_ALERT,
+											true)) {
+						if (SPUtiles
+								.getBooleanValue(
+										BTConstants.SP_KEY_COMING_PHONE_NODISTURB_ALERT,
+										false)) {
 							// SimpleDateFormat sdf = new
 							// SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
-							String startTime = SPUtiles.getStringValue(
-									BTConstants.SP_KEY_COMING_PHONE_NODISTURB_START_TIME, "00:00");
-							String endTime = SPUtiles.getStringValue(
-									BTConstants.SP_KEY_COMING_PHONE_NODISTURB_END_TIME, "00:00");
+							String startTime = SPUtiles
+									.getStringValue(
+											BTConstants.SP_KEY_COMING_PHONE_NODISTURB_START_TIME,
+											"00:00");
+							String endTime = SPUtiles
+									.getStringValue(
+											BTConstants.SP_KEY_COMING_PHONE_NODISTURB_END_TIME,
+											"00:00");
 							Calendar startCalendar = Calendar.getInstance();
-							startCalendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(startTime.split(":")[0]));
-							startCalendar.set(Calendar.MINUTE, Integer.valueOf(startTime.split(":")[1]));
+							startCalendar.set(Calendar.HOUR_OF_DAY,
+									Integer.valueOf(startTime.split(":")[0]));
+							startCalendar.set(Calendar.MINUTE,
+									Integer.valueOf(startTime.split(":")[1]));
 							startCalendar.set(Calendar.SECOND, 0);
 
 							Calendar endCalendar = Calendar.getInstance();
-							endCalendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(endTime.split(":")[0]));
-							endCalendar.set(Calendar.MINUTE, Integer.valueOf(endTime.split(":")[1]));
+							endCalendar.set(Calendar.HOUR_OF_DAY,
+									Integer.valueOf(endTime.split(":")[0]));
+							endCalendar.set(Calendar.MINUTE,
+									Integer.valueOf(endTime.split(":")[1]));
 							endCalendar.set(Calendar.SECOND, 0);
 
 							if (startCalendar.equals(endCalendar)) {
@@ -351,7 +405,8 @@ public class BTService extends Service implements LeScanCallback {
 							if (startCalendar.after(endCalendar)) {
 								endCalendar.add(Calendar.DAY_OF_MONTH, 1);
 							}
-							if (current.after(startCalendar) && current.before(endCalendar)) {
+							if (current.after(startCalendar)
+									&& current.before(endCalendar)) {
 								LogModule.d("勿扰时段内不震动...");
 								return;
 							}
@@ -387,8 +442,10 @@ public class BTService extends Service implements LeScanCallback {
 	 * @param incoming_number
 	 */
 	private void isAllowConstants(String incoming_number) {
-		if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_CONTACTS_ALERT, false)) {
-			if (Utils.isNotEmpty(incoming_number) && getPhoneContacts(incoming_number)) {
+		if (SPUtiles.getBooleanValue(
+				BTConstants.SP_KEY_COMING_PHONE_CONTACTS_ALERT, false)) {
+			if (Utils.isNotEmpty(incoming_number)
+					&& getPhoneContacts(incoming_number)) {
 				BTModule.phoneComingShakeBand(mBluetoothGatt);
 			}
 		} else {
@@ -398,8 +455,8 @@ public class BTService extends Service implements LeScanCallback {
 
 	/** 电话号码 **/
 	private static final int PHONES_NUMBER_INDEX = 1;
-	private static final String[] PHONES_PROJECTION = new String[] { Phone.DISPLAY_NAME, Phone.NUMBER, Photo.PHOTO_ID,
-			Phone.CONTACT_ID };
+	private static final String[] PHONES_PROJECTION = new String[] {
+			Phone.DISPLAY_NAME, Phone.NUMBER, Photo.PHOTO_ID, Phone.CONTACT_ID };
 
 	/**
 	 * 得到手机通讯录联系人信息
@@ -409,7 +466,8 @@ public class BTService extends Service implements LeScanCallback {
 	private boolean getPhoneContacts(String incoming_number) {
 		ContentResolver resolver = getContentResolver();
 		// 获取手机联系人
-		Cursor phoneCursor = resolver.query(Phone.CONTENT_URI, PHONES_PROJECTION, null, null, null);
+		Cursor phoneCursor = resolver.query(Phone.CONTENT_URI,
+				PHONES_PROJECTION, null, null, null);
 		if (phoneCursor != null) {
 			while (phoneCursor.moveToNext()) {
 				// 得到手机号码

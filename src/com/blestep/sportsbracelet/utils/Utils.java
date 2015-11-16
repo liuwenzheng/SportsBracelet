@@ -38,7 +38,8 @@ public class Utils {
 	 * @param characteristic
 	 * @return
 	 */
-	public static String[] formatData(byte[] data, BluetoothGattCharacteristic characteristic) {
+	public static String[] formatData(byte[] data,
+			BluetoothGattCharacteristic characteristic) {
 		if (data != null && data.length > 0) {
 			StringBuilder stringBuilder = new StringBuilder(data.length);
 			for (byte byteChar : data)
@@ -100,10 +101,12 @@ public class Utils {
 	}
 
 	public static boolean isEmpty(String s) {
-		return s == null || s.length() == 0 || s.trim().equals("") || s.trim().equals("null");
+		return s == null || s.length() == 0 || s.trim().equals("")
+				|| s.trim().equals("null");
 	}
 
 	public static boolean isNotEmpty(String s) {
-		return s != null && s.length() != 0 && !s.trim().equals("") && !s.trim().equals("null");
+		return s != null && s.length() != 0 && !s.trim().equals("")
+				&& !s.trim().equals("null");
 	}
 }

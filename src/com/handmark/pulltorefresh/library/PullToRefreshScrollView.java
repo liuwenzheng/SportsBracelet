@@ -40,7 +40,8 @@ public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 		super(context, mode);
 	}
 
-	public PullToRefreshScrollView(Context context, Mode mode, AnimationStyle style) {
+	public PullToRefreshScrollView(Context context, Mode mode,
+			AnimationStyle style) {
 		super(context, mode, style);
 	}
 
@@ -50,7 +51,8 @@ public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 	}
 
 	@Override
-	protected ScrollView createRefreshableView(Context context, AttributeSet attrs) {
+	protected ScrollView createRefreshableView(Context context,
+			AttributeSet attrs) {
 		ScrollView scrollView;
 		if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
 			scrollView = new InternalScrollViewSDK9(context, attrs);
@@ -71,7 +73,8 @@ public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 	protected boolean isReadyForPullEnd() {
 		View scrollViewChild = mRefreshableView.getChildAt(0);
 		if (null != scrollViewChild) {
-			return mRefreshableView.getScrollY() >= (scrollViewChild.getHeight() - getHeight());
+			return mRefreshableView.getScrollY() >= (scrollViewChild
+					.getHeight() - getHeight());
 		}
 		return false;
 	}
@@ -84,15 +87,17 @@ public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 		}
 
 		@Override
-		protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX,
-				int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+		protected boolean overScrollBy(int deltaX, int deltaY, int scrollX,
+				int scrollY, int scrollRangeX, int scrollRangeY,
+				int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
 
-			final boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX,
-					scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+			final boolean returnValue = super.overScrollBy(deltaX, deltaY,
+					scrollX, scrollY, scrollRangeX, scrollRangeY,
+					maxOverScrollX, maxOverScrollY, isTouchEvent);
 
 			// Does all of the hard work...
-			OverscrollHelper.overScrollBy(PullToRefreshScrollView.this, deltaX, scrollX, deltaY, scrollY,
-					getScrollRange(), isTouchEvent);
+			OverscrollHelper.overScrollBy(PullToRefreshScrollView.this, deltaX,
+					scrollX, deltaY, scrollY, getScrollRange(), isTouchEvent);
 
 			return returnValue;
 		}
@@ -104,7 +109,8 @@ public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 			int scrollRange = 0;
 			if (getChildCount() > 0) {
 				View child = getChildAt(0);
-				scrollRange = Math.max(0, child.getHeight() - (getHeight() - getPaddingBottom() - getPaddingTop()));
+				scrollRange = Math.max(0, child.getHeight()
+						- (getHeight() - getPaddingBottom() - getPaddingTop()));
 			}
 			return scrollRange;
 		}

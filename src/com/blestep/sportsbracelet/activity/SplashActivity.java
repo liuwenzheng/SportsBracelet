@@ -20,13 +20,16 @@ import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 
-public class SplashActivity extends BaseActivity implements OnPageChangeListener, OnClickListener {
+public class SplashActivity extends BaseActivity implements
+		OnPageChangeListener, OnClickListener {
 	private ViewPager vp_splash;
 	private RadioGroup rg_splash;
 	private SplashPagerAdapter mAdapter;
-	private View splash_item_one, splash_item_two, splash_item_three, splash_item_four;
+	private View splash_item_one, splash_item_two, splash_item_three,
+			splash_item_four;
 	private ArrayList<View> mViews;
-	private Button btn_enter, btn_splash_item_one_pass, btn_splash_item_two_pass;
+	private Button btn_enter, btn_splash_item_one_pass,
+			btn_splash_item_two_pass;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,8 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					startActivity(new Intent(SplashActivity.this, MainActivity.class));
+					startActivity(new Intent(SplashActivity.this,
+							MainActivity.class));
 					SplashActivity.this.finish();
 				};
 			}.start();
@@ -74,10 +78,14 @@ public class SplashActivity extends BaseActivity implements OnPageChangeListener
 		vp_splash = (ViewPager) findViewById(R.id.vp_splash);
 		rg_splash = (RadioGroup) findViewById(R.id.rg_splash);
 		((RadioButton) rg_splash.getChildAt(0)).setChecked(true);
-		splash_item_one = LayoutInflater.from(this).inflate(R.layout.splash_item_one, null);
-		btn_splash_item_one_pass = (Button) splash_item_one.findViewById(R.id.btn_splash_item_one_pass);
-		splash_item_two = LayoutInflater.from(this).inflate(R.layout.splash_item_two, null);
-		btn_splash_item_two_pass = (Button) splash_item_two.findViewById(R.id.btn_splash_item_two_pass);
+		splash_item_one = LayoutInflater.from(this).inflate(
+				R.layout.splash_item_one, null);
+		btn_splash_item_one_pass = (Button) splash_item_one
+				.findViewById(R.id.btn_splash_item_one_pass);
+		splash_item_two = LayoutInflater.from(this).inflate(
+				R.layout.splash_item_two, null);
+		btn_splash_item_two_pass = (Button) splash_item_two
+				.findViewById(R.id.btn_splash_item_two_pass);
 		// splash_item_three =
 		// LayoutInflater.from(this).inflate(R.layout.splash_item_three, null);
 		// splash_item_four =

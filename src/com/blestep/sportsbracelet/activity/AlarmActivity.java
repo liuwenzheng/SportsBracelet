@@ -94,27 +94,35 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = AlarmActivity.this.getLayoutInflater().inflate(R.layout.alarm_list_item, null);
-				holder.tv_alarm_item_name = (TextView) convertView.findViewById(R.id.tv_alarm_item_name);
-				holder.tv_alarm_item_time = (TextView) convertView.findViewById(R.id.tv_alarm_item_time);
-				holder.cb_alarm_item_switch = (CheckBox) convertView.findViewById(R.id.cb_alarm_item_switch);
+				convertView = AlarmActivity.this.getLayoutInflater().inflate(
+						R.layout.alarm_list_item, null);
+				holder.tv_alarm_item_name = (TextView) convertView
+						.findViewById(R.id.tv_alarm_item_name);
+				holder.tv_alarm_item_time = (TextView) convertView
+						.findViewById(R.id.tv_alarm_item_time);
+				holder.cb_alarm_item_switch = (CheckBox) convertView
+						.findViewById(R.id.cb_alarm_item_switch);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			holder.tv_alarm_item_name.setText(alarm.name);
 			holder.tv_alarm_item_time.setText(alarm.time);
-			holder.cb_alarm_item_switch.setChecked(alarm.state.equals("1") ? true : false);
-			holder.cb_alarm_item_switch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			holder.cb_alarm_item_switch
+					.setChecked(alarm.state.equals("1") ? true : false);
+			holder.cb_alarm_item_switch
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						alarm.state = isChecked ? "1" : "0";
-						DBTools.getInstance(AlarmActivity.this).updateAlarm(alarm);
-					}
-				}
-			});
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							if (isChecked) {
+								alarm.state = isChecked ? "1" : "0";
+								DBTools.getInstance(AlarmActivity.this)
+										.updateAlarm(alarm);
+							}
+						}
+					});
 			return convertView;
 		}
 

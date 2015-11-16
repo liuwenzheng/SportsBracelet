@@ -26,7 +26,8 @@ import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 
-public class AlarmEditActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
+public class AlarmEditActivity extends BaseActivity implements OnClickListener,
+		OnItemClickListener {
 	private ListView lv_alarm_edit;
 	private ArrayList<Alarm> mAlarms = new ArrayList<Alarm>();
 	private AlarmEditAdapter mAdapter;
@@ -82,25 +83,31 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener, 
 			}
 			AlertDialog.Builder builder = new Builder(this);
 			builder.setMessage(R.string.alarm_del_dialog);
-			builder.setPositiveButton(R.string.alarm_del_confirm, new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(R.string.alarm_del_confirm,
+					new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					for (int i = 0; i < mDelIndexs.size(); i++) {
-						DBTools.getInstance(AlarmEditActivity.this).deleteAlarm(Integer.valueOf(mDelIndexs.get(i)));
-					}
-					mAlarms = DBTools.getInstance(AlarmEditActivity.this).selectAllAlarm();
-					mAdapter.notifyDataSetChanged();
-					dialog.dismiss();
-				}
-			});
-			builder.setNegativeButton(R.string.alarm_del_cancel, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							for (int i = 0; i < mDelIndexs.size(); i++) {
+								DBTools.getInstance(AlarmEditActivity.this)
+										.deleteAlarm(
+												Integer.valueOf(mDelIndexs
+														.get(i)));
+							}
+							mAlarms = DBTools.getInstance(
+									AlarmEditActivity.this).selectAllAlarm();
+							mAdapter.notifyDataSetChanged();
+							dialog.dismiss();
+						}
+					});
+			builder.setNegativeButton(R.string.alarm_del_cancel,
+					new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
 			builder.show();
 
 			break;
@@ -134,10 +141,14 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener, 
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = AlarmEditActivity.this.getLayoutInflater().inflate(R.layout.alarm_edit_list_item, null);
-				holder.tv_alarm_edit_item_name = (TextView) convertView.findViewById(R.id.tv_alarm_edit_item_name);
-				holder.tv_alarm_edit_item_time = (TextView) convertView.findViewById(R.id.tv_alarm_edit_item_time);
-				holder.cb_alarm_edit_item_switch = (CheckBox) convertView.findViewById(R.id.cb_alarm_edit_item_switch);
+				convertView = AlarmEditActivity.this.getLayoutInflater()
+						.inflate(R.layout.alarm_edit_list_item, null);
+				holder.tv_alarm_edit_item_name = (TextView) convertView
+						.findViewById(R.id.tv_alarm_edit_item_name);
+				holder.tv_alarm_edit_item_time = (TextView) convertView
+						.findViewById(R.id.tv_alarm_edit_item_time);
+				holder.cb_alarm_edit_item_switch = (CheckBox) convertView
+						.findViewById(R.id.cb_alarm_edit_item_switch);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -145,17 +156,19 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener, 
 			holder.tv_alarm_edit_item_name.setText(alarm.name);
 			holder.tv_alarm_edit_item_time.setText(alarm.time);
 			holder.cb_alarm_edit_item_switch.setChecked(false);
-			holder.cb_alarm_edit_item_switch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			holder.cb_alarm_edit_item_switch
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						mDelIndexs.add(alarm.id);
-					} else {
-						mDelIndexs.remove(alarm.id);
-					}
-				}
-			});
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							if (isChecked) {
+								mDelIndexs.add(alarm.id);
+							} else {
+								mDelIndexs.remove(alarm.id);
+							}
+						}
+					});
 			return convertView;
 		}
 
@@ -167,7 +180,8 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 		Intent intent = new Intent(this, AlarmAddActivity.class);
 		intent.putExtra(BTConstants.EXTRA_KEY_ALARM, mAlarms.get(position));
 		startActivity(intent);

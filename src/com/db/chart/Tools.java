@@ -19,9 +19,9 @@ package com.db.chart;
 import android.content.res.Resources;
 
 public class Tools {
-	
+
 	public static float fromDpToPx(float dp) {
-        return dp * Resources.getSystem().getDisplayMetrics().density;
-    }
-	
+		return dp * Resources.getSystem().getDisplayMetrics().density;
+	}
+
 }

@@ -42,7 +42,8 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void initData() {
-		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
+		bindService(new Intent(this, BTService.class), mServiceConnection,
+				BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -74,39 +75,45 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 		}
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setMessage(R.string.clear_tips);
-		builder.setPositiveButton(R.string.clear_tips_confirm, new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.clear_tips_confirm,
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				switch (v.getId()) {
-				case R.id.tv_clear_phone:
-					DBTools.getInstance(ClearDataActivity.this).deleteAllData();
-					ToastUtils.showToast(ClearDataActivity.this, R.string.clear_success);
-					break;
-				case R.id.tv_clear_bracelet:
-					if (mBtService.isConnDevice()) {
-						mBtService.clearData();
-						ToastUtils.showToast(ClearDataActivity.this, R.string.clear_success);
-					} else {
-						ToastUtils.showToast(ClearDataActivity.this, R.string.clear_fail_conn_device);
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (v.getId()) {
+						case R.id.tv_clear_phone:
+							DBTools.getInstance(ClearDataActivity.this)
+									.deleteAllData();
+							ToastUtils.showToast(ClearDataActivity.this,
+									R.string.clear_success);
+							break;
+						case R.id.tv_clear_bracelet:
+							if (mBtService.isConnDevice()) {
+								mBtService.clearData();
+								ToastUtils.showToast(ClearDataActivity.this,
+										R.string.clear_success);
+							} else {
+								ToastUtils.showToast(ClearDataActivity.this,
+										R.string.clear_fail_conn_device);
+							}
+							break;
+
+						default:
+							break;
+						}
+
+						dialog.dismiss();
 					}
-					break;
+				});
+		builder.setNegativeButton(R.string.clear_tips_cancel,
+				new DialogInterface.OnClickListener() {
 
-				default:
-					break;
-				}
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
 
-				dialog.dismiss();
-			}
-		});
-		builder.setNegativeButton(R.string.clear_tips_cancel, new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-				dialog.dismiss();
-			}
-		});
+						dialog.dismiss();
+					}
+				});
 		builder.show();
 	}
 

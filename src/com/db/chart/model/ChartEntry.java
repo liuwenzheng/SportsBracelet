@@ -20,87 +20,68 @@ package com.db.chart.model;
  * Generic Data model of a {@link ChartView} entry
  */
 public class ChartEntry {
-		
-	
+
 	/** Input from user */
 	private String mLabel;
 	private float mValue;
 
-	
 	/** Display coordinates */
 	private float mX;
 	private float mY;
-	
-	
-	
-	
-	public ChartEntry(String label, float value){
+
+	public ChartEntry(String label, float value) {
 		mLabel = label;
 		mValue = value;
 	}
 
-	
-	
-	
 	/*
-	 * --------
-	 * Getters
-	 * --------
+	 * -------- Getters --------
 	 */
-	
-	
+
 	public String getLabel() {
 		return mLabel;
 	}
-	
 
 	public float getValue() {
 		return mValue;
 	}
 
-	
 	public float getX() {
 		return mX;
 	}
 
-	
 	public float getY() {
 		return mY;
 	}
 
-	
-
-	
 	/*
-	 * --------
-	 * Setters
-	 * --------
+	 * -------- Setters --------
 	 */
-	
-	
+
 	/**
 	 * Set new entry value.
-	 * @param value - new value
+	 * 
+	 * @param value
+	 *            - new value
 	 */
-	public void setValue(float value){
+	public void setValue(float value) {
 		mValue = value;
 	}
-	
-	
+
 	/**
 	 * Set the parsed display coordinates
+	 * 
 	 * @param x
 	 * @param y
 	 */
-	public void setCoordinates(float x, float y){
+	public void setCoordinates(float x, float y) {
 		mX = x;
 		mY = y;
 	}
 
-	
-	public String toString(){
-		return "Label="+mLabel+" \n" + "Value="+mValue+"\n" +
-				"X = "+mX+"\n" + "Y = "+mY;
+	public String toString() {
+		return "Label=" + mLabel + " \n" + "Value=" + mValue + "\n" + "X = "
+				+ mX + "\n" + "Y = " + mY;
 	}
-		
+
 }

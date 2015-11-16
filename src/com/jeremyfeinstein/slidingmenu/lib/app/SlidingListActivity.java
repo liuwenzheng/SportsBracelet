@@ -9,7 +9,8 @@ import android.widget.ListView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-public class SlidingListActivity extends ListActivity implements SlidingActivityBase {
+public class SlidingListActivity extends ListActivity implements
+		SlidingActivityBase {
 
 	private SlidingActivityHelper mHelper;
 
@@ -80,7 +81,8 @@ public class SlidingListActivity extends ListActivity implements SlidingActivity
 	 */
 	@Override
 	public void setContentView(View v) {
-		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*
@@ -112,7 +114,8 @@ public class SlidingListActivity extends ListActivity implements SlidingActivity
 	 * setBehindContentView(android.view.View)
 	 */
 	public void setBehindContentView(View v) {
-		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*

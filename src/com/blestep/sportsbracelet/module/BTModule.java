@@ -18,7 +18,6 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
 
-import com.blestep.sportsbracelet.AppConstants;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
@@ -33,17 +32,21 @@ public class BTModule {
 	public static final int REQUEST_ENABLE_BT = 1001;
 
 	public static final String BARCELET_BT_NAME = "J-Band";
-	public static final UUID SERVIE_UUID = UUID.fromString("0000ffc0-0000-1000-8000-00805f9b34fb");
-	public static final UUID CHARACTERISTIC_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+	public static final UUID SERVIE_UUID = UUID
+			.fromString("0000ffc0-0000-1000-8000-00805f9b34fb");
+	public static final UUID CHARACTERISTIC_DESCRIPTOR_UUID = UUID
+			.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
 	/**
 	 * Write, APP send command to wristbands using this characteristic
 	 */
-	public static final UUID CHARACTERISTIC_UUID_WRITE = UUID.fromString("0000ffc1-0000-1000-8000-00805f9b34fb");
+	public static final UUID CHARACTERISTIC_UUID_WRITE = UUID
+			.fromString("0000ffc1-0000-1000-8000-00805f9b34fb");
 	/**
 	 * Notify, wristbands send data to APP using this characteristic
 	 */
-	public static final UUID CHARACTERISTIC_UUID_NOTIFY = UUID.fromString("0000ffc2-0000-1000-8000-00805f9b34fb");
+	public static final UUID CHARACTERISTIC_UUID_NOTIFY = UUID
+			.fromString("0000ffc2-0000-1000-8000-00805f9b34fb");
 
 	/**
 	 * 
@@ -65,8 +68,10 @@ public class BTModule {
 		// Ensures Bluetooth is available on the device and it is enabled. If
 		// not,
 		// displays a dialog requesting user permission to enable Bluetooth.
-		Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-		((Activity) context).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+		Intent enableBtIntent = new Intent(
+				BluetoothAdapter.ACTION_REQUEST_ENABLE);
+		((Activity) context).startActivityForResult(enableBtIntent,
+				REQUEST_ENABLE_BT);
 	}
 
 	public BTModule() {
@@ -97,7 +102,7 @@ public class BTModule {
 		int minute = calendar.get(Calendar.MINUTE);
 		int second = calendar.get(Calendar.SECOND);
 		byte[] byteArray = new byte[7];
-		byteArray[0] = 0x11;
+		byteArray[0] = BTConstants.HEADER_SYNTIMEDATA;
 		byteArray[1] = (byte) (year - 2000);
 		byteArray[2] = (byte) month;
 		byteArray[3] = (byte) date;
@@ -119,7 +124,7 @@ public class BTModule {
 		int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
 		int age = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_AGE, 5);
 		int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0);
-		byteArray[0] = 0x12;
+		byteArray[0] = BTConstants.HEADER_SYNUSERINFO;
 		byteArray[1] = (byte) weight;
 		byteArray[2] = (byte) height;
 		byteArray[3] = (byte) age;
@@ -134,7 +139,7 @@ public class BTModule {
 	 */
 	public static void setAlarm(Context context, BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[17];
-		byteArray[0] = 0x13;
+		byteArray[0] = BTConstants.HEADER_SYNALARM;
 		byteArray[1] = 0x01;
 		ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
 		if (alarms.size() == 0) {
@@ -146,9 +151,12 @@ public class BTModule {
 		}
 		for (int i = 0; i < alarms.size(); i++) {
 			Alarm alarm = alarms.get(i);
-			byteArray[i * 3 + 2] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.state)), 16);
-			byteArray[i * 3 + 3] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[0])), 16);
-			byteArray[i * 3 + 4] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[1])), 16);
+			byteArray[i * 3 + 2] = Byte.valueOf(
+					Integer.toHexString(Integer.valueOf(alarm.state)), 16);
+			byteArray[i * 3 + 3] = Byte.valueOf(Integer.toHexString(Integer
+					.valueOf(alarm.time.split(":")[0])), 16);
+			byteArray[i * 3 + 4] = Byte.valueOf(Integer.toHexString(Integer
+					.valueOf(alarm.time.split(":")[1])), 16);
 		}
 
 		writeCharacteristicData(mBluetoothGatt, byteArray);
@@ -162,7 +170,7 @@ public class BTModule {
 	 */
 	public static void getBatteryData(BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[2];
-		byteArray[0] = 0x16;
+		byteArray[0] = BTConstants.HEADER_GETDATA;
 		byteArray[1] = 0x00;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
@@ -175,7 +183,7 @@ public class BTModule {
 	 */
 	public static void getStepData(BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[2];
-		byteArray[0] = 0x16;
+		byteArray[0] = BTConstants.HEADER_GETDATA;
 		byteArray[1] = 0x01;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
@@ -200,7 +208,7 @@ public class BTModule {
 	 */
 	public static void getSleepData(BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[2];
-		byteArray[0] = 0x16;
+		byteArray[0] = BTConstants.HEADER_GETDATA;
 		byteArray[1] = 0x02;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
@@ -283,7 +291,8 @@ public class BTModule {
 		for (BluetoothGattService gattService : gattServices) {
 			uuid = gattService.getUuid().toString();
 			if (uuid.startsWith("0000ffc0")) {
-				List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+				List<BluetoothGattCharacteristic> gattCharacteristics = gattService
+						.getCharacteristics();
 				// 遍历所有特征，找到发出的特征
 				for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 					uuid = gattCharacteristic.getUuid().toString();
@@ -292,14 +301,17 @@ public class BTModule {
 						if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
 
 							if (mNotifyCharacteristic != null) {
-								setCharacteristicNotification(mBluetoothGatt, mNotifyCharacteristic, false);
+								setCharacteristicNotification(mBluetoothGatt,
+										mNotifyCharacteristic, false);
 								mNotifyCharacteristic = null;
 							}
-							mBluetoothGatt.readCharacteristic(gattCharacteristic);
+							mBluetoothGatt
+									.readCharacteristic(gattCharacteristic);
 						}
 						if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
 							mNotifyCharacteristic = gattCharacteristic;
-							setCharacteristicNotification(mBluetoothGatt, gattCharacteristic, true);
+							setCharacteristicNotification(mBluetoothGatt,
+									gattCharacteristic, true);
 						}
 					}
 				}
@@ -315,7 +327,8 @@ public class BTModule {
 	 * @param enabled
 	 *            If true, enable notification. False otherwise.
 	 */
-	public static void setCharacteristicNotification(BluetoothGatt mBluetoothGatt,
+	public static void setCharacteristicNotification(
+			BluetoothGatt mBluetoothGatt,
 			BluetoothGattCharacteristic characteristic, boolean enabled) {
 		if (mBluetoothAdapter == null || mBluetoothGatt == null) {
 			return;
@@ -326,13 +339,16 @@ public class BTModule {
 		 */
 		// This is specific to Heart Rate Measurement.
 		if (CHARACTERISTIC_UUID_NOTIFY.equals(characteristic.getUuid())) {
-			BluetoothGattDescriptor descriptor = characteristic.getDescriptor(CHARACTERISTIC_DESCRIPTOR_UUID);
-			descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+			BluetoothGattDescriptor descriptor = characteristic
+					.getDescriptor(CHARACTERISTIC_DESCRIPTOR_UUID);
+			descriptor
+					.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 			mBluetoothGatt.writeDescriptor(descriptor);
 		}
 	}
 
-	public static void writeCharacteristicData(BluetoothGatt mBluetoothGatt, byte[] byteArray) {
+	public static void writeCharacteristicData(BluetoothGatt mBluetoothGatt,
+			byte[] byteArray) {
 		if (mBluetoothGatt == null) {
 			return;
 		}
@@ -344,12 +360,14 @@ public class BTModule {
 		}
 		BluetoothGattCharacteristic characteristic = null;
 		characteristic = service.getCharacteristic(CHARACTERISTIC_UUID_WRITE);
-		LogModule.i("writeCharacteristicData...characteristic:" + characteristic);
+		LogModule.i("writeCharacteristicData...characteristic:"
+				+ characteristic);
 		if (characteristic == null) {
 			return;
 		}
 		characteristic.setValue(byteArray);
-		characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+		characteristic
+				.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
 		mBluetoothGatt.writeCharacteristic(characteristic);
 	}
 
@@ -363,7 +381,7 @@ public class BTModule {
 	public static void saveBleData(String[] formatDatas, final Context context) {
 		int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
 		switch (header) {
-		case AppConstants.HEADER_BACK_STEP:
+		case BTConstants.HEADER_BACK_STEP:
 			// 保存步数
 			// 日期
 			String year = formatDatas[2];
@@ -371,7 +389,8 @@ public class BTModule {
 			String day = formatDatas[4];
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(2000 + Integer.valueOf(Utils.decodeToString(year)),
-					Integer.valueOf(Utils.decodeToString(month)) - 1, Integer.valueOf(Utils.decodeToString(day)));
+					Integer.valueOf(Utils.decodeToString(month)) - 1,
+					Integer.valueOf(Utils.decodeToString(day)));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = calendar.getTime();
 			// 步数
@@ -392,7 +411,7 @@ public class BTModule {
 			String calories0 = formatDatas[14];
 			String dateStr = sdf.format(date);
 			LogModule.e("日期：" + dateStr);
-			Intent intent = new Intent(AppConstants.ACTION_LOG);
+			Intent intent = new Intent(BTConstants.ACTION_LOG);
 			intent.putExtra("log", "日期：" + dateStr);
 			context.sendBroadcast(intent);
 
@@ -406,15 +425,16 @@ public class BTModule {
 			intent.putExtra("log", "时长：" + duration);
 			context.sendBroadcast(intent);
 
-			String distance = new DecimalFormat()
-					.format(Integer.valueOf(Utils.decodeToString(distance1 + distance0)) * 0.1);
+			String distance = new DecimalFormat().format(Integer.valueOf(Utils
+					.decodeToString(distance1 + distance0)) * 0.1);
 			LogModule.e("距离：" + distance);
 			intent.putExtra("log", "距离：" + distance);
 			context.sendBroadcast(intent);
 
 			String calories = Utils.decodeToString(calories1 + calories0);
 			LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
-			intent.putExtra("log", "卡路里：" + Utils.decodeToString(calories1 + calories0));
+			intent.putExtra("log",
+					"卡路里：" + Utils.decodeToString(calories1 + calories0));
 			context.sendBroadcast(intent);
 
 			Step step = new Step();
@@ -427,12 +447,15 @@ public class BTModule {
 				DBTools.getInstance(context).insertStep(step);
 				// 更新最新记录
 			}
-			if (Utils.isNotEmpty(dateStr) && dateStr.equals(sdf.format(Calendar.getInstance().getTime()))) {
+			if (Utils.isNotEmpty(dateStr)
+					&& dateStr.equals(sdf.format(Calendar.getInstance()
+							.getTime()))) {
 				DBTools.getInstance(context).updateStep(step);
 				BTService.mHandler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						Intent intent = new Intent(AppConstants.ACTION_REFRESH_DATA);
+						Intent intent = new Intent(
+								BTConstants.ACTION_REFRESH_DATA);
 						context.sendBroadcast(intent);
 					}
 				}, 1000);

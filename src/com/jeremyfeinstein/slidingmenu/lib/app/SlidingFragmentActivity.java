@@ -8,7 +8,8 @@ import android.view.ViewGroup.LayoutParams;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-public class SlidingFragmentActivity extends FragmentActivity implements SlidingActivityBase {
+public class SlidingFragmentActivity extends FragmentActivity implements
+		SlidingActivityBase {
 
 	private SlidingActivityHelper mHelper;
 
@@ -78,7 +79,8 @@ public class SlidingFragmentActivity extends FragmentActivity implements Sliding
 	 */
 	@Override
 	public void setContentView(View v) {
-		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*
@@ -110,7 +112,8 @@ public class SlidingFragmentActivity extends FragmentActivity implements Sliding
 	 * setBehindContentView(android.view.View)
 	 */
 	public void setBehindContentView(View v) {
-		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setBehindContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 	}
 
 	/*

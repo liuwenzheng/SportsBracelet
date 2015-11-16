@@ -19,10 +19,10 @@ package com.db.chart.model;
 /**
  * Data model that represents a point in {@link LineChartView}
  */
-public class Point extends ChartEntry{
+public class Point extends ChartEntry {
 
-	public Point(String label, float value){
+	public Point(String label, float value) {
 		super(label, value);
 	}
-	
+
 }

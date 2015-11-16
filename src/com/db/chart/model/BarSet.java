@@ -17,50 +17,39 @@
 package com.db.chart.model;
 
 /**
- * Data model containing a set of {@link Bar} to be used by {@link BarChartView}.
+ * Data model containing a set of {@link Bar} to be used by {@link BarChartView}
+ * .
  */
-public class BarSet extends ChartSet{
-	
-	
-	public BarSet(){
+public class BarSet extends ChartSet {
+
+	public BarSet() {
 		super();
 	}
-	
-	
-	
-	public void addBar(String label, float value){
+
+	public void addBar(String label, float value) {
 		this.addBar(new Bar(label, value));
 	}
-	
-	
-	public void addBar(Bar point){
+
+	public void addBar(Bar point) {
 		this.addEntry(point);
 	}
-	
-	
-	
+
 	/*
-	 * --------
-	 * Getters
-	 * --------
+	 * -------- Getters --------
 	 */
-	
-	public int getColor(){
+
+	public int getColor() {
 		return ((Bar) this.getEntry(0)).getColor();
 	}
 
-	
-	
 	/*
-	 * -------------
-	 * Setters
-	 * -------------
+	 * ------------- Setters -------------
 	 */
-	
-	public BarSet setColor(int color){
-		for(int i = 0; i < size(); i++)
+
+	public BarSet setColor(int color) {
+		for (int i = 0; i < size(); i++)
 			((Bar) getEntry(i)).setColor(color);
 		return this;
 	}
-	
+
 }

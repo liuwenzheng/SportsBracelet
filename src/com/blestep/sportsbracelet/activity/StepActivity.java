@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.blestep.sportsbracelet.AppConstants;
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
@@ -33,7 +33,8 @@ import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 
-public class StepActivity extends BaseActivity implements OnItemClickListener, ICircleProgressValue {
+public class StepActivity extends BaseActivity implements OnItemClickListener,
+		ICircleProgressValue {
 	private CircleProgressView circleView;
 	private TextView tv_conn_status, tv_current_value;
 	private ListView lv_devices;
@@ -45,10 +46,12 @@ public class StepActivity extends BaseActivity implements OnItemClickListener, I
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null) {
-				if (AppConstants.ACTION_BLE_DEVICES_DATA.equals(intent.getAction())) {
+				if (BTConstants.ACTION_BLE_DEVICES_DATA.equals(intent
+						.getAction())) {
 					tv_conn_status.setText("结束扫描...");
-					ArrayList<BleDevice> devices = (ArrayList<BleDevice>) intent.getExtras().getSerializable(
-							AppConstants.INTENT_EXTRA_KEY_DEVICES);
+					ArrayList<BleDevice> devices = (ArrayList<BleDevice>) intent
+							.getExtras().getSerializable(
+									BTConstants.EXTRA_KEY_DEVICES);
 					for (int i = 0; i < devices.size(); i++) {
 						HashMap<String, String> map = new HashMap<String, String>();
 						BleDevice device = devices.get(i);
@@ -57,24 +60,31 @@ public class StepActivity extends BaseActivity implements OnItemClickListener, I
 						mDevices.add(map);
 					}
 					mAdapter.notifyDataSetChanged();
-				} else if (AppConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
+				} else if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
+						.getAction())) {
 					tv_conn_status.setText("连接成功...");
 					lv_devices.setVisibility(View.GONE);
 					circleView.setVisibility(View.VISIBLE);
-				} else if (AppConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())) {
+				} else if (BTConstants.ACTION_CONN_STATUS_DISCONNECTED
+						.equals(intent.getAction())) {
 					tv_conn_status.setText("断开连接...");
-				} else if (AppConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
-					int battery = SPUtiles.getIntValue(BTConstants.SP_KEY_BATTERY, 0);
+				} else if (BTConstants.ACTION_REFRESH_DATA.equals(intent
+						.getAction())) {
+					int battery = SPUtiles.getIntValue(
+							BTConstants.SP_KEY_BATTERY, 0);
 					tv_conn_status.setText("电量为" + battery + "%");
-					Step step = DBTools.getInstance(StepActivity.this).selectCurrentStep();
+					Step step = DBTools.getInstance(StepActivity.this)
+							.selectCurrentStep();
 					if (step != null) {
 						circleView.setMaxValue(5000);
 						circleView.setValueAnimated(Float.valueOf(step.count));
 					}
 
-				} else if (AppConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())) {
+				} else if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent
+						.getAction())) {
 					tv_conn_status.setText("无法连接到设备");
-					Step step = DBTools.getInstance(StepActivity.this).selectCurrentStep();
+					Step step = DBTools.getInstance(StepActivity.this)
+							.selectCurrentStep();
 					if (step != null) {
 						circleView.setVisibility(View.VISIBLE);
 						circleView.setMaxValue(5000);
@@ -98,22 +108,24 @@ public class StepActivity extends BaseActivity implements OnItemClickListener, I
 		lv_devices = (ListView) findViewById(R.id.lv_devices);
 		tv_current_value = (TextView) findViewById(R.id.tv_current_value);
 		mDevices = new ArrayList<HashMap<String, String>>();
-		mAdapter = new SimpleAdapter(this, mDevices, R.layout.devices_list_item, new String[] { "name", "address" },
+		mAdapter = new SimpleAdapter(this, mDevices,
+				R.layout.devices_list_item, new String[] { "name", "address" },
 				new int[] { R.id.tv_device_name, R.id.tv_device_address });
 		lv_devices.setAdapter(mAdapter);
 		lv_devices.setOnItemClickListener(this);
-		bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
+		bindService(new Intent(this, BTService.class), mServiceConnection,
+				BIND_AUTO_CREATE);
 	}
 
 	@Override
 	protected void onResume() {
 		// 注册广播接收器
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(AppConstants.ACTION_BLE_DEVICES_DATA);
-		filter.addAction(AppConstants.ACTION_DISCOVER_SUCCESS);
-		filter.addAction(AppConstants.ACTION_CONN_STATUS_DISCONNECTED);
-		filter.addAction(AppConstants.ACTION_REFRESH_DATA);
-		filter.addAction(AppConstants.ACTION_CONN_STATUS_TIMEOUT);
+		filter.addAction(BTConstants.ACTION_BLE_DEVICES_DATA);
+		filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
 		registerReceiver(mReceiver, filter);
 		super.onResume();
 	}
@@ -173,7 +185,8 @@ public class StepActivity extends BaseActivity implements OnItemClickListener, I
 	};
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 		lv_devices.setVisibility(View.GONE);
 		circleView.setVisibility(View.VISIBLE);
 		mBtService.connectBle(mDevices.get(position).get("address"));

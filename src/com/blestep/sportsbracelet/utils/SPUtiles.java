@@ -10,7 +10,8 @@ public class SPUtiles {
 	public static SharedPreferences sp;
 
 	public static SharedPreferences getInstance(Context context) {
-		sp = context.getSharedPreferences(BTConstants.SP_NAME, context.MODE_PRIVATE);
+		sp = context.getSharedPreferences(BTConstants.SP_NAME,
+				context.MODE_PRIVATE);
 		return sp;
 	}
 

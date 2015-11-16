@@ -16,7 +16,8 @@ import com.db.chart.view.animation.easing.quint.QuintEaseOut;
 
 public class DataRetriever {
 
-	private final static String[] mColors = { "#b4efff", "#00bba7", "#e06c5d", "#35babf", "#ffb74d" };
+	private final static String[] mColors = { "#b4efff", "#00bba7", "#e06c5d",
+			"#35babf", "#ffb74d" };
 
 	public static boolean randBoolean() {
 		return Math.random() < 0.5;
@@ -81,7 +82,8 @@ public class DataRetriever {
 		for (int i = 0; i < size; i++)
 			order[i] = i;
 		shuffleArray(order);
-		return new Animation().setEasing(new QuintEaseOut()).setOverlap(1.0f).setAlpha(6).setEndAction(endAction);
+		return new Animation().setEasing(new QuintEaseOut()).setOverlap(1.0f)
+				.setAlpha(6).setEndAction(endAction);
 	}
 
 	// Implementing Fisher�Yates shuffle

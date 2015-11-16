@@ -29,45 +29,62 @@ public class DBTools {
 	}
 
 	public Step selectCurrentStep() {
-		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null, null, null, null);
+		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null,
+				null, null, null);
 		Step step = null;
 		while (cursor.moveToLast()) {
 			step = new Step();
-			step.date = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DATE));
-			step.count = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_COUNT));
-			step.duration = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
-			step.distance = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
-			step.calories = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
+			step.date = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_DATE));
+			step.count = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_COUNT));
+			step.duration = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
+			step.distance = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
+			step.calories = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
 			break;
 		}
 		return step;
 	}
 
 	public ArrayList<Step> selectAllStep() {
-		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null, null, null, null);
+		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null,
+				null, null, null);
 		ArrayList<Step> steps = new ArrayList<Step>();
 		while (cursor.moveToNext()) {
 			Step step = new Step();
-			step.date = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DATE));
-			step.count = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_COUNT));
-			step.duration = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
-			step.distance = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
-			step.calories = cursor.getString(cursor.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
+			step.date = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_DATE));
+			step.count = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_COUNT));
+			step.duration = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
+			step.distance = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
+			step.calories = cursor.getString(cursor
+					.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
 			steps.add(step);
 		}
 		return steps;
 	}
 
 	public ArrayList<Alarm> selectAllAlarm() {
-		Cursor cursor = db.query(DBConstants.TABLE_NAME_ALARM, null, null, null, null, null, null);
+		Cursor cursor = db.query(DBConstants.TABLE_NAME_ALARM, null, null,
+				null, null, null, null);
 		ArrayList<Alarm> alarms = new ArrayList<Alarm>();
 		while (cursor.moveToNext()) {
 			Alarm alarm = new Alarm();
 			alarm = new Alarm();
-			alarm.id = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_ID));
-			alarm.name = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_NAME));
-			alarm.time = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_TIME));
-			alarm.state = cursor.getString(cursor.getColumnIndex(DBConstants.ALARM_FIELD_STATE));
+			alarm.id = cursor.getString(cursor
+					.getColumnIndex(DBConstants.ALARM_FIELD_ID));
+			alarm.name = cursor.getString(cursor
+					.getColumnIndex(DBConstants.ALARM_FIELD_NAME));
+			alarm.time = cursor.getString(cursor
+					.getColumnIndex(DBConstants.ALARM_FIELD_TIME));
+			alarm.state = cursor.getString(cursor
+					.getColumnIndex(DBConstants.ALARM_FIELD_STATE));
 			alarms.add(alarm);
 		}
 		return alarms;
@@ -107,7 +124,8 @@ public class DBTools {
 
 	public boolean isStepExist(String date) {
 		String[] args = new String[] { date };
-		Cursor cursor = db.rawQuery("SELECT * FROM " + DBConstants.TABLE_NAME_STEP + " WHERE "
+		Cursor cursor = db.rawQuery("SELECT * FROM "
+				+ DBConstants.TABLE_NAME_STEP + " WHERE "
 				+ DBConstants.STEP_FIELD_DATE + " = ?", args);
 		if (cursor.getCount() == 0) {
 			cursor.close();
