@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.fragment;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +34,7 @@ import com.db.chart.view.YController;
 public class HistoryTab03 extends Fragment implements OnEntryClickListener {
 	private String mLabels[];
 	private String mValues[];
-	private int BAR_DISTANCE_MAX = 100;
+	private int BAR_DISTANCE_MAX = 1;
 	// private int BAR_STEP_AIM = 0;
 	private ArrayList<Step> mSteps;
 	private ArrayList<Step> mStepsSort;
@@ -92,8 +93,9 @@ public class HistoryTab03 extends Fragment implements OnEntryClickListener {
 		mStepsSort = new ArrayList<Step>();
 		mStepsSort.addAll(mSteps);
 		Collections.sort(mStepsSort, new StepCompare());
-		if (Integer.valueOf(mStepsSort.get(0).distance) >= BAR_DISTANCE_MAX) {
-			BAR_DISTANCE_MAX = Integer.valueOf(mStepsSort.get(0).distance);
+		if (Float.valueOf(mStepsSort.get(0).distance) >= BAR_DISTANCE_MAX) {
+			BAR_DISTANCE_MAX = Float.valueOf(mStepsSort.get(0).distance)
+					.intValue() + 1;
 		}
 		// else {
 		// BAR_STEP_MAX = BAR_STEP_AIM;
@@ -114,17 +116,20 @@ public class HistoryTab03 extends Fragment implements OnEntryClickListener {
 			mLabels[i] = mSdf.format(mCalendar.getTime());
 		}
 		updateBarChart(mLabels.length);
-		int stepSum = 0;
+		float stepSum = 0;
 		for (int i = 0; i < mValues.length; i++) {
 			if (Utils.isEmpty(mValues[i])) {
 				stepSum += 0;
 			} else {
-				stepSum += Integer.valueOf(mValues[i]);
+				stepSum += Float.valueOf(mValues[i]);
 			}
 		}
-		tv_history_distance_sum.setText(stepSum + "");
-		tv_history_distance_daily
-				.setText((int) (stepSum / mValues.length) + "");
+		tv_history_distance_sum.setText(new BigDecimal(stepSum).setScale(2,
+				BigDecimal.ROUND_HALF_UP).floatValue()
+				+ "");
+		tv_history_distance_daily.setText(new BigDecimal(stepSum
+				/ mValues.length).setScale(2, BigDecimal.ROUND_HALF_UP)
+				.floatValue() + "");
 
 	}
 
@@ -164,11 +169,11 @@ public class HistoryTab03 extends Fragment implements OnEntryClickListener {
 				mValues[j] = 0 + "";
 			} else {
 				if (index < nPoints) {
-					bar = new Bar(mLabels[j], Integer.valueOf(mSteps.get(j
+					bar = new Bar(mLabels[j], Float.valueOf(mSteps.get(j
 							- start).distance));
 					mValues[j] = mSteps.get(j - start).distance;
 				} else {
-					bar = new Bar(mLabels[j], Integer.valueOf(mSteps.get(j
+					bar = new Bar(mLabels[j], Float.valueOf(mSteps.get(j
 							+ start).distance));
 					mValues[j] = mSteps.get(j + start).distance;
 				}
@@ -229,9 +234,9 @@ public class HistoryTab03 extends Fragment implements OnEntryClickListener {
 
 		@Override
 		public int compare(Step lhs, Step rhs) {
-			if (Integer.valueOf(lhs.distance) > Integer.valueOf(rhs.distance)) {
+			if (Float.valueOf(lhs.distance) > Float.valueOf(rhs.distance)) {
 				return -1;
-			} else if (Integer.valueOf(lhs.distance) < Integer
+			} else if (Float.valueOf(lhs.distance) < Float
 					.valueOf(rhs.distance)) {
 				return 1;
 			}

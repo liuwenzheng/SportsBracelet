@@ -193,7 +193,7 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 				.setVerticalGrid(null)
 				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(BAR_STEP_MAX, BAR_STEP_MAX / 10)
+				.setMaxAxisValue(BAR_STEP_MAX, 1)
 				.setThresholdLine(BAR_STEP_AIM, DataRetriever.randPaint())
 				.animate(DataRetriever.randAnimation(mEndAction, nPoints));
 	}

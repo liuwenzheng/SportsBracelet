@@ -166,4 +166,20 @@
     <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
     <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
 
+    <!-- history -->
+    <string name="history_step">Steps</string>
+    <string name="history_step_daily">Daily average steps</string>
+    <string name="history_step_sum">Total steps</string>
+    <string name="history_step_unit">Step</string>
+    <string name="history_calorie">Calorie</string>
+    <string name="history_calorie_daily">Daily average calorie</string>
+    <string name="history_calorie_sum">Total calorie</string>
+    <string name="history_calorie_unit">Kcals</string>
+    <string name="history_distance">Mileage</string>
+    <string name="history_distance_daily">Daily average mileage</string>
+    <string name="history_distance_sum">Total mileage</string>
+    <string name="history_distance_unit">Km</string>
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
+
 </resources>
