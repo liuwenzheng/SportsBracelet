@@ -65,6 +65,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private ScrollView sv_log;
 	private PullToRefreshViewPager pull_refresh_viewpager;
 	private ViewPager mViewPager;
+	private boolean isConnDevice = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,29 +106,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 					@Override
 					public void onRefresh(
 							PullToRefreshBase<ViewPager> refreshView) {
-						if (mBtService.isConnDevice()) {
-							// 5s后若未获取数据自动结束刷新
-							BTService.mHandler.postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									runOnUiThread(new Runnable() {
-
-										@Override
-										public void run() {
-											if (pull_refresh_viewpager
-													.isRefreshing()) {
-												LogModule.e("5s后未获得手环数据！！！");
-												pull_refresh_viewpager
-														.onRefreshComplete();
-											}
-
-										}
-									});
-								}
-							}, 10000);
+						if (mBtService.isConnDevice() && !isConnDevice) {
 							synData();
 						} else {
-							pull_refresh_viewpager.onRefreshComplete();
+							// pull_refresh_viewpager.onRefreshComplete();
 						}
 					}
 				});
@@ -184,6 +166,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 						((MenuLeftFragment) leftMenuFragment)
 								.updateView(mBtService);
 					}
+					isConnDevice = false;
 					LogModule.d("配对失败...");
 					pull_refresh_viewpager.onRefreshComplete();
 					ToastUtils.showToast(MainActivity.this,
@@ -196,6 +179,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
 						.getAction())) {
+					isConnDevice = false;
 					LogModule.d("配对成功...");
 					if (leftMenuFragment != null
 							&& leftMenuFragment.isVisible()) {
@@ -204,7 +188,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 					}
 					ToastUtils.showToast(MainActivity.this,
 							R.string.setting_device_conn_success);
-					pull_refresh_viewpager.onRefreshComplete();
+					// pull_refresh_viewpager.onRefreshComplete();
 					autoPullUpdate(getString(R.string.step_syncdata_waiting));
 					tv_main_conn_tips.setVisibility(View.GONE);
 					tv_main_tips.setVisibility(View.GONE);
@@ -243,7 +227,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 				}
 				if (BTConstants.ACTION_REFRESH_DATA_BATTERY.equals(intent
 						.getAction())) {
-					int battery = intent.getIntExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE, 0);
+					int battery = intent.getIntExtra(
+							BTConstants.EXTRA_KEY_BATTERY_VALUE, 0);
 					if (battery == 0) {
 						return;
 					}
@@ -289,9 +274,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 					// getString(R.string.step_syncdata_waiting),
 					// false, false);
 				} else {
+					isConnDevice = true;
+					autoPullUpdate(getString(R.string.setting_device));
 					mBtService.connectBle(SPUtiles.getStringValue(
 							BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-					autoPullUpdate(getString(R.string.setting_device));
 					// tv_main_tips.setText(R.string.setting_device);
 					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -324,7 +310,23 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 			}
 		}, 200);
+		// 10s后若未获取数据自动结束刷新
+		BTService.mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() {
 
+					@Override
+					public void run() {
+						if (pull_refresh_viewpager.isRefreshing()) {
+							LogModule.e("10s后未获得手环数据！！！");
+							pull_refresh_viewpager.onRefreshComplete();
+						}
+
+					}
+				});
+			}
+		}, 10000);
 	}
 
 	@Override
@@ -332,6 +334,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case BTModule.REQUEST_ENABLE_BT:
+				isConnDevice = true;
 				autoPullUpdate(getString(R.string.setting_device));
 				mBtService.connectBle(SPUtiles.getStringValue(
 						BTConstants.SP_KEY_DEVICE_ADDRESS, null));
@@ -417,6 +420,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 			mBtService.connectBle(SPUtiles.getStringValue(
 					BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+			isConnDevice = true;
 			autoPullUpdate(getString(R.string.setting_device));
 			// tv_main_tips.setText(R.string.setting_device);
 			// tv_main_tips.setVisibility(View.VISIBLE);
