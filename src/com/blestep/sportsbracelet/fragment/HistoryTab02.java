@@ -107,10 +107,10 @@ public class HistoryTab02 extends Fragment implements OnEntryClickListener {
 				continue;
 			}
 			mCalendar.add(Calendar.DAY_OF_MONTH, -1);
-			if (i == mLabels.length - 2) {
-				mLabels[i] = getString(R.string.history_yesterday);
-				continue;
-			}
+			// if (i == mLabels.length - 2) {
+			// mLabels[i] = getString(R.string.history_yesterday);
+			// continue;
+			// }
 			mLabels[i] = mSdf.format(mCalendar.getTime());
 		}
 		updateBarChart(mLabels.length);
