@@ -188,7 +188,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 					}
 					ToastUtils.showToast(MainActivity.this,
 							R.string.setting_device_conn_success);
-					// pull_refresh_viewpager.onRefreshComplete();
+					pull_refresh_viewpager.onRefreshComplete();
 					autoPullUpdate(getString(R.string.step_syncdata_waiting));
 					tv_main_conn_tips.setVisibility(View.GONE);
 					tv_main_tips.setVisibility(View.GONE);

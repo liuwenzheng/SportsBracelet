@@ -164,7 +164,7 @@ public class HistoryTab03 extends Fragment implements OnEntryClickListener {
 		// TODO
 		for (int j = 0; j < nPoints; j++) {
 			Bar bar;
-			if (j < start) {
+			if (index < nPoints && j < start) {
 				bar = new Bar(mLabels[j], 0f);
 				mValues[j] = 0 + "";
 			} else {
