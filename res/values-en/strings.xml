@@ -40,7 +40,7 @@
     <string name="setting_target_recommend">Healthy</string>
     <string name="setting_target_active">Active</string>
     <string name="setting_target_step">Steps</string>
-    <string name="setting_target_calorie">Kcals</string>
+    <string name="setting_target_calorie">Cals</string>
     <string name="setting_target_calorie_unit">Cals</string>
     <string name="setting_target_tips">10,000 steps per day to be healthier</string>
     <string name="setting_target_amount_to">Equivalent</string>
@@ -174,7 +174,7 @@
     <string name="history_calorie">Calorie</string>
     <string name="history_calorie_daily">Average</string>
     <string name="history_calorie_sum">Total</string>
-    <string name="history_calorie_unit">Kcals</string>
+    <string name="history_calorie_unit">Cals</string>
     <string name="history_distance">Mileage</string>
     <string name="history_distance_daily">Average</string>
     <string name="history_distance_sum">Total</string>
