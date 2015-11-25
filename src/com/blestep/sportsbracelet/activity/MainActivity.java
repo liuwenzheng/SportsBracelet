@@ -207,6 +207,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 					if (tab01 != null && tab01.isVisible()) {
 						tab01.updateView();
 					}
+					LogModule.d("同步成功...");
 					int battery = SPUtiles.getIntValue(
 							BTConstants.SP_KEY_BATTERY, 0);
 					LogModule.i("电量为" + battery + "%");
@@ -216,6 +217,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 						((MenuLeftFragment) leftMenuFragment)
 								.updateView(mBtService);
 					}
+					ToastUtils.showToast(MainActivity.this,
+							R.string.syn_success);
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
@@ -311,22 +314,22 @@ public class MainActivity extends SlidingFragmentActivity implements
 			}
 		}, 200);
 		// 10s后若未获取数据自动结束刷新
-		BTService.mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						if (pull_refresh_viewpager.isRefreshing()) {
-							LogModule.e("10s后未获得手环数据！！！");
-							pull_refresh_viewpager.onRefreshComplete();
-						}
-
-					}
-				});
-			}
-		}, 10000);
+		// BTService.mHandler.postDelayed(new Runnable() {
+		// @Override
+		// public void run() {
+		// runOnUiThread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// if (pull_refresh_viewpager.isRefreshing()) {
+		// LogModule.e("10s后未获得手环数据！！！");
+		// pull_refresh_viewpager.onRefreshComplete();
+		// }
+		//
+		// }
+		// });
+		// }
+		// }, 10000);
 	}
 
 	@Override

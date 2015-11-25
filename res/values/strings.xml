@@ -181,5 +181,6 @@
     <string name="history_distance_unit">Km</string>
     <string name="history_today">Today</string>
     <string name="history_yesterday">Yesterday</string>
+    <string name="syn_success">同步成功</string>
 
 </resources>
