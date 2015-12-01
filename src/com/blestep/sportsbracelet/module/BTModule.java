@@ -163,6 +163,22 @@ public class BTModule {
 	}
 
 	/**
+	 * 设置闹钟
+	 * 
+	 * @param mBluetoothGatt
+	 */
+	public static void setSleep(Context context, BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[6];
+		byteArray[0] = BTConstants.HEADER_SYNSLEEP;
+		byteArray[1] = 0x01;
+		byteArray[2] = 0x17;
+		byteArray[3] = 0x00;
+		byteArray[4] = 0x07;
+		byteArray[5] = 0x00;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
 	 * 获取当前电量
 	 * 
 	 * @param mBluetoothGatt

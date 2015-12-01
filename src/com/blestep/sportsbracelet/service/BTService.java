@@ -299,6 +299,13 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	/**
+	 * 同步睡眠时间
+	 */
+	public void synSleepTime() {
+		BTModule.setSleep(this, mBluetoothGatt);
+	}
+
+	/**
 	 * 获取手环记步
 	 */
 	public void getStepData() {

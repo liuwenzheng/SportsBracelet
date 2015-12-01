@@ -250,6 +250,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 					} else if (ack == BTConstants.HEADER_SYNUSERINFO) {
 						mBtService.synAlarmData();
 					} else if (ack == BTConstants.HEADER_SYNALARM) {
+						mBtService.synSleepTime();
+					} else if (ack == BTConstants.HEADER_SYNSLEEP) {
 						mBtService.getBatteryData();
 					}
 				}
