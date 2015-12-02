@@ -222,10 +222,23 @@ public class BTModule {
 	 * @param mBluetoothGatt
 	 * 
 	 */
-	public static void getSleepData(BluetoothGatt mBluetoothGatt) {
+	public static void getSleepIndex(BluetoothGatt mBluetoothGatt) {
 		byte[] byteArray = new byte[2];
 		byteArray[0] = BTConstants.HEADER_GETDATA;
 		byteArray[1] = 0x02;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
+
+	/**
+	 * 获取睡眠数据
+	 * 
+	 * @param mBluetoothGatt
+	 * 
+	 */
+	public static void getSleepRecord(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[2];
+		byteArray[0] = BTConstants.HEADER_GETDATA;
+		byteArray[1] = 0x03;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 

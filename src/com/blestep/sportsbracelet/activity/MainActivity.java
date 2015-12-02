@@ -129,6 +129,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 		filter.addAction(BTConstants.ACTION_REFRESH_DATA);
 		filter.addAction(BTConstants.ACTION_ACK);
 		filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
 		// filter.addAction(BTConstants.ACTION_LOG);
 		registerReceiver(mReceiver, filter);
 		bindService(new Intent(this, BTService.class), mServiceConnection,
@@ -219,6 +221,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 					}
 					ToastUtils.showToast(MainActivity.this,
 							R.string.syn_success);
+					mBtService.getSleepIndex();
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
@@ -238,7 +241,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 					SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
 					mBtService.getStepData();
 				}
+				if (BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX.equals(intent
+						.getAction())) {
+					mBtService.getSleepRecord();
+				}
+				if (BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD.equals(intent
+						.getAction())) {
 
+				}
 				if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
 					int ack = intent.getIntExtra(
 							BTConstants.EXTRA_KEY_ACK_VALUE, 0);

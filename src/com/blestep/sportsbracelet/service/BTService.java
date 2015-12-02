@@ -222,6 +222,21 @@ public class BTService extends Service implements LeScanCallback {
 						sendBroadcast(intent);
 						return;
 					}
+					if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
+						Intent intent = new Intent(
+								BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
+						sendBroadcast(intent);
+						return;
+
+					}
+					if (header == BTConstants.HEADER_BACK_SLEEP_RECORD) {
+						Intent intent = new Intent(
+								BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
+						sendBroadcast(intent);
+						return;
+
+					}
+
 					// count--;
 					BTModule.saveBleData(formatDatas, getApplicationContext());
 					// LogModule.i(count + "...");
@@ -310,6 +325,20 @@ public class BTService extends Service implements LeScanCallback {
 	 */
 	public void getStepData() {
 		BTModule.getStepData(mBluetoothGatt);
+	}
+
+	/**
+	 * 获取手环睡眠指数
+	 */
+	public void getSleepIndex() {
+		BTModule.getSleepIndex(mBluetoothGatt);
+	}
+
+	/**
+	 * 获取手环睡眠记录
+	 */
+	public void getSleepRecord() {
+		BTModule.getSleepRecord(mBluetoothGatt);
 	}
 
 	/**

@@ -22,6 +22,10 @@ public class BTConstants {
 	public static final String ACTION_REFRESH_DATA = "action_refresh_data";
 	// 刷新电量数据
 	public static final String ACTION_REFRESH_DATA_BATTERY = "action_refresh_data_battery";
+	// 刷新睡眠指数
+	public static final String ACTION_REFRESH_DATA_SLEEP_INDEX = "action_refresh_data_sleep_index";
+	// 刷新睡眠记录
+	public static final String ACTION_REFRESH_DATA_SLEEP_RECORD = "action_refresh_data_sleep_record";
 	// 手环应答
 	public static final String ACTION_ACK = "action_ack";
 	// 连接超时
@@ -74,6 +78,10 @@ public class BTConstants {
 	public static final int HEADER_BACK_RECORD = 145;
 	// 记步记录
 	public static final int HEADER_BACK_STEP = 146;
+	// 睡眠指数
+	public static final int HEADER_BACK_SLEEP_INDEX = 147;
+	// 睡眠记录
+	public static final int HEADER_BACK_SLEEP_RECORD = 148;
 	// ACK
 	public static final int HEADER_BACK_ACK = 150;
 	// 同步时间

@@ -27,7 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
-import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.entity.BleDevice;
@@ -37,6 +36,7 @@ import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
+import com.blestep.sportsbracelet.utils.Utils;
 
 public class SettingDeviceActivity extends BaseActivity implements
 		OnClickListener, OnItemClickListener {
@@ -46,6 +46,9 @@ public class SettingDeviceActivity extends BaseActivity implements
 	private ArrayList<BleDevice> mDevices;
 	private ProgressDialog mDialog;
 	private int mPosition = -1;
+	private int mScanTimes = 0;
+	private boolean mIsScanContinue = false;
+	private BleDevice mScanDevice;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -231,6 +234,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 							return;
 						}
 					}
+
 					mDevices.add(bleDevice);
 					BleDevice[] bleDevices = new BleDevice[mDevices.size()];
 					for (int j = 0; j < mDevices.size(); j++) {
@@ -242,13 +246,39 @@ public class SettingDeviceActivity extends BaseActivity implements
 						System.out.println("..." + bleDevices[i].rssi);
 						mDevices.add(bleDevices[i]);
 					}
-					mAdapter.notifyDataSetChanged();
+					if (!mIsScanContinue) {
+						mAdapter.notifyDataSetChanged();
+					}
+					// 判断是否有正在敲击的手环，有则开始配对
+					if (Utils.isNotEmpty(bleDevice.name)
+							&& bleDevice.name.lastIndexOf("-D") > 0) {
+						LogModule.d("可以配对...");
+						mIsScanContinue = true;
+						mScanDevice = bleDevice;
+						if (mDialog != null) {
+							mDialog.dismiss();
+						}
+						mBtService.connectBle(bleDevice.address);
+						mDialog = ProgressDialog.show(
+								SettingDeviceActivity.this, null,
+								getString(R.string.setting_device), false,
+								false);
+					}
 				}
 				if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent
 						.getAction())) {
-					LogModule.d("结束扫描...");
-					if (mDialog != null) {
-						mDialog.dismiss();
+					LogModule.d("结束扫描..." + mScanTimes);
+					if (!mIsScanContinue) {
+						if (mScanTimes < 3) {
+							mScanTimes++;
+							LogModule.d("开始扫描..." + mScanTimes);
+							mDevices.clear();
+							mBtService.scanDevice();
+							return;
+						}
+						if (mDialog != null) {
+							mDialog.dismiss();
+						}
 					}
 				}
 				if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent
@@ -272,10 +302,13 @@ public class SettingDeviceActivity extends BaseActivity implements
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
-					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS,
-							mDevices.get(mPosition).address);
+					SPUtiles.setStringValue(
+							BTConstants.SP_KEY_DEVICE_ADDRESS,
+							mScanDevice == null ? mDevices.get(mPosition).address
+									: mScanDevice.address);
 					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
-							mDevices.get(mPosition).name);
+							mScanDevice == null ? mDevices.get(mPosition).name
+									: mScanDevice.name);
 					startActivity(new Intent(SettingDeviceActivity.this,
 							SettingUserInfoActivity.class));
 					SettingDeviceActivity.this.finish();
@@ -297,12 +330,13 @@ public class SettingDeviceActivity extends BaseActivity implements
 			if (!BTModule.isBluetoothOpen()) {
 				BTModule.openBluetooth(SettingDeviceActivity.this);
 			} else {
-				LogModule.d("开始扫描...");
+				LogModule.d("开始扫描..." + mScanTimes);
 				mBtService.scanDevice();
 				mDialog = ProgressDialog
 						.show(SettingDeviceActivity.this, null,
 								getString(R.string.setting_device_search),
 								false, false);
+				mScanTimes++;
 			}
 		}
 
