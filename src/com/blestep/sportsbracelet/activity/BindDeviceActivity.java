@@ -275,7 +275,7 @@ public class BindDeviceActivity extends BaseActivity implements
 						.getAction())) {
 					LogModule.d("结束扫描..." + mScanTimes);
 					if (!mIsScanContinue) {
-						if (mScanTimes < 3) {
+						if (mScanTimes < 4) {
 							mScanTimes++;
 							LogModule.d("开始扫描..." + mScanTimes);
 							mDevices.clear();
@@ -314,7 +314,7 @@ public class BindDeviceActivity extends BaseActivity implements
 									: mScanDevice.address);
 					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
 							mScanDevice == null ? mDevices.get(mPosition).name
-									: mScanDevice.name);
+									: mScanDevice.name.substring(0, mScanDevice.name.indexOf("-D")));
 					startActivity(new Intent(BindDeviceActivity.this,
 							SettingUserInfoActivity.class));
 					BindDeviceActivity.this.finish();
