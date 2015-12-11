@@ -41,6 +41,7 @@ import com.blestep.sportsbracelet.utils.Utils;
 public class SettingDeviceActivity extends BaseActivity implements
 		OnClickListener, OnItemClickListener {
 	private ListView lv_setting_device;
+	private TextView tv_syn_tips;
 	private BTService mBtService;
 	private DeviceAdapter mAdapter;
 	private ArrayList<BleDevice> mDevices;
@@ -103,44 +104,51 @@ public class SettingDeviceActivity extends BaseActivity implements
 
 	private void initView() {
 		lv_setting_device = (ListView) findViewById(R.id.lv_setting_device);
+		tv_syn_tips = (TextView) findViewById(R.id.tv_syn_tips);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_setting_next:
-
-			if (mDevices != null && mDevices.size() == 0) {
-				AlertDialog.Builder builder = new Builder(this);
-				builder.setMessage(R.string.setting_device_search_repeat);
-				builder.setPositiveButton(
-						R.string.setting_device_search_confirm,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								mBtService.scanDevice();
-								mDialog = ProgressDialog
-										.show(SettingDeviceActivity.this,
-												null,
-												getString(R.string.setting_device_search),
-												false, false);
-								dialog.dismiss();
-							}
-						});
-				builder.show();
-				return;
-			}
-			if (mPosition == -1) {
-				ToastUtils.showToast(this, R.string.setting_device_select_tips);
-				return;
-			}
-			LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
-			// 将选中地址缓存
-			mBtService.connectBle(mDevices.get(mPosition).address);
+			mScanTimes = 0;
+			LogModule.d("开始扫描..." + mScanTimes);
+			mBtService.scanDevice();
 			mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
-					getString(R.string.setting_device), false, false);
+					getString(R.string.setting_device_search), false, false);
+			mScanTimes++;
+
+			// if (mDevices != null && mDevices.size() == 0) {
+			// AlertDialog.Builder builder = new Builder(this);
+			// builder.setMessage(R.string.setting_device_search_repeat);
+			// builder.setPositiveButton(
+			// R.string.setting_device_search_confirm,
+			// new DialogInterface.OnClickListener() {
+			//
+			// @Override
+			// public void onClick(DialogInterface dialog,
+			// int which) {
+			// mBtService.scanDevice();
+			// mDialog = ProgressDialog
+			// .show(SettingDeviceActivity.this,
+			// null,
+			// getString(R.string.setting_device_search),
+			// false, false);
+			// dialog.dismiss();
+			// }
+			// });
+			// builder.show();
+			// return;
+			// }
+			// if (mPosition == -1) {
+			// ToastUtils.showToast(this, R.string.setting_device_select_tips);
+			// return;
+			// }
+			// LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
+			// // 将选中地址缓存
+			// mBtService.connectBle(mDevices.get(mPosition).address);
+			// mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
+			// getString(R.string.setting_device), false, false);
 			break;
 		case R.id.tv_setting_pre:
 			startActivity(new Intent(this, SettingBraceletActivity.class));
@@ -330,13 +338,13 @@ public class SettingDeviceActivity extends BaseActivity implements
 			if (!BTModule.isBluetoothOpen()) {
 				BTModule.openBluetooth(SettingDeviceActivity.this);
 			} else {
-				LogModule.d("开始扫描..." + mScanTimes);
-				mBtService.scanDevice();
-				mDialog = ProgressDialog
-						.show(SettingDeviceActivity.this, null,
-								getString(R.string.setting_device_search),
-								false, false);
-				mScanTimes++;
+				// LogModule.d("开始扫描..." + mScanTimes);
+				// mBtService.scanDevice();
+				// mDialog = ProgressDialog
+				// .show(SettingDeviceActivity.this, null,
+				// getString(R.string.setting_device_search),
+				// false, false);
+				// mScanTimes++;
 			}
 		}
 
