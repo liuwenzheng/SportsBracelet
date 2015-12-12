@@ -13,12 +13,12 @@
     <string name="setting_bluetooth">Turn on the phone bluetooth</string>
     <string name="setting_pre">Back</string>
     <string name="setting_next">Next</string>
-    <string name="setting_bracelet">Turn on the bracelet</string>
-    <string name="setting_bracelet_tips">Long press the touch point on bracelet for 5 seconds until screen lights up</string>
-    <string name="setting_device">Pairing your phone with bracelet</string>
-    <string name="setting_device_search">Searching for bracelet</string>
-    <string name="setting_device_search_repeat">Research for bracelet</string>
-    <string name="setting_device_select_tips">Please choose bracelet</string>
+    <string name="setting_bracelet">Turn on the wristband</string>
+    <string name="setting_bracelet_tips">Long press the indicator on wristband for 5 seconds until screen lights up</string>
+    <string name="setting_device">Pairing your phone with wristband</string>
+    <string name="setting_device_search">Searching for wristband</string>
+    <string name="setting_device_search_repeat">Research for wristband</string>
+    <string name="setting_device_select_tips">Please choose wristband</string>
     <string name="setting_device_search_confirm">Ok</string>
     <string name="setting_device_conn_success">Pairing Successfully</string>
     <string name="setting_device_conn_failure">Pairing failed</string>
@@ -51,7 +51,7 @@
     <string name="main_tab_step">Pedometer</string>
     <string name="main_tab_sleep">Sleeping</string>
     <string name="main_tab_run">Running</string>
-    <string name="main_conn_tips">Bracelet is not conected with phone, please click here</string>
+    <string name="main_conn_tips">Wristband is not conected with phone, please click here</string>
     <string name="main_exit_tips">Are you sure you want to quit?</string>
     <string name="main_exit_tips_confirm">Ok</string>
     <string name="main_exit_tips_cancel">Cancel</string>
@@ -71,15 +71,15 @@
     <string name="center_target">Set Sports Goal</string>
     <string name="center_target_tips">Daily steps</string>
     <string name="center_clear">Clear Data</string>
-    <string name="center_clear_tips">Clear APP and bracelet motion data</string>
+    <string name="center_clear_tips">Clear APP and wristband motion data</string>
     <!-- clear -->
     <string name="clear_title">Clear Data</string>
-    <string name="clear_bracelet">Bracelet</string>
+    <string name="clear_bracelet">Wristband</string>
     <string name="clear_phone">App</string>
     <string name="clear_tips">Are you sure you want to clear the data?</string>
     <string name="clear_tips_confirm">Ok</string>
     <string name="clear_tips_cancel">Cancel</string>
-    <string name="clear_fail_conn_device">Please connect bracelet</string>
+    <string name="clear_fail_conn_device">Please connect wristband</string>
     <string name="clear_success">Clear successfully</string>
     <!-- userinfo -->
     <string name="userinfo_title">Personal Profile</string>
@@ -101,18 +101,18 @@
     <string name="target_title">Set Goal</string>
     <!-- left -->
     <string name="alert_low_battery">Low battery remind</string>
-    <string name="alert_low_battery_tips">To remind when Bracelet power is less than 25%</string>
-    <string name="alert_find_band">Find Bracelet</string>
-    <string name="alert_find_band_tips">Bracelet shocking when connecting with phone</string>
-    <string name="alert_find_band_conn_false">Please connect bracelet</string>
+    <string name="alert_low_battery_tips">To remind when wristband power is less than 25%</string>
+    <string name="alert_find_band">Find wristband</string>
+    <string name="alert_find_band_tips">Wristband shocking when connecting with phone</string>
+    <string name="alert_find_band_conn_false">Please connect wristband</string>
     <string name="alert_coming_call">Call Reminder</string>
     <string name="alert_coming_call_open">On</string>
     <string name="alert_coming_call_close">Off</string>
-    <string name="alert_coming_call_tips">Bracelet shock when phone call comes</string>
+    <string name="alert_coming_call_tips">Wristband shock when phone call comes</string>
     <string name="alert_alarm">Alarm</string>
-    <string name="alert_alarm_tips">Set bracelet alarm time</string>
-    <string name="bind_bracelet">Bind bracelet</string>
-    <string name="bind_bracelet_tips">To pair and bind bracelet</string>
+    <string name="alert_alarm_tips">Set wristband alarm time</string>
+    <string name="bind_bracelet">Bind wristband</string>
+    <string name="bind_bracelet_tips">To pair and bind wristband</string>
     <string name="bracelet_reset">Reset</string>
     <string name="bracelet_reset_tips">Reset all the configuration information</string>
     <string name="bracelet_reset_alert">Are you sure you want to clear all the App settings?</string>
@@ -146,7 +146,7 @@
     <string name="alarm_awaken">Smart Wake</string>
     <string name="alarm_awaken_tips">Allow the alarm wake me from light sleep state when 30 minutes before the target time</string>
     <!-- device -->
-    <string name="bind_title">Bind bracelet</string>
+    <string name="bind_title">Bind wristband</string>
     <string name="bind_finish">Complete</string>
     <string name="bind_refresh">Refresh</string>
     <!-- about -->
@@ -182,6 +182,6 @@
     <string name="history_today">Today</string>
     <string name="history_yesterday">Yesterday</string>
     <string name="syn_success">synchronize successfully</string>
-    <string name="syn_tips">Long press the touch point for 5 seconds,Click "Next" to paring wristband automatically,Please click "Back" if failed</string>
+    <string name="syn_tips">Press the indicator for 5 seconds.\nClick “Next” to pair wristband</string>
 
 </resources>
