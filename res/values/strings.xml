@@ -154,7 +154,7 @@
     <string name="about_app">App version</string>
     <string name="about_firmware">Firmware Version</string>
     <string name="about_company">Moko Technology Ltd </string>
-    <string name="about_company_english">moko technology limited</string>
+    <string name="about_company_english"></string>
     <!-- pull -->
     <string name="pull_to_refresh_pull_label">Pull down to refresh…</string>
     <string name="pull_to_refresh_release_label">Release to refresh…</string>
@@ -182,7 +182,7 @@
     <string name="history_today">Today</string>
     <string name="history_yesterday">Yesterday</string>
     <string name="syn_success">synchronize successfully</string>
-    <string name="syn_tips">Long press the indicator for 5 seconds, \nthen click \'Next\' to pair automatically.\nPlease click \'Back\'if failed.</string>
+    <string name="syn_tips">Long press the indicator for 5 seconds, \nthen click \'Next\' to pair automatically.\nPlease click \'Back\' if failed.</string>
     <string name="syn_tips_2">Long press the indicator for 5 seconds,\nthen click \'complete\' to pair automatically.\nPlease try it again if failed.</string>
     
 </resources>
