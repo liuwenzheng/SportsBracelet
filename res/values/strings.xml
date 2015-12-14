@@ -182,7 +182,7 @@
     <string name="history_today">Today</string>
     <string name="history_yesterday">Yesterday</string>
     <string name="syn_success">synchronize successfully</string>
-    <string name="syn_tips">Press the indicator for 5 seconds.\nClick “Next” to pair wristband\nPlease click “Back” if failed</string>
-    <string name="syn_tips_2">Press the indicator for 5 seconds.\nClick “Complete” to pair wristband\nPlease try it again if failed</string>
+    <string name="syn_tips">Long press the indicator for 5 seconds, \nthen click \'Next\' to pair automatically.\nPlease click \'Back\'if failed.</string>
+    <string name="syn_tips_2">Long press the indicator for 5 seconds,\nthen click \'complete\' to pair automatically.\nPlease try it again if failed.</string>
     
 </resources>
