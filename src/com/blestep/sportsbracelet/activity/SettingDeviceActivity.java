@@ -111,13 +111,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_setting_next:
-			mScanTimes = 0;
-			LogModule.d("开始扫描..." + mScanTimes);
-			mBtService.scanDevice();
-			mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
-					getString(R.string.setting_device_search), false, false);
-			mScanTimes++;
-
+			startScanDevice();
 			// if (mDevices != null && mDevices.size() == 0) {
 			// AlertDialog.Builder builder = new Builder(this);
 			// builder.setMessage(R.string.setting_device_search_repeat);
@@ -160,6 +154,16 @@ public class SettingDeviceActivity extends BaseActivity implements
 		}
 	}
 
+	private void startScanDevice() {
+		mScanTimes = 0;
+		mIsScanContinue = false;
+		LogModule.d("开始扫描..." + mScanTimes);
+		mBtService.scanDevice();
+		mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
+				getString(R.string.setting_device_search), false, false);
+		mScanTimes++;
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -169,6 +173,31 @@ public class SettingDeviceActivity extends BaseActivity implements
 		}
 		mDevices.get(position).isChecked = true;
 		mAdapter.notifyDataSetChanged();
+		// 开始配对
+		if (mDevices != null && mDevices.size() == 0) {
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage(R.string.setting_device_search_repeat);
+			builder.setPositiveButton(R.string.setting_device_search_confirm,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startScanDevice();
+							dialog.dismiss();
+						}
+					});
+			builder.show();
+			return;
+		}
+		if (mPosition == -1) {
+			ToastUtils.showToast(this, R.string.setting_device_select_tips);
+			return;
+		}
+		LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
+		// 将选中地址缓存
+		mBtService.connectBle(mDevices.get(mPosition).address);
+		mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
+				getString(R.string.setting_device), false, false);
 	}
 
 	public class DeviceAdapter extends BaseAdapter {
@@ -314,9 +343,11 @@ public class SettingDeviceActivity extends BaseActivity implements
 							BTConstants.SP_KEY_DEVICE_ADDRESS,
 							mScanDevice == null ? mDevices.get(mPosition).address
 									: mScanDevice.address);
-					SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
+					SPUtiles.setStringValue(
+							BTConstants.SP_KEY_DEVICE_NAME,
 							mScanDevice == null ? mDevices.get(mPosition).name
-									: mScanDevice.name.substring(0, mScanDevice.name.indexOf("-D")));
+									: mScanDevice.name.substring(0,
+											mScanDevice.name.indexOf("-D")));
 					startActivity(new Intent(SettingDeviceActivity.this,
 							SettingUserInfoActivity.class));
 					SettingDeviceActivity.this.finish();

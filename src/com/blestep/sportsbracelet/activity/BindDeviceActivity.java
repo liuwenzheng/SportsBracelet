@@ -3,10 +3,13 @@ package com.blestep.sportsbracelet.activity;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -116,12 +119,7 @@ public class BindDeviceActivity extends BaseActivity implements
 					getString(R.string.setting_device_search), false, false);
 			break;
 		case R.id.btn_bind_finish:
-			mScanTimes = 0;
-			LogModule.d("开始扫描..." + mScanTimes);
-			mBtService.scanDevice();
-			mDialog = ProgressDialog.show(BindDeviceActivity.this, null,
-					getString(R.string.setting_device_search), false, false);
-			mScanTimes++;
+			startScanDevice();
 			// if (mDevices != null && mDevices.size() == 0) {
 			// AlertDialog.Builder builder = new Builder(this);
 			// builder.setMessage(R.string.setting_device_search_repeat);
@@ -161,6 +159,16 @@ public class BindDeviceActivity extends BaseActivity implements
 		}
 	}
 
+	private void startScanDevice() {
+		mScanTimes = 0;
+		mIsScanContinue = false;
+		LogModule.d("开始扫描..." + mScanTimes);
+		mBtService.scanDevice();
+		mDialog = ProgressDialog.show(BindDeviceActivity.this, null,
+				getString(R.string.setting_device_search), false, false);
+		mScanTimes++;
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -170,6 +178,32 @@ public class BindDeviceActivity extends BaseActivity implements
 		}
 		mDevices.get(position).isChecked = true;
 		mAdapter.notifyDataSetChanged();
+		// 开始配对
+		if (mDevices != null && mDevices.size() == 0) {
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage(R.string.setting_device_search_repeat);
+			builder.setPositiveButton(R.string.setting_device_search_confirm,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startScanDevice();
+							dialog.dismiss();
+						}
+					});
+			builder.show();
+			return;
+		}
+		if (mPosition == -1) {
+			ToastUtils.showToast(this, R.string.setting_device_select_tips);
+			return;
+		}
+		LogModule.i("选中设备mac地址:" + mDevices.get(mPosition).address);
+		mBtService.disConnectBle();
+		// 将选中地址缓存
+		mBtService.connectBle(mDevices.get(mPosition).address);
+		mDialog = ProgressDialog.show(BindDeviceActivity.this, null,
+				getString(R.string.setting_device), false, false);
 	}
 
 	public class DeviceAdapter extends BaseAdapter {
