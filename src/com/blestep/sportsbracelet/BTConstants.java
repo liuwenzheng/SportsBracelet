@@ -60,6 +60,7 @@ public class BTConstants {
 	public static final String SP_KEY_COMING_PHONE_NODISTURB_ALERT = "sp_key_coming_phone_nodisturb_alert";
 	public static final String SP_KEY_COMING_PHONE_NODISTURB_START_TIME = "sp_key_coming_phone_nodisturb_start_time";
 	public static final String SP_KEY_COMING_PHONE_NODISTURB_END_TIME = "sp_key_coming_phone_nodisturb_end_time";
+	public static final String SP_KEY_TOUCHBUTTON = "sp_key_touchbutton";
 	// Extra_key
 	/**
 	 * intent传值key
@@ -94,4 +95,6 @@ public class BTConstants {
 	public static final byte HEADER_SYNSLEEP = 0x14;
 	// 获取数据
 	public static final byte HEADER_GETDATA = 0x16;
+	// 初始化触摸按键
+	public static final byte HEADER_SYNTOUCHBUTTON = 0x1B;
 }

@@ -110,7 +110,17 @@ public class BTModule {
 		byteArray[5] = (byte) minute;
 		byteArray[6] = (byte) second;
 		writeCharacteristicData(mBluetoothGatt, byteArray);
+	}
 
+	/**
+	 * 初始化触摸按键
+	 * 
+	 * @param mBluetoothGatt
+	 */
+	public static void setTouchButton(BluetoothGatt mBluetoothGatt) {
+		byte[] byteArray = new byte[1];
+		byteArray[0] = BTConstants.HEADER_SYNTOUCHBUTTON;
+		writeCharacteristicData(mBluetoothGatt, byteArray);
 	}
 
 	/**

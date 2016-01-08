@@ -1,6 +1,8 @@
 package com.blestep.sportsbracelet.activity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -19,6 +21,7 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ScrollView;
@@ -225,6 +228,22 @@ public class MainActivity extends SlidingFragmentActivity implements
 					// if (mDialog != null) {
 					// mDialog.dismiss();
 					// }
+					// 每天初始化一次触摸按钮
+					Calendar calendar = Calendar.getInstance();
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							BTConstants.PATTERN_YYYY_MM_DD);
+					String dateStr = sdf.format(calendar.getTime());
+					if (!TextUtils.isEmpty(SPUtiles.getStringValue(
+							BTConstants.SP_KEY_TOUCHBUTTON, ""))
+							&& SPUtiles.getStringValue(
+									BTConstants.SP_KEY_TOUCHBUTTON, "").equals(
+									dateStr)) {
+						return;
+					} else {
+						mBtService.synTouchButton();
+						SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
+								dateStr);
+					}
 				}
 				if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
 					String strLog = intent.getStringExtra("log");

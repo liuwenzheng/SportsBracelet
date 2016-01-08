@@ -300,6 +300,13 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	/**
+	 * 初始化触摸按键
+	 */
+	public void synTouchButton() {
+		BTModule.setTouchButton(mBluetoothGatt);
+	}
+
+	/**
 	 * 同步用户数据
 	 */
 	public void synUserInfoData() {
