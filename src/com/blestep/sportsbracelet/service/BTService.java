@@ -39,6 +39,7 @@ public class BTService extends Service implements LeScanCallback {
 	// private ArrayList<BleDevice> mDevices;
 	public BluetoothGatt mBluetoothGatt;
 	private BluetoothGattCallback mGattCallback;
+	private boolean isReconnect = false;
 
 	@Override
 	public void onCreate() {
@@ -141,6 +142,10 @@ public class BTService extends Service implements LeScanCallback {
 						Intent intent = new Intent(
 								BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
 						sendBroadcast(intent);
+						if (!isReconnect) {
+							LogModule.d("开始重连...");
+							new Thread(runnableReconnect).start();
+						}
 						break;
 					}
 				};
@@ -548,4 +553,42 @@ public class BTService extends Service implements LeScanCallback {
 			return BTService.this;
 		}
 	}
+
+	public void connectGatt() {
+		BluetoothDevice device = BTModule.mBluetoothAdapter
+				.getRemoteDevice(SPUtiles.getStringValue(
+						BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+		if (device != null) {
+			if (mBluetoothGatt != null) {
+				mBluetoothGatt.close();
+				mBluetoothGatt.disconnect();
+				mBluetoothGatt = null;
+			}
+			mBluetoothGatt = device.connectGatt(BTService.this, false,
+					mGattCallback);
+		} else {
+			LogModule
+					.d("the bluetoothDevice is null, please reset the bluetoothDevice");
+		}
+	}
+
+	Runnable runnableReconnect = new Runnable() {
+
+		@Override
+		public void run() {
+			isReconnect = true;
+			if (!isConnDevice()) {
+				LogModule.d("重连中...");
+				mHandler.postDelayed(this, 10 * 1000);
+				if (BTModule.isBluetoothOpen()) {
+					connectGatt();
+				} else {
+					LogModule.d("蓝牙未开启...");
+				}
+			} else {
+				isReconnect = false;
+				LogModule.d("设备已连接...");
+			}
+		}
+	};
 }
