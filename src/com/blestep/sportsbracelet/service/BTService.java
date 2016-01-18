@@ -275,6 +275,7 @@ public class BTService extends Service implements LeScanCallback {
 	public void disConnectBle() {
 		if (mBluetoothGatt != null) {
 			mBluetoothGatt.close();
+			BTModule.mNotifyCharacteristic = null;
 			mBluetoothGatt = null;
 		}
 	}
@@ -382,11 +383,14 @@ public class BTService extends Service implements LeScanCallback {
 	public boolean isConnDevice() {
 		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext()
 				.getSystemService(Context.BLUETOOTH_SERVICE);
-		int connState = bluetoothManager
-				.getConnectionState(BTModule.mBluetoothAdapter
-						.getRemoteDevice(SPUtiles.getStringValue(
-								BTConstants.SP_KEY_DEVICE_ADDRESS, null)),
-						BluetoothProfile.GATT);
+		String address = SPUtiles.getStringValue(
+				BTConstants.SP_KEY_DEVICE_ADDRESS, null);
+		if (address == null) {
+			return false;
+		}
+		int connState = bluetoothManager.getConnectionState(
+				BTModule.mBluetoothAdapter.getRemoteDevice(address),
+				BluetoothProfile.GATT);
 		if (connState == BluetoothProfile.STATE_CONNECTED) {
 			return true;
 		} else {

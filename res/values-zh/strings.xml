@@ -46,6 +46,7 @@
     <string name="setting_target_amount_to">相当于</string>
     <string name="setting_target_minutes">%1$s分钟</string>
     <string name="setting_target_finish">完成</string>
+    <string name="setting_target_min">请设置目标值</string>
 
     <!-- main -->
     <string name="main_tab_step">计步</string>

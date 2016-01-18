@@ -14,6 +14,7 @@ import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.view.CircularSeekBar;
 import com.blestep.sportsbracelet.view.CircularSeekBar.OnSeekChangeListener;
 
@@ -114,6 +115,11 @@ public class SettingTargetActivity extends BaseActivity implements
 		case R.id.btn_target_finish:
 			// ToastUtils.showToast(this, "设置目标为：" +
 			// tv_step.getText().toString());
+			if (Integer.valueOf(tv_step.getText().toString()) < 200) {
+				ToastUtils.showToast(this, getString(R.string.setting_target_min));
+				return;
+			}
+
 			SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM,
 					Integer.valueOf(tv_step.getText().toString()));
 			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_X,
