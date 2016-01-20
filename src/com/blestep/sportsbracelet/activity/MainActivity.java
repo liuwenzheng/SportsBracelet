@@ -76,7 +76,27 @@ public class MainActivity extends SlidingFragmentActivity implements
 		setContentView(R.layout.activity_main);
 		initView();
 		initListener();
-		initData();
+		// 注册广播接收器
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
+		filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
+		filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
+		filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA);
+		filter.addAction(BTConstants.ACTION_ACK);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
+		// filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
+		// filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
+		// filter.addAction(BTConstants.ACTION_LOG);
+		registerReceiver(mReceiver, filter);
+
+	}
+
+	@Override
+	protected void onStart() {
+		bindService(new Intent(this, BTService.class), mServiceConnection,
+				BIND_AUTO_CREATE);
+		super.onStart();
 	}
 
 	private void initView() {
@@ -118,40 +138,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 				});
 	}
 
-	private void initData() {
-	}
-
-	@Override
-	protected void onStart() {
-		// 注册广播接收器
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
-		filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
-		filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
-		filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
-		filter.addAction(BTConstants.ACTION_REFRESH_DATA);
-		filter.addAction(BTConstants.ACTION_ACK);
-		filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
-		// filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
-		// filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
-		// filter.addAction(BTConstants.ACTION_LOG);
-		registerReceiver(mReceiver, filter);
-		bindService(new Intent(this, BTService.class), mServiceConnection,
-				BIND_AUTO_CREATE);
-		super.onStart();
-	}
-
 	@Override
 	protected void onStop() {
+		// stopService(new Intent(this, BTService.class));
 		unbindService(mServiceConnection);
-		// 注销广播接收器
-		unregisterReceiver(mReceiver);
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy() {
-		// stopService(new Intent(this, BTService.class));
+
+		// 注销广播接收器
+		unregisterReceiver(mReceiver);
 		super.onDestroy();
 	}
 
@@ -304,6 +302,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 				if (mBtService.isConnDevice()) {
 					autoPullUpdate(getString(R.string.step_syncdata_waiting));
 					synData();
+					tv_main_conn_tips.setVisibility(View.GONE);
 					// tv_main_tips.setText(R.string.step_syncdata_waiting);
 					// tv_main_tips.setVisibility(View.VISIBLE);
 					// mDialog = ProgressDialog.show(MainActivity.this, null,

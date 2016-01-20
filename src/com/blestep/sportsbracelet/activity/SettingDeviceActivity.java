@@ -58,10 +58,6 @@ public class SettingDeviceActivity extends BaseActivity implements
 		initView();
 		initListener();
 		initData();
-	}
-
-	@Override
-	protected void onResume() {
 		// 注册广播接收器
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BTConstants.ACTION_BLE_DEVICES_DATA);
@@ -71,18 +67,12 @@ public class SettingDeviceActivity extends BaseActivity implements
 		filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
 		filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
 		registerReceiver(mReceiver, filter);
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		// 注销广播接收器
-		unregisterReceiver(mReceiver);
-		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
+		// 注销广播接收器
+		unregisterReceiver(mReceiver);
 		unbindService(mServiceConnection);
 		super.onDestroy();
 	}
@@ -330,6 +320,9 @@ public class SettingDeviceActivity extends BaseActivity implements
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
+					startActivity(new Intent(SettingDeviceActivity.this,
+							SettingBraceletActivity.class));
+					SettingDeviceActivity.this.finish();
 				}
 				if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
 						.getAction())) {

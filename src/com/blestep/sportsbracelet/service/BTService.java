@@ -559,6 +559,11 @@ public class BTService extends Service implements LeScanCallback {
 	}
 
 	public void connectGatt() {
+		String address = SPUtiles.getStringValue(
+				BTConstants.SP_KEY_DEVICE_ADDRESS, null);
+		if (address == null) {
+			return;
+		}
 		BluetoothDevice device = BTModule.mBluetoothAdapter
 				.getRemoteDevice(SPUtiles.getStringValue(
 						BTConstants.SP_KEY_DEVICE_ADDRESS, null));
