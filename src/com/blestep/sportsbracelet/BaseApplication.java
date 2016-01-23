@@ -1,9 +1,14 @@
 package com.blestep.sportsbracelet;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import android.app.Application;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.module.BTModule;
@@ -24,5 +29,21 @@ public class BaseApplication extends Application {
 		BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext()
 				.getSystemService(Context.BLUETOOTH_SERVICE);
 		BTModule.mBluetoothAdapter = bluetoothManager.getAdapter();
+		Thread.setDefaultUncaughtExceptionHandler(new BTUncaughtExceptionHandler());
+	}
+
+	public class BTUncaughtExceptionHandler implements
+			Thread.UncaughtExceptionHandler {
+		private static final String LOGTAG = "BTUncaughtExceptionHandler";
+
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex) {
+			// 读取stacktrace信息
+			final Writer result = new StringWriter();
+			final PrintWriter printWriter = new PrintWriter(result);
+			ex.printStackTrace(printWriter);
+			String errorReport = result.toString();
+			Log.i(LOGTAG, "uncaughtException errorReport=" + errorReport);
+		}
 	}
 }
