@@ -13,6 +13,7 @@ import android.util.Log;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.service.BTService;
+import com.blestep.sportsbracelet.utils.IOUtils;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 
 public class BaseApplication extends Application {
@@ -43,7 +44,9 @@ public class BaseApplication extends Application {
 			final PrintWriter printWriter = new PrintWriter(result);
 			ex.printStackTrace(printWriter);
 			String errorReport = result.toString();
+			IOUtils.setCrashLog(errorReport);
 			Log.i(LOGTAG, "uncaughtException errorReport=" + errorReport);
+			android.os.Process.killProcess(android.os.Process.myPid());
 		}
 	}
 }
