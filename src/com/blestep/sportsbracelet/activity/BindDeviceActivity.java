@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -269,16 +270,7 @@ public class BindDeviceActivity extends BaseActivity implements
 					}
 
 					mDevices.add(bleDevice);
-					BleDevice[] bleDevices = new BleDevice[mDevices.size()];
-					for (int j = 0; j < mDevices.size(); j++) {
-						bleDevices[j] = mDevices.get(j);
-					}
-					Arrays.sort(bleDevices);
-					mDevices.clear();
-					for (int i = 0; i < bleDevices.length; i++) {
-						System.out.println("..." + bleDevices[i].rssi);
-						mDevices.add(bleDevices[i]);
-					}
+					Collections.sort(mDevices);
 					if (!mIsScanContinue) {
 						mAdapter.notifyDataSetChanged();
 					}
@@ -292,9 +284,10 @@ public class BindDeviceActivity extends BaseActivity implements
 							mDialog.dismiss();
 						}
 						mBtService.connectBle(bleDevice.address);
-						mDialog = ProgressDialog.show(BindDeviceActivity.this,
-								null, getString(R.string.setting_device),
-								false, false);
+						mDialog = ProgressDialog.show(
+								BindDeviceActivity.this, null,
+								getString(R.string.setting_device), false,
+								false);
 					}
 				}
 				if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent
@@ -311,6 +304,7 @@ public class BindDeviceActivity extends BaseActivity implements
 						if (mDialog != null) {
 							mDialog.dismiss();
 						}
+						mAdapter.notifyDataSetChanged();
 					}
 				}
 				if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent
