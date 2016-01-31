@@ -46,7 +46,8 @@
     <string name="setting_target_amount_to">Equivalent</string>
     <string name="setting_target_minutes">%1$sMins</string>
     <string name="setting_target_finish">Complete</string>
-
+    <string name="setting_target_min">please set the goal</string>
+    
     <!-- main -->
     <string name="main_tab_step">Pedometer</string>
     <string name="main_tab_sleep">Sleeping</string>
@@ -184,5 +185,5 @@
     <string name="syn_success">synchronize successfully</string>
     <string name="syn_tips">Long press the indicator for 5 seconds, \nthen click \'Next\' to pair automatically.\nPlease click \'Back\' if failed.</string>
     <string name="syn_tips_2">Long press the indicator for 5 seconds,\nthen click \'complete\' to pair automatically.\nPlease try it again if failed.</string>
-    
+
 </resources>

@@ -46,7 +46,8 @@
     <string name="setting_target_amount_to">Equivalent</string>
     <string name="setting_target_minutes">%1$sMins</string>
     <string name="setting_target_finish">Complete</string>
-
+    <string name="setting_target_min">please set the goal</string>
+    
     <!-- main -->
     <string name="main_tab_step">Pedometer</string>
     <string name="main_tab_sleep">Sleeping</string>

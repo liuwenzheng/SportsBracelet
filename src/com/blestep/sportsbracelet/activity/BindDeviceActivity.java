@@ -299,6 +299,7 @@ public class BindDeviceActivity extends BaseActivity implements
 							LogModule.d("开始扫描..." + mScanTimes);
 							mDevices.clear();
 							mBtService.scanDevice();
+							mAdapter.notifyDataSetChanged();
 							return;
 						}
 						if (mDialog != null) {

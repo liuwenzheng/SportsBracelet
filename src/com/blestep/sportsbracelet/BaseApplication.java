@@ -8,6 +8,9 @@ import android.app.Application;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 import com.blestep.sportsbracelet.db.DBTools;
@@ -43,8 +46,23 @@ public class BaseApplication extends Application {
 			final Writer result = new StringWriter();
 			final PrintWriter printWriter = new PrintWriter(result);
 			ex.printStackTrace(printWriter);
-			String errorReport = result.toString();
-			IOUtils.setCrashLog(errorReport);
+			StringBuffer errorReport = new StringBuffer();
+			// 获取packagemanager的实例
+			PackageManager packageManager = getPackageManager();
+			// getPackageName()是你当前类的包名，0代表是获取版本信息
+			PackageInfo packInfo = null;
+			try {
+				packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+			} catch (NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			if (packInfo != null) {
+				String version = packInfo.versionName;
+				errorReport.append(version);
+				errorReport.append("\r\n");
+			}
+			errorReport.append(result.toString());
+			IOUtils.setCrashLog(errorReport.toString());
 			Log.i(LOGTAG, "uncaughtException errorReport=" + errorReport);
 			android.os.Process.killProcess(android.os.Process.myPid());
 		}

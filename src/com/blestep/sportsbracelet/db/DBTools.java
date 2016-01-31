@@ -63,6 +63,9 @@ public class DBTools {
 					.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
 			step.distance = cursor.getString(cursor
 					.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
+			if (step.distance.indexOf(",") > 0) {
+				step.distance.replace(",", ".");
+			}
 			step.calories = cursor.getString(cursor
 					.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
 			steps.add(step);
