@@ -18,11 +18,13 @@ import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.IOUtils;
 import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		MobclickAgent.setCatchUncaughtExceptions(true);
 		// 初始化数据库
 		DBTools.getInstance(getApplicationContext());
 		// 初始化SharedPreference
@@ -64,6 +66,9 @@ public class BaseApplication extends Application {
 			errorReport.append(result.toString());
 			IOUtils.setCrashLog(errorReport.toString());
 			Log.i(LOGTAG, "uncaughtException errorReport=" + errorReport);
+			// 友盟上传报错信息
+			MobclickAgent.reportError(getApplicationContext(), ex);
+			MobclickAgent.onKillProcess(getApplicationContext());
 			android.os.Process.killProcess(android.os.Process.myPid());
 		}
 	}

@@ -25,6 +25,7 @@ import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.utils.ToastUtils;
+import com.umeng.analytics.MobclickAgent;
 
 public class AlarmEditActivity extends BaseActivity implements OnClickListener,
 		OnItemClickListener {
@@ -46,9 +47,14 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener,
 	protected void onResume() {
 		mAlarms = DBTools.getInstance(this).selectAllAlarm();
 		mAdapter.notifyDataSetChanged();
-		super.onResume();
+		MobclickAgent.onResume(this);
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 	private void initView() {
 		lv_alarm_edit = (ListView) findViewById(R.id.lv_alarm_edit);
 	}

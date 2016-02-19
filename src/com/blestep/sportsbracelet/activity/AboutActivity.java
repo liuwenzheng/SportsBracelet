@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
+import com.umeng.analytics.MobclickAgent;
 
 public class AboutActivity extends BaseActivity implements OnClickListener {
 	private TextView tv_app_version, tv_about_firmware;
@@ -60,4 +61,15 @@ public class AboutActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

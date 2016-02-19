@@ -19,6 +19,7 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.umeng.analytics.MobclickAgent;
 
 public class SplashActivity extends BaseActivity implements
 		OnPageChangeListener, OnClickListener {
@@ -34,6 +35,7 @@ public class SplashActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		MobclickAgent.setDebugMode(true);
 		if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, true)) {
 			setContentView(R.layout.splash_pass);
 			new Thread() {
@@ -161,4 +163,15 @@ public class SplashActivity extends BaseActivity implements
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

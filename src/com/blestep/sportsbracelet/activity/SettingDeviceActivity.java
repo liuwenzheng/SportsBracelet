@@ -38,6 +38,7 @@ import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 public class SettingDeviceActivity extends BaseActivity implements
 		OnClickListener, OnItemClickListener {
@@ -378,5 +379,15 @@ public class SettingDeviceActivity extends BaseActivity implements
 		startActivity(new Intent(this, SettingBraceletActivity.class));
 		this.finish();
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.module.BTModule;
+import com.umeng.analytics.MobclickAgent;
 
 public class SettingBluetoothActivity extends BaseActivity implements
 		OnClickListener {
@@ -51,5 +52,15 @@ public class SettingBluetoothActivity extends BaseActivity implements
 			break;
 		}
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

@@ -43,6 +43,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends SlidingFragmentActivity implements
 		OnClickListener {
@@ -505,5 +506,16 @@ public class MainActivity extends SlidingFragmentActivity implements
 					}
 				});
 		builder.show();
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 }

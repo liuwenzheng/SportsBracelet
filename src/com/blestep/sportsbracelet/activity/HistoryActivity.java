@@ -22,6 +22,7 @@ import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.fragment.HistoryTab01;
 import com.blestep.sportsbracelet.fragment.HistoryTab02;
 import com.blestep.sportsbracelet.fragment.HistoryTab03;
+import com.umeng.analytics.MobclickAgent;
 
 public class HistoryActivity extends FragmentActivity implements
 		OnClickListener, OnPageChangeListener, OnCheckedChangeListener {
@@ -145,5 +146,15 @@ public class HistoryActivity extends FragmentActivity implements
 		((RadioButton) rg_history_tab.getChildAt(position * 2))
 				.setChecked(true);
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

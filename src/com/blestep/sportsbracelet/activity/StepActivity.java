@@ -32,6 +32,7 @@ import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
+import com.umeng.analytics.MobclickAgent;
 
 public class StepActivity extends BaseActivity implements OnItemClickListener,
 		ICircleProgressValue {
@@ -128,6 +129,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,
 		filter.addAction(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
 		registerReceiver(mReceiver, filter);
 		super.onResume();
+		MobclickAgent.onResume(this);
 	}
 
 	@Override
@@ -135,6 +137,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,
 		// 注销广播接收器
 		unregisterReceiver(mReceiver);
 		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 
 	@Override

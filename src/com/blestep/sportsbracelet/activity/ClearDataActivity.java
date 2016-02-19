@@ -20,6 +20,7 @@ import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.ToastUtils;
+import com.umeng.analytics.MobclickAgent;
 
 public class ClearDataActivity extends BaseActivity implements OnClickListener {
 
@@ -116,5 +117,15 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 				});
 		builder.show();
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

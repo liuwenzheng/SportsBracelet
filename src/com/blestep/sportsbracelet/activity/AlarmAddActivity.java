@@ -19,6 +19,7 @@ import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 public class AlarmAddActivity extends BaseActivity implements OnClickListener {
 
@@ -121,5 +122,15 @@ public class AlarmAddActivity extends BaseActivity implements OnClickListener {
 		}
 
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }

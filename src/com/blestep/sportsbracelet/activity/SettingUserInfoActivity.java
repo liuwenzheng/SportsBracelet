@@ -26,6 +26,7 @@ import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 public class SettingUserInfoActivity extends BaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
@@ -183,5 +184,15 @@ public class SettingUserInfoActivity extends BaseActivity implements
 			break;
 		}
 	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
 }
