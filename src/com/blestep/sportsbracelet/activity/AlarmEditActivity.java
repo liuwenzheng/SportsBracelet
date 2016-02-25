@@ -47,6 +47,7 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener,
 	protected void onResume() {
 		mAlarms = DBTools.getInstance(this).selectAllAlarm();
 		mAdapter.notifyDataSetChanged();
+		super.onResume();
 		MobclickAgent.onResume(this);
 	}
 
