@@ -181,6 +181,10 @@
     <string name="history_distance_sum">总里程</string>
     <string name="history_distance_unit">公里</string>
     <string name="history_today">今天</string>
+    <string name="history_this_week">本周</string>
+    <string name="history_week_number">第%1$s周</string>
+    <string name="history_this_month">本月</string>
+    <string name="history_month_number">%1$s月</string>
     <string name="history_yesterday">昨天</string>
     <string name="syn_success">同步成功</string>
     <string name="syn_tips">长按手环触点5秒，点击“下一步”，进行自动连接，如不成功请点击“上一步”，重复此操作</string>

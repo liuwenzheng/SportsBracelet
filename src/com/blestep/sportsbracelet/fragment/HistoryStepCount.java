@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.activity.HistoryActivity;
 import com.blestep.sportsbracelet.entity.Step;
+import com.blestep.sportsbracelet.event.HistoryChangeUnitClick;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.DataRetriever;
 import com.blestep.sportsbracelet.utils.SPUtiles;
@@ -31,7 +33,11 @@ import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
 
-public class HistoryTab01 extends Fragment implements OnEntryClickListener {
+import de.greenrobot.event.EventBus;
+
+public class HistoryStepCount extends Fragment implements OnEntryClickListener,
+		OnClickListener {
+	private static final String TAG = HistoryStepCount.class.getSimpleName();
 	private String mLabels[];
 	private String mValues[];
 	private int BAR_STEP_MAX = 100;
@@ -56,35 +62,71 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		LogModule.i("onActivityCreated");
-		mActivity = (HistoryActivity) getActivity();
+		LogModule.i(TAG + "onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
 	public void onResume() {
-		LogModule.i("onResume");
+		LogModule.i(TAG + "onResume");
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
-		LogModule.i("onPause");
+		LogModule.i(TAG + "onPause");
 		super.onPause();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.history_tab_01, container, false);
+		LogModule.i(TAG + "onCreateView");
+		EventBus.getDefault().register(this);
+		mActivity = (HistoryActivity) getActivity();
+		LogModule.i(TAG + "onCreateView-->" + mActivity.selectHistoryUnit);
+		mView = inflater.inflate(R.layout.history_step_count, container, false);
 		initView();
-		initData();
+		switch (mActivity.selectHistoryUnit) {
+		case HistoryActivity.DATA_UNIT_DAY:
+			initData(7, mActivity.selectHistoryUnit);
+			break;
+		case HistoryActivity.DATA_UNIT_WEEK:
+			initData(7, mActivity.selectHistoryUnit);
+			break;
+		case HistoryActivity.DATA_UNIT_MONTH:
+			initData(12, mActivity.selectHistoryUnit);
+			break;
+		}
+
 		return mView;
 	}
 
-	private void initData() {
-		mLabels = new String[7];
-		mValues = new String[7];
+	@Override
+	public void onDestroyView() {
+		LogModule.i(TAG + "onDestroyView");
+		EventBus.getDefault().unregister(this);
+		super.onDestroyView();
+	}
+
+	public void onEvent(HistoryChangeUnitClick event) {
+		LogModule.i(TAG + "onEvent-->" + event.selectHistoryUnit);
+		switch (event.selectHistoryUnit) {
+		case HistoryActivity.DATA_UNIT_DAY:
+			initData(7, event.selectHistoryUnit);
+			break;
+		case HistoryActivity.DATA_UNIT_WEEK:
+			initData(7, event.selectHistoryUnit);
+			break;
+		case HistoryActivity.DATA_UNIT_MONTH:
+			initData(7, event.selectHistoryUnit);
+			break;
+		}
+	}
+
+	private void initData(int labelsCount, int unit) {
+		mLabels = new String[labelsCount];
+		mValues = new String[labelsCount];
 		mSteps = (ArrayList<Step>) getArguments().getSerializable(
 				BTConstants.EXTRA_KEY_HISTORY);
 		BAR_STEP_AIM = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
@@ -99,18 +141,48 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 		}
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
 		mCalendar = Calendar.getInstance();
-
-		for (int i = mLabels.length - 1; i >= 0; i--) {
-			if (i == mLabels.length - 1) {
-				mLabels[i] = getString(R.string.history_today);
-				continue;
+		// 日
+		if (unit == HistoryActivity.DATA_UNIT_DAY) {
+			for (int i = mLabels.length - 1; i >= 0; i--) {
+				if (i == mLabels.length - 1) {
+					mLabels[i] = getString(R.string.history_today);
+					continue;
+				}
+				mCalendar.add(Calendar.DAY_OF_MONTH, -1);
+				// if (i == mLabels.length - 2) {
+				// mLabels[i] = getString(R.string.history_yesterday);
+				// continue;
+				// }
+				mLabels[i] = mSdf.format(mCalendar.getTime());
 			}
-			mCalendar.add(Calendar.DAY_OF_MONTH, -1);
-			// if (i == mLabels.length - 2) {
-			// mLabels[i] = getString(R.string.history_yesterday);
-			// continue;
-			// }
-			mLabels[i] = mSdf.format(mCalendar.getTime());
+		}
+		// 周
+		if (unit == HistoryActivity.DATA_UNIT_WEEK) {
+			Calendar monday = Calendar.getInstance();
+			monday.setFirstDayOfWeek(Calendar.MONDAY);
+			monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+			for (int i = mLabels.length - 1; i >= 0; i--) {
+				if (i == mLabels.length - 1) {
+					mLabels[i] = getString(R.string.history_this_week);
+					continue;
+				}
+				monday.add(Calendar.WEEK_OF_MONTH, -1);
+				mLabels[i] = getString(R.string.history_week_number,
+						monday.get(Calendar.WEEK_OF_YEAR));
+			}
+		}
+		// 月
+		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
+			for (int i = mLabels.length - 1; i >= 0; i--) {
+				if (i == mLabels.length - 1) {
+					mLabels[i] = getString(R.string.history_this_month);
+					continue;
+				}
+				mCalendar.add(Calendar.MONTH, -1);
+				mLabels[i] = getString(R.string.history_month_number,
+						mCalendar.get(Calendar.MONTH) + 1);
+			}
 		}
 		updateBarChart(mLabels.length);
 		int stepSum = 0;
@@ -133,6 +205,10 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 		tv_history_step_sum = (TextView) mView
 				.findViewById(R.id.tv_history_step_sum);
 		bcv_step.setOnEntryClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_day).setOnClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_week).setOnClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_month)
+				.setOnClickListener(this);
 	}
 
 	@Override
@@ -155,20 +231,20 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 			start = index - nPoints;
 		}
 		// TODO
-		for (int j = 0; j < nPoints; j++) {
+		for (int i = 0; i < nPoints; i++) {
 			Bar bar;
-			if (index < nPoints && j < start) {
-				bar = new Bar(mLabels[j], 0f);
-				mValues[j] = 0 + "";
+			if (index < nPoints && i < start) {
+				bar = new Bar(mLabels[i], 0f);
+				mValues[i] = 0 + "";
 			} else {
 				if (index < nPoints) {
-					bar = new Bar(mLabels[j], Integer.valueOf(mSteps.get(j
+					bar = new Bar(mLabels[i], Integer.valueOf(mSteps.get(i
 							- start).count));
-					mValues[j] = mSteps.get(j - start).count;
+					mValues[i] = mSteps.get(i - start).count;
 				} else {
-					bar = new Bar(mLabels[j], Integer.valueOf(mSteps.get(j
+					bar = new Bar(mLabels[i], Integer.valueOf(mSteps.get(i
 							+ start).count));
-					mValues[j] = mSteps.get(j + start).count;
+					mValues[i] = mSteps.get(i + start).count;
 				}
 			}
 			data.addBar(bar);
@@ -236,4 +312,25 @@ public class HistoryTab01 extends Fragment implements OnEntryClickListener {
 		}
 
 	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_history_unit_day:
+			EventBus.getDefault().postSticky(
+					new HistoryChangeUnitClick(HistoryActivity.DATA_UNIT_DAY));
+			break;
+		case R.id.btn_history_unit_week:
+			EventBus.getDefault().postSticky(
+					new HistoryChangeUnitClick(HistoryActivity.DATA_UNIT_WEEK));
+			break;
+		case R.id.btn_history_unit_month:
+			EventBus.getDefault()
+					.postSticky(
+							new HistoryChangeUnitClick(
+									HistoryActivity.DATA_UNIT_MONTH));
+			break;
+		}
+	}
+
 }

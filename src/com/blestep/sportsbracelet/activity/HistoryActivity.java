@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -19,19 +20,27 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
-import com.blestep.sportsbracelet.fragment.HistoryTab01;
-import com.blestep.sportsbracelet.fragment.HistoryTab02;
-import com.blestep.sportsbracelet.fragment.HistoryTab03;
+import com.blestep.sportsbracelet.event.HistoryChangeUnitClick;
+import com.blestep.sportsbracelet.fragment.HistoryStepCalorie;
+import com.blestep.sportsbracelet.fragment.HistoryStepCount;
+import com.blestep.sportsbracelet.fragment.HistoryStepDistance;
 import com.umeng.analytics.MobclickAgent;
+
+import de.greenrobot.event.EventBus;
 
 public class HistoryActivity extends FragmentActivity implements
 		OnClickListener, OnPageChangeListener, OnCheckedChangeListener {
+	public static final int DATA_UNIT_DAY = 0;
+	public static final int DATA_UNIT_WEEK = 1;
+	public static final int DATA_UNIT_MONTH = 2;
+	public int selectHistoryUnit = 0;
+
 	private ViewPager vp_history;
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
-	private HistoryTab01 tab01;
-	private HistoryTab02 tab02;
-	private HistoryTab03 tab03;
+	private HistoryStepCount tab01;
+	private HistoryStepCalorie tab02;
+	private HistoryStepDistance tab03;
 
 	private RadioGroup rg_history_tab;
 
@@ -41,6 +50,7 @@ public class HistoryActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.history_page);
+		EventBus.getDefault().register(this);
 		initView();
 		initListener();
 		initData();
@@ -65,9 +75,9 @@ public class HistoryActivity extends FragmentActivity implements
 		mSteps = DBTools.getInstance(this).selectAllStep();
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(BTConstants.EXTRA_KEY_HISTORY, mSteps);
-		tab01 = new HistoryTab01();
-		tab02 = new HistoryTab02();
-		tab03 = new HistoryTab03();
+		tab01 = new HistoryStepCount();
+		tab02 = new HistoryStepCalorie();
+		tab03 = new HistoryStepDistance();
 
 		tab01.setArguments(bundle);
 		tab02.setArguments(bundle);
@@ -88,6 +98,12 @@ public class HistoryActivity extends FragmentActivity implements
 			@Override
 			public Fragment getItem(int arg0) {
 				return mFragments.get(arg0);
+			}
+
+			@Override
+			public Object instantiateItem(ViewGroup container, int position) {
+
+				return super.instantiateItem(container, position);
 			}
 		};
 		vp_history.setAdapter(mAdapter);
@@ -146,6 +162,7 @@ public class HistoryActivity extends FragmentActivity implements
 		((RadioButton) rg_history_tab.getChildAt(position * 2))
 				.setChecked(true);
 	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -156,5 +173,15 @@ public class HistoryActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
+	}
+
+	public void onEvent(HistoryChangeUnitClick event) {
+		this.selectHistoryUnit = event.selectHistoryUnit;
 	}
 }
