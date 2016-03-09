@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -230,5 +231,37 @@ public class Utils {
 	 * */
 	private static boolean isLeapYear(int year) {
 		return (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0));
+	}
+
+	/**
+	 * 字符串时间转换成calendar
+	 * 
+	 * @param strDate
+	 * @param pattern
+	 * @return
+	 */
+	public static Calendar strDate2Calendar(String strDate, String pattern) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		try {
+			Date date = sdf.parse(strDate);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return calendar;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * calendar转换成字符串时间
+	 * 
+	 * @param calendar
+	 * @param pattern
+	 * @return
+	 */
+	public static String calendar2strDate(Calendar calendar, String pattern) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.format(calendar.getTime());
 	}
 }

@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
@@ -44,7 +45,8 @@ public class HistoryActivity extends FragmentActivity implements
 
 	private RadioGroup rg_history_tab;
 
-	private ArrayList<Step> mSteps;
+	public ArrayList<Step> mSteps;
+	public HashMap<String, Step> mStepsMap;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,13 @@ public class HistoryActivity extends FragmentActivity implements
 
 	private void initViewPager() {
 		mSteps = DBTools.getInstance(this).selectAllStep();
+		if (mSteps.size() == 0) {
+			finish();
+		}
+		mStepsMap = new HashMap<String, Step>();
+		for (Step step : mSteps) {
+			mStepsMap.put(step.date, step);
+		}
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(BTConstants.EXTRA_KEY_HISTORY, mSteps);
 		tab01 = new HistoryStepCount();

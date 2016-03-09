@@ -98,7 +98,6 @@ public class SettingUserInfoActivity extends BaseActivity implements
 			mDialog.show();
 			break;
 		case R.id.btn_setting_next:
-			// TODO 判断，存储，跳转
 			if (Utils.isEmpty(et_setting_userinfo_name.getText().toString())) {
 				ToastUtils.showToast(this,
 						R.string.setting_userinfo_name_not_null);

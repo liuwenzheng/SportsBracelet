@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,10 +41,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private static final String TAG = HistoryStepCount.class.getSimpleName();
 	private String mLabels[];
 	private String mValues[];
-	private int BAR_STEP_MAX = 100;
-	private int BAR_STEP_AIM = 100;
-	private ArrayList<Step> mSteps;
-	private ArrayList<Step> mStepsSort;
+	// private int BAR_STEP_MAX = 100;
+	// private int BAR_STEP_AIM = 100;
 	private SimpleDateFormat mSdf;
 	private Calendar mCalendar;
 	private TextView tv_history_step_daily, tv_history_step_sum;
@@ -127,24 +126,12 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private void initData(int labelsCount, int unit) {
 		mLabels = new String[labelsCount];
 		mValues = new String[labelsCount];
-		mSteps = (ArrayList<Step>) getArguments().getSerializable(
-				BTConstants.EXTRA_KEY_HISTORY);
-		BAR_STEP_AIM = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
-		// 找到最大的，与目标值对比
-		mStepsSort = new ArrayList<Step>();
-		mStepsSort.addAll(mSteps);
-		Collections.sort(mStepsSort, new StepCompare());
-		if (Integer.valueOf(mStepsSort.get(0).count) >= BAR_STEP_AIM) {
-			BAR_STEP_MAX = Integer.valueOf(mStepsSort.get(0).count);
-		} else {
-			BAR_STEP_MAX = BAR_STEP_AIM;
-		}
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
 		mCalendar = Calendar.getInstance();
 		// 日
 		if (unit == HistoryActivity.DATA_UNIT_DAY) {
-			for (int i = mLabels.length - 1; i >= 0; i--) {
-				if (i == mLabels.length - 1) {
+			for (int i = labelsCount - 1; i >= 0; i--) {
+				if (i == labelsCount - 1) {
 					mLabels[i] = getString(R.string.history_today);
 					continue;
 				}
@@ -155,6 +142,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				// }
 				mLabels[i] = mSdf.format(mCalendar.getTime());
 			}
+			updateBarChartByDay(labelsCount);
 		}
 		// 周
 		if (unit == HistoryActivity.DATA_UNIT_WEEK) {
@@ -162,8 +150,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			monday.setFirstDayOfWeek(Calendar.MONDAY);
 			monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
-			for (int i = mLabels.length - 1; i >= 0; i--) {
-				if (i == mLabels.length - 1) {
+			for (int i = labelsCount - 1; i >= 0; i--) {
+				if (i == labelsCount - 1) {
 					mLabels[i] = getString(R.string.history_this_week);
 					continue;
 				}
@@ -171,11 +159,12 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				mLabels[i] = getString(R.string.history_week_number,
 						monday.get(Calendar.WEEK_OF_YEAR));
 			}
+			updateBarChartByWeek(labelsCount);
 		}
 		// 月
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
-			for (int i = mLabels.length - 1; i >= 0; i--) {
-				if (i == mLabels.length - 1) {
+			for (int i = labelsCount - 1; i >= 0; i--) {
+				if (i == labelsCount - 1) {
 					mLabels[i] = getString(R.string.history_this_month);
 					continue;
 				}
@@ -183,10 +172,11 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				mLabels[i] = getString(R.string.history_month_number,
 						mCalendar.get(Calendar.MONTH) + 1);
 			}
+			updateBarChartByMonth(labelsCount);
 		}
-		updateBarChart(mLabels.length);
+		// 计算总步数和均步数
 		int stepSum = 0;
-		for (int i = 0; i < mValues.length; i++) {
+		for (int i = 0; i < labelsCount; i++) {
 			if (Utils.isEmpty(mValues[i])) {
 				stepSum += 0;
 			} else {
@@ -220,31 +210,47 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 
 	}
 
-	public void updateBarChart(int nPoints) {
+	/**
+	 * 计算以日为单位的运动量
+	 * 
+	 * @param labelsCount
+	 */
+	public void updateBarChartByDay(int labelsCount) {
+		int barStepMax = 100;
+		int barStepAim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
+		// 找到最大的，与目标值对比
+		ArrayList<Step> stepsSort = new ArrayList<Step>();
+		stepsSort.addAll(mActivity.mSteps);
+		Collections.sort(stepsSort, new StepCompare());
+		if (Integer.valueOf(stepsSort.get(0).count) >= barStepAim) {
+			barStepMax = Integer.valueOf(stepsSort.get(0).count);
+		} else {
+			barStepMax = barStepAim;
+		}
+		// 构建柱状图
 		bcv_step.reset();
 		BarSet data = new BarSet();
-		int index = mSteps.size();
+		int stepsCount = mActivity.mSteps.size();
 		int start = 0;
-		if (index < nPoints) {
-			start = nPoints - index;
+		if (stepsCount < labelsCount) {
+			start = labelsCount - stepsCount;
 		} else {
-			start = index - nPoints;
+			start = stepsCount - labelsCount;
 		}
-		// TODO
-		for (int i = 0; i < nPoints; i++) {
+		for (int i = 0; i < labelsCount; i++) {
 			Bar bar;
-			if (index < nPoints && i < start) {
+			if (stepsCount < labelsCount && i < start) {
 				bar = new Bar(mLabels[i], 0f);
 				mValues[i] = 0 + "";
 			} else {
-				if (index < nPoints) {
-					bar = new Bar(mLabels[i], Integer.valueOf(mSteps.get(i
-							- start).count));
-					mValues[i] = mSteps.get(i - start).count;
+				if (stepsCount < labelsCount) {
+					bar = new Bar(mLabels[i], Integer.valueOf(mActivity.mSteps
+							.get(i - start).count));
+					mValues[i] = mActivity.mSteps.get(i - start).count;
 				} else {
-					bar = new Bar(mLabels[i], Integer.valueOf(mSteps.get(i
-							+ start).count));
-					mValues[i] = mSteps.get(i + start).count;
+					bar = new Bar(mLabels[i], Integer.valueOf(mActivity.mSteps
+							.get(i + start).count));
+					mValues[i] = mActivity.mSteps.get(i + start).count;
 				}
 			}
 			data.addBar(bar);
@@ -264,14 +270,83 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		bcv_step.setBarBackground(false);
 		bcv_step.setRoundCorners(0);
 		// 运动目标值
-		bcv_step.setmThresholdText(BAR_STEP_AIM + "");
+		bcv_step.setmThresholdText(barStepAim + "");
 		bcv_step.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
 				.setVerticalGrid(null)
 				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(BAR_STEP_MAX, 1)
-				.setThresholdLine(BAR_STEP_AIM, DataRetriever.randPaint())
-				.animate(DataRetriever.randAnimation(mEndAction, nPoints));
+				.setMaxAxisValue(barStepMax, 1)
+				.setThresholdLine(barStepAim, DataRetriever.randPaint())
+				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+	}
+
+	/**
+	 * 计算以周为单位的运动量
+	 * 
+	 * @param labelsCount
+	 */
+	private void updateBarChartByWeek(int labelsCount) {
+		bcv_step.reset();
+		BarSet data = new BarSet();
+		// 拿到最新的数据开始计算日期
+		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
+		Calendar calendar = Utils.strDate2Calendar(step.date,
+				BTConstants.PATTERN_YYYY_MM_DD);
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+		// 拿到当天所在周的周末
+		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		calendar.add(Calendar.WEEK_OF_MONTH, -6);
+		int[] sortData = new int[labelsCount];
+		for (int i = 0; i < labelsCount; i++) {
+			int weekCount = 0;
+			// 一周7天
+			for (int j = 0; j < 7; j++) {
+				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
+						BTConstants.PATTERN_YYYY_MM_DD)) == null) {
+					calendar.add(Calendar.DAY_OF_MONTH, 1);
+					continue;
+				}
+				weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+						.calendar2strDate(calendar,
+								BTConstants.PATTERN_YYYY_MM_DD)).count);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			Bar bar = new Bar(mLabels[i], weekCount);
+			mValues[i] = weekCount + "";
+			sortData[i] = weekCount;
+			data.addBar(bar);
+		}
+		Arrays.sort(sortData);
+		int barStepMax = sortData[labelsCount - 1];
+		// TEST
+		// int stepValue[] = { 10000, 5000, 2500, 1250, 2000, 4000, 8000 };
+		// for (int i = 0; i < nPoints; i++) {
+		// Bar bar = new Bar(mLabels[i], stepValue[i]);
+		// mValues[i] = stepValue[i] + "";
+		// data.addBar(bar);
+		// }
+		data.setColor(getResources().getColor(R.color.blue_b4efff));
+		bcv_step.addData(data);
+
+		bcv_step.setBarSpacing((int) Tools.fromDpToPx(50));
+		bcv_step.setSetSpacing(0);
+		bcv_step.setBarBackground(false);
+		bcv_step.setRoundCorners(0);
+		bcv_step.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+				.setVerticalGrid(null)
+				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
+				.setMaxAxisValue(barStepMax, 1)
+				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+	}
+
+	/**
+	 * 计算以月为单位的运动量
+	 * 
+	 * @param labelsCount
+	 */
+	private void updateBarChartByMonth(int labelsCount) {
+
 	}
 
 	private void showBarTooltip(int index, Rect rect) {

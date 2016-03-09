@@ -186,7 +186,6 @@ public class HistoryStepDistance extends Fragment implements
 		} else {
 			start = index - nPoints;
 		}
-		// TODO
 		for (int i = 0; i < nPoints; i++) {
 			Bar bar;
 			if (index < nPoints && i < start) {
