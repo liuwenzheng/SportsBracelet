@@ -33,6 +33,7 @@ import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
+import com.db.chart.view.animation.easing.linear.LinearEase;
 
 import de.greenrobot.event.EventBus;
 
@@ -45,7 +46,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	// private int BAR_STEP_AIM = 100;
 	private SimpleDateFormat mSdf;
 	private Calendar mCalendar;
-	private TextView tv_history_step_daily, tv_history_step_sum;
+	private TextView history_step_daily, tv_history_step_daily,
+			tv_history_step_sum;
 
 	private static Runnable mEndAction = new Runnable() {
 		@Override
@@ -118,7 +120,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			initData(7, event.selectHistoryUnit);
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
-			initData(7, event.selectHistoryUnit);
+			initData(12, event.selectHistoryUnit);
 			break;
 		}
 	}
@@ -185,11 +187,22 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		}
 		tv_history_step_sum.setText(stepSum + "");
 		tv_history_step_daily.setText((int) (stepSum / mValues.length) + "");
+		if (unit == HistoryActivity.DATA_UNIT_DAY) {
+			history_step_daily.setText(getString(R.string.history_step_daily));
+		}
+		if (unit == HistoryActivity.DATA_UNIT_WEEK) {
+			history_step_daily.setText(getString(R.string.history_step_week));
+		}
+		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
+			history_step_daily.setText(getString(R.string.history_step_month));
+		}
 
 	}
 
 	private void initView() {
 		bcv_step = (BarChartView) mView.findViewById(R.id.bcv_step);
+		history_step_daily = (TextView) mView
+				.findViewById(R.id.history_step_daily);
 		tv_history_step_daily = (TextView) mView
 				.findViewById(R.id.tv_history_step_daily);
 		tv_history_step_sum = (TextView) mView
@@ -215,7 +228,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 * 
 	 * @param labelsCount
 	 */
-	public void updateBarChartByDay(int labelsCount) {
+	private void updateBarChartByDay(int labelsCount) {
 		int barStepMax = 100;
 		int barStepAim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
 		// 找到最大的，与目标值对比
@@ -293,22 +306,20 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		Calendar calendar = Utils.strDate2Calendar(step.date,
 				BTConstants.PATTERN_YYYY_MM_DD);
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		// 拿到当天所在周的周末
+		// 拿到当天所在周的周一
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		calendar.add(Calendar.WEEK_OF_MONTH, -6);
+		calendar.add(Calendar.WEEK_OF_MONTH, -(labelsCount - 1));
 		int[] sortData = new int[labelsCount];
 		for (int i = 0; i < labelsCount; i++) {
 			int weekCount = 0;
 			// 一周7天
 			for (int j = 0; j < 7; j++) {
 				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
-						BTConstants.PATTERN_YYYY_MM_DD)) == null) {
-					calendar.add(Calendar.DAY_OF_MONTH, 1);
-					continue;
+						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+					weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+							.calendar2strDate(calendar,
+									BTConstants.PATTERN_YYYY_MM_DD)).count);
 				}
-				weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
-						.calendar2strDate(calendar,
-								BTConstants.PATTERN_YYYY_MM_DD)).count);
 				calendar.add(Calendar.DAY_OF_MONTH, 1);
 			}
 			Bar bar = new Bar(mLabels[i], weekCount);
@@ -346,7 +357,56 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 * @param labelsCount
 	 */
 	private void updateBarChartByMonth(int labelsCount) {
+		bcv_step.reset();
+		BarSet data = new BarSet();
+		// 拿到最新的数据开始计算日期
+		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
+		Calendar calendar = Utils.strDate2Calendar(step.date,
+				BTConstants.PATTERN_YYYY_MM_DD);
+		// 拿到当天所在月的第一天
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.add(Calendar.MONTH, -(labelsCount - 1));
+		int[] sortData = new int[labelsCount];
+		for (int i = 0; i < labelsCount; i++) {
+			int monthCount = 0;
+			// 计算当月有多少天
+			int daysInMonth = calendar.getActualMaximum(Calendar.DATE);
+			for (int j = 0; j < daysInMonth; j++) {
+				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
+						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+					monthCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+							.calendar2strDate(calendar,
+									BTConstants.PATTERN_YYYY_MM_DD)).count);
+				}
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			Bar bar = new Bar(mLabels[i], monthCount);
+			mValues[i] = monthCount + "";
+			sortData[i] = monthCount;
+			data.addBar(bar);
+		}
+		Arrays.sort(sortData);
+		int barStepMax = sortData[labelsCount - 1];
+		// TEST
+		// int stepValue[] = { 10000, 5000, 2500, 1250, 2000, 4000, 8000 };
+		// for (int i = 0; i < nPoints; i++) {
+		// Bar bar = new Bar(mLabels[i], stepValue[i]);
+		// mValues[i] = stepValue[i] + "";
+		// data.addBar(bar);
+		// }
+		data.setColor(getResources().getColor(R.color.blue_b4efff));
+		bcv_step.addData(data);
 
+		bcv_step.setBarSpacing((int) Tools.fromDpToPx(20));
+		bcv_step.setSetSpacing(0);
+		bcv_step.setBarBackground(false);
+		bcv_step.setRoundCorners(0);
+		bcv_step.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+				.setVerticalGrid(null)
+				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
+				.setMaxAxisValue(barStepMax, 1)
+				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
 	}
 
 	private void showBarTooltip(int index, Rect rect) {
@@ -368,7 +428,6 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private void dismissBarTooltip(final int index, final Rect rect) {
 
 		bcv_step.dismissTooltip(mBarTooltip);
-
 		mBarTooltip = null;
 		if (index != -1)
 			showBarTooltip(index, rect);

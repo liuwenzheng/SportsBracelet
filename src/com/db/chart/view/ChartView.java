@@ -296,6 +296,8 @@ public abstract class ChartView extends RelativeLayout {
 			horController.mandatoryBorderSpacing = 1;
 		style.thresholdPaint = null;
 		style.gridPaint = null;
+		mClickedIndex = -1;
+		dismissAllTooltips();
 	}
 
 	public ChartView updateValues(int setIndex, float[] values) {
