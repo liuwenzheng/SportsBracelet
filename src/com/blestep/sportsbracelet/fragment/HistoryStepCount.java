@@ -9,11 +9,15 @@ import java.util.Comparator;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
+import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -33,7 +37,6 @@ import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
-import com.db.chart.view.animation.easing.linear.LinearEase;
 
 import de.greenrobot.event.EventBus;
 
@@ -42,24 +45,40 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private static final String TAG = HistoryStepCount.class.getSimpleName();
 	private String mLabels[];
 	private String mValues[];
-	// private int BAR_STEP_MAX = 100;
-	// private int BAR_STEP_AIM = 100;
 	private SimpleDateFormat mSdf;
 	private Calendar mCalendar;
 	private TextView history_step_daily, tv_history_step_daily,
 			tv_history_step_sum;
-
-	private static Runnable mEndAction = new Runnable() {
-		@Override
-		public void run() {
-
-		}
-	};
-
 	private View mView;
 	private HistoryActivity mActivity;
 	private BarChartView bcv_step;
 	private TextView mBarTooltip;
+	private RelativeLayout rl_pre_and_next;
+	/**
+	 * 绘图完成后的操作
+	 */
+	private Runnable mEndAction = new Runnable() {
+		@Override
+		public void run() {
+			mHandler.sendEmptyMessage(0);
+		}
+	};
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 0:
+				// 将按钮都释放开
+				mView.findViewById(R.id.btn_history_unit_day).setEnabled(true);
+				mView.findViewById(R.id.btn_history_unit_week).setEnabled(true);
+				mView.findViewById(R.id.btn_history_unit_month)
+						.setEnabled(true);
+				break;
+
+			default:
+				break;
+			}
+		};
+	};
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -138,10 +157,6 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 					continue;
 				}
 				mCalendar.add(Calendar.DAY_OF_MONTH, -1);
-				// if (i == mLabels.length - 2) {
-				// mLabels[i] = getString(R.string.history_yesterday);
-				// continue;
-				// }
 				mLabels[i] = mSdf.format(mCalendar.getTime());
 			}
 			updateBarChartByDay(labelsCount);
@@ -212,6 +227,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mView.findViewById(R.id.btn_history_unit_week).setOnClickListener(this);
 		mView.findViewById(R.id.btn_history_unit_month)
 				.setOnClickListener(this);
+		mView.findViewById(R.id.btn_pre).setOnClickListener(this);
+		mView.findViewById(R.id.btn_next).setOnClickListener(this);
+		rl_pre_and_next = (RelativeLayout) mView
+				.findViewById(R.id.rl_pre_and_next);
 	}
 
 	@Override
@@ -358,6 +377,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 */
 	private void updateBarChartByMonth(int labelsCount) {
 		bcv_step.reset();
+		rl_pre_and_next.setVisibility(View.INVISIBLE);
 		BarSet data = new BarSet();
 		// 拿到最新的数据开始计算日期
 		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
@@ -449,6 +469,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 
 	@Override
 	public void onClick(View v) {
+		mView.findViewById(R.id.btn_history_unit_day).setEnabled(false);
+		mView.findViewById(R.id.btn_history_unit_week).setEnabled(false);
+		mView.findViewById(R.id.btn_history_unit_month).setEnabled(false);
 		switch (v.getId()) {
 		case R.id.btn_history_unit_day:
 			EventBus.getDefault().postSticky(
@@ -463,6 +486,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 					.postSticky(
 							new HistoryChangeUnitClick(
 									HistoryActivity.DATA_UNIT_MONTH));
+			break;
+		case R.id.btn_pre:
+			break;
+		case R.id.btn_next:
 			break;
 		}
 	}
