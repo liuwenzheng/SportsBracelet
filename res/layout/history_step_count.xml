@@ -24,6 +24,7 @@
             android:id="@+id/btn_pre"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="前" />
 
         <Button
@@ -31,6 +32,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:enabled="false"
             android:text="后" />
     </RelativeLayout>
 

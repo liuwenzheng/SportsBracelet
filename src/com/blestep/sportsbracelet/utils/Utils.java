@@ -194,7 +194,7 @@ public class Utils {
 	 * @param eDate结束时间
 	 * @return result返回结果(0--相同 1--前者大 2--后者大)
 	 * */
-	private static int compareDate(Date sDate, Date eDate) {
+	public static int compareDate(Date sDate, Date eDate) {
 		int result = 0;
 		// 将开始时间赋给日历实例
 		Calendar sC = Calendar.getInstance();
@@ -214,7 +214,7 @@ public class Utils {
 	 * @param tStr输入字符串
 	 * @return 如果为空，则返回""，如果不空，则返回该字符串去掉前后空格
 	 */
-	private static String cTrim(String tStr) {
+	public static String cTrim(String tStr) {
 		String ttStr = "";
 		if (tStr == null) {
 		} else {
@@ -229,7 +229,7 @@ public class Utils {
 	 * @param year待判定的年份
 	 * @return 判定结果
 	 * */
-	private static boolean isLeapYear(int year) {
+	public static boolean isLeapYear(int year) {
 		return (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0));
 	}
 

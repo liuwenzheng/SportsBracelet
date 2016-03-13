@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import com.blestep.sportsbracelet.event.HistoryChangeUnitClick;
 import com.blestep.sportsbracelet.fragment.HistoryStepCalorie;
 import com.blestep.sportsbracelet.fragment.HistoryStepCount;
 import com.blestep.sportsbracelet.fragment.HistoryStepDistance;
+import com.blestep.sportsbracelet.utils.Utils;
 import com.umeng.analytics.MobclickAgent;
 
 import de.greenrobot.event.EventBus;
@@ -34,6 +36,9 @@ public class HistoryActivity extends FragmentActivity implements
 	public static final int DATA_UNIT_DAY = 0;
 	public static final int DATA_UNIT_WEEK = 1;
 	public static final int DATA_UNIT_MONTH = 2;
+	public static final int COUNT_NUMBER_DAY = 7;
+	public static final int COUNT_NUMBER_WEEK = 7;
+	public static final int COUNT_NUMBER_MONTH = 12;
 	public int selectHistoryUnit = 0;
 
 	private ViewPager vp_history;
@@ -47,6 +52,9 @@ public class HistoryActivity extends FragmentActivity implements
 
 	public ArrayList<Step> mSteps;
 	public HashMap<String, Step> mStepsMap;
+	public Calendar mLastDayCalendar;
+	public Calendar mLastWeekCalendar;
+	public Calendar mTodayCalendar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,11 @@ public class HistoryActivity extends FragmentActivity implements
 	}
 
 	private void initData() {
+		// 拿到最新的数据开始计算日期
+		Step step = mSteps.get(mSteps.size() - 1);
+		mTodayCalendar = Utils.strDate2Calendar(step.date,
+				BTConstants.PATTERN_YYYY_MM_DD);
+
 	}
 
 	private void initViewPager() {

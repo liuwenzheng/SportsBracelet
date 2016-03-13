@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -54,6 +53,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private BarChartView bcv_step;
 	private TextView mBarTooltip;
 	private RelativeLayout rl_pre_and_next;
+	private boolean mIsPreDayShow;
+	private boolean mIsPreWeekShow;
+	private boolean mIsNextDayShow;
+	private boolean mIsNextWeekShow;
 	/**
 	 * 绘图完成后的操作
 	 */
@@ -72,6 +75,16 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				mView.findViewById(R.id.btn_history_unit_week).setEnabled(true);
 				mView.findViewById(R.id.btn_history_unit_month)
 						.setEnabled(true);
+				if (mIsPreDayShow || mIsPreWeekShow) {
+					mView.findViewById(R.id.btn_pre).setEnabled(true);
+				} else {
+					mView.findViewById(R.id.btn_pre).setEnabled(false);
+				}
+				if (mIsNextDayShow || mIsNextWeekShow) {
+					mView.findViewById(R.id.btn_next).setEnabled(true);
+				} else {
+					mView.findViewById(R.id.btn_next).setEnabled(false);
+				}
 				break;
 
 			default:
@@ -109,13 +122,16 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		initView();
 		switch (mActivity.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
-			initData(7, mActivity.selectHistoryUnit);
+			initData(HistoryActivity.COUNT_NUMBER_DAY,
+					mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
 			break;
 		case HistoryActivity.DATA_UNIT_WEEK:
-			initData(7, mActivity.selectHistoryUnit);
+			initData(HistoryActivity.COUNT_NUMBER_WEEK,
+					mActivity.selectHistoryUnit, mActivity.mLastWeekCalendar);
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
-			initData(12, mActivity.selectHistoryUnit);
+			initData(HistoryActivity.COUNT_NUMBER_MONTH,
+					mActivity.selectHistoryUnit, null);
 			break;
 		}
 
@@ -133,40 +149,49 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		LogModule.i(TAG + "onEvent-->" + event.selectHistoryUnit);
 		switch (event.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
-			initData(7, event.selectHistoryUnit);
+			initData(HistoryActivity.COUNT_NUMBER_DAY, event.selectHistoryUnit,
+					null);
 			break;
 		case HistoryActivity.DATA_UNIT_WEEK:
-			initData(7, event.selectHistoryUnit);
+			initData(HistoryActivity.COUNT_NUMBER_WEEK,
+					event.selectHistoryUnit, null);
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
-			initData(12, event.selectHistoryUnit);
+			initData(HistoryActivity.COUNT_NUMBER_MONTH,
+					event.selectHistoryUnit, null);
 			break;
 		}
 	}
 
-	private void initData(int labelsCount, int unit) {
+	private void initData(int labelsCount, int unit, Calendar calendar) {
 		mLabels = new String[labelsCount];
 		mValues = new String[labelsCount];
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
-		mCalendar = Calendar.getInstance();
+		if (calendar == null) {
+			mCalendar = (Calendar) mActivity.mTodayCalendar.clone();
+		} else {
+			mCalendar = (Calendar) calendar.clone();
+		}
 		// 日
 		if (unit == HistoryActivity.DATA_UNIT_DAY) {
 			for (int i = labelsCount - 1; i >= 0; i--) {
-				if (i == labelsCount - 1) {
+				if (mCalendar.getTime().compareTo(
+						mActivity.mTodayCalendar.getTime()) >= 0) {
 					mLabels[i] = getString(R.string.history_today);
+					mCalendar.add(Calendar.DAY_OF_MONTH, -1);
 					continue;
 				}
 				mCalendar.add(Calendar.DAY_OF_MONTH, -1);
 				mLabels[i] = mSdf.format(mCalendar.getTime());
 			}
-			updateBarChartByDay(labelsCount);
+			updateBarChartByDay(labelsCount, calendar == null ? null
+					: (Calendar) calendar.clone());
 		}
 		// 周
 		if (unit == HistoryActivity.DATA_UNIT_WEEK) {
-			Calendar monday = Calendar.getInstance();
+			Calendar monday = (Calendar) mCalendar.clone();
 			monday.setFirstDayOfWeek(Calendar.MONDAY);
 			monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
 			for (int i = labelsCount - 1; i >= 0; i--) {
 				if (i == labelsCount - 1) {
 					mLabels[i] = getString(R.string.history_this_week);
@@ -231,6 +256,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mView.findViewById(R.id.btn_next).setOnClickListener(this);
 		rl_pre_and_next = (RelativeLayout) mView
 				.findViewById(R.id.rl_pre_and_next);
+		mView.findViewById(R.id.btn_pre).setEnabled(false);
+		mView.findViewById(R.id.btn_next).setEnabled(false);
 	}
 
 	@Override
@@ -243,60 +270,84 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	}
 
 	/**
+	 * 判断是否可点击前一天
+	 * 
+	 * @param labelsCount
+	 */
+	private void isPreDayEnable(Calendar calendar) {
+		// 前一天是否可点击
+		mActivity.mLastDayCalendar = (Calendar) calendar.clone();
+		mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+				-HistoryActivity.COUNT_NUMBER_DAY);
+		if (mActivity.mStepsMap.get(Utils.calendar2strDate(
+				mActivity.mLastDayCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+			mIsPreDayShow = true;
+		} else {
+			mIsPreDayShow = false;
+		}
+	}
+
+	/**
+	 * 判断是否可点击后一天
+	 * 
+	 * @param calendar
+	 * 
+	 * @param labelsCount
+	 */
+	private void isNextDayEnable(Calendar calendar) {
+		mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+				HistoryActivity.COUNT_NUMBER_DAY);
+		if (mActivity.mLastDayCalendar.getTime().compareTo(calendar.getTime()) >= 0) {
+			mIsNextDayShow = false;
+		} else {
+			mIsNextDayShow = true;
+		}
+	}
+
+	/**
 	 * 计算以日为单位的运动量
 	 * 
 	 * @param labelsCount
 	 */
-	private void updateBarChartByDay(int labelsCount) {
+	private void updateBarChartByDay(int labelsCount, Calendar calendar) {
+		// 构建柱状图
+		bcv_step.reset();
+		BarSet data = new BarSet();
+		rl_pre_and_next.setVisibility(View.VISIBLE);
+		if (calendar == null) {
+			calendar = mActivity.mTodayCalendar;
+		}
+		calendar.add(Calendar.DAY_OF_MONTH, 1 - labelsCount);
+		ArrayList<Step> stepsSort = new ArrayList<Step>();
+		for (int i = 0; i < labelsCount; i++) {
+			int dayStep = 0;
+			if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
+					BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+				dayStep = Integer.valueOf(mActivity.mStepsMap.get(Utils
+						.calendar2strDate(calendar,
+								BTConstants.PATTERN_YYYY_MM_DD)).count);
+				stepsSort.add(mActivity.mStepsMap.get(Utils.calendar2strDate(
+						calendar, BTConstants.PATTERN_YYYY_MM_DD)));
+			} else {
+				stepsSort.add(new Step("0"));
+			}
+			mValues[i] = dayStep + "";
+			Bar bar = new Bar(mLabels[i], dayStep);
+			data.addBar(bar);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		// 找到最大的，与目标值对比
 		int barStepMax = 100;
 		int barStepAim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
-		// 找到最大的，与目标值对比
-		ArrayList<Step> stepsSort = new ArrayList<Step>();
-		stepsSort.addAll(mActivity.mSteps);
 		Collections.sort(stepsSort, new StepCompare());
 		if (Integer.valueOf(stepsSort.get(0).count) >= barStepAim) {
 			barStepMax = Integer.valueOf(stepsSort.get(0).count);
 		} else {
 			barStepMax = barStepAim;
 		}
-		// 构建柱状图
-		bcv_step.reset();
-		BarSet data = new BarSet();
-		int stepsCount = mActivity.mSteps.size();
-		int start = 0;
-		if (stepsCount < labelsCount) {
-			start = labelsCount - stepsCount;
-		} else {
-			start = stepsCount - labelsCount;
-		}
-		for (int i = 0; i < labelsCount; i++) {
-			Bar bar;
-			if (stepsCount < labelsCount && i < start) {
-				bar = new Bar(mLabels[i], 0f);
-				mValues[i] = 0 + "";
-			} else {
-				if (stepsCount < labelsCount) {
-					bar = new Bar(mLabels[i], Integer.valueOf(mActivity.mSteps
-							.get(i - start).count));
-					mValues[i] = mActivity.mSteps.get(i - start).count;
-				} else {
-					bar = new Bar(mLabels[i], Integer.valueOf(mActivity.mSteps
-							.get(i + start).count));
-					mValues[i] = mActivity.mSteps.get(i + start).count;
-				}
-			}
-			data.addBar(bar);
-		}
-		// TEST
-		// int stepValue[] = { 10000, 5000, 2500, 1250, 2000, 4000, 8000 };
-		// for (int i = 0; i < nPoints; i++) {
-		// Bar bar = new Bar(mLabels[i], stepValue[i]);
-		// mValues[i] = stepValue[i] + "";
-		// data.addBar(bar);
-		// }
+
 		data.setColor(getResources().getColor(R.color.blue_b4efff));
 		bcv_step.addData(data);
-
 		bcv_step.setBarSpacing((int) Tools.fromDpToPx(50));
 		bcv_step.setSetSpacing(0);
 		bcv_step.setBarBackground(false);
@@ -310,6 +361,28 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				.setMaxAxisValue(barStepMax, 1)
 				.setThresholdLine(barStepAim, DataRetriever.randPaint())
 				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		isPreDayEnable(calendar);
+		isNextDayEnable(calendar);
+	}
+
+	/**
+	 * 判断是否可点击前一周后一周
+	 * 
+	 * @param labelsCount
+	 */
+	private void isChangeWeekEnable(int labelsCount) {
+		// 拿到最新的数据开始计算日期
+		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
+		mActivity.mLastDayCalendar = Utils.strDate2Calendar(step.date,
+				BTConstants.PATTERN_YYYY_MM_DD);
+		mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH, -labelsCount);
+		if (mActivity.mStepsMap.get(Utils.calendar2strDate(
+				mActivity.mLastDayCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+			mView.findViewById(R.id.btn_pre).setEnabled(true);
+		} else {
+			mView.findViewById(R.id.btn_next).setEnabled(false);
+		}
 	}
 
 	/**
@@ -320,6 +393,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private void updateBarChartByWeek(int labelsCount) {
 		bcv_step.reset();
 		BarSet data = new BarSet();
+		rl_pre_and_next.setVisibility(View.VISIBLE);
 		// 拿到最新的数据开始计算日期
 		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
 		Calendar calendar = Utils.strDate2Calendar(step.date,
@@ -327,7 +401,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		// 拿到当天所在周的周一
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		calendar.add(Calendar.WEEK_OF_MONTH, -(labelsCount - 1));
+		calendar.add(Calendar.WEEK_OF_MONTH, 1 - labelsCount);
 		int[] sortData = new int[labelsCount];
 		for (int i = 0; i < labelsCount; i++) {
 			int weekCount = 0;
@@ -377,15 +451,15 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 */
 	private void updateBarChartByMonth(int labelsCount) {
 		bcv_step.reset();
-		rl_pre_and_next.setVisibility(View.INVISIBLE);
 		BarSet data = new BarSet();
+		rl_pre_and_next.setVisibility(View.INVISIBLE);
 		// 拿到最新的数据开始计算日期
 		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
 		Calendar calendar = Utils.strDate2Calendar(step.date,
 				BTConstants.PATTERN_YYYY_MM_DD);
 		// 拿到当天所在月的第一天
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		calendar.add(Calendar.MONTH, -(labelsCount - 1));
+		calendar.add(Calendar.MONTH, 1 - labelsCount);
 		int[] sortData = new int[labelsCount];
 		for (int i = 0; i < labelsCount; i++) {
 			int monthCount = 0;
@@ -472,6 +546,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mView.findViewById(R.id.btn_history_unit_day).setEnabled(false);
 		mView.findViewById(R.id.btn_history_unit_week).setEnabled(false);
 		mView.findViewById(R.id.btn_history_unit_month).setEnabled(false);
+		mView.findViewById(R.id.btn_pre).setEnabled(false);
+		mView.findViewById(R.id.btn_next).setEnabled(false);
 		switch (v.getId()) {
 		case R.id.btn_history_unit_day:
 			EventBus.getDefault().postSticky(
@@ -488,10 +564,32 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 									HistoryActivity.DATA_UNIT_MONTH));
 			break;
 		case R.id.btn_pre:
+			// 前一天/周
+			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
+				initData(HistoryActivity.COUNT_NUMBER_DAY,
+						mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
+			}
+			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
+				initData(HistoryActivity.COUNT_NUMBER_WEEK,
+						mActivity.selectHistoryUnit,
+						mActivity.mLastWeekCalendar);
+			}
+
 			break;
 		case R.id.btn_next:
+			// 后一天/周
+			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
+				mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+						HistoryActivity.COUNT_NUMBER_DAY);
+				initData(HistoryActivity.COUNT_NUMBER_DAY,
+						mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
+			}
+			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
+				initData(HistoryActivity.COUNT_NUMBER_WEEK,
+						mActivity.selectHistoryUnit,
+						mActivity.mLastWeekCalendar);
+			}
 			break;
 		}
 	}
-
 }
