@@ -193,15 +193,18 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			monday.setFirstDayOfWeek(Calendar.MONDAY);
 			monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 			for (int i = labelsCount - 1; i >= 0; i--) {
-				if (i == labelsCount - 1) {
+				if (monday.get(Calendar.WEEK_OF_YEAR) == mActivity.mTodayCalendar
+						.get(Calendar.WEEK_OF_YEAR)) {
 					mLabels[i] = getString(R.string.history_this_week);
+					monday.add(Calendar.WEEK_OF_MONTH, -1);
 					continue;
 				}
 				monday.add(Calendar.WEEK_OF_MONTH, -1);
 				mLabels[i] = getString(R.string.history_week_number,
 						monday.get(Calendar.WEEK_OF_YEAR));
 			}
-			updateBarChartByWeek(labelsCount);
+			updateBarChartByWeek(labelsCount, calendar == null ? null
+					: (Calendar) calendar.clone());
 		}
 		// 月
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
@@ -236,36 +239,6 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
 			history_step_daily.setText(getString(R.string.history_step_month));
 		}
-
-	}
-
-	private void initView() {
-		bcv_step = (BarChartView) mView.findViewById(R.id.bcv_step);
-		history_step_daily = (TextView) mView
-				.findViewById(R.id.history_step_daily);
-		tv_history_step_daily = (TextView) mView
-				.findViewById(R.id.tv_history_step_daily);
-		tv_history_step_sum = (TextView) mView
-				.findViewById(R.id.tv_history_step_sum);
-		bcv_step.setOnEntryClickListener(this);
-		mView.findViewById(R.id.btn_history_unit_day).setOnClickListener(this);
-		mView.findViewById(R.id.btn_history_unit_week).setOnClickListener(this);
-		mView.findViewById(R.id.btn_history_unit_month)
-				.setOnClickListener(this);
-		mView.findViewById(R.id.btn_pre).setOnClickListener(this);
-		mView.findViewById(R.id.btn_next).setOnClickListener(this);
-		rl_pre_and_next = (RelativeLayout) mView
-				.findViewById(R.id.rl_pre_and_next);
-		mView.findViewById(R.id.btn_pre).setEnabled(false);
-		mView.findViewById(R.id.btn_next).setEnabled(false);
-	}
-
-	@Override
-	public void onClick(int setIndex, int entryIndex, Rect rect) {
-		if (mBarTooltip == null)
-			showBarTooltip(entryIndex, rect);
-		else
-			dismissBarTooltip(entryIndex, rect);
 
 	}
 
@@ -367,21 +340,52 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	}
 
 	/**
-	 * 判断是否可点击前一周后一周
+	 * 是否可点击后一周
 	 * 
-	 * @param labelsCount
+	 * @param calendar
 	 */
-	private void isChangeWeekEnable(int labelsCount) {
-		// 拿到最新的数据开始计算日期
-		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
-		mActivity.mLastDayCalendar = Utils.strDate2Calendar(step.date,
-				BTConstants.PATTERN_YYYY_MM_DD);
-		mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH, -labelsCount);
-		if (mActivity.mStepsMap.get(Utils.calendar2strDate(
-				mActivity.mLastDayCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-			mView.findViewById(R.id.btn_pre).setEnabled(true);
+	private void isNextWeekEnable(Calendar calendar) {
+		mActivity.mLastWeekCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+		mActivity.mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+				HistoryActivity.COUNT_NUMBER_WEEK);
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		if (mActivity.mLastWeekCalendar.getTime().compareTo(calendar.getTime()) >= 0) {
+			mIsNextDayShow = false;
 		} else {
-			mView.findViewById(R.id.btn_next).setEnabled(false);
+			mIsNextDayShow = true;
+		}
+	}
+
+	/**
+	 * 是否可点击前一周
+	 * 
+	 * @param calendar
+	 */
+	private void isPreWeekEnable(Calendar calendar) {
+		// 前一周是否可点击
+		mActivity.mLastWeekCalendar = (Calendar) calendar.clone();
+		// 拿到当天所在周的周一
+		mActivity.mLastWeekCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+		mActivity.mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+				-HistoryActivity.COUNT_NUMBER_WEEK);
+		int weekCount = 0;
+		// 一周7天
+		for (int i = 0; i < 7; i++) {
+			if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
+					BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+				weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+						.calendar2strDate(calendar,
+								BTConstants.PATTERN_YYYY_MM_DD)).count);
+			}
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		if (weekCount > 0) {
+			mIsPreWeekShow = true;
+		} else {
+			mIsPreWeekShow = false;
 		}
 	}
 
@@ -389,15 +393,16 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 * 计算以周为单位的运动量
 	 * 
 	 * @param labelsCount
+	 * @param calendar
 	 */
-	private void updateBarChartByWeek(int labelsCount) {
+	private void updateBarChartByWeek(int labelsCount, Calendar calendar) {
 		bcv_step.reset();
 		BarSet data = new BarSet();
 		rl_pre_and_next.setVisibility(View.VISIBLE);
 		// 拿到最新的数据开始计算日期
-		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
-		Calendar calendar = Utils.strDate2Calendar(step.date,
-				BTConstants.PATTERN_YYYY_MM_DD);
+		if (calendar == null) {
+			calendar = mActivity.mTodayCalendar;
+		}
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		// 拿到当天所在周的周一
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -442,6 +447,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
 				.setMaxAxisValue(barStepMax, 1)
 				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+		isPreWeekEnable(calendar);
+		isNextWeekEnable(calendar);
 	}
 
 	/**
@@ -501,6 +508,36 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
 				.setMaxAxisValue(barStepMax, 1)
 				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+	}
+
+	private void initView() {
+		bcv_step = (BarChartView) mView.findViewById(R.id.bcv_step);
+		history_step_daily = (TextView) mView
+				.findViewById(R.id.history_step_daily);
+		tv_history_step_daily = (TextView) mView
+				.findViewById(R.id.tv_history_step_daily);
+		tv_history_step_sum = (TextView) mView
+				.findViewById(R.id.tv_history_step_sum);
+		bcv_step.setOnEntryClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_day).setOnClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_week).setOnClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_month)
+				.setOnClickListener(this);
+		mView.findViewById(R.id.btn_pre).setOnClickListener(this);
+		mView.findViewById(R.id.btn_next).setOnClickListener(this);
+		rl_pre_and_next = (RelativeLayout) mView
+				.findViewById(R.id.rl_pre_and_next);
+		mView.findViewById(R.id.btn_pre).setEnabled(false);
+		mView.findViewById(R.id.btn_next).setEnabled(false);
+	}
+
+	@Override
+	public void onClick(int setIndex, int entryIndex, Rect rect) {
+		if (mBarTooltip == null)
+			showBarTooltip(entryIndex, rect);
+		else
+			dismissBarTooltip(entryIndex, rect);
+
 	}
 
 	private void showBarTooltip(int index, Rect rect) {
@@ -566,10 +603,14 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		case R.id.btn_pre:
 			// 前一天/周
 			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
+				mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+						-HistoryActivity.COUNT_NUMBER_DAY);
 				initData(HistoryActivity.COUNT_NUMBER_DAY,
 						mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
 			}
 			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
+				mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+						-HistoryActivity.COUNT_NUMBER_WEEK);
 				initData(HistoryActivity.COUNT_NUMBER_WEEK,
 						mActivity.selectHistoryUnit,
 						mActivity.mLastWeekCalendar);
@@ -585,6 +626,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 						mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
 			}
 			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
+				mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+						HistoryActivity.COUNT_NUMBER_WEEK);
 				initData(HistoryActivity.COUNT_NUMBER_WEEK,
 						mActivity.selectHistoryUnit,
 						mActivity.mLastWeekCalendar);
