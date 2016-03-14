@@ -52,9 +52,10 @@ public class HistoryActivity extends FragmentActivity implements
 
 	public ArrayList<Step> mSteps;
 	public HashMap<String, Step> mStepsMap;
-	public Calendar mLastDayCalendar;
-	public Calendar mLastWeekCalendar;
-	public Calendar mTodayCalendar;
+	public Calendar mLastDayCalendar;// 上一周的最后一天
+	public Calendar mLastWeekCalendar;// 7周前的周一
+	public Calendar mTodayCalendar;// 今天
+	public Calendar mLastYearCalendar;// 去年的今天
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,8 @@ public class HistoryActivity extends FragmentActivity implements
 		Step step = mSteps.get(mSteps.size() - 1);
 		mTodayCalendar = Utils.strDate2Calendar(step.date,
 				BTConstants.PATTERN_YYYY_MM_DD);
-
+		mLastYearCalendar = (Calendar) mTodayCalendar.clone();
+		mLastYearCalendar.add(Calendar.YEAR, -1);
 	}
 
 	private void initViewPager() {

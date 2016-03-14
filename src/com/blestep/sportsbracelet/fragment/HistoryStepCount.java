@@ -120,6 +120,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		LogModule.i(TAG + "onCreateView-->" + mActivity.selectHistoryUnit);
 		mView = inflater.inflate(R.layout.history_step_count, container, false);
 		initView();
+		mIsPreDayShow = false;
+		mIsNextDayShow = false;
+		mIsPreWeekShow = false;
+		mIsNextDayShow = false;
 		switch (mActivity.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY,
@@ -147,6 +151,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 
 	public void onEvent(HistoryChangeUnitClick event) {
 		LogModule.i(TAG + "onEvent-->" + event.selectHistoryUnit);
+		mIsPreDayShow = false;
+		mIsNextDayShow = false;
+		mIsPreWeekShow = false;
+		mIsNextDayShow = false;
 		switch (event.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY, event.selectHistoryUnit,
@@ -181,8 +189,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 					mCalendar.add(Calendar.DAY_OF_MONTH, -1);
 					continue;
 				}
-				mCalendar.add(Calendar.DAY_OF_MONTH, -1);
 				mLabels[i] = mSdf.format(mCalendar.getTime());
+				mCalendar.add(Calendar.DAY_OF_MONTH, -1);
 			}
 			updateBarChartByDay(labelsCount, calendar == null ? null
 					: (Calendar) calendar.clone());
@@ -199,9 +207,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 					monday.add(Calendar.WEEK_OF_MONTH, -1);
 					continue;
 				}
-				monday.add(Calendar.WEEK_OF_MONTH, -1);
 				mLabels[i] = getString(R.string.history_week_number,
 						monday.get(Calendar.WEEK_OF_YEAR));
+				monday.add(Calendar.WEEK_OF_MONTH, -1);
 			}
 			updateBarChartByWeek(labelsCount, calendar == null ? null
 					: (Calendar) calendar.clone());
@@ -253,7 +261,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 				-HistoryActivity.COUNT_NUMBER_DAY);
 		if (mActivity.mStepsMap.get(Utils.calendar2strDate(
-				mActivity.mLastDayCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+				mActivity.mLastDayCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null
+				&& mActivity.mLastDayCalendar.getTime().compareTo(
+						mActivity.mLastYearCalendar.getTime()) >= 0) {
 			mIsPreDayShow = true;
 		} else {
 			mIsPreDayShow = false;
@@ -270,7 +280,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private void isNextDayEnable(Calendar calendar) {
 		mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 				HistoryActivity.COUNT_NUMBER_DAY);
-		if (mActivity.mLastDayCalendar.getTime().compareTo(calendar.getTime()) >= 0) {
+		if (mActivity.mLastDayCalendar.getTime().compareTo(
+				mActivity.mTodayCalendar.getTime()) >= 0) {
 			mIsNextDayShow = false;
 		} else {
 			mIsNextDayShow = true;
@@ -374,15 +385,19 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		int weekCount = 0;
 		// 一周7天
 		for (int i = 0; i < 7; i++) {
-			if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
-					BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+			if (mActivity.mStepsMap.get(Utils
+					.calendar2strDate(mActivity.mLastWeekCalendar,
+							BTConstants.PATTERN_YYYY_MM_DD)) != null) {
 				weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
-						.calendar2strDate(calendar,
+						.calendar2strDate(mActivity.mLastWeekCalendar,
 								BTConstants.PATTERN_YYYY_MM_DD)).count);
 			}
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			mActivity.mLastWeekCalendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
-		if (weekCount > 0) {
+		mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH, -1);
+		if (weekCount > 0
+				&& mActivity.mLastWeekCalendar.getTime().compareTo(
+						mActivity.mLastYearCalendar.getTime()) >= 0) {
 			mIsPreWeekShow = true;
 		} else {
 			mIsPreWeekShow = false;
@@ -447,6 +462,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
 				.setMaxAxisValue(barStepMax, 1)
 				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+		calendar.add(Calendar.WEEK_OF_MONTH, -1);
 		isPreWeekEnable(calendar);
 		isNextWeekEnable(calendar);
 	}
