@@ -534,6 +534,9 @@ public abstract class ChartView extends RelativeLayout {
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				if (mEntryListener != null && mSetClicked != -1
 						&& mIndexClicked != -1) {
+					if (mRegions.size() == 0) {
+						return true;
+					}
 					if (mRegions.get(mSetClicked).get(mIndexClicked)
 							.contains((int) event.getX(), (int) event.getY())) {
 

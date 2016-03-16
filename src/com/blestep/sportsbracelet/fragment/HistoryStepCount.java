@@ -12,9 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -55,8 +59,12 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private RelativeLayout rl_pre_and_next;
 	private boolean mIsPreDayShow;
 	private boolean mIsPreWeekShow;
+	private boolean mIsPreYearShow;
 	private boolean mIsNextDayShow;
 	private boolean mIsNextWeekShow;
+	private boolean mIsNextYearShow;
+	// 手势
+	private GestureDetectorCompat mDetector;
 	/**
 	 * 绘图完成后的操作
 	 */
@@ -75,12 +83,13 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				mView.findViewById(R.id.btn_history_unit_week).setEnabled(true);
 				mView.findViewById(R.id.btn_history_unit_month)
 						.setEnabled(true);
-				if (mIsPreDayShow || mIsPreWeekShow) {
+				mView.findViewById(R.id.btn_history_unit_year).setEnabled(true);
+				if (mIsPreDayShow || mIsPreWeekShow || mIsPreYearShow) {
 					mView.findViewById(R.id.btn_pre).setEnabled(true);
 				} else {
 					mView.findViewById(R.id.btn_pre).setEnabled(false);
 				}
-				if (mIsNextDayShow || mIsNextWeekShow) {
+				if (mIsNextDayShow || mIsNextWeekShow || mIsNextYearShow) {
 					mView.findViewById(R.id.btn_next).setEnabled(true);
 				} else {
 					mView.findViewById(R.id.btn_next).setEnabled(false);
@@ -123,7 +132,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mIsPreDayShow = false;
 		mIsNextDayShow = false;
 		mIsPreWeekShow = false;
-		mIsNextDayShow = false;
+		mIsNextWeekShow = false;
+		mIsPreYearShow = false;
+		mIsNextYearShow = false;
 		switch (mActivity.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY,
@@ -135,10 +146,40 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
+					mActivity.selectHistoryUnit, mActivity.mLastMonthCalendar);
+			break;
+		case HistoryActivity.DATA_UNIT_YEAR:
+			initData(HistoryActivity.COUNT_NUMBER_YEAR,
 					mActivity.selectHistoryUnit, null);
 			break;
 		}
+		mDetector = new GestureDetectorCompat(mActivity,
+				new GestureDetector.SimpleOnGestureListener() {
+					@Override
+					public boolean onFling(MotionEvent e1, MotionEvent e2,
+							float velocityX, float velocityY) {
+						if (Math.abs(e1.getX() - e2.getX()) > 100
+								&& velocityX > 200) {
+							// 前
+							onFlingPre();
 
+						}
+						if (Math.abs(e1.getX() - e2.getX()) > 100
+								&& velocityX < -200) {
+							// 后
+							onFlingNext();
+						}
+						return true;
+					}
+				});
+		bcv_step.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				mDetector.onTouchEvent(event);
+				return false;
+			}
+		});
 		return mView;
 	}
 
@@ -154,7 +195,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mIsPreDayShow = false;
 		mIsNextDayShow = false;
 		mIsPreWeekShow = false;
-		mIsNextDayShow = false;
+		mIsNextWeekShow = false;
+		mIsPreYearShow = false;
+		mIsNextYearShow = false;
 		switch (event.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY, event.selectHistoryUnit,
@@ -166,6 +209,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
+					event.selectHistoryUnit, null);
+			break;
+		case HistoryActivity.DATA_UNIT_YEAR:
+			initData(HistoryActivity.COUNT_NUMBER_YEAR,
 					event.selectHistoryUnit, null);
 			break;
 		}
@@ -216,16 +263,30 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		}
 		// 月
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
+			Calendar firstDay = (Calendar) mCalendar.clone();
+			firstDay.set(Calendar.DAY_OF_MONTH, 1);
 			for (int i = labelsCount - 1; i >= 0; i--) {
-				if (i == labelsCount - 1) {
+				if (firstDay.get(Calendar.MONTH) == mActivity.mTodayCalendar
+						.get(Calendar.MONTH)) {
 					mLabels[i] = getString(R.string.history_this_month);
+					firstDay.add(Calendar.MONTH, -1);
 					continue;
 				}
-				mCalendar.add(Calendar.MONTH, -1);
 				mLabels[i] = getString(R.string.history_month_number,
-						mCalendar.get(Calendar.MONTH) + 1);
+						firstDay.get(Calendar.MONTH) + 1);
+				firstDay.add(Calendar.MONTH, -1);
 			}
-			updateBarChartByMonth(labelsCount);
+			updateBarChartByMonth(labelsCount, calendar == null ? null
+					: (Calendar) calendar.clone());
+		}
+		// 年
+		if (unit == HistoryActivity.DATA_UNIT_YEAR) {
+			for (int i = labelsCount - 1; i >= 0; i--) {
+				mLabels[i] = mCalendar.get(Calendar.YEAR) + "";
+				mCalendar.add(Calendar.YEAR, -1);
+			}
+			updateBarChartByYear(labelsCount, calendar == null ? null
+					: (Calendar) calendar.clone());
 		}
 		// 计算总步数和均步数
 		int stepSum = 0;
@@ -247,6 +308,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
 			history_step_daily.setText(getString(R.string.history_step_month));
 		}
+		if (unit == HistoryActivity.DATA_UNIT_YEAR) {
+			history_step_daily.setText(getString(R.string.history_step_year));
+		}
 
 	}
 
@@ -263,7 +327,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		if (mActivity.mStepsMap.get(Utils.calendar2strDate(
 				mActivity.mLastDayCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null
 				&& mActivity.mLastDayCalendar.getTime().compareTo(
-						mActivity.mLastYearCalendar.getTime()) >= 0) {
+						mActivity.m7YearAgoCalendar.getTime()) >= 0) {
 			mIsPreDayShow = true;
 		} else {
 			mIsPreDayShow = false;
@@ -299,7 +363,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		BarSet data = new BarSet();
 		rl_pre_and_next.setVisibility(View.VISIBLE);
 		if (calendar == null) {
-			calendar = mActivity.mTodayCalendar;
+			calendar = (Calendar) mActivity.mTodayCalendar.clone();
 		}
 		calendar.add(Calendar.DAY_OF_MONTH, 1 - labelsCount);
 		ArrayList<Step> stepsSort = new ArrayList<Step>();
@@ -397,7 +461,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH, -1);
 		if (weekCount > 0
 				&& mActivity.mLastWeekCalendar.getTime().compareTo(
-						mActivity.mLastYearCalendar.getTime()) >= 0) {
+						mActivity.m7YearAgoCalendar.getTime()) >= 0) {
 			mIsPreWeekShow = true;
 		} else {
 			mIsPreWeekShow = false;
@@ -416,7 +480,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		rl_pre_and_next.setVisibility(View.VISIBLE);
 		// 拿到最新的数据开始计算日期
 		if (calendar == null) {
-			calendar = mActivity.mTodayCalendar;
+			calendar = (Calendar) mActivity.mTodayCalendar.clone();
 		}
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		// 拿到当天所在周的周一
@@ -468,18 +532,73 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	}
 
 	/**
+	 * 是否可点击后一年
+	 * 
+	 * @param calendar
+	 */
+	private void isNextMonthEnable(Calendar calendar) {
+		mActivity.mLastMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
+		mActivity.mLastMonthCalendar.add(Calendar.MONTH,
+				HistoryActivity.COUNT_NUMBER_MONTH);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		if (mActivity.mLastMonthCalendar.getTime()
+				.compareTo(calendar.getTime()) >= 0) {
+			mIsNextYearShow = false;
+		} else {
+			mIsNextYearShow = true;
+		}
+	}
+
+	/**
+	 * 是否可点击前一年
+	 * 
+	 * @param calendar
+	 */
+	private void isPreMonthEnable(Calendar calendar) {
+		// 前一周是否可点击
+		mActivity.mLastMonthCalendar = (Calendar) calendar.clone();
+		// 拿到当天所在周的周一
+		mActivity.mLastMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
+		mActivity.mLastMonthCalendar.add(Calendar.MONTH,
+				-HistoryActivity.COUNT_NUMBER_MONTH);
+		int monthCount = 0;
+		// 计算当月有多少天
+		int daysInMonth = calendar.getActualMaximum(Calendar.DATE);
+		for (int i = 0; i < daysInMonth; i++) {
+			if (mActivity.mStepsMap.get(Utils.calendar2strDate(
+					mActivity.mLastMonthCalendar,
+					BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+				monthCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+						.calendar2strDate(mActivity.mLastMonthCalendar,
+								BTConstants.PATTERN_YYYY_MM_DD)).count);
+			}
+			mActivity.mLastMonthCalendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		mActivity.mLastMonthCalendar.add(Calendar.MONTH, -1);
+		if (monthCount > 0
+				&& mActivity.mLastMonthCalendar.getTime().compareTo(
+						mActivity.m7YearAgoCalendar.getTime()) >= 0) {
+			mIsPreYearShow = true;
+		} else {
+			mIsPreYearShow = false;
+		}
+
+	}
+
+	/**
 	 * 计算以月为单位的运动量
 	 * 
 	 * @param labelsCount
+	 * @param calendar
 	 */
-	private void updateBarChartByMonth(int labelsCount) {
+	private void updateBarChartByMonth(int labelsCount, Calendar calendar) {
 		bcv_step.reset();
 		BarSet data = new BarSet();
-		rl_pre_and_next.setVisibility(View.INVISIBLE);
+		rl_pre_and_next.setVisibility(View.VISIBLE);
 		// 拿到最新的数据开始计算日期
-		Step step = mActivity.mSteps.get(mActivity.mSteps.size() - 1);
-		Calendar calendar = Utils.strDate2Calendar(step.date,
-				BTConstants.PATTERN_YYYY_MM_DD);
+		if (calendar == null) {
+			calendar = (Calendar) mActivity.mTodayCalendar.clone();
+		}
 		// 拿到当天所在月的第一天
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		calendar.add(Calendar.MONTH, 1 - labelsCount);
@@ -524,6 +643,68 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
 				.setMaxAxisValue(barStepMax, 1)
 				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+		calendar.add(Calendar.MONTH, -1);
+		isPreMonthEnable(calendar);
+		isNextMonthEnable(calendar);
+	}
+
+	/**
+	 * 计算以年为单位的运动量
+	 * 
+	 * @param labelsCount
+	 */
+	private void updateBarChartByYear(int labelsCount, Calendar calendar) {
+		bcv_step.reset();
+		BarSet data = new BarSet();
+		rl_pre_and_next.setVisibility(View.INVISIBLE);
+		// 拿到最新的数据开始计算日期
+		if (calendar == null) {
+			calendar = (Calendar) mActivity.mTodayCalendar.clone();
+		}
+		// 拿到当天所在月的第一天
+		calendar.set(Calendar.DAY_OF_YEAR, 1);
+		calendar.add(Calendar.YEAR, 1 - labelsCount);
+		int[] sortData = new int[labelsCount];
+		for (int i = 0; i < labelsCount; i++) {
+			int yearCount = 0;
+			// 计算当月有多少天
+			int daysInYear = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
+			for (int j = 0; j < daysInYear; j++) {
+				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
+						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+					yearCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+							.calendar2strDate(calendar,
+									BTConstants.PATTERN_YYYY_MM_DD)).count);
+				}
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			Bar bar = new Bar(mLabels[i], yearCount);
+			mValues[i] = yearCount + "";
+			sortData[i] = yearCount;
+			data.addBar(bar);
+		}
+		Arrays.sort(sortData);
+		int barStepMax = sortData[labelsCount - 1];
+		// TEST
+		// int stepValue[] = { 10000, 5000, 2500, 1250, 2000, 4000, 8000 };
+		// for (int i = 0; i < nPoints; i++) {
+		// Bar bar = new Bar(mLabels[i], stepValue[i]);
+		// mValues[i] = stepValue[i] + "";
+		// data.addBar(bar);
+		// }
+		data.setColor(getResources().getColor(R.color.blue_b4efff));
+		bcv_step.addData(data);
+
+		bcv_step.setBarSpacing((int) Tools.fromDpToPx(50));
+		bcv_step.setSetSpacing(0);
+		bcv_step.setBarBackground(false);
+		bcv_step.setRoundCorners(0);
+		bcv_step.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+				.setVerticalGrid(null)
+				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
+				.setMaxAxisValue(barStepMax, 1)
+				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
 	}
 
 	private void initView() {
@@ -539,8 +720,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mView.findViewById(R.id.btn_history_unit_week).setOnClickListener(this);
 		mView.findViewById(R.id.btn_history_unit_month)
 				.setOnClickListener(this);
-		mView.findViewById(R.id.btn_pre).setOnClickListener(this);
-		mView.findViewById(R.id.btn_next).setOnClickListener(this);
+		mView.findViewById(R.id.btn_history_unit_year).setOnClickListener(this);
+		// mView.findViewById(R.id.btn_pre).setOnClickListener(this);
+		// mView.findViewById(R.id.btn_next).setOnClickListener(this);
 		rl_pre_and_next = (RelativeLayout) mView
 				.findViewById(R.id.rl_pre_and_next);
 		mView.findViewById(R.id.btn_pre).setEnabled(false);
@@ -599,8 +781,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mView.findViewById(R.id.btn_history_unit_day).setEnabled(false);
 		mView.findViewById(R.id.btn_history_unit_week).setEnabled(false);
 		mView.findViewById(R.id.btn_history_unit_month).setEnabled(false);
-		mView.findViewById(R.id.btn_pre).setEnabled(false);
-		mView.findViewById(R.id.btn_next).setEnabled(false);
+		mView.findViewById(R.id.btn_history_unit_year).setEnabled(false);
+		// mView.findViewById(R.id.btn_pre).setEnabled(false);
+		// mView.findViewById(R.id.btn_next).setEnabled(false);
 		switch (v.getId()) {
 		case R.id.btn_history_unit_day:
 			EventBus.getDefault().postSticky(
@@ -616,39 +799,113 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 							new HistoryChangeUnitClick(
 									HistoryActivity.DATA_UNIT_MONTH));
 			break;
-		case R.id.btn_pre:
-			// 前一天/周
-			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
-				mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
-						-HistoryActivity.COUNT_NUMBER_DAY);
-				initData(HistoryActivity.COUNT_NUMBER_DAY,
-						mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
-			}
-			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
-				mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
-						-HistoryActivity.COUNT_NUMBER_WEEK);
-				initData(HistoryActivity.COUNT_NUMBER_WEEK,
-						mActivity.selectHistoryUnit,
-						mActivity.mLastWeekCalendar);
-			}
-
+		case R.id.btn_history_unit_year:
+			EventBus.getDefault().postSticky(
+					new HistoryChangeUnitClick(HistoryActivity.DATA_UNIT_YEAR));
 			break;
-		case R.id.btn_next:
-			// 后一天/周
-			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
-				mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
-						HistoryActivity.COUNT_NUMBER_DAY);
-				initData(HistoryActivity.COUNT_NUMBER_DAY,
-						mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
-			}
-			if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
-				mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
-						HistoryActivity.COUNT_NUMBER_WEEK);
-				initData(HistoryActivity.COUNT_NUMBER_WEEK,
-						mActivity.selectHistoryUnit,
-						mActivity.mLastWeekCalendar);
-			}
-			break;
+		// case R.id.btn_pre:
+		// 前一天/周/年
+		// if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY)
+		// {
+		// mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+		// -HistoryActivity.COUNT_NUMBER_DAY);
+		// initData(HistoryActivity.COUNT_NUMBER_DAY,
+		// mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
+		// }
+		// if (mActivity.selectHistoryUnit ==
+		// HistoryActivity.DATA_UNIT_WEEK) {
+		// mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+		// -HistoryActivity.COUNT_NUMBER_WEEK);
+		// initData(HistoryActivity.COUNT_NUMBER_WEEK,
+		// mActivity.selectHistoryUnit,
+		// mActivity.mLastWeekCalendar);
+		// }
+		// if (mActivity.selectHistoryUnit ==
+		// HistoryActivity.DATA_UNIT_MONTH) {
+		// mActivity.mLastWeekCalendar.add(Calendar.MONTH,
+		// -HistoryActivity.COUNT_NUMBER_MONTH);
+		// initData(HistoryActivity.COUNT_NUMBER_MONTH,
+		// mActivity.selectHistoryUnit,
+		// mActivity.mLastMonthCalendar);
+		// }
+		// break;
+		// case R.id.btn_next:
+		// 后一天/周/年
+		// if (mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY)
+		// {
+		// mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+		// HistoryActivity.COUNT_NUMBER_DAY);
+		// initData(HistoryActivity.COUNT_NUMBER_DAY,
+		// mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
+		// }
+		// if (mActivity.selectHistoryUnit ==
+		// HistoryActivity.DATA_UNIT_WEEK) {
+		// mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+		// HistoryActivity.COUNT_NUMBER_WEEK);
+		// initData(HistoryActivity.COUNT_NUMBER_WEEK,
+		// mActivity.selectHistoryUnit,
+		// mActivity.mLastWeekCalendar);
+		// }
+		// if (mActivity.selectHistoryUnit ==
+		// HistoryActivity.DATA_UNIT_MONTH) {
+		// mActivity.mLastWeekCalendar.add(Calendar.MONTH,
+		// HistoryActivity.COUNT_NUMBER_MONTH);
+		// initData(HistoryActivity.COUNT_NUMBER_MONTH,
+		// mActivity.selectHistoryUnit,
+		// mActivity.mLastMonthCalendar);
+		// }
+		// break;
 		}
+	}
+
+	private void onFlingPre() {
+		// 前一天/周/年
+		if (mIsPreDayShow
+				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
+			mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+					-HistoryActivity.COUNT_NUMBER_DAY);
+			initData(HistoryActivity.COUNT_NUMBER_DAY,
+					mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
+		}
+		if (mIsPreWeekShow
+				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
+			mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+					-HistoryActivity.COUNT_NUMBER_WEEK);
+			initData(HistoryActivity.COUNT_NUMBER_WEEK,
+					mActivity.selectHistoryUnit, mActivity.mLastWeekCalendar);
+		}
+		if (mIsPreYearShow
+				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
+			mActivity.mLastWeekCalendar.add(Calendar.MONTH,
+					-HistoryActivity.COUNT_NUMBER_MONTH);
+			initData(HistoryActivity.COUNT_NUMBER_MONTH,
+					mActivity.selectHistoryUnit, mActivity.mLastMonthCalendar);
+		}
+	}
+
+	private void onFlingNext() {
+		// 后一天/周/年
+		if (mIsNextDayShow
+				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
+			mActivity.mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
+					HistoryActivity.COUNT_NUMBER_DAY);
+			initData(HistoryActivity.COUNT_NUMBER_DAY,
+					mActivity.selectHistoryUnit, mActivity.mLastDayCalendar);
+		}
+		if (mIsNextWeekShow
+				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
+			mActivity.mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+					HistoryActivity.COUNT_NUMBER_WEEK);
+			initData(HistoryActivity.COUNT_NUMBER_WEEK,
+					mActivity.selectHistoryUnit, mActivity.mLastWeekCalendar);
+		}
+		if (mIsNextYearShow
+				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
+			mActivity.mLastWeekCalendar.add(Calendar.MONTH,
+					HistoryActivity.COUNT_NUMBER_MONTH);
+			initData(HistoryActivity.COUNT_NUMBER_MONTH,
+					mActivity.selectHistoryUnit, mActivity.mLastMonthCalendar);
+		}
+
 	}
 }

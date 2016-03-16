@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +26,7 @@ import com.blestep.sportsbracelet.fragment.HistoryStepCalorie;
 import com.blestep.sportsbracelet.fragment.HistoryStepCount;
 import com.blestep.sportsbracelet.fragment.HistoryStepDistance;
 import com.blestep.sportsbracelet.utils.Utils;
+import com.blestep.sportsbracelet.view.ControlScrollViewPager;
 import com.umeng.analytics.MobclickAgent;
 
 import de.greenrobot.event.EventBus;
@@ -36,12 +36,14 @@ public class HistoryActivity extends FragmentActivity implements
 	public static final int DATA_UNIT_DAY = 0;
 	public static final int DATA_UNIT_WEEK = 1;
 	public static final int DATA_UNIT_MONTH = 2;
+	public static final int DATA_UNIT_YEAR = 3;
 	public static final int COUNT_NUMBER_DAY = 7;
 	public static final int COUNT_NUMBER_WEEK = 7;
 	public static final int COUNT_NUMBER_MONTH = 12;
+	public static final int COUNT_NUMBER_YEAR = 7;
 	public int selectHistoryUnit = 0;
 
-	private ViewPager vp_history;
+	private ControlScrollViewPager vp_history;
 	private FragmentPagerAdapter mAdapter;
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 	private HistoryStepCount tab01;
@@ -54,8 +56,9 @@ public class HistoryActivity extends FragmentActivity implements
 	public HashMap<String, Step> mStepsMap;
 	public Calendar mLastDayCalendar;// 上一周的最后一天
 	public Calendar mLastWeekCalendar;// 7周前的周一
+	public Calendar mLastMonthCalendar;// 一年前的今天
 	public Calendar mTodayCalendar;// 今天
-	public Calendar mLastYearCalendar;// 去年的今天
+	public Calendar m7YearAgoCalendar;// 7年前的今天
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,8 @@ public class HistoryActivity extends FragmentActivity implements
 	}
 
 	private void initView() {
-		vp_history = (ViewPager) findViewById(R.id.vp_history);
+		vp_history = (ControlScrollViewPager) findViewById(R.id.vp_history);
+		vp_history.setScrollable(false);
 		rg_history_tab = (RadioGroup) findViewById(R.id.rg_history_tab);
 		initViewPager();
 	}
@@ -84,8 +88,8 @@ public class HistoryActivity extends FragmentActivity implements
 		Step step = mSteps.get(mSteps.size() - 1);
 		mTodayCalendar = Utils.strDate2Calendar(step.date,
 				BTConstants.PATTERN_YYYY_MM_DD);
-		mLastYearCalendar = (Calendar) mTodayCalendar.clone();
-		mLastYearCalendar.add(Calendar.YEAR, -1);
+		m7YearAgoCalendar = (Calendar) mTodayCalendar.clone();
+		m7YearAgoCalendar.add(Calendar.YEAR, -6);
 	}
 
 	private void initViewPager() {

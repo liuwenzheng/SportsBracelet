@@ -151,6 +151,14 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="月" />
+
+        <Button
+            android:id="@+id/btn_history_unit_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="年" />
     </LinearLayout>
 
 </LinearLayout>

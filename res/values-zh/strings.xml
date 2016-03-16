@@ -172,6 +172,7 @@
     <string name="history_step_daily">日均步数</string>
     <string name="history_step_week">周均步数</string>
     <string name="history_step_month">月均步数</string>
+    <string name="history_step_year">年均步数</string>
     <string name="history_step_sum">总步数</string>
     <string name="history_step_unit">步</string>
     <string name="history_calorie">热量</string>
