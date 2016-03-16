@@ -18,7 +18,7 @@
     <RelativeLayout
         android:id="@+id/rl_pre_and_next"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp" >
 
         <Button
             android:id="@+id/btn_pre"
@@ -39,7 +39,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="1.0"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="25dp"
@@ -124,41 +124,59 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="28dp" >
 
-        <Button
+        <CheckBox
             android:id="@+id/btn_history_unit_day"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:background="@drawable/history_radiobtn_selector"
+            android:button="@null"
+            android:checked="true"
             android:gravity="center"
-            android:text="日" />
+            android:text="日"
+            android:textColor="@drawable/history_radiobtn_text_selector" />
 
-        <Button
+        <CheckBox
             android:id="@+id/btn_history_unit_week"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_alignBottom="@id/btn_history_unit_day"
+            android:layout_marginLeft="1dp"
+            android:layout_toRightOf="@id/btn_history_unit_day"
+            android:background="@drawable/history_radiobtn_selector"
+            android:button="@null"
             android:gravity="center"
-            android:text="周" />
+            android:text="周"
+            android:textColor="@drawable/history_radiobtn_text_selector" />
 
-        <Button
+        <CheckBox
             android:id="@+id/btn_history_unit_month"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_alignBottom="@id/btn_history_unit_day"
+            android:layout_marginLeft="1dp"
+            android:layout_toRightOf="@id/btn_history_unit_week"
+            android:background="@drawable/history_radiobtn_selector"
+            android:button="@null"
             android:gravity="center"
-            android:text="月" />
+            android:text="月"
+            android:textColor="@drawable/history_radiobtn_text_selector" />
 
-        <Button
+        <CheckBox
             android:id="@+id/btn_history_unit_year"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
+            android:layout_alignBottom="@id/btn_history_unit_day"
+            android:layout_marginLeft="1dp"
+            android:layout_toRightOf="@id/btn_history_unit_month"
+            android:background="@drawable/history_radiobtn_selector"
+            android:button="@null"
             android:gravity="center"
-            android:text="年" />
-    </LinearLayout>
+            android:text="年"
+            android:textColor="@drawable/history_radiobtn_text_selector" />
+    </RelativeLayout>
 
 </LinearLayout>

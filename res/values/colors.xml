@@ -29,8 +29,13 @@
     <color name="grey_dddddd">#dddddd</color>
     <color name="grey_8b8b8b">#8b8b8b</color>
     <color name="grey_979797">#979797</color>
+    <color name="grey_d9d9d9">#d9d9d9</color>
+    <color name="grey_696969">#696969</color>
+    <color name="grey_f0f0f0">#f0f0f0</color>
+    <color name="grey_acacac">#acacac</color>
     <color name="red_ec4300">#ec4300</color>
     <color name="red_e05b5e">#e05b5e</color>
+    <color name="red_d75c70">#d75c70</color>
 
     <!-- test -->
     <color name="black_000000">#000000</color>
