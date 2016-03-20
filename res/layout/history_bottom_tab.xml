@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rg_history_bottom_tab_parent"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal" >
+
+    <RadioButton
+        android:id="@+id/rb_history_unit_day"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:background="@drawable/history_radiobtn_selector"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:text="日"
+        android:textColor="@drawable/history_radiobtn_text_selector" />
+
+    <RadioButton
+        android:id="@+id/rb_history_unit_week"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="1.0"
+        android:background="@drawable/history_radiobtn_selector"
+        android:button="@null"
+        android:gravity="center"
+        android:text="周"
+        android:textColor="@drawable/history_radiobtn_text_selector" />
+
+    <RadioButton
+        android:id="@+id/rb_history_unit_month"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="1.0"
+        android:background="@drawable/history_radiobtn_selector"
+        android:button="@null"
+        android:gravity="center"
+        android:text="月"
+        android:textColor="@drawable/history_radiobtn_text_selector" />
+
+    <RadioButton
+        android:id="@+id/rb_history_unit_year"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="1.0"
+        android:background="@drawable/history_radiobtn_selector"
+        android:button="@null"
+        android:gravity="center"
+        android:text="年"
+        android:textColor="@drawable/history_radiobtn_text_selector" />
+
+</RadioGroup>

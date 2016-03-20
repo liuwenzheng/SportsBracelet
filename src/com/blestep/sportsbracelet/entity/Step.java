@@ -11,8 +11,10 @@ public class Step implements Serializable {
 	public Step() {
 	}
 
-	public Step(String count) {
+	public Step(String count, String distance, String calories) {
 		this.count = count;
+		this.distance = distance;
+		this.calories = calories;
 	}
 
 	public String date;

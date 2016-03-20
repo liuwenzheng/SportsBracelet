@@ -124,59 +124,6 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="28dp" >
-
-        <CheckBox
-            android:id="@+id/btn_history_unit_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/history_radiobtn_selector"
-            android:button="@null"
-            android:checked="true"
-            android:gravity="center"
-            android:text="日"
-            android:textColor="@drawable/history_radiobtn_text_selector" />
-
-        <CheckBox
-            android:id="@+id/btn_history_unit_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/btn_history_unit_day"
-            android:layout_marginLeft="1dp"
-            android:layout_toRightOf="@id/btn_history_unit_day"
-            android:background="@drawable/history_radiobtn_selector"
-            android:button="@null"
-            android:gravity="center"
-            android:text="周"
-            android:textColor="@drawable/history_radiobtn_text_selector" />
-
-        <CheckBox
-            android:id="@+id/btn_history_unit_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/btn_history_unit_day"
-            android:layout_marginLeft="1dp"
-            android:layout_toRightOf="@id/btn_history_unit_week"
-            android:background="@drawable/history_radiobtn_selector"
-            android:button="@null"
-            android:gravity="center"
-            android:text="月"
-            android:textColor="@drawable/history_radiobtn_text_selector" />
-
-        <CheckBox
-            android:id="@+id/btn_history_unit_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/btn_history_unit_day"
-            android:layout_marginLeft="1dp"
-            android:layout_toRightOf="@id/btn_history_unit_month"
-            android:background="@drawable/history_radiobtn_selector"
-            android:button="@null"
-            android:gravity="center"
-            android:text="年"
-            android:textColor="@drawable/history_radiobtn_text_selector" />
-    </RelativeLayout>
+    <include layout="@layout/history_bottom_tab" />
 
 </LinearLayout>

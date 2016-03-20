@@ -54,9 +54,6 @@ public class HistoryActivity extends FragmentActivity implements
 
 	public ArrayList<Step> mSteps;
 	public HashMap<String, Step> mStepsMap;
-	public Calendar mLastDayCalendar;// 上一周的最后一天
-	public Calendar mLastWeekCalendar;// 7周前的周一
-	public Calendar mLastMonthCalendar;// 一年前的今天
 	public Calendar mTodayCalendar;// 今天
 	public Calendar m7YearAgoCalendar;// 7年前的今天
 
@@ -135,6 +132,7 @@ public class HistoryActivity extends FragmentActivity implements
 			}
 		};
 		vp_history.setAdapter(mAdapter);
+		vp_history.setOffscreenPageLimit(2);
 	}
 
 	@Override

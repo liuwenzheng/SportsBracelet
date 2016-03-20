@@ -3,6 +3,4 @@
 
     <solid android:color="@color/grey_f0f0f0" />
 
-    <size android:height="22dp" />
-
 </shape>
