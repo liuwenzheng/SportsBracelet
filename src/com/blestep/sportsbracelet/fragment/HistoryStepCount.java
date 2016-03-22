@@ -142,28 +142,11 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mIsPreYearShow = false;
 		mIsNextYearShow = false;
 		rg_history_bottom_tab_parent.setOnCheckedChangeListener(null);
-		switch (mActivity.selectHistoryUnit) {
-		case HistoryActivity.DATA_UNIT_DAY:
-			initData(HistoryActivity.COUNT_NUMBER_DAY,
-					mActivity.selectHistoryUnit, mLastDayCalendar);
-			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_day);
-			break;
-		case HistoryActivity.DATA_UNIT_WEEK:
-			initData(HistoryActivity.COUNT_NUMBER_WEEK,
-					mActivity.selectHistoryUnit, mLastWeekCalendar);
-			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_week);
-			break;
-		case HistoryActivity.DATA_UNIT_MONTH:
-			initData(HistoryActivity.COUNT_NUMBER_MONTH,
-					mActivity.selectHistoryUnit, mLastMonthCalendar);
-			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_month);
-			break;
-		case HistoryActivity.DATA_UNIT_YEAR:
-			initData(HistoryActivity.COUNT_NUMBER_YEAR,
-					mActivity.selectHistoryUnit, null);
-			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_year);
-			break;
-		}
+
+		initData(HistoryActivity.COUNT_NUMBER_DAY, mActivity.selectHistoryUnit,
+				mLastDayCalendar, null);
+		rg_history_bottom_tab_parent.check(R.id.rb_history_unit_day);
+
 		mDetector = new GestureDetectorCompat(mActivity,
 				new GestureDetector.SimpleOnGestureListener() {
 					@Override
@@ -213,29 +196,30 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		switch (event.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY, event.selectHistoryUnit,
-					null);
+					null, null);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_day);
 			break;
 		case HistoryActivity.DATA_UNIT_WEEK:
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
-					event.selectHistoryUnit, null);
+					event.selectHistoryUnit, null, null);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_week);
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
-					event.selectHistoryUnit, null);
+					event.selectHistoryUnit, null, null);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_month);
 			break;
 		case HistoryActivity.DATA_UNIT_YEAR:
 			initData(HistoryActivity.COUNT_NUMBER_YEAR,
-					event.selectHistoryUnit, null);
+					event.selectHistoryUnit, null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_year);
 			break;
 		}
 		rg_history_bottom_tab_parent.setOnCheckedChangeListener(this);
 	}
 
-	private void initData(int labelsCount, int unit, Calendar calendar) {
+	private void initData(int labelsCount, int unit, Calendar calendar,
+			HistoryChangeUnitClick event) {
 		mLabels = new String[labelsCount];
 		mValues = new String[labelsCount];
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
@@ -262,6 +246,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		// 周
 		if (unit == HistoryActivity.DATA_UNIT_WEEK) {
 			Calendar monday = (Calendar) mCalendar.clone();
+			if (monday.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				monday.add(Calendar.DAY_OF_MONTH, -1);
+			}
 			monday.setFirstDayOfWeek(Calendar.MONDAY);
 			monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 			for (int i = labelsCount - 1; i >= 0; i--) {
@@ -298,12 +285,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		}
 		// 年
 		if (unit == HistoryActivity.DATA_UNIT_YEAR) {
-			for (int i = labelsCount - 1; i >= 0; i--) {
-				mLabels[i] = mCalendar.get(Calendar.YEAR) + "";
-				mCalendar.add(Calendar.YEAR, -1);
-			}
-			updateBarChartByYear(labelsCount, calendar == null ? null
-					: (Calendar) calendar.clone());
+			mValues = event.valuesCount;
+			updateBarChartByYear(event);
 		}
 		// 计算总步数和均步数
 		int stepSum = 0;
@@ -498,6 +481,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		if (calendar == null) {
 			calendar = (Calendar) mActivity.mTodayCalendar.clone();
 		}
+		if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
+		}
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		// 拿到当天所在周的周一
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -659,54 +645,25 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 * 
 	 * @param labelsCount
 	 */
-	private void updateBarChartByYear(int labelsCount, Calendar calendar) {
+	private void updateBarChartByYear(HistoryChangeUnitClick event) {
 		bcv_step.reset();
-		BarSet data = new BarSet();
-		rl_pre_and_next.setVisibility(View.INVISIBLE);
-		// 拿到最新的数据开始计算日期
-		if (calendar == null) {
-			calendar = (Calendar) mActivity.mTodayCalendar.clone();
-		}
-		// 拿到当天所在月的第一天
-		calendar.set(Calendar.DAY_OF_YEAR, 1);
-		calendar.add(Calendar.YEAR, 1 - labelsCount);
-		int[] sortData = new int[labelsCount];
-		for (int i = 0; i < labelsCount; i++) {
-			int yearCount = 0;
-			// 计算当月有多少天
-			int daysInYear = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
-			for (int j = 0; j < daysInYear; j++) {
-				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
-						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-					yearCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
-							.calendar2strDate(calendar,
-									BTConstants.PATTERN_YYYY_MM_DD)).count);
-				}
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
-			}
-			Bar bar = new Bar(mLabels[i], yearCount);
-			mValues[i] = yearCount + "";
-			sortData[i] = yearCount;
-			data.addBar(bar);
-		}
-		Arrays.sort(sortData);
-		int barStepMax = 100;
-		if (sortData[labelsCount - 1] >= barStepMax) {
-			barStepMax = sortData[labelsCount - 1];
-		}
-		data.setColor(getResources().getColor(R.color.blue_b4efff));
-		bcv_step.addData(data);
-
+		bcv_step.addData(event.dataCount);
 		bcv_step.setBarSpacing((int) Tools.fromDpToPx(50));
 		bcv_step.setSetSpacing(0);
 		bcv_step.setBarBackground(false);
 		bcv_step.setRoundCorners(0);
-		bcv_step.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+		bcv_step.setBorderSpacing(0)
+				.setGrid(null)
+				.setHorizontalGrid(null)
 				.setVerticalGrid(null)
-				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
-				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(barStepMax, 1)
-				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
+				.setYLabels(YController.LabelPosition.NONE)
+				.setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE)
+				.setXAxis(true)
+				.setMaxAxisValue(event.barCountMax, 1)
+				.animate(
+						DataRetriever.randAnimation(mEndAction,
+								mActivity.COUNT_NUMBER_YEAR));
 	}
 
 	private void initView() {
@@ -780,21 +737,21 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 					-HistoryActivity.COUNT_NUMBER_DAY);
 			initData(HistoryActivity.COUNT_NUMBER_DAY,
-					mActivity.selectHistoryUnit, mLastDayCalendar);
+					mActivity.selectHistoryUnit, mLastDayCalendar, null);
 		}
 		if (mIsPreWeekShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
 			mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
 					-HistoryActivity.COUNT_NUMBER_WEEK);
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
-					mActivity.selectHistoryUnit, mLastWeekCalendar);
+					mActivity.selectHistoryUnit, mLastWeekCalendar, null);
 		}
 		if (mIsPreYearShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
 			mLastWeekCalendar.add(Calendar.MONTH,
 					-HistoryActivity.COUNT_NUMBER_MONTH);
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
-					mActivity.selectHistoryUnit, mLastMonthCalendar);
+					mActivity.selectHistoryUnit, mLastMonthCalendar, null);
 		}
 	}
 
@@ -805,21 +762,21 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 			mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 					HistoryActivity.COUNT_NUMBER_DAY);
 			initData(HistoryActivity.COUNT_NUMBER_DAY,
-					mActivity.selectHistoryUnit, mLastDayCalendar);
+					mActivity.selectHistoryUnit, mLastDayCalendar, null);
 		}
 		if (mIsNextWeekShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
 			mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
 					HistoryActivity.COUNT_NUMBER_WEEK);
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
-					mActivity.selectHistoryUnit, mLastWeekCalendar);
+					mActivity.selectHistoryUnit, mLastWeekCalendar, null);
 		}
 		if (mIsNextYearShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
 			mLastWeekCalendar.add(Calendar.MONTH,
 					HistoryActivity.COUNT_NUMBER_MONTH);
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
-					mActivity.selectHistoryUnit, mLastMonthCalendar);
+					mActivity.selectHistoryUnit, mLastMonthCalendar, null);
 		}
 
 	}

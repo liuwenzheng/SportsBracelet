@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +26,18 @@ import com.blestep.sportsbracelet.event.HistoryChangeUnitClick;
 import com.blestep.sportsbracelet.fragment.HistoryStepCalorie;
 import com.blestep.sportsbracelet.fragment.HistoryStepCount;
 import com.blestep.sportsbracelet.fragment.HistoryStepDistance;
+import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.ControlScrollViewPager;
+import com.db.chart.model.Bar;
+import com.db.chart.model.BarSet;
 import com.umeng.analytics.MobclickAgent;
 
 import de.greenrobot.event.EventBus;
 
 public class HistoryActivity extends FragmentActivity implements
 		OnClickListener, OnPageChangeListener, OnCheckedChangeListener {
+	private static final String TAG = HistoryActivity.class.getSimpleName();
 	public static final int DATA_UNIT_DAY = 0;
 	public static final int DATA_UNIT_WEEK = 1;
 	public static final int DATA_UNIT_MONTH = 2;
@@ -209,5 +214,104 @@ public class HistoryActivity extends FragmentActivity implements
 
 	public void onEvent(HistoryChangeUnitClick event) {
 		this.selectHistoryUnit = event.selectHistoryUnit;
+		switch (event.selectHistoryUnit) {
+		case HistoryActivity.DATA_UNIT_DAY:
+
+			break;
+		case HistoryActivity.DATA_UNIT_WEEK:
+
+			break;
+		case HistoryActivity.DATA_UNIT_MONTH:
+
+			break;
+		case HistoryActivity.DATA_UNIT_YEAR:
+			BarSet dataCount = new BarSet();
+			BarSet dataCalorie = new BarSet();
+			BarSet dataDistance = new BarSet();
+
+			String[] labels = new String[COUNT_NUMBER_YEAR];
+			String[] valueCount = new String[COUNT_NUMBER_YEAR];
+			String[] valueCalorie = new String[COUNT_NUMBER_YEAR];
+			String[] valueDistance = new String[COUNT_NUMBER_YEAR];
+			Calendar calendarLabels = (Calendar) mTodayCalendar.clone();
+			for (int i = COUNT_NUMBER_YEAR - 1; i >= 0; i--) {
+				labels[i] = calendarLabels.get(Calendar.YEAR) + "";
+				calendarLabels.add(Calendar.YEAR, -1);
+			}
+			Calendar calendar = (Calendar) mTodayCalendar.clone();
+			// 拿到当天所在月的第一天
+			calendar.set(Calendar.DAY_OF_YEAR, 1);
+			calendar.add(Calendar.YEAR, 1 - COUNT_NUMBER_YEAR);
+			int[] sortDataCount = new int[COUNT_NUMBER_YEAR];
+			int[] sortDataCalorie = new int[COUNT_NUMBER_YEAR];
+			int[] sortDataDistance = new int[COUNT_NUMBER_YEAR];
+			for (int i = 0; i < COUNT_NUMBER_YEAR; i++) {
+				int yearCount = 0;
+				int yearCalorie = 0;
+				int yearDistance = 0;
+				// 计算当月有多少天
+				int daysInYear = calendar
+						.getActualMaximum(Calendar.DAY_OF_YEAR);
+				for (int j = 0; j < daysInYear; j++) {
+					if (mStepsMap.get(Utils.calendar2strDate(calendar,
+							BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+						yearCount += Integer.valueOf(mStepsMap.get(Utils
+								.calendar2strDate(calendar,
+										BTConstants.PATTERN_YYYY_MM_DD)).count);
+						yearCalorie += Integer
+								.valueOf(mStepsMap.get(Utils.calendar2strDate(
+										calendar,
+										BTConstants.PATTERN_YYYY_MM_DD)).calories);
+						yearDistance += Float
+								.valueOf(mStepsMap.get(Utils.calendar2strDate(
+										calendar,
+										BTConstants.PATTERN_YYYY_MM_DD)).distance);
+					}
+					calendar.add(Calendar.DAY_OF_MONTH, 1);
+				}
+				Bar barCount = new Bar(labels[i], yearCount);
+				Bar barCalorie = new Bar(labels[i], yearCalorie);
+				Bar barDistance = new Bar(labels[i], yearDistance);
+				valueCount[i] = yearCount + "";
+				valueCalorie[i] = yearCalorie + "";
+				valueDistance[i] = yearDistance + "";
+				sortDataCount[i] = yearCount;
+				sortDataCalorie[i] = yearCalorie;
+				sortDataDistance[i] = yearDistance;
+				dataCount.addBar(barCount);
+				dataCalorie.addBar(barCalorie);
+				dataDistance.addBar(barDistance);
+			}
+			Arrays.sort(sortDataCount);
+			Arrays.sort(sortDataCalorie);
+			Arrays.sort(sortDataDistance);
+			int barCountMax = 100;
+			int barCalorieMax = 100;
+			int barDistanceMax = 1;
+			if (sortDataCount[COUNT_NUMBER_YEAR - 1] >= barCountMax) {
+				barCountMax = sortDataCount[COUNT_NUMBER_YEAR - 1];
+			}
+			if (sortDataCalorie[COUNT_NUMBER_YEAR - 1] >= barCalorieMax) {
+				barCalorieMax = sortDataCalorie[COUNT_NUMBER_YEAR - 1];
+			}
+			if (sortDataDistance[COUNT_NUMBER_YEAR - 1] >= barDistanceMax) {
+				barDistanceMax = Float.valueOf(
+						sortDataDistance[COUNT_NUMBER_YEAR - 1]).intValue() + 1;
+			}
+			dataCount.setColor(getResources().getColor(R.color.blue_b4efff));
+			dataCalorie.setColor(getResources().getColor(R.color.blue_b4efff));
+			dataDistance.setColor(getResources().getColor(R.color.blue_b4efff));
+			event.dataCount = dataCount;
+			event.dataCalorie = dataCalorie;
+			event.dataDistance = dataDistance;
+			event.valuesCount = valueCount;
+			event.valuesCalorie = valueCalorie;
+			event.valuesDistance = valueDistance;
+			event.barCountMax = barCountMax;
+			event.barCalorieMax = barCalorieMax;
+			event.barDistanceMax = barDistanceMax;
+			break;
+		}
+		LogModule.i(TAG + "onEvent-->" + event.selectHistoryUnit);
 	}
 }
