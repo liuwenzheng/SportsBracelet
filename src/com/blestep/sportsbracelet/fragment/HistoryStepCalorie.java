@@ -206,7 +206,7 @@ public class HistoryStepCalorie extends Fragment implements
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
-					event.selectHistoryUnit, null, null);
+					event.selectHistoryUnit, null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_month);
 			break;
 		case HistoryActivity.DATA_UNIT_YEAR:
@@ -267,21 +267,21 @@ public class HistoryStepCalorie extends Fragment implements
 		}
 		// 月
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
-			Calendar firstDay = (Calendar) mCalendar.clone();
-			firstDay.set(Calendar.DAY_OF_MONTH, 1);
-			for (int i = labelsCount - 1; i >= 0; i--) {
-				if (firstDay.get(Calendar.MONTH) == mActivity.mTodayCalendar
-						.get(Calendar.MONTH)) {
-					mLabels[i] = getString(R.string.history_this_month);
-					firstDay.add(Calendar.MONTH, -1);
-					continue;
-				}
-				mLabels[i] = getString(R.string.history_month_number,
-						firstDay.get(Calendar.MONTH) + 1);
-				firstDay.add(Calendar.MONTH, -1);
+			if (event == null) {
+				event = new HistoryChangeUnitClick(
+						HistoryActivity.DATA_UNIT_MONTH);
+				event = mActivity.getMonthData(mCalendar, event);
 			}
-			updateBarChartByMonth(labelsCount, calendar == null ? null
-					: (Calendar) calendar.clone());
+			updateBarChartByMonth(event);
+			Calendar preOrNextCalendar;
+			if (calendar == null) {
+				preOrNextCalendar = (Calendar) mActivity.mTodayCalendar.clone();
+			} else {
+				preOrNextCalendar = (Calendar) calendar.clone();
+			}
+			isPreMonthEnable(preOrNextCalendar);
+			isNextMonthEnable(preOrNextCalendar);
+			mValues = event.valuesCalorie;
 		}
 		// 年
 		if (unit == HistoryActivity.DATA_UNIT_YEAR) {
@@ -419,9 +419,10 @@ public class HistoryStepCalorie extends Fragment implements
 		mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
 				HistoryActivity.COUNT_NUMBER_WEEK);
-		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		if (mLastWeekCalendar.getTime().compareTo(calendar.getTime()) >= 0) {
+		Calendar todayWeek = (Calendar) mActivity.mTodayCalendar.clone();
+		todayWeek.setFirstDayOfWeek(Calendar.MONDAY);
+		todayWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		if (mLastWeekCalendar.getTime().compareTo(todayWeek.getTime()) >= 0) {
 			mIsNextDayShow = false;
 		} else {
 			mIsNextDayShow = true;
@@ -441,21 +442,24 @@ public class HistoryStepCalorie extends Fragment implements
 		mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
 				-HistoryActivity.COUNT_NUMBER_WEEK);
-		int weekCount = 0;
-		// 一周7天
-		for (int i = 0; i < 7; i++) {
-			if (mActivity.mStepsMap.get(Utils.calendar2strDate(
-					mLastWeekCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-				weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
-						.calendar2strDate(mLastWeekCalendar,
-								BTConstants.PATTERN_YYYY_MM_DD)).calories);
-			}
-			mLastWeekCalendar.add(Calendar.DAY_OF_MONTH, 1);
-		}
-		mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH, -1);
-		if (weekCount > 0
-				&& mLastWeekCalendar.getTime().compareTo(
-						mActivity.m7YearAgoCalendar.getTime()) >= 0) {
+		Calendar agoWeek = (Calendar) mActivity.m7YearAgoCalendar.clone();
+		agoWeek.setFirstDayOfWeek(Calendar.MONDAY);
+		agoWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// int weekCount = 0;
+		// // 一周7天
+		// for (int i = 0; i < 7; i++) {
+		// if (mActivity.mStepsMap.get(Utils.calendar2strDate(
+		// mLastWeekCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+		// weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+		// .calendar2strDate(mLastWeekCalendar,
+		// BTConstants.PATTERN_YYYY_MM_DD)).count);
+		// }
+		// mLastWeekCalendar.add(Calendar.DAY_OF_MONTH, 1);
+		// }
+		// mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH, -1);
+		if (/*
+			 * weekCount > 0 &&
+			 */mLastWeekCalendar.getTime().compareTo(agoWeek.getTime()) >= 0) {
 			mIsPreWeekShow = true;
 		} else {
 			mIsPreWeekShow = false;
@@ -533,8 +537,9 @@ public class HistoryStepCalorie extends Fragment implements
 		mLastMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		mLastMonthCalendar.add(Calendar.MONTH,
 				HistoryActivity.COUNT_NUMBER_MONTH);
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		if (mLastMonthCalendar.getTime().compareTo(calendar.getTime()) >= 0) {
+		Calendar todayMonth = (Calendar) mActivity.mTodayCalendar.clone();
+		todayMonth.set(Calendar.DAY_OF_MONTH, 1);
+		if (mLastMonthCalendar.getTime().compareTo(todayMonth.getTime()) >= 0) {
 			mIsNextYearShow = false;
 		} else {
 			mIsNextYearShow = true;
@@ -553,22 +558,23 @@ public class HistoryStepCalorie extends Fragment implements
 		mLastMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		mLastMonthCalendar.add(Calendar.MONTH,
 				-HistoryActivity.COUNT_NUMBER_MONTH);
-		int monthCount = 0;
-		// 计算当月有多少天
-		int daysInMonth = calendar.getActualMaximum(Calendar.DATE);
-		for (int i = 0; i < daysInMonth; i++) {
-			if (mActivity.mStepsMap.get(Utils.calendar2strDate(
-					mLastMonthCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-				monthCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
-						.calendar2strDate(mLastMonthCalendar,
-								BTConstants.PATTERN_YYYY_MM_DD)).calories);
-			}
-			mLastMonthCalendar.add(Calendar.DAY_OF_MONTH, 1);
-		}
-		mLastMonthCalendar.add(Calendar.MONTH, -1);
-		if (monthCount > 0
-				&& mLastMonthCalendar.getTime().compareTo(
-						mActivity.m7YearAgoCalendar.getTime()) >= 0) {
+		Calendar agoMonth = (Calendar) mActivity.m7YearAgoCalendar.clone();
+		agoMonth.set(Calendar.DAY_OF_MONTH, 1);
+		/*
+		 * int monthCount = 0; // 计算当月有多少天 int daysInMonth =
+		 * calendar.getActualMaximum(Calendar.DATE); for (int i = 0; i <
+		 * daysInMonth; i++) { if
+		 * (mActivity.mStepsMap.get(Utils.calendar2strDate( mLastMonthCalendar,
+		 * BTConstants.PATTERN_YYYY_MM_DD)) != null) { monthCount +=
+		 * Integer.valueOf(mActivity.mStepsMap.get(Utils
+		 * .calendar2strDate(mLastMonthCalendar,
+		 * BTConstants.PATTERN_YYYY_MM_DD)).count); }
+		 * mLastMonthCalendar.add(Calendar.DAY_OF_MONTH, 1); }
+		 * mLastMonthCalendar.add(Calendar.MONTH, -1);
+		 */
+		if (/*
+			 * monthCount > 0 &&
+			 */mLastMonthCalendar.getTime().compareTo(agoMonth.getTime()) >= 0) {
 			mIsPreYearShow = true;
 		} else {
 			mIsPreYearShow = false;
@@ -582,57 +588,26 @@ public class HistoryStepCalorie extends Fragment implements
 	 * @param labelsCount
 	 * @param calendar
 	 */
-	private void updateBarChartByMonth(int labelsCount, Calendar calendar) {
+	private void updateBarChartByMonth(HistoryChangeUnitClick event) {
 		bcv_calorie.reset();
-		BarSet data = new BarSet();
-		rl_pre_and_next.setVisibility(View.VISIBLE);
-		// 拿到最新的数据开始计算日期
-		if (calendar == null) {
-			calendar = (Calendar) mActivity.mTodayCalendar.clone();
-		}
-		// 拿到当天所在月的第一天
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		calendar.add(Calendar.MONTH, 1 - labelsCount);
-		int[] sortData = new int[labelsCount];
-		for (int i = 0; i < labelsCount; i++) {
-			int monthCount = 0;
-			// 计算当月有多少天
-			int daysInMonth = calendar.getActualMaximum(Calendar.DATE);
-			for (int j = 0; j < daysInMonth; j++) {
-				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
-						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-					monthCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
-							.calendar2strDate(calendar,
-									BTConstants.PATTERN_YYYY_MM_DD)).calories);
-				}
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
-			}
-			Bar bar = new Bar(mLabels[i], monthCount);
-			mValues[i] = monthCount + "";
-			sortData[i] = monthCount;
-			data.addBar(bar);
-		}
-		Arrays.sort(sortData);
-		int barStepMax = 100;
-		if (sortData[labelsCount - 1] >= barStepMax) {
-			barStepMax = sortData[labelsCount - 1];
-		}
-		data.setColor(getResources().getColor(R.color.blue_b4efff));
-		bcv_calorie.addData(data);
-
+		bcv_calorie.addData(event.dataCalorie);
 		bcv_calorie.setBarSpacing((int) Tools.fromDpToPx(20));
 		bcv_calorie.setSetSpacing(0);
 		bcv_calorie.setBarBackground(false);
 		bcv_calorie.setRoundCorners(0);
-		bcv_calorie.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+		bcv_calorie
+				.setBorderSpacing(0)
+				.setGrid(null)
+				.setHorizontalGrid(null)
 				.setVerticalGrid(null)
-				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
-				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(barStepMax, 1)
-				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
-		calendar.add(Calendar.MONTH, -1);
-		isPreMonthEnable(calendar);
-		isNextMonthEnable(calendar);
+				.setYLabels(YController.LabelPosition.NONE)
+				.setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE)
+				.setXAxis(true)
+				.setMaxAxisValue(event.barCalorieMax, 1)
+				.animate(
+						DataRetriever.randAnimation(mEndAction,
+								mActivity.COUNT_NUMBER_MONTH));
 	}
 
 	/**
@@ -746,8 +721,12 @@ public class HistoryStepCalorie extends Fragment implements
 		}
 		if (mIsPreYearShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
-			mLastWeekCalendar.add(Calendar.MONTH,
+			mLastMonthCalendar.add(Calendar.MONTH,
 					-HistoryActivity.COUNT_NUMBER_MONTH);
+			LogModule.i(TAG
+					+ "--"
+					+ new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD)
+							.format(mLastMonthCalendar.getTime()));
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
 					mActivity.selectHistoryUnit, mLastMonthCalendar, null);
 		}
@@ -771,10 +750,15 @@ public class HistoryStepCalorie extends Fragment implements
 		}
 		if (mIsNextYearShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
-			mLastWeekCalendar.add(Calendar.MONTH,
+			mLastMonthCalendar.add(Calendar.MONTH,
 					HistoryActivity.COUNT_NUMBER_MONTH);
+			LogModule.i(TAG
+					+ "--"
+					+ new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD)
+							.format(mLastMonthCalendar.getTime()));
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
 					mActivity.selectHistoryUnit, mLastMonthCalendar, null);
+
 		}
 
 	}

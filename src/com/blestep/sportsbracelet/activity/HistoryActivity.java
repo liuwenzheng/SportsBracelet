@@ -91,7 +91,7 @@ public class HistoryActivity extends FragmentActivity implements
 		mTodayCalendar = Utils.strDate2Calendar(step.date,
 				BTConstants.PATTERN_YYYY_MM_DD);
 		m7YearAgoCalendar = (Calendar) mTodayCalendar.clone();
-		m7YearAgoCalendar.add(Calendar.YEAR, -6);
+		m7YearAgoCalendar.add(Calendar.YEAR, -7);
 	}
 
 	private void initViewPager() {
@@ -214,17 +214,11 @@ public class HistoryActivity extends FragmentActivity implements
 
 	public void onEvent(HistoryChangeUnitClick event) {
 		this.selectHistoryUnit = event.selectHistoryUnit;
-		switch (event.selectHistoryUnit) {
-		case HistoryActivity.DATA_UNIT_DAY:
-
-			break;
-		case HistoryActivity.DATA_UNIT_WEEK:
-
-			break;
-		case HistoryActivity.DATA_UNIT_MONTH:
-
-			break;
-		case HistoryActivity.DATA_UNIT_YEAR:
+		if (event.selectHistoryUnit == DATA_UNIT_DAY) {
+		} else if (event.selectHistoryUnit == DATA_UNIT_WEEK) {
+		} else if (event.selectHistoryUnit == DATA_UNIT_MONTH) {
+			getMonthData(null, event);
+		} else if (event.selectHistoryUnit == DATA_UNIT_YEAR) {
 			BarSet dataCount = new BarSet();
 			BarSet dataCalorie = new BarSet();
 			BarSet dataDistance = new BarSet();
@@ -239,7 +233,7 @@ public class HistoryActivity extends FragmentActivity implements
 				calendarLabels.add(Calendar.YEAR, -1);
 			}
 			Calendar calendar = (Calendar) mTodayCalendar.clone();
-			// 拿到当天所在月的第一天
+			// 拿到当天所在年的第一天
 			calendar.set(Calendar.DAY_OF_YEAR, 1);
 			calendar.add(Calendar.YEAR, 1 - COUNT_NUMBER_YEAR);
 			int[] sortDataCount = new int[COUNT_NUMBER_YEAR];
@@ -249,7 +243,7 @@ public class HistoryActivity extends FragmentActivity implements
 				int yearCount = 0;
 				int yearCalorie = 0;
 				int yearDistance = 0;
-				// 计算当月有多少天
+				// 计算当年有多少天
 				int daysInYear = calendar
 						.getActualMaximum(Calendar.DAY_OF_YEAR);
 				for (int j = 0; j < daysInYear; j++) {
@@ -310,8 +304,111 @@ public class HistoryActivity extends FragmentActivity implements
 			event.barCountMax = barCountMax;
 			event.barCalorieMax = barCalorieMax;
 			event.barDistanceMax = barDistanceMax;
-			break;
 		}
 		LogModule.i(TAG + "onEvent-->" + event.selectHistoryUnit);
+	}
+
+	public HistoryChangeUnitClick getMonthData(Calendar calendar,
+			HistoryChangeUnitClick event) {
+		BarSet dataCount = new BarSet();
+		BarSet dataCalorie = new BarSet();
+		BarSet dataDistance = new BarSet();
+
+		String[] labels = new String[COUNT_NUMBER_MONTH];
+		String[] valueCount = new String[COUNT_NUMBER_MONTH];
+		String[] valueCalorie = new String[COUNT_NUMBER_MONTH];
+		String[] valueDistance = new String[COUNT_NUMBER_MONTH];
+		Calendar calendarLabels;
+		if (calendar == null) {
+			calendarLabels = (Calendar) mTodayCalendar.clone();
+		} else {
+			calendarLabels = (Calendar) calendar.clone();
+		}
+		for (int i = COUNT_NUMBER_MONTH - 1; i >= 0; i--) {
+			if (calendarLabels.get(Calendar.YEAR) == mTodayCalendar
+					.get(Calendar.YEAR)
+					&& calendarLabels.get(Calendar.MONTH) == mTodayCalendar
+							.get(Calendar.MONTH)) {
+				labels[i] = getString(R.string.history_this_month);
+				calendarLabels.add(Calendar.MONTH, -1);
+				continue;
+			}
+			labels[i] = getString(R.string.history_month_number,
+					calendarLabels.get(Calendar.MONTH) + 1);
+			calendarLabels.add(Calendar.MONTH, -1);
+		}
+		// 拿到最新的数据开始计算日期
+		if (calendar == null) {
+			calendar = (Calendar) mTodayCalendar.clone();
+		}
+		// 拿到当天所在月的第一天
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.add(Calendar.MONTH, 1 - COUNT_NUMBER_MONTH);
+		int[] sortDataCount = new int[COUNT_NUMBER_MONTH];
+		int[] sortDataCalorie = new int[COUNT_NUMBER_MONTH];
+		int[] sortDataDistance = new int[COUNT_NUMBER_MONTH];
+		for (int i = 0; i < COUNT_NUMBER_MONTH; i++) {
+			int monthCount = 0;
+			int monthCalorie = 0;
+			int monthDistance = 0;
+			// 计算当月有多少天
+			int daysInMonth = calendar.getActualMaximum(Calendar.DATE);
+			for (int j = 0; j < daysInMonth; j++) {
+				if (mStepsMap.get(Utils.calendar2strDate(calendar,
+						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
+					monthCount += Integer.valueOf(mStepsMap.get(Utils
+							.calendar2strDate(calendar,
+									BTConstants.PATTERN_YYYY_MM_DD)).count);
+					monthCalorie += Integer.valueOf(mStepsMap.get(Utils
+							.calendar2strDate(calendar,
+									BTConstants.PATTERN_YYYY_MM_DD)).calories);
+					monthDistance += Float.valueOf(mStepsMap.get(Utils
+							.calendar2strDate(calendar,
+									BTConstants.PATTERN_YYYY_MM_DD)).distance);
+				}
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			Bar barCount = new Bar(labels[i], monthCount);
+			Bar barCalorie = new Bar(labels[i], monthCalorie);
+			Bar barDistance = new Bar(labels[i], monthDistance);
+			valueCount[i] = monthCount + "";
+			valueCalorie[i] = monthCalorie + "";
+			valueDistance[i] = monthDistance + "";
+			sortDataCount[i] = monthCount;
+			sortDataCalorie[i] = monthCalorie;
+			sortDataDistance[i] = monthDistance;
+			dataCount.addBar(barCount);
+			dataCalorie.addBar(barCalorie);
+			dataDistance.addBar(barDistance);
+		}
+		Arrays.sort(sortDataCount);
+		Arrays.sort(sortDataCalorie);
+		Arrays.sort(sortDataDistance);
+		int barCountMax = 100;
+		int barCalorieMax = 100;
+		int barDistanceMax = 1;
+		if (sortDataCount[COUNT_NUMBER_MONTH - 1] >= barCountMax) {
+			barCountMax = sortDataCount[COUNT_NUMBER_MONTH - 1];
+		}
+		if (sortDataCalorie[COUNT_NUMBER_MONTH - 1] >= barCalorieMax) {
+			barCalorieMax = sortDataCalorie[COUNT_NUMBER_MONTH - 1];
+		}
+		if (sortDataDistance[COUNT_NUMBER_MONTH - 1] >= barDistanceMax) {
+			barDistanceMax = Float.valueOf(
+					sortDataDistance[COUNT_NUMBER_MONTH - 1]).intValue() + 1;
+		}
+		dataCount.setColor(getResources().getColor(R.color.blue_b4efff));
+		dataCalorie.setColor(getResources().getColor(R.color.blue_b4efff));
+		dataDistance.setColor(getResources().getColor(R.color.blue_b4efff));
+		event.dataCount = dataCount;
+		event.dataCalorie = dataCalorie;
+		event.dataDistance = dataDistance;
+		event.valuesCount = valueCount;
+		event.valuesCalorie = valueCalorie;
+		event.valuesDistance = valueDistance;
+		event.barCountMax = barCountMax;
+		event.barCalorieMax = barCalorieMax;
+		event.barDistanceMax = barDistanceMax;
+		return event;
 	}
 }
