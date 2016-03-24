@@ -2,10 +2,7 @@ package com.blestep.sportsbracelet.fragment;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 
 import android.graphics.Rect;
@@ -36,8 +33,6 @@ import com.blestep.sportsbracelet.utils.DataRetriever;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
-import com.db.chart.model.Bar;
-import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
@@ -196,12 +191,12 @@ public class HistoryStepDistance extends Fragment implements
 		switch (event.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY, event.selectHistoryUnit,
-					null, null);
+					null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_day);
 			break;
 		case HistoryActivity.DATA_UNIT_WEEK:
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
-					event.selectHistoryUnit, null, null);
+					event.selectHistoryUnit, null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_week);
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
@@ -222,7 +217,6 @@ public class HistoryStepDistance extends Fragment implements
 			HistoryChangeUnitClick event) {
 		mLabels = new String[labelsCount];
 		mValues = new String[labelsCount];
-		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
 		if (calendar == null) {
 			mCalendar = (Calendar) mActivity.mTodayCalendar.clone();
 		} else {
@@ -230,45 +224,45 @@ public class HistoryStepDistance extends Fragment implements
 		}
 		// 日
 		if (unit == HistoryActivity.DATA_UNIT_DAY) {
-			for (int i = labelsCount - 1; i >= 0; i--) {
-				if (mCalendar.getTime().compareTo(
-						mActivity.mTodayCalendar.getTime()) >= 0) {
-					mLabels[i] = getString(R.string.history_today);
-					mCalendar.add(Calendar.DAY_OF_MONTH, -1);
-					continue;
-				}
-				mLabels[i] = mSdf.format(mCalendar.getTime());
-				mCalendar.add(Calendar.DAY_OF_MONTH, -1);
+			if (event == null) {
+				event = new HistoryChangeUnitClick(
+						HistoryActivity.DATA_UNIT_DAY);
+				event = mActivity.getDayData(mCalendar, event);
 			}
-			updateBarChartByDay(labelsCount, calendar == null ? null
-					: (Calendar) calendar.clone());
+			updateBarChartByDay(event);
+			Calendar preOrNextCalendar;
+			if (calendar == null) {
+				preOrNextCalendar = (Calendar) mActivity.mTodayCalendar.clone();
+			} else {
+				preOrNextCalendar = (Calendar) calendar.clone();
+			}
+			isPreDayEnable(preOrNextCalendar);
+			isNextDayEnable(preOrNextCalendar);
+			mValues = event.valuesDistance;
 		}
 		// 周
 		if (unit == HistoryActivity.DATA_UNIT_WEEK) {
-			Calendar monday = (Calendar) mCalendar.clone();
-			if (monday.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-				monday.add(Calendar.DAY_OF_MONTH, -1);
+			if (event == null) {
+				event = new HistoryChangeUnitClick(
+						HistoryActivity.DATA_UNIT_WEEK);
+				event = mActivity.getWeekData(mCalendar, event);
 			}
-			monday.setFirstDayOfWeek(Calendar.MONDAY);
-			monday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-			for (int i = labelsCount - 1; i >= 0; i--) {
-				if (monday.get(Calendar.WEEK_OF_YEAR) == mActivity.mTodayCalendar
-						.get(Calendar.WEEK_OF_YEAR)) {
-					mLabels[i] = getString(R.string.history_this_week);
-					monday.add(Calendar.WEEK_OF_MONTH, -1);
-					continue;
-				}
-				mLabels[i] = getString(R.string.history_week_number,
-						monday.get(Calendar.WEEK_OF_YEAR));
-				monday.add(Calendar.WEEK_OF_MONTH, -1);
+			updateBarChartByWeek(event);
+			Calendar preOrNextCalendar;
+			if (calendar == null) {
+				preOrNextCalendar = (Calendar) mActivity.mTodayCalendar.clone();
+			} else {
+				preOrNextCalendar = (Calendar) calendar.clone();
 			}
-			updateBarChartByWeek(labelsCount, calendar == null ? null
-					: (Calendar) calendar.clone());
+			isPreWeekEnable(preOrNextCalendar);
+			isNextWeekEnable(preOrNextCalendar);
+			mValues = event.valuesDistance;
 		}
 		// 月
 		if (unit == HistoryActivity.DATA_UNIT_MONTH) {
 			if (event == null) {
-				event = new HistoryChangeUnitClick(HistoryActivity.DATA_UNIT_MONTH);
+				event = new HistoryChangeUnitClick(
+						HistoryActivity.DATA_UNIT_MONTH);
 				event = mActivity.getMonthData(mCalendar, event);
 			}
 			updateBarChartByMonth(event);
@@ -362,55 +356,27 @@ public class HistoryStepDistance extends Fragment implements
 	 * 
 	 * @param labelsCount
 	 */
-	private void updateBarChartByDay(int labelsCount, Calendar calendar) {
+	private void updateBarChartByDay(HistoryChangeUnitClick event) {
 		// 构建柱状图
 		bcv_distance.reset();
-		BarSet data = new BarSet();
-		rl_pre_and_next.setVisibility(View.VISIBLE);
-		if (calendar == null) {
-			calendar = (Calendar) mActivity.mTodayCalendar.clone();
-		}
-		calendar.add(Calendar.DAY_OF_MONTH, 1 - labelsCount);
-		ArrayList<Step> stepsSort = new ArrayList<Step>();
-
-		for (int i = 0; i < labelsCount; i++) {
-			float dayStep = 0;
-			if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
-					BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-				dayStep = Float.valueOf(mActivity.mStepsMap.get(Utils
-						.calendar2strDate(calendar,
-								BTConstants.PATTERN_YYYY_MM_DD)).distance);
-				stepsSort.add(mActivity.mStepsMap.get(Utils.calendar2strDate(
-						calendar, BTConstants.PATTERN_YYYY_MM_DD)));
-			} else {
-				stepsSort.add(new Step("0", "0", "0"));
-			}
-			mValues[i] = dayStep + "";
-			Bar bar = new Bar(mLabels[i], dayStep);
-			data.addBar(bar);
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-		}
-		// 找到最大的，与目标值对比
-		int barStepMax = 1;
-		Collections.sort(stepsSort, new StepCompare());
-		if (Float.valueOf(stepsSort.get(0).distance) >= barStepMax) {
-			barStepMax = Float.valueOf(stepsSort.get(0).distance).intValue() + 1;
-		}
-		data.setColor(getResources().getColor(R.color.blue_b4efff));
-		bcv_distance.addData(data);
+		bcv_distance.addData(event.dataDistance);
 		bcv_distance.setBarSpacing((int) Tools.fromDpToPx(50));
 		bcv_distance.setSetSpacing(0);
 		bcv_distance.setBarBackground(false);
 		bcv_distance.setRoundCorners(0);
-		bcv_distance.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+		bcv_distance
+				.setBorderSpacing(0)
+				.setGrid(null)
+				.setHorizontalGrid(null)
 				.setVerticalGrid(null)
-				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
-				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(barStepMax, 1)
-				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
-		calendar.add(Calendar.DAY_OF_MONTH, -1);
-		isPreDayEnable(calendar);
-		isNextDayEnable(calendar);
+				.setYLabels(YController.LabelPosition.NONE)
+				.setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE)
+				.setXAxis(true)
+				.setMaxAxisValue(event.barDistanceMax, 1)
+				.animate(
+						DataRetriever.randAnimation(mEndAction,
+								mActivity.COUNT_NUMBER_DAY));
 	}
 
 	/**
@@ -427,9 +393,9 @@ public class HistoryStepDistance extends Fragment implements
 		todayWeek.setFirstDayOfWeek(Calendar.MONDAY);
 		todayWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		if (mLastWeekCalendar.getTime().compareTo(todayWeek.getTime()) >= 0) {
-			mIsNextDayShow = false;
+			mIsNextWeekShow = false;
 		} else {
-			mIsNextDayShow = true;
+			mIsNextWeekShow = true;
 		}
 	}
 
@@ -476,61 +442,26 @@ public class HistoryStepDistance extends Fragment implements
 	 * @param labelsCount
 	 * @param calendar
 	 */
-	private void updateBarChartByWeek(int labelsCount, Calendar calendar) {
+	private void updateBarChartByWeek(HistoryChangeUnitClick event) {
 		bcv_distance.reset();
-		BarSet data = new BarSet();
-		rl_pre_and_next.setVisibility(View.VISIBLE);
-		// 拿到最新的数据开始计算日期
-		if (calendar == null) {
-			calendar = (Calendar) mActivity.mTodayCalendar.clone();
-		}
-		if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			calendar.add(Calendar.DAY_OF_MONTH, -1);
-		}
-		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		// 拿到当天所在周的周一
-		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		calendar.add(Calendar.WEEK_OF_MONTH, 1 - labelsCount);
-		float[] sortData = new float[labelsCount];
-		for (int i = 0; i < labelsCount; i++) {
-			float weekCount = 0;
-			// 一周7天
-			for (int j = 0; j < 7; j++) {
-				if (mActivity.mStepsMap.get(Utils.calendar2strDate(calendar,
-						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-					weekCount += Float.valueOf(mActivity.mStepsMap.get(Utils
-							.calendar2strDate(calendar,
-									BTConstants.PATTERN_YYYY_MM_DD)).distance);
-				}
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
-			}
-			Bar bar = new Bar(mLabels[i], weekCount);
-			mValues[i] = weekCount + "";
-			sortData[i] = weekCount;
-			data.addBar(bar);
-		}
-		Arrays.sort(sortData);
-		// 找到最大的，与目标值对比
-		int barStepMax = 1;
-		if (sortData[labelsCount - 1] >= barStepMax) {
-			barStepMax = Float.valueOf(sortData[labelsCount - 1]).intValue() + 1;
-		}
-		data.setColor(getResources().getColor(R.color.blue_b4efff));
-		bcv_distance.addData(data);
-
+		bcv_distance.addData(event.dataDistance);
 		bcv_distance.setBarSpacing((int) Tools.fromDpToPx(50));
 		bcv_distance.setSetSpacing(0);
 		bcv_distance.setBarBackground(false);
 		bcv_distance.setRoundCorners(0);
-		bcv_distance.setBorderSpacing(0).setGrid(null).setHorizontalGrid(null)
+		bcv_distance
+				.setBorderSpacing(0)
+				.setGrid(null)
+				.setHorizontalGrid(null)
 				.setVerticalGrid(null)
-				.setYLabels(YController.LabelPosition.NONE).setYAxis(false)
-				.setXLabels(XController.LabelPosition.OUTSIDE).setXAxis(true)
-				.setMaxAxisValue(barStepMax, 1)
-				.animate(DataRetriever.randAnimation(mEndAction, labelsCount));
-		calendar.add(Calendar.WEEK_OF_MONTH, -1);
-		isPreWeekEnable(calendar);
-		isNextWeekEnable(calendar);
+				.setYLabels(YController.LabelPosition.NONE)
+				.setYAxis(false)
+				.setXLabels(XController.LabelPosition.OUTSIDE)
+				.setXAxis(true)
+				.setMaxAxisValue(event.barDistanceMax, 1)
+				.animate(
+						DataRetriever.randAnimation(mEndAction,
+								mActivity.COUNT_NUMBER_WEEK));
 	}
 
 	/**
