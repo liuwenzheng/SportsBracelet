@@ -319,10 +319,8 @@ public class HistoryStepCalorie extends Fragment implements
 		mLastDayCalendar = (Calendar) calendar.clone();
 		mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 				-HistoryActivity.COUNT_NUMBER_DAY);
-		if (mActivity.mStepsMap.get(Utils.calendar2strDate(mLastDayCalendar,
-				BTConstants.PATTERN_YYYY_MM_DD)) != null
-				&& mLastDayCalendar.getTime().compareTo(
-						mActivity.m7YearAgoCalendar.getTime()) >= 0) {
+		if (mLastDayCalendar.getTime().compareTo(
+				mActivity.m7YearAgoCalendar.getTime()) >= 0) {
 			mIsPreDayShow = true;
 		} else {
 			mIsPreDayShow = false;
