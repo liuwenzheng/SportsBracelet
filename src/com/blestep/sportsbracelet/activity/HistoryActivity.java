@@ -63,6 +63,9 @@ public class HistoryActivity extends FragmentActivity implements
 	public HashMap<String, Step> mStepsMap;
 	public Calendar mTodayCalendar;// 今天
 	public Calendar m7YearAgoCalendar;// 7年前的今天
+	public Calendar m3WeekAgoCalendar;// 3周前的今天
+	public Calendar m3MonthAgoCalendar;// 3月前的今天
+	public Calendar m3YearAgoCalendar;// 3年前的今天
 	private SimpleDateFormat mSdf;
 
 	@Override
@@ -95,6 +98,13 @@ public class HistoryActivity extends FragmentActivity implements
 				BTConstants.PATTERN_YYYY_MM_DD);
 		m7YearAgoCalendar = (Calendar) mTodayCalendar.clone();
 		m7YearAgoCalendar.add(Calendar.YEAR, -7);
+		m3WeekAgoCalendar = (Calendar) mTodayCalendar.clone();
+		m3WeekAgoCalendar.add(Calendar.DAY_OF_MONTH, -21);
+		m3MonthAgoCalendar = (Calendar) mTodayCalendar.clone();
+		m3MonthAgoCalendar.add(Calendar.WEEK_OF_YEAR, -21);
+		m3YearAgoCalendar = (Calendar) mTodayCalendar.clone();
+		m3YearAgoCalendar.add(Calendar.YEAR, -3);
+
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_MM_DD);
 	}
 
@@ -532,42 +542,52 @@ public class HistoryActivity extends FragmentActivity implements
 		String[] valueDistance = new String[COUNT_NUMBER_WEEK];
 		Calendar calendarLabels;
 		Calendar weekDayToday = (Calendar) mTodayCalendar.clone();
+		boolean isSunday = false;
+		if (weekDayToday.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			isSunday = true;
+		}
 		if (calendar == null) {
 			calendarLabels = (Calendar) mTodayCalendar.clone();
 		} else {
 			calendarLabels = (Calendar) calendar.clone();
 		}
-		if (calendarLabels.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			calendarLabels.add(Calendar.DAY_OF_MONTH, -1);
-		}
-		calendarLabels.setFirstDayOfWeek(Calendar.MONDAY);
-		calendarLabels.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		weekDayToday.setFirstDayOfWeek(Calendar.MONDAY);
-		weekDayToday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// calendarLabels.setFirstDayOfWeek(Calendar.MONDAY);
+		// calendarLabels.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// weekDayToday.setFirstDayOfWeek(Calendar.MONDAY);
+		// weekDayToday.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		for (int i = COUNT_NUMBER_WEEK - 1; i >= 0; i--) {
 			if (calendarLabels.get(Calendar.YEAR) == weekDayToday
 					.get(Calendar.YEAR)
 					&& calendarLabels.get(Calendar.WEEK_OF_YEAR) == weekDayToday
 							.get(Calendar.WEEK_OF_YEAR)) {
 				labels[i] = getString(R.string.history_this_week);
-				calendarLabels.add(Calendar.WEEK_OF_MONTH, -1);
+				calendarLabels.add(Calendar.WEEK_OF_YEAR, -1);
 				continue;
 			}
-			labels[i] = getString(R.string.history_week_number,
-					calendarLabels.get(Calendar.WEEK_OF_YEAR));
-			calendarLabels.add(Calendar.WEEK_OF_MONTH, -1);
+			if (isSunday) {
+				labels[i] = getString(R.string.history_week_number,
+						calendarLabels.get(Calendar.WEEK_OF_YEAR) - 1);
+			} else {
+				labels[i] = getString(R.string.history_week_number,
+						calendarLabels.get(Calendar.WEEK_OF_YEAR));
+			}
+			calendarLabels.add(Calendar.WEEK_OF_YEAR, -1);
 		}
 		// 拿到最新的数据开始计算日期
 		if (calendar == null) {
 			calendar = (Calendar) weekDayToday.clone();
 		}
-		if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			calendar.add(Calendar.DAY_OF_MONTH, -1);
-		}
 		// 拿到当天所在周的周一
-		calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		calendar.add(Calendar.WEEK_OF_MONTH, 1 - COUNT_NUMBER_WEEK);
+		if (isSunday) {
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			calendar.add(Calendar.WEEK_OF_YEAR, -COUNT_NUMBER_WEEK);
+		} else {
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			calendar.add(Calendar.WEEK_OF_YEAR, 1 - COUNT_NUMBER_WEEK);
+		}
 		int[] sortDataCount = new int[COUNT_NUMBER_WEEK];
 		int[] sortDataCalorie = new int[COUNT_NUMBER_WEEK];
 		int[] sortDataDistance = new int[COUNT_NUMBER_WEEK];

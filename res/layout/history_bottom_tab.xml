@@ -2,55 +2,58 @@
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rg_history_bottom_tab_parent"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:orientation="horizontal" >
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="20dp"
+    android:paddingTop="20dp" >
 
     <RadioButton
         android:id="@+id/rb_history_unit_day"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/history_radiobtn_selector"
         android:button="@null"
         android:checked="true"
         android:gravity="center"
         android:text="日"
-        android:textColor="@drawable/history_radiobtn_text_selector" />
+        android:textColor="@drawable/history_radiobtn_text_selector"
+        android:textSize="18sp" />
 
     <RadioButton
         android:id="@+id/rb_history_unit_week"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="1dp"
-        android:layout_weight="1.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:background="@drawable/history_radiobtn_selector"
         android:button="@null"
         android:gravity="center"
         android:text="周"
-        android:textColor="@drawable/history_radiobtn_text_selector" />
+        android:textColor="@drawable/history_radiobtn_text_selector"
+        android:textSize="18sp" />
 
     <RadioButton
         android:id="@+id/rb_history_unit_month"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="1dp"
-        android:layout_weight="1.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:background="@drawable/history_radiobtn_selector"
         android:button="@null"
         android:gravity="center"
         android:text="月"
-        android:textColor="@drawable/history_radiobtn_text_selector" />
+        android:textColor="@drawable/history_radiobtn_text_selector"
+        android:textSize="18sp" />
 
     <RadioButton
         android:id="@+id/rb_history_unit_year"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="1dp"
-        android:layout_weight="1.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:background="@drawable/history_radiobtn_selector"
         android:button="@null"
         android:gravity="center"
         android:text="年"
-        android:textColor="@drawable/history_radiobtn_text_selector" />
+        android:textColor="@drawable/history_radiobtn_text_selector"
+        android:textSize="18sp" />
 
 </RadioGroup>

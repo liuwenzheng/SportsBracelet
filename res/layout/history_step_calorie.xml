@@ -36,6 +36,8 @@
             android:text="后" />
     </RelativeLayout>
 
+    <include layout="@layout/history_center_tab" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -83,9 +85,9 @@
         <View
             style="@style/divider_line_vertical"
             android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="50dp" />
+            android:layout_marginTop="25dp" />
 
         <RelativeLayout
             android:layout_width="0dp"

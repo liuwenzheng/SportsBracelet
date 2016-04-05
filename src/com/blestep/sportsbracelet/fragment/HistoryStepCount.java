@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
@@ -53,7 +54,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	private BarChartView bcv_step;
 	private TextView mBarTooltip;
 	private RelativeLayout rl_pre_and_next;
-	private RadioGroup rg_history_bottom_tab_parent;
+	private RadioGroup rg_history_bottom_tab_parent,
+			rg_history_center_tab_parent;
 	private boolean mIsPreDayShow;
 	private boolean mIsPreWeekShow;
 	private boolean mIsPreYearShow;
@@ -187,27 +189,34 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mIsNextWeekShow = false;
 		mIsPreYearShow = false;
 		mIsNextYearShow = false;
+		selectedIndex = 2;
+		((RadioButton) rg_history_center_tab_parent.getChildAt(selectedIndex))
+				.setChecked(true);
 		rg_history_bottom_tab_parent.setOnCheckedChangeListener(null);
 		switch (event.selectHistoryUnit) {
 		case HistoryActivity.DATA_UNIT_DAY:
 			initData(HistoryActivity.COUNT_NUMBER_DAY, event.selectHistoryUnit,
 					null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_day);
+			rg_history_center_tab_parent.setVisibility(View.VISIBLE);
 			break;
 		case HistoryActivity.DATA_UNIT_WEEK:
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
 					event.selectHistoryUnit, null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_week);
+			rg_history_center_tab_parent.setVisibility(View.VISIBLE);
 			break;
 		case HistoryActivity.DATA_UNIT_MONTH:
 			initData(HistoryActivity.COUNT_NUMBER_MONTH,
 					event.selectHistoryUnit, null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_month);
+			rg_history_center_tab_parent.setVisibility(View.VISIBLE);
 			break;
 		case HistoryActivity.DATA_UNIT_YEAR:
 			initData(HistoryActivity.COUNT_NUMBER_YEAR,
 					event.selectHistoryUnit, null, event);
 			rg_history_bottom_tab_parent.check(R.id.rb_history_unit_year);
+			rg_history_center_tab_parent.setVisibility(View.INVISIBLE);
 			break;
 		}
 		rg_history_bottom_tab_parent.setOnCheckedChangeListener(this);
@@ -318,7 +327,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 				-HistoryActivity.COUNT_NUMBER_DAY);
 		if (mLastDayCalendar.getTime().compareTo(
-				mActivity.m7YearAgoCalendar.getTime()) >= 0) {
+				mActivity.m3WeekAgoCalendar.getTime()) > 0) {
 			mIsPreDayShow = true;
 		} else {
 			mIsPreDayShow = false;
@@ -380,13 +389,13 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 	 * @param calendar
 	 */
 	private void isNextWeekEnable(Calendar calendar) {
-		mLastWeekCalendar.setFirstDayOfWeek(Calendar.MONDAY);
-		mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+		// mLastWeekCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+		// mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		mLastWeekCalendar.add(Calendar.WEEK_OF_YEAR,
 				HistoryActivity.COUNT_NUMBER_WEEK);
 		Calendar todayWeek = (Calendar) mActivity.mTodayCalendar.clone();
-		todayWeek.setFirstDayOfWeek(Calendar.MONDAY);
-		todayWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		// todayWeek.setFirstDayOfWeek(Calendar.MONDAY);
+		// todayWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		if (mLastWeekCalendar.getTime().compareTo(todayWeek.getTime()) >= 0) {
 			mIsNextWeekShow = false;
 		} else {
@@ -403,13 +412,11 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		// 前一周是否可点击
 		mLastWeekCalendar = (Calendar) calendar.clone();
 		// 拿到当天所在周的周一
-		mLastWeekCalendar.setFirstDayOfWeek(Calendar.MONDAY);
-		mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+		// mLastWeekCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+		// mLastWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		mLastWeekCalendar.add(Calendar.WEEK_OF_YEAR,
 				-HistoryActivity.COUNT_NUMBER_WEEK);
-		Calendar agoWeek = (Calendar) mActivity.m7YearAgoCalendar.clone();
-		agoWeek.setFirstDayOfWeek(Calendar.MONDAY);
-		agoWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		Calendar agoWeek = (Calendar) mActivity.m3MonthAgoCalendar.clone();
 		// int weekCount = 0;
 		// // 一周7天
 		// for (int i = 0; i < 7; i++) {
@@ -421,10 +428,10 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		// }
 		// mLastWeekCalendar.add(Calendar.DAY_OF_MONTH, 1);
 		// }
-		// mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH, -1);
+		// mLastWeekCalendar.add(Calendar.WEEK_OF_YEAR, -1);
 		if (/*
 			 * weekCount > 0 &&
-			 */mLastWeekCalendar.getTime().compareTo(agoWeek.getTime()) >= 0) {
+			 */mLastWeekCalendar.getTime().compareTo(agoWeek.getTime()) > 0) {
 			mIsPreWeekShow = true;
 		} else {
 			mIsPreWeekShow = false;
@@ -488,7 +495,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		mLastMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		mLastMonthCalendar.add(Calendar.MONTH,
 				-HistoryActivity.COUNT_NUMBER_MONTH);
-		Calendar agoMonth = (Calendar) mActivity.m7YearAgoCalendar.clone();
+		Calendar agoMonth = (Calendar) mActivity.m3YearAgoCalendar.clone();
 		agoMonth.set(Calendar.DAY_OF_MONTH, 1);
 		/*
 		 * int monthCount = 0; // 计算当月有多少天 int daysInMonth =
@@ -504,7 +511,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		 */
 		if (/*
 			 * monthCount > 0 &&
-			 */mLastMonthCalendar.getTime().compareTo(agoMonth.getTime()) >= 0) {
+			 */mLastMonthCalendar.getTime().compareTo(agoMonth.getTime()) > 0) {
 			mIsPreYearShow = true;
 		} else {
 			mIsPreYearShow = false;
@@ -576,6 +583,8 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		bcv_step.setOnEntryClickListener(this);
 		rg_history_bottom_tab_parent = (RadioGroup) mView
 				.findViewById(R.id.rg_history_bottom_tab_parent);
+		rg_history_center_tab_parent = (RadioGroup) mView
+				.findViewById(R.id.rg_history_center_tab_parent);
 		rl_pre_and_next = (RelativeLayout) mView
 				.findViewById(R.id.rl_pre_and_next);
 		mView.findViewById(R.id.btn_pre).setEnabled(false);
@@ -629,19 +638,28 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 
 	}
 
+	// 设置被选中的页面
+	int selectedIndex = 2;
+
 	private void onFlingPre() {
 		// 前一天/周/年
 		if (mIsPreDayShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
 			mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 					-HistoryActivity.COUNT_NUMBER_DAY);
+			selectedIndex--;
+			((RadioButton) rg_history_center_tab_parent
+					.getChildAt(selectedIndex)).setChecked(true);
 			initData(HistoryActivity.COUNT_NUMBER_DAY,
 					mActivity.selectHistoryUnit, mLastDayCalendar, null);
 		}
 		if (mIsPreWeekShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
-			mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+			mLastWeekCalendar.add(Calendar.WEEK_OF_YEAR,
 					-HistoryActivity.COUNT_NUMBER_WEEK);
+			selectedIndex--;
+			((RadioButton) rg_history_center_tab_parent
+					.getChildAt(selectedIndex)).setChecked(true);
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
 					mActivity.selectHistoryUnit, mLastWeekCalendar, null);
 		}
@@ -649,6 +667,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
 			mLastMonthCalendar.add(Calendar.MONTH,
 					-HistoryActivity.COUNT_NUMBER_MONTH);
+			selectedIndex--;
+			((RadioButton) rg_history_center_tab_parent
+					.getChildAt(selectedIndex)).setChecked(true);
 			LogModule.i(TAG
 					+ "--"
 					+ new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD)
@@ -664,13 +685,19 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_DAY) {
 			mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
 					HistoryActivity.COUNT_NUMBER_DAY);
+			selectedIndex++;
+			((RadioButton) rg_history_center_tab_parent
+					.getChildAt(selectedIndex)).setChecked(true);
 			initData(HistoryActivity.COUNT_NUMBER_DAY,
 					mActivity.selectHistoryUnit, mLastDayCalendar, null);
 		}
 		if (mIsNextWeekShow
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_WEEK) {
-			mLastWeekCalendar.add(Calendar.WEEK_OF_MONTH,
+			mLastWeekCalendar.add(Calendar.WEEK_OF_YEAR,
 					HistoryActivity.COUNT_NUMBER_WEEK);
+			selectedIndex++;
+			((RadioButton) rg_history_center_tab_parent
+					.getChildAt(selectedIndex)).setChecked(true);
 			initData(HistoryActivity.COUNT_NUMBER_WEEK,
 					mActivity.selectHistoryUnit, mLastWeekCalendar, null);
 		}
@@ -678,6 +705,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 				&& mActivity.selectHistoryUnit == HistoryActivity.DATA_UNIT_MONTH) {
 			mLastMonthCalendar.add(Calendar.MONTH,
 					HistoryActivity.COUNT_NUMBER_MONTH);
+			selectedIndex++;
+			((RadioButton) rg_history_center_tab_parent
+					.getChildAt(selectedIndex)).setChecked(true);
 			LogModule.i(TAG
 					+ "--"
 					+ new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD)
