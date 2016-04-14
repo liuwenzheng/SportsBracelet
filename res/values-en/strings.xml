@@ -60,7 +60,7 @@
     <string name="step_syncdata_waiting">Syncing data…</string>
     <string name="step_history">History</string>
     <string name="step_duration">Time</string>
-    <string name="step_distance">Mileage</string>
+    <string name="step_distance">Distance</string>
     <string name="step_duration_unit">%1$sh%2$smin</string>
     <string name="step_distance_unit">Km</string>
     <string name="step_heart_rate_unit">/Min</string>
@@ -170,20 +170,37 @@
     <!-- history -->
     <string name="history_step">Steps</string>
     <string name="history_step_daily">Average</string>
+    <string name="history_step_week">Average</string>
+    <string name="history_step_month">Average</string>
+    <string name="history_step_year">Average</string>
     <string name="history_step_sum">Total</string>
-    <string name="history_step_unit">Step</string>
+    <string name="history_step_unit">Step(s)</string>
     <string name="history_calorie">Calorie</string>
     <string name="history_calorie_daily">Average</string>
+    <string name="history_calorie_week">Average</string>
+    <string name="history_calorie_month">Average</string>
+    <string name="history_calorie_year">Average</string>
     <string name="history_calorie_sum">Total</string>
     <string name="history_calorie_unit">Cals</string>
-    <string name="history_distance">Mileage</string>
+    <string name="history_distance">Distance</string>
     <string name="history_distance_daily">Average</string>
+    <string name="history_distance_week">Average</string>
+    <string name="history_distance_month">Average</string>
+    <string name="history_distance_year">Average</string>
     <string name="history_distance_sum">Total</string>
     <string name="history_distance_unit">Km</string>
     <string name="history_today">Today</string>
+    <string name="history_this_week">current</string>
+    <string name="history_week_number">%1$s</string>
+    <string name="history_this_month">current</string>
+    <string name="history_month_number">%1$s</string>
     <string name="history_yesterday">Yesterday</string>
     <string name="syn_success">synchronize successfully</string>
     <string name="syn_tips">Long press the indicator for 5 seconds, \nthen click \'Next\' to pair automatically.\nPlease click \'Back\' if failed.</string>
     <string name="syn_tips_2">Long press the indicator for 5 seconds,\nthen click \'complete\' to pair automatically.\nPlease try it again if failed.</string>
-
+	<string name="tab_year">Y</string>
+    <string name="tab_month">M</string>
+    <string name="tab_week">W</string>
+    <string name="tab_day">D</string>
+    
 </resources>

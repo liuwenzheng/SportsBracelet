@@ -451,6 +451,14 @@ public class HistoryActivity extends FragmentActivity implements
 				calendarLabels.add(Calendar.MONTH, -1);
 				continue;
 			}
+			if (calendarLabels.get(Calendar.MONTH) == 0) {
+				labels[i] = getString(R.string.history_month_number,
+						calendarLabels.get(Calendar.MONTH) + 1)
+						+ "/"
+						+ calendarLabels.get(Calendar.YEAR);
+				calendarLabels.add(Calendar.MONTH, -1);
+				continue;
+			}
 			labels[i] = getString(R.string.history_month_number,
 					calendarLabels.get(Calendar.MONTH) + 1);
 			calendarLabels.add(Calendar.MONTH, -1);
@@ -561,6 +569,14 @@ public class HistoryActivity extends FragmentActivity implements
 					&& calendarLabels.get(Calendar.WEEK_OF_YEAR) == weekDayToday
 							.get(Calendar.WEEK_OF_YEAR)) {
 				labels[i] = getString(R.string.history_this_week);
+				calendarLabels.add(Calendar.WEEK_OF_YEAR, -1);
+				continue;
+			}
+			if (calendarLabels.get(Calendar.WEEK_OF_YEAR) == 1) {
+				labels[i] = getString(R.string.history_week_number,
+						calendarLabels.get(Calendar.WEEK_OF_YEAR))
+						+ "/"
+						+ (calendarLabels.get(Calendar.YEAR) + 1);
 				calendarLabels.add(Calendar.WEEK_OF_YEAR, -1);
 				continue;
 			}
