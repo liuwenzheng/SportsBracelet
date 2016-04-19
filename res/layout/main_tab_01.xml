@@ -39,7 +39,7 @@
         android:layout_marginTop="15dp" >
 
         <RelativeLayout
-            android:id="@+id/rl_step"
+            android:id="@+id/rl_step_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" >
@@ -69,7 +69,7 @@
             android:id="@+id/rl_calorie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_step"
+            android:layout_below="@id/rl_step_count"
             android:layout_centerHorizontal="true" >
 
             <TextView
@@ -96,7 +96,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/rl_step"
+            android:layout_above="@id/rl_step_count"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:scaleType="fitCenter"
