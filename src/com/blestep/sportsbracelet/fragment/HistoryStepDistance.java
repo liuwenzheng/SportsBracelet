@@ -325,7 +325,6 @@ public class HistoryStepDistance extends Fragment implements
 	/**
 	 * 判断是否可点击前一天
 	 * 
-	 * @param labelsCount
 	 */
 	private void isPreDayEnable(Calendar calendar) {
 		// 前一天是否可点击
@@ -345,7 +344,6 @@ public class HistoryStepDistance extends Fragment implements
 	 * 
 	 * @param calendar
 	 * 
-	 * @param labelsCount
 	 */
 	private void isNextDayEnable(Calendar calendar) {
 		mLastDayCalendar.add(Calendar.DAY_OF_MONTH,
@@ -361,7 +359,6 @@ public class HistoryStepDistance extends Fragment implements
 	/**
 	 * 计算以日为单位的运动量
 	 * 
-	 * @param labelsCount
 	 */
 	private void updateBarChartByDay(HistoryChangeUnitClick event) {
 		// 构建柱状图
@@ -444,8 +441,6 @@ public class HistoryStepDistance extends Fragment implements
 	/**
 	 * 计算以周为单位的运动量
 	 * 
-	 * @param labelsCount
-	 * @param calendar
 	 */
 	private void updateBarChartByWeek(HistoryChangeUnitClick event) {
 		bcv_distance.reset();
@@ -526,8 +521,6 @@ public class HistoryStepDistance extends Fragment implements
 	/**
 	 * 计算以月为单位的运动量
 	 * 
-	 * @param labelsCount
-	 * @param calendar
 	 */
 	private void updateBarChartByMonth(HistoryChangeUnitClick event) {
 		bcv_distance.reset();

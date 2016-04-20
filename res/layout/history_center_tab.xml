@@ -6,14 +6,15 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:paddingBottom="10dp"
-    android:paddingTop="10dp" >
+    android:paddingTop="10dp">
 
     <RadioButton
         android:id="@+id/rb_history_one"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:background="@drawable/history_tab_selector"
-        android:button="@null" />
+        android:button="@null"
+        android:clickable="false" />
 
     <RadioButton
         android:id="@+id/rb_history_two"
@@ -21,7 +22,8 @@
         android:layout_height="10dp"
         android:layout_marginLeft="18dp"
         android:background="@drawable/history_tab_selector"
-        android:button="@null" />
+        android:button="@null"
+        android:clickable="false" />
 
     <RadioButton
         android:id="@+id/rb_history_three"
@@ -30,6 +32,7 @@
         android:layout_marginLeft="18dp"
         android:background="@drawable/history_tab_selector"
         android:button="@null"
-        android:checked="true" />
+        android:checked="true"
+        android:clickable="false" />
 
 </RadioGroup>

@@ -3,10 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white_ffffff"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <com.db.chart.view.BarChartView
-        xmlns:chart="http://schemas.android.com/apk/res-auto"
+    <com.db.chart.view.BarChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bcv_calorie"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -18,7 +17,7 @@
     <RelativeLayout
         android:id="@+id/rl_pre_and_next"
         android:layout_width="match_parent"
-        android:layout_height="0dp" >
+        android:layout_height="0dp">
 
         <Button
             android:id="@+id/btn_pre"
@@ -43,14 +42,13 @@
         android:layout_height="0dp"
         android:layout_weight="1.0"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp" >
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0" >
+            android:layout_weight="1.0"
+            android:paddingLeft="25dp">
 
             <TextView
                 android:id="@+id/history_calorie_daily"
@@ -66,34 +64,34 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/history_calorie_daily"
                 android:layout_marginTop="10dp"
+                android:maxLength="5"
                 android:text="0"
                 android:textColor="@color/red_e05b5e"
-                android:textSize="36sp" />
+                android:textSize="30sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_history_calorie_daily"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/tv_history_calorie_daily"
                 android:singleLine="true"
                 android:text="@string/history_calorie_unit"
                 android:textColor="@color/grey_3a3a3a"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
         </RelativeLayout>
 
         <View
             style="@style/divider_line_vertical"
             android:layout_height="match_parent"
             android:layout_marginBottom="25dp"
-            android:layout_marginLeft="25dp"
             android:layout_marginTop="25dp" />
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_weight="1.0" >
+            android:layout_weight="1.0"
+            android:paddingLeft="25dp">
 
             <TextView
                 android:id="@+id/history_calorie_sum"
@@ -109,20 +107,21 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/history_calorie_sum"
                 android:layout_marginTop="10dp"
+                android:maxLength="6"
                 android:text="0"
                 android:textColor="@color/red_e05b5e"
-                android:textSize="36sp" />
+                android:textSize="30sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_history_calorie_sum"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/tv_history_calorie_sum"
                 android:singleLine="true"
                 android:text="@string/history_calorie_unit"
                 android:textColor="@color/grey_3a3a3a"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>
 
