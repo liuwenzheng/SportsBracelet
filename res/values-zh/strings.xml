@@ -1,6 +1,8 @@
 <resources>
 
     <string name="app_name">iFit360</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
     <!-- splash -->
     <string name="splash_one_item_pass">跳过</string>
     <string name="splash_one_item_1">心率自动监测</string>
@@ -27,8 +29,10 @@
     <string name="setting_userinfo_birthday">年龄</string>
     <string name="setting_userinfo_height">身高</string>
     <string name="setting_userinfo_height_unit">厘米</string>
+    <string name="setting_userinfo_height_unit_british">英尺/英寸</string>
     <string name="setting_userinfo_weight">体重</string>
     <string name="setting_userinfo_weight_unit">公斤</string>
+    <string name="setting_userinfo_weight_unit_british">磅</string>
     <string name="setting_userinfo_name_not_null">昵称不能为空！</string>
     <string name="setting_userinfo_weight_not_null">体重不能为空！</string>
     <string name="setting_userinfo_height_not_null">身高不能为空！</string>
@@ -119,6 +123,10 @@
     <string name="bracelet_reset_alert">是否确定清空手机的所有设置？</string>
     <string name="bracelet_reset_alert_confirm">确定</string>
     <string name="bracelet_reset_alert_cancel">取消</string>
+    <string name="bracelet_system">系统设置</string>
+    <string name="bracelet_unit">单位</string>
+    <string name="bracelet_unit_british">英制</string>
+    <string name="bracelet_unit_metric">公制</string>
     <string name="about">关于</string>
     <!-- phone_coming -->
     <string name="phone_coming_alert_title">来电提醒</string>

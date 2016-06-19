@@ -234,7 +234,7 @@
     <View style="@style/divider_line" />
 
     <RelativeLayout
-        android:id="@+id/rl_bracelet_reset"
+        android:id="@+id/rl_bracelet_system"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="13dp"
@@ -243,19 +243,19 @@
         android:paddingTop="13dp" >
 
         <TextView
-            android:id="@+id/tv_bracelet_reset"
+            android:id="@+id/tv_bracelet_system"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bracelet_reset"
+            android:text="@string/bracelet_system"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_bracelet_reset"
+            android:layout_below="@id/tv_bracelet_system"
             android:layout_marginTop="6dp"
-            android:text="@string/bracelet_reset_tips"
+            android:text=""
             android:textColor="@color/grey_979797"
             android:textSize="12sp" />
     </RelativeLayout>
