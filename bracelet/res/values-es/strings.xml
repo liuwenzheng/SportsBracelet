@@ -1,6 +1,9 @@
 <resources>
 
     <string name="app_name">Key2Pay</string>
+    <string name="app_name">iFit360</string>
+    <string name="confirm">confirm</string>
+    <string name="cancel">cancel</string>
     <!-- splash -->
     <string name="splash_one_item_pass">Skip</string>
     <string name="splash_one_item_1">Keep healthy</string>
@@ -27,8 +30,10 @@
     <string name="setting_userinfo_birthday">Age</string>
     <string name="setting_userinfo_height">Height</string>
     <string name="setting_userinfo_height_unit">cm</string>
+    <string name="setting_userinfo_height_unit_british">ft/in</string>
     <string name="setting_userinfo_weight">Weight</string>
     <string name="setting_userinfo_weight_unit">kg</string>
+    <string name="setting_userinfo_weight_unit_british">lb</string>
     <string name="setting_userinfo_name_not_null">Nickname can not be empty</string>
     <string name="setting_userinfo_weight_not_null">Weight can not be empty</string>
     <string name="setting_userinfo_height_not_null">Height can not be empty</string>
@@ -119,6 +124,10 @@
     <string name="bracelet_reset_alert">Are you sure you want to clear all the App settings?</string>
     <string name="bracelet_reset_alert_confirm">Ok</string>
     <string name="bracelet_reset_alert_cancel">Cancel</string>
+    <string name="bracelet_system">System</string>
+    <string name="bracelet_unit">Unit</string>
+    <string name="bracelet_unit_british">British system</string>
+    <string name="bracelet_unit_metric">Metric system</string>
     <string name="about">About</string>
     <!-- phone_coming -->
     <string name="phone_coming_alert_title">Call Reminder</string>
