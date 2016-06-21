@@ -289,6 +289,7 @@ public class BindDeviceActivity extends BaseActivity implements
 								BindDeviceActivity.this, null,
 								getString(R.string.setting_device), false,
 								false);
+						mPosition = 0;
 					}
 				}
 				if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent

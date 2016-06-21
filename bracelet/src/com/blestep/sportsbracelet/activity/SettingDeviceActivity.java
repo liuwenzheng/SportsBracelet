@@ -283,6 +283,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 								SettingDeviceActivity.this, null,
 								getString(R.string.setting_device), false,
 								false);
+						mPosition = 0;
 					}
 				}
 				if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent
@@ -315,7 +316,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
-					startActivity(new Intent(SettingDeviceActivity.this,
+ 					startActivity(new Intent(SettingDeviceActivity.this,
 							SettingBraceletActivity.class));
 					SettingDeviceActivity.this.finish();
 				}

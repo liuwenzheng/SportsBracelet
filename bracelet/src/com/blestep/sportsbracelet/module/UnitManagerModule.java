@@ -9,8 +9,7 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.view.CustomDialog;
-import com.wx.wheelview.adapter.ArrayWheelAdapter;
-import com.wx.wheelview.widget.WheelView;
+import com.jp.wheelview.WheelView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,7 +36,6 @@ public class UnitManagerModule {
     private WheelView wv_weight_kg;
     private WheelView wv_weight_lb;
     private WheelView wv_weight_unit;
-    private WheelView.WheelViewStyle style;
     private int heightValue;
     private TextView tv_setting_userinfo_height;
     private TextView tv_height_unit;
@@ -60,30 +58,34 @@ public class UnitManagerModule {
         wv_height_ft = ButterKnife.findById(view, R.id.wv_height_ft);
         wv_height_in = ButterKnife.findById(view, R.id.wv_height_in);
         wv_height_unit = ButterKnife.findById(view, R.id.wv_height_unit);
-        style = new WheelView.WheelViewStyle();
-        style.selectedTextSize = 20;
-        style.textSize = 16;
         SPUtiles.getInstance(activity);
-        resetHeightWheel(activity);
-        wv_height_unit.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_height_unit.setSkin(WheelView.Skin.Holo);
-        wv_height_unit.setWheelData(createHeightUnit(activity));
-        wv_height_unit.setStyle(style);
-        wv_height_unit.setSelection(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? 1 : 0);
-        wv_height_unit.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
+        resetHeightWheel();
+        wv_height_unit.setData(createHeightUnit(activity));
+        wv_height_unit.setDefault(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? 1 : 0);
+        wv_height_unit.setOnSelectListener(new WheelView.OnSelectListener() {
             @Override
-            public void onItemSelected(int position, Object o) {
-                if (position == 0 && !SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
+            public void endSelect(int id, String text) {
+                if (id == 0 && !SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
                     return;
                 }
-                if (position == 1 && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
+                if (id == 1 && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
                     return;
                 }
-                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, position == 0 ? false : true);
-                resetHeightWheel(activity);
+                if (id == 0) {
+                    heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectedText()), Integer.valueOf(wv_height_in.getSelectedText()));
+                }
+                if (id == 1) {
+                    heightValue = Integer.valueOf(wv_height_cm.getSelectedText());
+                }
+                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, id == 0 ? false : true);
+                resetHeightWheel();
+            }
+
+            @Override
+            public void selecting(int id, String text) {
+
             }
         });
-
 
         builder.setContentView(view);
         builder.setTitle(R.string.setting_userinfo_height);
@@ -91,18 +93,18 @@ public class UnitManagerModule {
             public void onClick(DialogInterface dialog, int which) {
                 boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
                 if (!isBritish) {
-                    heightValue = Integer.valueOf(wv_height_cm.getSelectionItem().toString());
+                    heightValue = Integer.valueOf(wv_height_cm.getSelectedText());
                     tv_setting_userinfo_height.setText(heightValue + "");
                     tv_setting_userinfo_height.setTag(heightValue + "");
-                    tv_height_unit.setText(wv_height_unit.getSelectionItem().toString());
+                    tv_height_unit.setText(wv_height_unit.getSelectedText());
 
                     tv_setting_userinfo_weight.setText(tv_setting_userinfo_weight.getTag().toString());
                     tv_weight_unit.setText(activity.getString(R.string.setting_userinfo_weight_unit));
                 } else {
-                    heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectionItem().toString()), Integer.valueOf(wv_height_in.getSelectionItem().toString()));
-                    tv_setting_userinfo_height.setText(String.format("%s'%s''", wv_height_ft.getSelectionItem().toString(), wv_height_in.getSelectionItem().toString()));
+                    heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectedText()), Integer.valueOf(wv_height_in.getSelectedText()));
+                    tv_setting_userinfo_height.setText(String.format("%s'%s''", wv_height_ft.getSelectedText(), wv_height_in.getSelectedText()));
                     tv_setting_userinfo_height.setTag(heightValue + "");
-                    tv_height_unit.setText(wv_height_unit.getSelectionItem().toString());
+                    tv_height_unit.setText(wv_height_unit.getSelectedText());
 
                     tv_setting_userinfo_weight.setText(kgToLb(Integer.valueOf(tv_setting_userinfo_weight.getTag().toString())) + "");
                     tv_weight_unit.setText(activity.getString(R.string.setting_userinfo_weight_unit_british));
@@ -133,27 +135,32 @@ public class UnitManagerModule {
         wv_weight_kg = ButterKnife.findById(view, R.id.wv_weight_kg);
         wv_weight_lb = ButterKnife.findById(view, R.id.wv_weight_lb);
         wv_weight_unit = ButterKnife.findById(view, R.id.wv_weight_unit);
-        style = new WheelView.WheelViewStyle();
-        style.selectedTextSize = 20;
-        style.textSize = 16;
         SPUtiles.getInstance(activity);
-        resetWeightWheel(activity);
-        wv_weight_unit.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_weight_unit.setSkin(WheelView.Skin.Holo);
-        wv_weight_unit.setWheelData(createWeightUnit(activity));
-        wv_weight_unit.setStyle(style);
-        wv_weight_unit.setSelection(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? 1 : 0);
-        wv_weight_unit.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener() {
+        resetWeightWheel();
+        wv_weight_unit.setData(createWeightUnit(activity));
+        wv_weight_unit.setDefault(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? 1 : 0);
+        wv_weight_unit.setOnSelectListener(new WheelView.OnSelectListener() {
             @Override
-            public void onItemSelected(int position, Object o) {
-                if (position == 0 && !SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
+            public void endSelect(int id, String text) {
+                if (id == 0 && !SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
                     return;
                 }
-                if (position == 1 && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
+                if (id == 1 && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
                     return;
                 }
-                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, position == 0 ? false : true);
-                resetWeightWheel(activity);
+                if (id == 0) {
+                    weightValue = LbToKg(Integer.valueOf(wv_weight_lb.getSelectedText()));
+                }
+                if (id == 1) {
+                    weightValue = Integer.valueOf(wv_weight_kg.getSelectedText());
+                }
+                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, id == 0 ? false : true);
+                resetWeightWheel();
+            }
+
+            @Override
+            public void selecting(int id, String text) {
+
             }
         });
 
@@ -164,18 +171,18 @@ public class UnitManagerModule {
             public void onClick(DialogInterface dialog, int which) {
                 boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
                 if (!isBritish) {
-                    weightValue = Integer.valueOf(wv_weight_kg.getSelectionItem().toString());
-                    tv_setting_userinfo_weight.setText(weightValue  + "");
-                    tv_setting_userinfo_weight.setTag(weightValue  + "");
-                    tv_weight_unit.setText(wv_weight_unit.getSelectionItem().toString());
+                    weightValue = Integer.valueOf(wv_weight_kg.getSelectedText());
+                    tv_setting_userinfo_weight.setText(weightValue + "");
+                    tv_setting_userinfo_weight.setTag(weightValue + "");
+                    tv_weight_unit.setText(wv_weight_unit.getSelectedText());
 
                     tv_setting_userinfo_height.setText(tv_setting_userinfo_height.getTag().toString());
                     tv_height_unit.setText(activity.getString(R.string.setting_userinfo_height_unit));
                 } else {
-                    weightValue = LbToKg(Integer.valueOf(wv_weight_lb.getSelectionItem().toString()));
-                    tv_setting_userinfo_weight.setText(wv_weight_lb.getSelectionItem().toString());
-                    tv_setting_userinfo_weight.setTag(weightValue  + "");
-                    tv_weight_unit.setText(wv_weight_unit.getSelectionItem().toString());
+                    weightValue = LbToKg(Integer.valueOf(wv_weight_lb.getSelectedText()));
+                    tv_setting_userinfo_weight.setText(wv_weight_lb.getSelectedText());
+                    tv_setting_userinfo_weight.setTag(weightValue + "");
+                    tv_weight_unit.setText(wv_weight_unit.getSelectedText());
 
                     tv_setting_userinfo_height.setText(String.format("%s'%s''", cmToFt(Integer.valueOf(tv_setting_userinfo_height.getTag().toString())),
                             cmToIn(Integer.valueOf(tv_setting_userinfo_height.getTag().toString()))));
@@ -193,79 +200,59 @@ public class UnitManagerModule {
         builder.create().show();
     }
 
-    private void resetWeightWheel(Activity activity) {
+    private void resetWeightWheel() {
         boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
         if (!isBritish) {
+            wv_weight_kg.setVisibility(View.VISIBLE);
             wv_weight_lb.setVisibility(View.GONE);
-            initWeightKg(activity, weightValue);
+            initWeightKg();
         } else {
             wv_weight_kg.setVisibility(View.GONE);
-            initWeightLb(activity, weightValue);
+            wv_weight_lb.setVisibility(View.VISIBLE);
+            initWeightLb();
         }
     }
 
-    private void initWeightLb(Activity activity, int weightValue) {
-        wv_weight_lb.setSkin(WheelView.Skin.Holo);
-        wv_weight_lb.setWheelSize(3);
-        wv_weight_lb.setWheelData(createWeightLb());
-        wv_weight_lb.setSelection(kgToLb(weightValue) - MIN_WEIGHT_LB);
-        wv_weight_lb.setStyle(style);
-        wv_weight_lb.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_weight_lb.addOnGlobalLayoutListener();
+    private void initWeightLb() {
+        wv_weight_lb.setData(createWeightLb());
+        wv_weight_lb.setDefault(kgToLb(weightValue) - MIN_WEIGHT_LB);
     }
 
-    private void initWeightKg(Activity activity, int weightValue) {
-        wv_weight_kg.setSkin(WheelView.Skin.Holo);
-        wv_weight_kg.setWheelData(createWeightKg());
-        wv_weight_kg.setWheelSize(3);
-        wv_weight_kg.setSelection(weightValue - MIN_WEIGHT_KG);
-        wv_weight_kg.setStyle(style);
-        wv_weight_kg.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_weight_kg.addOnGlobalLayoutListener();
+    private void initWeightKg() {
+        wv_weight_kg.setData(createWeightKg());
+        wv_weight_kg.setDefault(weightValue - MIN_WEIGHT_KG);
     }
 
-    private void resetHeightWheel(Activity activity) {
+    private void resetHeightWheel() {
         boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
         if (!isBritish) {
+            wv_height_cm.setVisibility(View.VISIBLE);
             wv_height_ft.setVisibility(View.GONE);
             wv_height_in.setVisibility(View.GONE);
-            initHeightCm(activity, heightValue);
+            initHeightCm();
         } else {
-            wv_height_cm.setVisibility(View.GONE);
-            initHeightFt(activity, heightValue);
-            initHeightIn(activity, heightValue);
+            wv_height_cm.setVisibility(View.VISIBLE);
+            wv_height_ft.setVisibility(View.VISIBLE);
+            wv_height_in.setVisibility(View.VISIBLE);
+            initHeightFt();
+            initHeightIn();
         }
     }
 
-    private void initHeightIn(Activity activity, int heightValue) {
-        wv_height_in.setSkin(WheelView.Skin.Holo);
-        wv_height_in.setWheelData(createHeightIn());
-        wv_height_in.setWheelSize(3);
-        wv_height_in.setSelection(cmToIn(heightValue) - MIN_HEIGHT_IN);
-        wv_height_in.setStyle(style);
-        wv_height_in.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_height_in.addOnGlobalLayoutListener();
+    private void initHeightIn() {
+        wv_height_in.setData(createHeightIn());
+        wv_height_in.setDefault(cmToIn(heightValue) - MIN_HEIGHT_IN);
     }
 
-    private void initHeightFt(Activity activity, int heightValue) {
-        wv_height_ft.setSkin(WheelView.Skin.Holo);
-        wv_height_ft.setWheelData(createHeightFt());
-        wv_height_ft.setWheelSize(3);
-        wv_height_ft.setSelection(cmToFt(heightValue) - MIN_HEIGHT_FT);
-        wv_height_ft.setStyle(style);
-        wv_height_ft.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_height_ft.addOnGlobalLayoutListener();
+    private void initHeightFt() {
+        wv_height_ft.setData(createHeightFt());
+        wv_height_ft.setDefault(cmToFt(heightValue) - MIN_HEIGHT_FT);
     }
 
 
-    private void initHeightCm(Activity activity, int heightValue) {
-        wv_height_cm.setSkin(WheelView.Skin.Holo);
-        wv_height_cm.setWheelData(createHeightCm());
-        wv_height_cm.setWheelSize(3);
-        wv_height_cm.setSelection(heightValue - MIN_HEIGHT_CM);
-        wv_height_cm.setStyle(style);
-        wv_height_cm.setWheelAdapter(new ArrayWheelAdapter(activity));
-        wv_height_cm.addOnGlobalLayoutListener();
+    private void initHeightCm() {
+        wv_height_cm.setData(createHeightCm());
+        wv_height_cm.setDefault(heightValue - MIN_HEIGHT_CM);
     }
 
     private ArrayList<String> createHeightCm() {
@@ -323,20 +310,20 @@ public class UnitManagerModule {
     }
 
     public static int cmToIn(int heightValue) {
-        return (int)(heightValue * CM_TO_IN % 12);
+        return (int) (heightValue * CM_TO_IN % 12);
     }
 
     public static int InToCm(int ft, int in) {
-        return (int)((ft * 12 + in) / CM_TO_IN);
+        return (int) ((ft * 12 + in) / CM_TO_IN);
     }
 
     public static int cmToFt(int heightValue) {
-        return (int)(heightValue * CM_TO_IN / 12);
+        return (int) (heightValue * CM_TO_IN / 12);
     }
 
     public static int kgToLb(int weightValue) {
         if (weightValue == 150) {
-            return new BigDecimal(weightValue * KG_TO_LB).setScale(0, BigDecimal.ROUND_HALF_UP).intValue() -1;
+            return new BigDecimal(weightValue * KG_TO_LB).setScale(0, BigDecimal.ROUND_HALF_UP).intValue() - 1;
         }
         return new BigDecimal(weightValue * KG_TO_LB).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
     }
