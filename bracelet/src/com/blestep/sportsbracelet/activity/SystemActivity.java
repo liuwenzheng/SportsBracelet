@@ -5,29 +5,27 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class SystemActivity extends Activity {
 
-    @InjectView(R.id.tv_unit)
+
+    @Bind(R.id.tv_unit)
     TextView tvUnit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_system);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         tvUnit.setText(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? getString(R.string.bracelet_unit_british) : getString(R.string.bracelet_unit_metric));
     }
 

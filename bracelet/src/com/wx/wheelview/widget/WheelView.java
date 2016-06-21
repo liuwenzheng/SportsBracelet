@@ -74,7 +74,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
 
     private WheelViewStyle mStyle;  // 滚轮样式
 
-    private com.wx.wheelview.widget.WheelView mJoinWheelView;   // 副WheelView
+    private WheelView mJoinWheelView;   // 副WheelView
 
     private HashMap<String, List<T>> mJoinMap;    // 副滚轮数据列表
 
@@ -352,11 +352,11 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
         if (WheelUtils.isEmpty(list)) {
             throw new WheelViewException("join map data is error.");
         }
-        com.wx.wheelview.widget.WheelView.this.postDelayed(new Runnable() {
+        WheelView.this.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setWheelData(list);
-                com.wx.wheelview.widget.WheelView.super.setSelection(0);
+                WheelView.super.setSelection(0);
                 refreshCurrentPosition(true);
             }
         }, 10);
@@ -380,10 +380,10 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
     public void setSelection(final int selection) {
         mSelection = selection;
         setVisibility(View.INVISIBLE);
-        com.wx.wheelview.widget.WheelView.this.postDelayed(new Runnable() {
+        WheelView.this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                com.wx.wheelview.widget.WheelView.super.setSelection(getRealPosition(selection));
+                WheelView.super.setSelection(getRealPosition(selection));
                 refreshCurrentPosition(false);
                 setVisibility(View.VISIBLE);
             }
@@ -396,7 +396,7 @@ public class WheelView<T> extends ListView implements IWheelView<T> {
      * @param wheelView
      */
     @Override
-    public void join(com.wx.wheelview.widget.WheelView wheelView) {
+    public void join(WheelView wheelView) {
         if (wheelView == null) {
             throw new WheelViewException("wheelview cannot be null.");
         }

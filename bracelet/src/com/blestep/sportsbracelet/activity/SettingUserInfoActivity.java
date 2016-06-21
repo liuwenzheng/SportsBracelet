@@ -27,19 +27,19 @@ import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 public class SettingUserInfoActivity extends BaseActivity {
-    @InjectView(R.id.et_setting_userinfo_name)
+    @Bind(R.id.et_setting_userinfo_name)
     EditText et_setting_userinfo_name;
-    @InjectView(R.id.rg_setting_userinfo_sex)
+    @Bind(R.id.rg_setting_userinfo_sex)
     RadioGroup rg_setting_userinfo_sex;
-    @InjectView(R.id.tv_setting_userinfo_birthday)
+    @Bind(R.id.tv_setting_userinfo_birthday)
     TextView tv_setting_userinfo_birthday;
-    @InjectView(R.id.tv_setting_userinfo_height)
+    @Bind(R.id.tv_setting_userinfo_height)
     TextView tv_setting_userinfo_height;
-    @InjectView(R.id.tv_setting_userinfo_weight)
+    @Bind(R.id.tv_setting_userinfo_weight)
     TextView tv_setting_userinfo_weight;
     private DatePickerDialog mDialog;
     private Calendar mCalendar;
@@ -50,7 +50,7 @@ public class SettingUserInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_userinfo);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         initData();
     }
 

@@ -120,7 +120,7 @@ public abstract class BaseWheelAdapter<T> extends BaseAdapter {
         return view;
     }
 
-    public final com.wx.wheelview.adapter.BaseWheelAdapter setClickable(boolean clickable) {
+    public final BaseWheelAdapter setClickable(boolean clickable) {
         if (clickable != mClickable) {
             mClickable = clickable;
             super.notifyDataSetChanged();
@@ -128,7 +128,7 @@ public abstract class BaseWheelAdapter<T> extends BaseAdapter {
         return this;
     }
 
-    public final com.wx.wheelview.adapter.BaseWheelAdapter setLoop(boolean loop) {
+    public final BaseWheelAdapter setLoop(boolean loop) {
         if (loop != mLoop) {
             mLoop = loop;
             super.notifyDataSetChanged();
@@ -136,13 +136,13 @@ public abstract class BaseWheelAdapter<T> extends BaseAdapter {
         return this;
     }
 
-    public final com.wx.wheelview.adapter.BaseWheelAdapter setWheelSize(int wheelSize) {
+    public final BaseWheelAdapter setWheelSize(int wheelSize) {
         mWheelSize = wheelSize;
         super.notifyDataSetChanged();
         return this;
     }
 
-    public final com.wx.wheelview.adapter.BaseWheelAdapter setData(List<T> list) {
+    public final BaseWheelAdapter setData(List<T> list) {
         mList = list;
         super.notifyDataSetChanged();
         return this;

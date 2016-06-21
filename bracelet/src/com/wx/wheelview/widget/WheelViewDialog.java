@@ -132,7 +132,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param onDialogItemClickListener
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setOnDialogItemClickListener(OnDialogItemClickListener onDialogItemClickListener) {
+    public WheelViewDialog setOnDialogItemClickListener(OnDialogItemClickListener onDialogItemClickListener) {
         mOnDialogItemClickListener = onDialogItemClickListener;
         return this;
     }
@@ -143,7 +143,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param color
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setDialogStyle(int color) {
+    public WheelViewDialog setDialogStyle(int color) {
         mTitle.setTextColor(color);
         mLine1.setBackgroundColor(color);
         mLine2.setBackgroundColor(color);
@@ -159,7 +159,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param title
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setTitle(String title) {
+    public WheelViewDialog setTitle(String title) {
         mTitle.setText(title);
         return this;
     }
@@ -170,7 +170,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param color
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setTextColor(int color) {
+    public WheelViewDialog setTextColor(int color) {
         mTitle.setTextColor(color);
         return this;
     }
@@ -181,7 +181,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param size
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setTextSize(int size) {
+    public WheelViewDialog setTextSize(int size) {
         mTitle.setTextSize(size);
         return this;
     }
@@ -192,7 +192,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param text
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setButtonText(String text) {
+    public WheelViewDialog setButtonText(String text) {
         mButton.setText(text);
         return this;
     }
@@ -203,7 +203,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param color
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setButtonColor(int color) {
+    public WheelViewDialog setButtonColor(int color) {
         mButton.setTextColor(color);
         return this;
     }
@@ -214,7 +214,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      * @param size
      * @return
      */
-    public com.wx.wheelview.widget.WheelViewDialog setButtonSize(int size) {
+    public WheelViewDialog setButtonSize(int size) {
         mButton.setTextSize(size);
         return this;
     }
@@ -224,7 +224,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      *
      * @param count
      */
-    public com.wx.wheelview.widget.WheelViewDialog setCount(int count) {
+    public WheelViewDialog setCount(int count) {
         mWheelView.setWheelSize(count);
         return this;
     }
@@ -234,7 +234,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      *
      * @param loop
      */
-    public com.wx.wheelview.widget.WheelViewDialog setLoop(boolean loop) {
+    public WheelViewDialog setLoop(boolean loop) {
         mWheelView.setLoop(loop);
         return this;
     }
@@ -244,7 +244,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      *
      * @param selection
      */
-    public com.wx.wheelview.widget.WheelViewDialog setSelection(int selection) {
+    public WheelViewDialog setSelection(int selection) {
         mWheelView.setSelection(selection);
         return this;
     }
@@ -254,7 +254,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      *
      * @param arrays
      */
-    public com.wx.wheelview.widget.WheelViewDialog setItems(T[] arrays) {
+    public WheelViewDialog setItems(T[] arrays) {
         return setItems(Arrays.asList(arrays));
     }
 
@@ -263,7 +263,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
      *
      * @param list
      */
-    public com.wx.wheelview.widget.WheelViewDialog setItems(List<T> list) {
+    public WheelViewDialog setItems(List<T> list) {
         mWheelView.setWheelData(list);
         return this;
     }
@@ -271,7 +271,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
     /**
      * 显示
      */
-    public com.wx.wheelview.widget.WheelViewDialog show() {
+    public WheelViewDialog show() {
         if (!mDialog.isShowing()) {
             mDialog.show();
         }
@@ -281,7 +281,7 @@ public class WheelViewDialog<T> implements View.OnClickListener {
     /**
      * 隐藏
      */
-    public com.wx.wheelview.widget.WheelViewDialog dismiss() {
+    public WheelViewDialog dismiss() {
         if (mDialog.isShowing()) {
             mDialog.dismiss();
         }

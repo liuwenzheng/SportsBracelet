@@ -331,6 +331,9 @@ public class BindDeviceActivity extends BaseActivity implements
 					if (mDialog != null) {
 						mDialog.dismiss();
 					}
+					if (mPosition == -1) {
+						return;
+					}
 					SPUtiles.setStringValue(
 							BTConstants.SP_KEY_DEVICE_ADDRESS,
 							mScanDevice == null ? mDevices.get(mPosition).address
