@@ -19,6 +19,7 @@ import com.blestep.sportsbracelet.module.UnitManagerModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
+import com.blestep.sportsbracelet.view.CustomDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.ParseException;
@@ -46,6 +47,8 @@ public class SettingUserInfoActivity extends BaseActivity {
     private SimpleDateFormat sdf = new SimpleDateFormat(
             BTConstants.PATTERN_YYYY_MM_DD);
     private UnitManagerModule module;
+    private CustomDialog heightDialog, weightDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +82,8 @@ public class SettingUserInfoActivity extends BaseActivity {
                 }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                 mCalendar.get(Calendar.DAY_OF_MONTH));
         module = new UnitManagerModule();
+        heightDialog = module.createHeightDialog(this);
+        weightDialog = module.createWeightDialog(this);
     }
 
     @Override
@@ -97,10 +102,12 @@ public class SettingUserInfoActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_setting_userinfo_height:
-                module.createHeightDialog(this);
+                module.resetHeightWheel(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false));
+                heightDialog.show();
                 break;
             case R.id.tv_setting_userinfo_weight:
-                module.createWeightDialog(this);
+                module.resetWeightWheel(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false));
+                weightDialog.show();
                 break;
             case R.id.tv_setting_userinfo_birthday:
                 mDialog.show();

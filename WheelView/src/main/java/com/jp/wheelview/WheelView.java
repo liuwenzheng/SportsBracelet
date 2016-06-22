@@ -113,6 +113,10 @@ public class WheelView extends View {
      */
     private static final int REFRESH_VIEW = 0x001;
     /**
+     * 结束回调
+     */
+    private static final int END_SELECT = 0x002;
+    /**
      * 移动距离
      */
     private static final int MOVE_NUMBER = 5;
@@ -332,13 +336,9 @@ public class WheelView extends View {
             defaultMove((int) itemList.get(itemList.size() - 1)
                     .moveToSelected());
         }
-        for (ItemObject item : itemList) {
-            if (item.isSelected()) {
-                if (onSelectListener != null)
-                    onSelectListener.endSelect(item.id, item.itemText);
-                break;
-            }
-        }
+        Message rMessage = new Message();
+        rMessage.what = END_SELECT;
+        handler.sendMessage(rMessage);
     }
 
     /**
@@ -448,14 +448,9 @@ public class WheelView extends View {
                         e.printStackTrace();
                     }
                 }
-                for (ItemObject item : itemList) {
-                    if (item.isSelected()) {
-                        if (onSelectListener != null)
-                            onSelectListener.endSelect(item.id, item.itemText);
-                        break;
-                    }
-                }
-
+                Message rMessage = new Message();
+                rMessage.what = END_SELECT;
+                handler.sendMessage(rMessage);
             }
         }).start();
     }
@@ -613,6 +608,15 @@ public class WheelView extends View {
             switch (msg.what) {
                 case REFRESH_VIEW:
                     invalidate();
+                    break;
+                case END_SELECT:
+                    for (ItemObject item : itemList) {
+                        if (item.isSelected()) {
+                            if (onSelectListener != null)
+                                onSelectListener.endSelect(item.id, item.itemText);
+                            break;
+                        }
+                    }
                     break;
                 default:
                     break;

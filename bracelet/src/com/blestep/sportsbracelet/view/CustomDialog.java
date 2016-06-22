@@ -169,7 +169,7 @@ public class CustomDialog extends Dialog {
                 ((LinearLayout) layout.findViewById(R.id.content))
                         .removeAllViews();
                 ((LinearLayout) layout.findViewById(R.id.content))
-                        .addView(contentView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                        .addView(contentView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             }
             dialog.setContentView(layout);
             dialog.setCanceledOnTouchOutside(false);
