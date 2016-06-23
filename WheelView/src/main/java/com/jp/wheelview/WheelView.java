@@ -8,6 +8,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextPaint;
@@ -205,7 +206,11 @@ public class WheelView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        controlWidth = getWidth();
+        if (controlWidth == 0) {
+            invalidate();
+            return;
+        }
         drawLine(canvas);
         drawList(canvas);
         drawMask(canvas);
@@ -336,9 +341,20 @@ public class WheelView extends View {
             defaultMove((int) itemList.get(itemList.size() - 1)
                     .moveToSelected());
         }
-        Message rMessage = new Message();
-        rMessage.what = END_SELECT;
-        handler.sendMessage(rMessage);
+        for (ItemObject item : itemList) {
+            if (item.isSelected()) {
+                if (onSelectListener != null) {
+                    Message message = new Message();
+                    message.what = END_SELECT;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("text",item.itemText);
+                    bundle.putInt("id",item.id);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -378,20 +394,32 @@ public class WheelView extends View {
             for (int i = 0; i < itemList.size(); i++) {
                 if (itemList.get(i).isSelected()) {
                     newMove = (int) itemList.get(i).moveToSelected();
-                    if (onSelectListener != null)
-                        onSelectListener.endSelect(itemList.get(i).id,
-                                itemList.get(i).itemText);
-                    break;
+                    if (onSelectListener != null) {
+                        Message message = new Message();
+                        message.what = END_SELECT;
+                        Bundle bundle = new Bundle();
+                        bundle.putString("text", itemList.get(i).itemText);
+                        bundle.putInt("id", itemList.get(i).id);
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                        break;
+                    }
                 }
             }
         } else {
             for (int i = itemList.size() - 1; i >= 0; i--) {
                 if (itemList.get(i).isSelected()) {
                     newMove = (int) itemList.get(i).moveToSelected();
-                    if (onSelectListener != null)
-                        onSelectListener.endSelect(itemList.get(i).id,
-                                itemList.get(i).itemText);
-                    break;
+                    if (onSelectListener != null) {
+                        Message message = new Message();
+                        message.what = END_SELECT;
+                        Bundle bundle = new Bundle();
+                        bundle.putString("text", itemList.get(i).itemText);
+                        bundle.putInt("id", itemList.get(i).id);
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                        break;
+                    }
                 }
             }
         }
@@ -448,9 +476,20 @@ public class WheelView extends View {
                         e.printStackTrace();
                     }
                 }
-                Message rMessage = new Message();
-                rMessage.what = END_SELECT;
-                handler.sendMessage(rMessage);
+                for (ItemObject item : itemList) {
+                    if (item.isSelected()) {
+                        if (onSelectListener != null) {
+                            Message message = new Message();
+                            message.what = END_SELECT;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("text",item.itemText);
+                            bundle.putInt("id",item.id);
+                            message.setData(bundle);
+                            handler.sendMessage(message);
+                            break;
+                        }
+                    }
+                }
             }
         }).start();
     }
@@ -610,13 +649,10 @@ public class WheelView extends View {
                     invalidate();
                     break;
                 case END_SELECT:
-                    for (ItemObject item : itemList) {
-                        if (item.isSelected()) {
-                            if (onSelectListener != null)
-                                onSelectListener.endSelect(item.id, item.itemText);
-                            break;
-                        }
-                    }
+                    int id = msg.getData().getInt("id");
+                    String text = msg.getData().getString("text");
+                    if (onSelectListener != null)
+                        onSelectListener.endSelect(id, text);
                     break;
                 default:
                     break;
