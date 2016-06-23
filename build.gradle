@@ -31,5 +31,18 @@ android {
             abortOnError false
         }
     }
-
+    signingConfigs {
+        release {
+            keyAlias 'sportbracelet'
+            keyPassword 'moko123456'
+            storeFile file('D:\\AndroidStudioProjects\\SportsBracelet\\keystore\\sportbracelet')
+            storePassword 'moko123456'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
 }

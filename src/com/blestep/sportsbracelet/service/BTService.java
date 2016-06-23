@@ -430,7 +430,7 @@ public class BTService extends Service implements LeScanCallback {
                         LogModule.d("来电号码:" + incoming_number);
                         // log:来电号码:18801283616
                         if (!TextUtils.isEmpty(incoming_number) && isConnDevice() && SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, true)) {
-                            ToastUtils.showToast(context, "phone number:" + incoming_number);
+                            // ToastUtils.showToast(context, "phone number:" + incoming_number);
                             if (SPUtiles
                                     .getBooleanValue(
                                             BTConstants.SP_KEY_COMING_PHONE_NODISTURB_ALERT,
