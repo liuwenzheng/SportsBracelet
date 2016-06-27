@@ -231,6 +231,7 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/tv_step_distance_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/iv_step_distance"

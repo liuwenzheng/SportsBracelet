@@ -67,6 +67,7 @@
     <string name="step_distance">Distance</string>
     <string name="step_duration_unit">%1$sh%2$smin</string>
     <string name="step_distance_unit">Km</string>
+    <string name="step_distance_unit_british">Mi</string>
     <string name="step_heart_rate_unit">/Min</string>
     <!-- mycenter -->
     <string name="center_title">Personal Center</string>

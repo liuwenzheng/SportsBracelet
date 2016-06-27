@@ -70,6 +70,7 @@
                 android:textSize="30sp" />
 
             <TextView
+                android:id="@+id/tv_history_distance_daily_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_history_distance_daily"
@@ -113,6 +114,7 @@
                 android:textSize="30sp" />
 
             <TextView
+                android:id="@+id/tv_history_distance_sum_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_history_distance_sum"

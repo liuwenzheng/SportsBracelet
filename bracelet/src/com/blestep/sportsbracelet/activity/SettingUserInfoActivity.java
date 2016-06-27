@@ -5,9 +5,9 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -19,7 +19,6 @@ import com.blestep.sportsbracelet.module.UnitManagerModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
-import com.blestep.sportsbracelet.view.CustomDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.ParseException;
@@ -27,8 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingUserInfoActivity extends BaseActivity {
@@ -42,19 +41,43 @@ public class SettingUserInfoActivity extends BaseActivity {
     TextView tv_setting_userinfo_height;
     @Bind(R.id.tv_setting_userinfo_weight)
     TextView tv_setting_userinfo_weight;
+    @Bind(R.id.iv_setting_userinfo_icon)
+    ImageView iv_setting_userinfo_icon;
     private DatePickerDialog mDialog;
     private Calendar mCalendar;
     private SimpleDateFormat sdf = new SimpleDateFormat(
             BTConstants.PATTERN_YYYY_MM_DD);
     private UnitManagerModule module;
-    private CustomDialog heightDialog, weightDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_userinfo);
         ButterKnife.bind(this);
+        initListener();
         initData();
+    }
+
+    private void initListener() {
+        rg_setting_userinfo_sex
+                .setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId) {
+                            case R.id.rb_userinfo_male:
+                                iv_setting_userinfo_icon.setImageResource(R.drawable.pic_male);
+                                break;
+                            case R.id.rb_userinfo_female:
+                                iv_setting_userinfo_icon.setImageResource(R.drawable.pic_female);
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                    }
+                });
     }
 
     private void initData() {
@@ -82,8 +105,6 @@ public class SettingUserInfoActivity extends BaseActivity {
                 }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                 mCalendar.get(Calendar.DAY_OF_MONTH));
         module = new UnitManagerModule();
-        heightDialog = module.createHeightDialog(this);
-        weightDialog = module.createWeightDialog(this);
     }
 
     @Override
@@ -102,12 +123,10 @@ public class SettingUserInfoActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_setting_userinfo_height:
-                module.resetHeightWheel(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false));
-                heightDialog.show();
+                module.createHeightDialog(this);
                 break;
             case R.id.tv_setting_userinfo_weight:
-                module.resetWeightWheel(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false));
-                weightDialog.show();
+                module.createWeightDialog(this);
                 break;
             case R.id.tv_setting_userinfo_birthday:
                 mDialog.show();

@@ -28,6 +28,7 @@ import com.blestep.sportsbracelet.fragment.HistoryStepCalorie;
 import com.blestep.sportsbracelet.fragment.HistoryStepCount;
 import com.blestep.sportsbracelet.fragment.HistoryStepDistance;
 import com.blestep.sportsbracelet.module.LogModule;
+import com.blestep.sportsbracelet.module.UnitManagerModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.ControlScrollViewPager;
@@ -116,6 +117,13 @@ public class HistoryActivity extends FragmentActivity implements
 		mStepsMap = new HashMap<String, Step>();
 		for (Step step : mSteps) {
 			mStepsMap.put(step.date, step);
+		}
+		// 转换为英制
+		SPUtiles.getInstance(this);
+		if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)) {
+			for (Step step : mSteps) {
+				step.distance = UnitManagerModule.kmToMi(Float.valueOf(step.distance)) + "";
+			}
 		}
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(BTConstants.EXTRA_KEY_HISTORY, mSteps);

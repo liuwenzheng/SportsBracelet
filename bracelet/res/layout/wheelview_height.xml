@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <com.jp.wheelview.WheelView
         android:id="@+id/wv_height_cm"
         android:layout_width="100dp"
         android:layout_height="153dp"
-        android:visibility="gone"
         app:itemNumber="3"
         app:lineColor="@android:color/holo_blue_dark"
         app:lineHeight="1.5dp"
@@ -27,7 +27,6 @@
         android:id="@+id/wv_height_ft"
         android:layout_width="50dp"
         android:layout_height="153dp"
-        android:visibility="gone"
         app:itemNumber="3"
         app:lineColor="@android:color/holo_blue_dark"
         app:lineHeight="1.5dp"
@@ -43,7 +42,7 @@
         android:id="@+id/wv_height_in"
         android:layout_width="50dp"
         android:layout_height="153dp"
-        android:visibility="gone"
+        android:layout_marginLeft="10dp"
         app:itemNumber="3"
         app:lineColor="@android:color/holo_blue_dark"
         app:lineHeight="1.5dp"
@@ -57,8 +56,9 @@
 
     <com.jp.wheelview.WheelView
         android:id="@+id/wv_height_unit"
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="153dp"
+        android:layout_marginLeft="10dp"
         app:itemNumber="3"
         app:lineColor="@android:color/holo_blue_dark"
         app:lineHeight="1.5dp"
