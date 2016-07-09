@@ -28,7 +28,6 @@ import com.blestep.sportsbracelet.entity.BleDevice;
 import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
-import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
 
 import java.util.Calendar;
@@ -147,15 +146,15 @@ public class BTService extends Service implements LeScanCallback {
                             Intent intent = new Intent(
                                     BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
                             sendBroadcast(intent);
-                            if (!isReconnect) {
+                            // 2016/7/9 当来电提醒打开时才启动重连机制
+                            if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !isReconnect) {
                                 LogModule.d("开始重连...");
+                                // TODO: 2016/7/9 此处可用线程池控制，减少创建线程导致的内存消耗
                                 new Thread(runnableReconnect).start();
                             }
                             break;
                     }
                 }
-
-                ;
 
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
@@ -429,8 +428,8 @@ public class BTService extends Service implements LeScanCallback {
                                 .getStringExtra("incoming_number");
                         LogModule.d("来电号码:" + incoming_number);
                         // log:来电号码:18801283616
-                        if (!TextUtils.isEmpty(incoming_number) && isConnDevice() && SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, true)) {
-                            ToastUtils.showToast(context, "phone number:" + incoming_number);
+                        if (!TextUtils.isEmpty(incoming_number) && isConnDevice() && SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false)) {
+                            // ToastUtils.showToast(context, "phone number:" + incoming_number);
                             if (SPUtiles
                                     .getBooleanValue(
                                             BTConstants.SP_KEY_COMING_PHONE_NODISTURB_ALERT,

@@ -135,7 +135,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
         tv_bracelet_name.setText(SPUtiles.getStringValue(
                 BTConstants.SP_KEY_DEVICE_NAME, ""));
         if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT,
-                true)) {
+                false)) {
             tv_alert_coming_call_state
                     .setText(getString(R.string.alert_coming_call_open));
         } else {

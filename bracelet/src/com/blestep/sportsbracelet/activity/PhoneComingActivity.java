@@ -77,7 +77,7 @@ public class PhoneComingActivity extends BaseActivity implements
 	private void initData() {
 		mSdf = new SimpleDateFormat(BTConstants.PATTERN_HH_MM);
 		cb_allow_phone_coming_alert.setChecked(SPUtiles.getBooleanValue(
-				BTConstants.SP_KEY_COMING_PHONE_ALERT, true));
+				BTConstants.SP_KEY_COMING_PHONE_ALERT, false));
 		cb_allow_phone_coming_alert_contacts.setChecked(SPUtiles
 				.getBooleanValue(
 						BTConstants.SP_KEY_COMING_PHONE_CONTACTS_ALERT, false));
