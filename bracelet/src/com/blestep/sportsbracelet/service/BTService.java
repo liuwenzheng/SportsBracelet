@@ -239,19 +239,31 @@ public class BTService extends Service implements LeScanCallback {
                         sendBroadcast(intent);
                         return;
                     }
-                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
-                        Intent intent = new Intent(
-                                BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
-                        sendBroadcast(intent);
+//                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
+//                        Intent intent = new Intent(
+//                                BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
+//                        sendBroadcast(intent);
+//                        return;
+//
+//                    }
+//                    if (header == BTConstants.HEADER_BACK_SLEEP_RECORD) {
+//                        Intent intent = new Intent(
+//                                BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
+//                        sendBroadcast(intent);
+//                        return;
+//
+//                    }
+                    if (header == BTConstants.HEADER_FIRMWARE_VERSION) {
+                        int major = Integer.valueOf(Utils
+                                .decodeToString(formatDatas[0]));
+                        int minor = Integer.valueOf(Utils
+                                .decodeToString(formatDatas[1]));
+                        int revision = Integer.valueOf(Utils
+                                .decodeToString(formatDatas[2]));
+                        Intent intent = new Intent(BTConstants.ACTION_REFRESH_DATA_VERSION);
+                        intent.putExtra(BTConstants.EXTRA_KEY_VERSION_VALUE, String.format("%s.%s.%s", major, minor, revision));
+                        BTService.this.sendBroadcast(intent);
                         return;
-
-                    }
-                    if (header == BTConstants.HEADER_BACK_SLEEP_RECORD) {
-                        Intent intent = new Intent(
-                                BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
-                        sendBroadcast(intent);
-                        return;
-
                     }
 
                     // count--;
@@ -269,8 +281,6 @@ public class BTService extends Service implements LeScanCallback {
                     // }, 1000);
                     // }
                 }
-
-                ;
             };
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -373,6 +383,13 @@ public class BTService extends Service implements LeScanCallback {
      */
     public void getBatteryData() {
         BTModule.getBatteryData(mBluetoothGatt);
+    }
+
+    /**
+     * 获取手环固件版本号
+     */
+    public void getVersionData() {
+        BTModule.getVersionData(mBluetoothGatt);
     }
 
     /**

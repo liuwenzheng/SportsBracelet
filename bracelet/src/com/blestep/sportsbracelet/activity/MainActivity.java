@@ -86,11 +86,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 		filter.addAction(BTConstants.ACTION_REFRESH_DATA);
 		filter.addAction(BTConstants.ACTION_ACK);
 		filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
+		filter.addAction(BTConstants.ACTION_REFRESH_DATA_VERSION);
 		// filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
 		// filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
 		// filter.addAction(BTConstants.ACTION_LOG);
 		registerReceiver(mReceiver, filter);
-
 	}
 
 	@Override
@@ -257,6 +257,15 @@ public class MainActivity extends SlidingFragmentActivity implements
 						return;
 					}
 					SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
+					mBtService.getVersionData();
+				}
+				if (BTConstants.ACTION_REFRESH_DATA_VERSION.equals(intent
+						.getAction())) {
+					String version = intent.getStringExtra(BTConstants.EXTRA_KEY_VERSION_VALUE);
+					if (TextUtils.isEmpty(version)) {
+						return;
+					}
+					SPUtiles.setStringValue(BTConstants.SP_KEY_VERSION, version);
 					mBtService.getStepData();
 				}
 				// if (BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX.equals(intent

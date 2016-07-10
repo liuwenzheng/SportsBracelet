@@ -199,6 +199,18 @@ public class BTModule {
     }
 
     /**
+     * 获取当前版本号
+     *
+     * @param mBluetoothGatt
+     */
+    public static void getVersionData(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[1] = 0x06;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
      * 获取步数
      *
      * @param mBluetoothGatt
@@ -410,6 +422,10 @@ public class BTModule {
         if (characteristic == null) {
             return;
         }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte byteChar : byteArray)
+            stringBuilder.append(String.format("%02X ", byteChar));
+        LogModule.i("发送的16位进制数：" + stringBuilder.toString());
         characteristic.setValue(byteArray);
         characteristic
                 .setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
