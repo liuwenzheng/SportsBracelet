@@ -211,5 +211,8 @@
     <string name="tab_month">月</string>
     <string name="tab_week">周</string>
     <string name="tab_day">日</string>
+    <string name="sleep_sober">清醒</string>
+    <string name="sleep_light">浅睡</string>
+    <string name="sleep_deep">深睡</string>
 
 </resources>

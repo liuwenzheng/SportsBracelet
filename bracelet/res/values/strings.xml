@@ -211,5 +211,8 @@
     <string name="tab_month">M</string>
     <string name="tab_week">W</string>
     <string name="tab_day">D</string>
+    <string name="sleep_sober">Awake</string>
+    <string name="sleep_light">Restless</string>
+    <string name="sleep_deep">Asleep</string>
 
 </resources>
