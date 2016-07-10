@@ -53,8 +53,8 @@
     <string name="setting_target_min">please set the goal</string>
     
     <!-- main -->
-    <string name="main_tab_step">Pedometer</string>
-    <string name="main_tab_sleep">Sleeping</string>
+    <string name="main_tab_step">Steps</string>
+    <string name="main_tab_sleep">Sleep</string>
     <string name="main_tab_run">Running</string>
     <string name="main_conn_tips">Wristband is not conected with phone, please click here</string>
     <string name="main_exit_tips">Are you sure you want to quit?</string>
