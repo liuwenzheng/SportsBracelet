@@ -64,5 +64,14 @@
     <color name="button_default">#37474f</color>
     <color name="app_background">#e0e0e0</color>
     <color name="actionbar">#607d8b</color>
+    <!-- guide -->
+    <color name="guide1_start_3d8400">#3d8400</color>
+    <color name="guide1_end_7dcd00">#7dcd00</color>
+    <color name="guide2_start_ff7200">#ff7200</color>
+    <color name="guide2_end_ff9300">#ff9300</color>
+    <color name="guide3_start_4164df">#4164df</color>
+    <color name="guide3_end_6a89f2">#6a89f2</color>
+    <color name="guide4_start_6614ac">#6614ac</color>
+    <color name="guide4_end_8735cc">#8735cc</color>
 
 </resources>

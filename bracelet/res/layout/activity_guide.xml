@@ -3,8 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.blestep.sportsbracelet.view.GradientLinearLayout
+        android:id="@+id/gll_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.blestep.sportsbracelet.view.GradientLinearLayout>
+
     <com.blestep.sportsbracelet.view.ControlScrollViewPager
-        android:id="@+id/csp_guide"
+        android:id="@+id/csvp_guide"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
