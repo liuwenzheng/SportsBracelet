@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.blestep.sportsbracelet.R;
 
-public class ImageFragment extends Fragment {
+public class TextFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
