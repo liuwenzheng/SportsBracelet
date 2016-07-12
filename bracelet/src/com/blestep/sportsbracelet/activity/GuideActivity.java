@@ -7,11 +7,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.fragment.TextFragment;
+import com.blestep.sportsbracelet.fragment.GuideTipsFragment;
 import com.blestep.sportsbracelet.view.ControlScrollViewPager;
 import com.blestep.sportsbracelet.view.GradientLinearView;
 
@@ -20,6 +23,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class GuideActivity extends FragmentActivity {
     @Bind(R.id.gll_bg)
@@ -30,6 +34,10 @@ public class GuideActivity extends FragmentActivity {
     ImageView ivGuideIcon;
     @Bind(R.id.frame_guide_icon)
     FrameLayout frameGuideIcon;
+    @Bind(R.id.iv_guide_splash)
+    ImageView ivGuideSplash;
+    @Bind(R.id.ll_guide_dot)
+    LinearLayout ll_guide_dot;
     private int[] colors = new int[8];
     private List<Fragment> views = new ArrayList<>();
     private ArgbEvaluator mArgbEvaluator;
@@ -46,6 +54,19 @@ public class GuideActivity extends FragmentActivity {
         csvpGuide.setCurrentItem(0);
         csvpGuide.setOnPageChangeListener(new PageChangeLisener());
         mArgbEvaluator = new ArgbEvaluator();
+        ((ImageView) ll_guide_dot.getChildAt(0)).setImageResource(R.drawable.guide_checked_true);
+    }
+
+    @OnClick({R.id.tv_register, R.id.tv_login})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_register:
+                // TODO: 2016/7/12 注册 
+                break;
+            case R.id.tv_login:
+                // TODO: 2016/7/12 登录
+                break;
+        }
     }
 
     class PageChangeLisener implements ViewPager.OnPageChangeListener {
@@ -55,11 +76,15 @@ public class GuideActivity extends FragmentActivity {
                                    int positionOffsetPixels) {
             setBgColor(position, positionOffset);
             setGuideImage(position, positionOffset);
+            setSplashImage(position, positionOffset);
         }
 
         @Override
-        public void onPageSelected(int i) {
-
+        public void onPageSelected(int position) {
+            for (int i = 0; i < ll_guide_dot.getChildCount(); i++) {
+                ((ImageView) ll_guide_dot.getChildAt(i)).setImageResource(R.drawable.guide_checked_false);
+            }
+            ((ImageView) ll_guide_dot.getChildAt(position)).setImageResource(R.drawable.guide_checked_true);
         }
 
         @Override
@@ -68,10 +93,24 @@ public class GuideActivity extends FragmentActivity {
         }
     }
 
+    private void setSplashImage(int position, float positionOffset) {
+        int marginBottom = 0;
+        if (position == 3) {
+            if (positionOffset >= 0.5) {
+                marginBottom = (int) (gllBg.getHeight() - positionOffset * 2 * gllBg.getHeight());
+            }
+        }
+        if (position == 4) {
+            marginBottom = -gllBg.getHeight();
+        }
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) ivGuideSplash.getLayoutParams();
+        lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, marginBottom);
+        ivGuideSplash.setLayoutParams(lp);
+    }
+
     private void setGuideImage(int position, float positionOffset) {
-        if (position >= 3)
-            return;
         int marginTop;
+        ivGuideIcon.setVisibility(position == 4 ? View.GONE : View.VISIBLE);
         if (positionOffset < 0.5) {
             if (position == 0) {
                 ivGuideIcon.setImageResource(R.drawable.guide_step);
@@ -96,7 +135,11 @@ public class GuideActivity extends FragmentActivity {
             if (position == 2) {
                 ivGuideIcon.setImageResource(R.drawable.guide_cloud);
             }
-            marginTop = (int) ((1 - positionOffset) * frameGuideIcon.getHeight() * 2);
+            if (position == 3) {
+                marginTop = (int) (positionOffset * frameGuideIcon.getHeight() * 2);
+            } else {
+                marginTop = (int) ((1 - positionOffset) * frameGuideIcon.getHeight() * 2);
+            }
         }
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) ivGuideIcon.getLayoutParams();
         lp.setMargins(lp.leftMargin, marginTop, lp.rightMargin, lp.bottomMargin);
@@ -149,11 +192,31 @@ public class GuideActivity extends FragmentActivity {
     }
 
     private void initFragment() {
-        views.add(new TextFragment());
-        views.add(new TextFragment());
-        views.add(new TextFragment());
-        views.add(new TextFragment());
-        views.add(new TextFragment());
+        GuideTipsFragment fragment1 = new GuideTipsFragment();
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("tips", getString(R.string.guide_count_steps_accurately));
+        fragment1.setArguments(bundle1);
+        views.add(fragment1);
+        GuideTipsFragment fragment2 = new GuideTipsFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putString("tips", getString(R.string.guide_control_your_calorie_consumption));
+        fragment2.setArguments(bundle2);
+        views.add(fragment2);
+        GuideTipsFragment fragment3 = new GuideTipsFragment();
+        Bundle bundle3 = new Bundle();
+        bundle3.putString("tips", getString(R.string.guide_smart_alarms));
+        fragment3.setArguments(bundle3);
+        views.add(fragment3);
+        GuideTipsFragment fragment4 = new GuideTipsFragment();
+        Bundle bundle4 = new Bundle();
+        bundle4.putString("tips", getString(R.string.guide_health_management_in_the_cloud));
+        fragment4.setArguments(bundle4);
+        views.add(fragment4);
+        GuideTipsFragment fragment5 = new GuideTipsFragment();
+        Bundle bundle5 = new Bundle();
+        bundle5.putString("tips", getString(R.string.guide_better_everyday));
+        fragment5.setArguments(bundle5);
+        views.add(fragment5);
     }
 
     private void initColors() {

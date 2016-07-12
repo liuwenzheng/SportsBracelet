@@ -5,20 +5,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.blestep.sportsbracelet.R;
 
-public class TextFragment extends Fragment {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
+import butterknife.ButterKnife;
+
+public class GuideTipsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item, null);
+        View view = inflater.inflate(R.layout.guide_tips_text, null);
+        TextView tv_guide_tips = ButterKnife.findById(view, R.id.tv_guide_tips);
+        String tips = (String) getArguments().get("tips");
+        tv_guide_tips.setText(tips);
         return view;
     }
 }

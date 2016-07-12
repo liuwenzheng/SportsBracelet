@@ -211,5 +211,12 @@
     <string name="tab_month">M</string>
     <string name="tab_week">W</string>
     <string name="tab_day">D</string>
+    <string name="guide_register">Sign Up</string>
+    <string name="guide_login">Sign In</string>
+    <string name="guide_better_everyday">Better Everyday</string>
+    <string name="guide_count_steps_accurately">Count steps accurately</string>
+    <string name="guide_control_your_calorie_consumption">Control your Calorie Consumption</string>
+    <string name="guide_smart_alarms">Smart alarms</string>
+    <string name="guide_health_management_in_the_cloud">Health management in the cloud</string>
     
 </resources>

@@ -211,5 +211,12 @@
     <string name="tab_month">月</string>
     <string name="tab_week">周</string>
     <string name="tab_day">日</string>
+    <string name="guide_register">加入我们</string>
+    <string name="guide_login">登录</string>
+    <string name="guide_better_everyday">每天进步一点点</string>
+    <string name="guide_count_steps_accurately">精准记录运动步数</string>
+    <string name="guide_control_your_calorie_consumption">全面掌握热量消耗</string>
+    <string name="guide_smart_alarms">智能闹钟提醒</string>
+    <string name="guide_health_management_in_the_cloud">云端健康数据管理</string>
 
 </resources>

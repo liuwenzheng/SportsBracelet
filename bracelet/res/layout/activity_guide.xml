@@ -7,16 +7,7 @@
     <com.blestep.sportsbracelet.view.GradientLinearView
         android:id="@+id/gll_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.blestep.sportsbracelet.view.GradientLinearView>
-
-    <com.blestep.sportsbracelet.view.ControlScrollViewPager
-        android:id="@+id/csvp_guide"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.blestep.sportsbracelet.view.ControlScrollViewPager>
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/frame_guide_icon"
@@ -33,6 +24,19 @@
             android:src="@drawable/guide_step" />
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/iv_guide_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/gll_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/guide_splash" />
+
+    <com.blestep.sportsbracelet.view.ControlScrollViewPager
+        android:id="@+id/csvp_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,59 +44,55 @@
         android:layout_below="@id/frame_guide_icon"
         android:orientation="vertical">
 
-        <TextView
+        <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.0"
-            android:gravity="center"
-            android:text="精准记录运动步数"
-            android:textColor="@color/white_ffffff"
-            android:textSize="24sp" />
+            android:layout_weight="1.0" />
 
-        <RadioGroup
+        <LinearLayout
+            android:id="@+id/ll_guide_dot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:focusable="false"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <RadioButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:button="@drawable/guide_radiobtn_selector" />
+                android:src="@drawable/guide_checked_false" />
 
-            <RadioButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:button="@drawable/guide_radiobtn_selector" />
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/guide_checked_false" />
 
-            <RadioButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:button="@drawable/guide_radiobtn_selector" />
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/guide_checked_false" />
 
-            <RadioButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:button="@drawable/guide_radiobtn_selector" />
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/guide_checked_false" />
 
-            <RadioButton
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:button="@drawable/guide_radiobtn_selector" />
-        </RadioGroup>
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/guide_checked_false" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_register"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text="加入我们"
+            android:text="@string/guide_register"
             android:textColor="@color/white_ffffff"
             android:textSize="14sp" />
 
@@ -103,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text="登录"
+            android:text="@string/guide_login"
             android:textColor="@color/white_ffffff"
             android:textSize="14sp" />
     </LinearLayout>
