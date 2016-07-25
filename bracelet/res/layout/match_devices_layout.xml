@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f1f1f4"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="90dp"
+        android:text="连接手环"
+        android:textColor="@color/black_333333"
+        android:textSize="34sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tv_match_tips_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:drawableLeft="@drawable/match_point"
+            android:drawablePadding="6dp"
+            android:paddingLeft="45dp"
+            android:paddingRight="45dp"
+            android:text="使其他设备远离手机"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_match_tips_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_match_tips_1"
+            android:layout_below="@id/tv_match_tips_1"
+            android:layout_marginTop="15dp"
+            android:drawableLeft="@drawable/match_point"
+            android:drawablePadding="6dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="45dp"
+            android:paddingRight="45dp"
+            android:text="长按手环触点5秒"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_match_tips_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_match_tips_2"
+            android:layout_below="@id/tv_match_tips_2"
+            android:layout_marginTop="15dp"
+            android:drawableLeft="@drawable/match_point"
+            android:drawablePadding="6dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="45dp"
+            android:paddingRight="45dp"
+            android:text="手环贴近手机"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_match_tips_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_match_tips_3"
+            android:layout_below="@id/tv_match_tips_3"
+            android:layout_marginTop="15dp"
+            android:drawableLeft="@drawable/match_point"
+            android:drawablePadding="6dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="45dp"
+            android:paddingRight="45dp"
+            android:text="点击下方按钮"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0">
+
+        <RelativeLayout
+            android:id="@+id/rl_match_auto"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/match_btn_outer_bg">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/match_btn_inner_bg">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="自动配对"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="19sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <include layout="@layout/widget_bottom_nav" />
+</LinearLayout>

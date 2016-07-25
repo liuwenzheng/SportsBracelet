@@ -94,7 +94,7 @@ public class BluetoothOpenActivity extends BaseActivity {
     @Override
     public void onNextClick() {
         super.onNextClick();
-        // TODO: 2016/7/25 跳转自动配对页面
+        startActivity(new Intent(this, MatchDevicesActivity.class));
     }
 
     @Override
