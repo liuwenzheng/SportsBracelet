@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="50dp"
         android:text="连接手环"
         android:textColor="@color/black_333333"
         android:textSize="34sp" />
@@ -93,7 +93,8 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/match_btn_outer_bg">
+            android:background="@drawable/match_btn_outer_bg"
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -111,6 +112,27 @@
             </RelativeLayout>
         </RelativeLayout>
 
+        <FrameLayout
+            android:id="@+id/frame_match_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_match_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/match_loading" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/match_device" />
+
+        </FrameLayout>
 
     </RelativeLayout>
 
