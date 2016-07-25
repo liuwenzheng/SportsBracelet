@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f1f1f4"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_bluetooth_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="90dp"
+        android:text="蓝牙未开启"
+        android:textColor="@color/black_333333"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/tv_bluetooth_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:text="您的手机蓝牙未打开，请打开后点击下一步"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0">
+
+        <RelativeLayout
+            android:id="@+id/rl_bluetooth_ring"
+            android:layout_width="204dp"
+            android:layout_height="204dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp"
+            android:background="@drawable/bluetooth_ring_close">
+
+            <ImageView
+                android:id="@+id/iv_bluetooth_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/bluetooth_close" />
+
+            <TextView
+                android:id="@+id/tv_open_bluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_bluetooth_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="点击开启"
+                android:textColor="@color/grey_bfbfbf"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/widget_bottom_nav" />
+</LinearLayout>

@@ -1,18 +1,19 @@
 package com.blestep.sportsbracelet.activity;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.view.BottomNavView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ActivateBraceletActivity extends Activity implements BottomNavView.OnBottomNavClickListener {
+public class ActivateBraceletActivity extends BaseActivity {
 
     @Bind(R.id.iv_activate_hand)
     ImageView iv_activate_hand;
@@ -32,14 +33,9 @@ public class ActivateBraceletActivity extends Activity implements BottomNavView.
         animation.start();
     }
 
-    @Override
-    public void onPreClick() {
-
-    }
 
     @Override
     public void onNextClick() {
-        // TODO: 2016/7/25 跳转蓝牙页面
-
+        startActivity(new Intent(this, BluetoothOpenActivity.class));
     }
 }
