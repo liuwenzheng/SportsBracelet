@@ -12,4 +12,40 @@
         android:text="激活手环"
         android:textColor="@color/black_333333"
         android:textSize="34sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:text="长按手环触点5秒，出现“Hello”字符后，使手环从睡眠状态激活"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1.0">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/activate_bracelet" />
+
+        <ImageView
+            android:id="@+id/iv_activate_hand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="60dp"
+            android:src="@drawable/activate_hand" />
+    </RelativeLayout>
+
+    <include layout="@layout/widget_bottom_nav" />
 </LinearLayout>

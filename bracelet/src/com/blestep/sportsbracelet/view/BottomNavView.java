@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -16,13 +17,16 @@ import butterknife.ButterKnife;
  */
 public class BottomNavView extends RelativeLayout implements View.OnClickListener {
     private Button btn_pre, btn_next;
-    private Context mContext;
     private OnBottomNavClickListener listener;
 
     public BottomNavView(Context context) {
         super(context);
-        this.mContext = context;
     }
+
+    public BottomNavView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
 
     @Override
     protected void onFinishInflate() {
@@ -70,7 +74,7 @@ public class BottomNavView extends RelativeLayout implements View.OnClickListene
         this.listener = listener;
     }
 
-    interface OnBottomNavClickListener {
+    public interface OnBottomNavClickListener {
         void onPreClick();
 
         void onNextClick();
