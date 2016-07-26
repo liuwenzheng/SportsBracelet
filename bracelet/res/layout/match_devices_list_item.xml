@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
+
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="left"
+        android:text=""
+        android:textColor="@color/black_333333"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_device_mac"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4.0"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/black_333333"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/iv_device_checked"
+        android:layout_width="0dp"
+        android:layout_weight="1.0"
+        android:layout_height="wrap_content"
+        android:src="@drawable/match_device_checked_false"
+        android:gravity="right" />
+
+</LinearLayout>

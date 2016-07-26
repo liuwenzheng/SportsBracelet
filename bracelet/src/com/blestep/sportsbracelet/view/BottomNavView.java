@@ -43,6 +43,14 @@ public class BottomNavView extends RelativeLayout implements View.OnClickListene
         btn_next.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    public void setPreText(String text) {
+        btn_pre.setText(text);
+    }
+
+    public void setNextText(String text) {
+        btn_next.setText(text);
+    }
+
     public void setPreEnable(boolean enable) {
         btn_pre.setEnabled(enable);
         btn_pre.setOnClickListener(enable ? this : null);
@@ -50,7 +58,7 @@ public class BottomNavView extends RelativeLayout implements View.OnClickListene
 
     public void setNextEnable(boolean enable) {
         btn_next.setEnabled(enable);
-        btn_pre.setOnClickListener(enable ? this : null);
+        btn_next.setOnClickListener(enable ? this : null);
     }
 
     @Override
