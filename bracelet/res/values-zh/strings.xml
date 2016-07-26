@@ -89,7 +89,7 @@
     <string name="clear_success">清除成功！</string>
     <!-- userinfo -->
     <string name="userinfo_title">个人信息</string>
-    <string name="userinfo_confirm">确认</string>
+    <string name="userinfo_confirm">确定</string>
     <string name="userinfo_name_hint">昵称</string>
     <string name="userinfo_sex">性别</string>
     <string name="userinfo_birthday">年龄</string>

@@ -18,7 +18,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="上一步"
-        android:textColor="@drawable/btn_enable_selector" />
+        android:textColor="@drawable/btn_text_enable_selector" />
 
     <Button
         android:id="@+id/btn_next"
@@ -31,5 +31,5 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="下一步"
-        android:textColor="@drawable/btn_enable_selector" />
+        android:textColor="@drawable/btn_text_enable_selector" />
 </com.blestep.sportsbracelet.view.BottomNavView>
