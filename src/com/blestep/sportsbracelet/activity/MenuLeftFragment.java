@@ -149,16 +149,16 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 		}
 		int battery = SPUtiles.getIntValue(BTConstants.SP_KEY_BATTERY, 0);
 		int battery_percent = (int) (battery / 25) + 1;
-		if (battery_percent <= 2) {
+		if (battery_percent < 2) {
 			iv_battery_state.setImageResource(R.drawable.battery_one);
 		}
-		if (battery_percent > 2 && battery_percent <= 3) {
+		if (battery_percent >= 2 && battery_percent < 3) {
 			iv_battery_state.setImageResource(R.drawable.battery_two);
 		}
-		if (battery_percent > 3 && battery_percent <= 4) {
+		if (battery_percent >= 3 && battery_percent < 4) {
 			iv_battery_state.setImageResource(R.drawable.battery_three);
 		}
-		if (battery_percent > 4) {
+		if (battery_percent >= 4) {
 			iv_battery_state.setImageResource(R.drawable.battery_four);
 		}
 	}
