@@ -421,7 +421,6 @@ public class BTModule {
      *
      * @param formatDatas
      * @param context
-     * @param index
      */
     public static void saveBleData(String[] formatDatas, final Context context) {
         int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
@@ -491,6 +490,8 @@ public class BTModule {
                 if (!DBTools.getInstance(context).isStepExist(step.date)) {
                     DBTools.getInstance(context).insertStep(step);
                     // 更新最新记录
+                } else if (!dateStr.equals(sdf.format(Calendar.getInstance().getTime()))){
+                    DBTools.getInstance(context).updateStep(step);
                 }
                 if (Utils.isNotEmpty(dateStr)
                         && dateStr.equals(sdf.format(Calendar.getInstance()
