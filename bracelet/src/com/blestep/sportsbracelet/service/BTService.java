@@ -111,10 +111,8 @@ public class BTService extends Service implements LeScanCallback {
         if (device == null) {
             return;
         } else {
-
             mGattCallback = new BluetoothGattCallback() {
                 // private int count;
-
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
@@ -176,15 +174,11 @@ public class BTService extends Service implements LeScanCallback {
                     }
                 }
 
-                ;
-
                 public void onCharacteristicRead(BluetoothGatt gatt,
                                                  BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
                     LogModule.d("onCharacteristicRead...");
                 }
-
-                ;
 
                 public void onCharacteristicWrite(BluetoothGatt gatt,
                                                   BluetoothGattCharacteristic characteristic, int status) {
@@ -196,8 +190,6 @@ public class BTService extends Service implements LeScanCallback {
                         LogModule.d("onCharacteristicWrite...failure");
                     }
                 }
-
-                ;
 
                 public void onCharacteristicChanged(BluetoothGatt gatt,
                                                     BluetoothGattCharacteristic characteristic) {
@@ -269,8 +261,6 @@ public class BTService extends Service implements LeScanCallback {
                     // }, 1000);
                     // }
                 }
-
-                ;
             };
             mHandler.postDelayed(new Runnable() {
                 @Override

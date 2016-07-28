@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import android.animation.ArgbEvaluator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.fragment.GuideTipsFragment;
 import com.blestep.sportsbracelet.view.ControlScrollViewPager;
 import com.blestep.sportsbracelet.view.GradientLinearView;
@@ -25,7 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GuideActivity extends FragmentActivity {
+public class GuideActivity extends BaseActivity {
     @Bind(R.id.gll_bg)
     GradientLinearView gllBg;
     @Bind(R.id.csvp_guide)
@@ -61,10 +63,12 @@ public class GuideActivity extends FragmentActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_register:
-                // TODO: 2016/7/12 注册 
+                // TODO: 2016/7/12 注册
                 break;
             case R.id.tv_login:
                 // TODO: 2016/7/12 登录
+                startActivity(new Intent(this, ActivateBraceletActivity.class));
+                finish();
                 break;
         }
     }

@@ -45,8 +45,12 @@
     <color name="red_e05b5e">#e05b5e</color>
     <color name="red_d75c70">#d75c70</color>
     <color name="red_fe82b5">#fe82b5</color>
+    <color name="red_ea2e00">#ea2e00</color>
+    <color name="red_f20c00">#f20c00</color>
     <color name="green_10b46c">#10b46c</color>
     <color name="orange_ff9c00">#ff9c00</color>
+    <color name="orange_ff7500">#ff7500</color>
+    <color name="yellow_ffcc00">#ffcc00</color>
 
     <!-- test -->
     <color name="black_000000">#000000</color>

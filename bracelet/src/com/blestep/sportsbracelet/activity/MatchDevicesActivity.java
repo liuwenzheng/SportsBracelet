@@ -178,6 +178,18 @@ public class MatchDevicesActivity extends BaseActivity {
         }
     }
 
+    private void showInitUI() {
+        rl_match_auto.setVisibility(View.VISIBLE);
+        frame_match_loading.setVisibility(View.GONE);
+        tv_match_tips_1.setVisibility(View.VISIBLE);
+        tv_match_tips_2.setVisibility(View.VISIBLE);
+        tv_match_tips_3.setVisibility(View.VISIBLE);
+        tv_match_tips_4.setVisibility(View.VISIBLE);
+        tv_match_tips_failure.setVisibility(View.GONE);
+        bnv_nav.setNextEnable(false);
+        lv_match_devices.setVisibility(View.GONE);
+    }
+
     private void showMatchAutoUI() {
         rl_match_auto.setVisibility(View.GONE);
         frame_match_loading.setVisibility(View.VISIBLE);
@@ -289,7 +301,9 @@ public class MatchDevicesActivity extends BaseActivity {
                             mScanDevice == null ? mDevices.get(mPosition).address : mScanDevice.address);
                     SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
                             mScanDevice == null ? mDevices.get(mPosition).name : mScanDevice.name.substring(0, mScanDevice.name.indexOf("-D")));
-                    startActivity(new Intent(MatchDevicesActivity.this, SettingUserInfoActivity.class));
+                    // showInitUI();
+                    startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
+                    finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
                 }
             }
 

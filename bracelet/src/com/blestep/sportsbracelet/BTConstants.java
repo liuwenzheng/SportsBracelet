@@ -35,6 +35,7 @@ public class BTConstants {
 
     public static final String ACTION_PHONE_STATE = "android.intent.action.PHONE_STATE";
     public static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+    public static final String ACTION_FINISH_ACTIVITY = "action.finishActivity";
     // sp
     public static final String SP_NAME = "sp_name_sportsbracelet";
     public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";

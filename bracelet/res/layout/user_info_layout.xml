@@ -189,9 +189,9 @@
             android:background="@drawable/btn_bg_enable_selector"
             android:enabled="false"
             android:gravity="center"
-            android:text="下一步"
+            android:text="@string/setting_next"
             android:textColor="@color/white_ffffff"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

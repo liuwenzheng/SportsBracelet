@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.activity;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -208,7 +209,9 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
                 finish();
                 break;
             case R.id.tv_user_confirm:
-                // TODO: 2016/7/27 返回首页
+                // 返回首页
+                saveUserData();
+                finish();
                 break;
             case R.id.iv_user_sex:
                 View v = getLayoutInflater().inflate(R.layout.wheelview_gender, null);
@@ -255,8 +258,9 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
                 mDialog.show();
                 break;
             case R.id.btn_next:
-                // TODO: 2016/7/27 跳转目标页
+                // 跳转目标页
                 saveUserData();
+                startActivity(new Intent(this, TargetLayoutActivity.class));
                 break;
         }
     }
@@ -278,7 +282,6 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
             e.printStackTrace();
         }
         SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME, et_user_name.getText().toString());
-        finish();
     }
 
 
