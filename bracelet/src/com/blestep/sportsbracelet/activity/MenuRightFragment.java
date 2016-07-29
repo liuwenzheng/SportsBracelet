@@ -71,10 +71,10 @@ public class MenuRightFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.rl_center_userinfo:
-			startActivity(new Intent(mainActivity, UserInfoActivity.class));
+			startActivity(new Intent(mainActivity, UserInfoLayoutActivity.class));
 			break;
 		case R.id.rl_center_target:
-			startActivity(new Intent(mainActivity, TargetActivity.class));
+			startActivity(new Intent(mainActivity, TargetLayoutActivity.class));
 			break;
 		case R.id.rl_center_clear:
 			startActivity(new Intent(mainActivity, ClearDataActivity.class));

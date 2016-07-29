@@ -68,6 +68,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
                     return;
                 }
                 SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_target_steps_value.getText().toString()));
+                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, false);
                 // TODO: 2016/7/28 跳转主页面
                 startActivity(new Intent(this, MainActivity.class));
                 finishActivities(GuideActivity.class, ActivateBraceletActivity.class,
