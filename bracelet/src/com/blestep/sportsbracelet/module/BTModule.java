@@ -491,20 +491,13 @@ public class BTModule {
                 if (!DBTools.getInstance(context).isStepExist(step.date)) {
                     DBTools.getInstance(context).insertStep(step);
                     // 更新最新记录
+                } else {
+                    Step current = DBTools.getInstance(context).selectCurrentStep();
+                    if (current != null && current.date.equals(step.date)) {
+                        DBTools.getInstance(context).updateStep(step);
+                    }
                 }
-                if (Utils.isNotEmpty(dateStr)
-                        && dateStr.equals(sdf.format(Calendar.getInstance()
-                        .getTime()))) {
-                    DBTools.getInstance(context).updateStep(step);
-                    BTService.mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(
-                                    BTConstants.ACTION_REFRESH_DATA);
-                            context.sendBroadcast(intent);
-                        }
-                    }, 1000);
-                }
+
                 break;
 
             default:
