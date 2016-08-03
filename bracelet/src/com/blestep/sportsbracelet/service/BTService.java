@@ -111,9 +111,8 @@ public class BTService extends Service implements LeScanCallback {
         if (device == null) {
             return;
         } else {
-
             mGattCallback = new BluetoothGattCallback() {
-                // private int count;
+                private int stepsCount;
 
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
@@ -176,15 +175,11 @@ public class BTService extends Service implements LeScanCallback {
                     }
                 }
 
-                ;
-
                 public void onCharacteristicRead(BluetoothGatt gatt,
                                                  BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
                     LogModule.d("onCharacteristicRead...");
                 }
-
-                ;
 
                 public void onCharacteristicWrite(BluetoothGatt gatt,
                                                   BluetoothGattCharacteristic characteristic, int status) {
@@ -196,8 +191,6 @@ public class BTService extends Service implements LeScanCallback {
                         LogModule.d("onCharacteristicWrite...failure");
                     }
                 }
-
-                ;
 
                 public void onCharacteristicChanged(BluetoothGatt gatt,
                                                     BluetoothGattCharacteristic characteristic) {
@@ -224,14 +217,14 @@ public class BTService extends Service implements LeScanCallback {
                         return;
                     }
                     if (header == BTConstants.HEADER_BACK_RECORD) {
-                        // count = 0;
-                        // int stepRecord = Integer.valueOf(formatDatas[1]);
+                        stepsCount = 0;
+                        int stepRecord = Integer.valueOf(formatDatas[1]);
                         // int sleepRecord = Integer.valueOf(formatDatas[2]);
                         // 保存电量
                         int battery = Integer.valueOf(Utils
                                 .decodeToString(formatDatas[3]));
-                        // count = stepRecord;
-                        // LogModule.i("手环中的记录总数为：" + count);
+                        stepsCount = stepRecord;
+                        LogModule.i("手环中的记录总数为：" + stepsCount);
                         Intent intent = new Intent(
                                 BTConstants.ACTION_REFRESH_DATA_BATTERY);
                         intent.putExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE,
@@ -239,38 +232,36 @@ public class BTService extends Service implements LeScanCallback {
                         sendBroadcast(intent);
                         return;
                     }
-                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
-                        Intent intent = new Intent(
-                                BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
-                        sendBroadcast(intent);
-                        return;
-
-                    }
-                    if (header == BTConstants.HEADER_BACK_SLEEP_RECORD) {
-                        Intent intent = new Intent(
-                                BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
-                        sendBroadcast(intent);
-                        return;
-
-                    }
-
-                    // count--;
+//                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
+//                        Intent intent = new Intent(
+//                                BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
+//                        sendBroadcast(intent);
+//                        return;
+//
+//                    }
+//                    if (header == BTConstants.HEADER_BACK_SLEEP_RECORD) {
+//                        Intent intent = new Intent(
+//                                BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
+//                        sendBroadcast(intent);
+//                        return;
+//
+//                    }
                     BTModule.saveBleData(formatDatas, getApplicationContext());
-                    // LogModule.i(count + "...");
-                    // if (count == 0) {
-                    // LogModule.i("延迟1s发送广播更新数据");
-                    // mHandler.postDelayed(new Runnable() {
-                    // @Override
-                    // public void run() {
-                    // Intent intent = new
-                    // Intent(BTConstants.ACTION_REFRESH_DATA);
-                    // sendBroadcast(intent);
-                    // }
-                    // }, 1000);
-                    // }
+                    stepsCount--;
+                    if (stepsCount == 0) {
+                        LogModule.i("延迟1s发送广播更新数据");
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new
+                                        Intent(BTConstants.ACTION_REFRESH_DATA);
+                                sendBroadcast(intent);
+                            }
+                        }, 1000);
+                    } else {
+                        LogModule.i("还有" + stepsCount + "条数据未同步");
+                    }
                 }
-
-                ;
             };
             mHandler.postDelayed(new Runnable() {
                 @Override

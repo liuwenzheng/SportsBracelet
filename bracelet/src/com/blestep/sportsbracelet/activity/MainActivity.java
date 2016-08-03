@@ -81,6 +81,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     private PullToRefreshViewPager pull_refresh_viewpager;
     private ViewPager mViewPager;
     private boolean isConnDevice = false;
+    private boolean isSyncData = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,8 +143,9 @@ public class MainActivity extends SlidingFragmentActivity implements
                     @Override
                     public void onRefresh(
                             PullToRefreshBase<ViewPager> refreshView) {
-                        if (mBtService.isConnDevice() && !isConnDevice) {
-                            synData();
+                        if (mBtService.isConnDevice() && !isConnDevice && !isSyncData) {
+                            LogModule.i("下拉刷新同步数据");
+                            syncData();
                         } else {
                             // pull_refresh_viewpager.onRefreshComplete();
                         }
@@ -189,7 +191,8 @@ public class MainActivity extends SlidingFragmentActivity implements
         super.onDestroy();
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver
+            mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -234,7 +237,8 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // if (mDialog != null) {
                     // mDialog.dismiss();
                     // }
-                    synData();
+                    LogModule.i("配对完开始同步数据");
+                    syncData();
                     // tv_main_tips.setText(R.string.step_syncdata_waiting);
                     // tv_main_tips.setVisibility(View.VISIBLE);
                     // mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -242,6 +246,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // false, false);
                 }
                 if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
+                    isSyncData = false;
                     pull_refresh_viewpager.onRefreshComplete();
                     if (tab01 != null && tab01.isVisible()) {
                         tab01.updateView();
@@ -336,8 +341,9 @@ public class MainActivity extends SlidingFragmentActivity implements
             } else {
                 LogModule.d("连接手环or同步数据？");
                 if (mBtService.isConnDevice()) {
+                    LogModule.i("已经连接手环开始同步数据");
                     autoPullUpdate(getString(R.string.step_syncdata_waiting));
-                    synData();
+                    syncData();
                     tv_main_conn_tips.setVisibility(View.GONE);
                     // tv_main_tips.setText(R.string.step_syncdata_waiting);
                     // tv_main_tips.setVisibility(View.VISIBLE);
@@ -345,6 +351,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // getString(R.string.step_syncdata_waiting),
                     // false, false);
                 } else {
+                    LogModule.i("未连接，先连接手环");
                     isConnDevice = true;
                     autoPullUpdate(getString(R.string.setting_device));
                     mBtService.connectBle(SPUtiles.getStringValue(
@@ -370,7 +377,8 @@ public class MainActivity extends SlidingFragmentActivity implements
     /**
      * 同步数据
      */
-    private void synData() {
+    private void syncData() {
+        isSyncData = true;
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
         BTService.mHandler.postDelayed(new Runnable() {
 

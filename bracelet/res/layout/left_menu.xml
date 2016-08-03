@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_484848"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="17dp"
-        android:paddingRight="17dp" >
+        android:paddingRight="17dp">
 
         <TextView
             android:id="@+id/tv_bracelet_name"
@@ -22,10 +22,18 @@
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_battery_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_ffffff"
+            android:textSize="18sp" />
+
         <ImageView
             android:id="@+id/iv_battery_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
             android:scaleType="fitCenter"
             android:src="@drawable/battery_one" />
 
@@ -46,7 +54,7 @@
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
         android:paddingTop="13dp"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_alert_low_battery"
@@ -81,7 +89,7 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
 
         <TextView
             android:id="@+id/tv_alert_find_band"
@@ -118,7 +126,7 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
 
         <TextView
             android:id="@+id/tv_alert_coming_call"
@@ -166,7 +174,7 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
 
         <TextView
             android:id="@+id/tv_alert_alarm"
@@ -203,7 +211,7 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
 
         <TextView
             android:id="@+id/tv_bind_bracelet"
@@ -240,7 +248,7 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
 
         <TextView
             android:id="@+id/tv_bracelet_system"
@@ -269,7 +277,7 @@
         android:paddingBottom="20dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="20dp" >
+        android:paddingTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"

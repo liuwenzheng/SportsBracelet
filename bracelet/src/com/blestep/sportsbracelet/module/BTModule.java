@@ -421,7 +421,6 @@ public class BTModule {
      *
      * @param formatDatas
      * @param context
-     * @param index
      */
     public static void saveBleData(String[] formatDatas, final Context context) {
         int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
