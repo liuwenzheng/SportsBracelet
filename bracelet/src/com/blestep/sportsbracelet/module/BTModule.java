@@ -198,6 +198,18 @@ public class BTModule {
     }
 
     /**
+     * 获取当前版本号
+     *
+     * @param mBluetoothGatt
+     */
+    public static void getVersionData(BluetoothGatt mBluetoothGatt,Context context) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[1] = 0x06;
+        writeCharacteristicData(mBluetoothGatt, byteArray,context);
+    }
+
+    /**
      * 获取步数
      *
      * @param mBluetoothGatt
@@ -413,7 +425,7 @@ public class BTModule {
             Intent intent = new Intent(BTConstants.ACTION_LOG);
             StringBuilder sb = new StringBuilder("发给手环命令：");
             for (int i = 0; i < byteArray.length; i++) {
-                sb.append(byteArray[i]);
+                sb.append(String.format("%02X ", byteArray[i]));
                 sb.append(" ");
             }
             intent.putExtra("log", sb.toString());

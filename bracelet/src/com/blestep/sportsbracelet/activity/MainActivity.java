@@ -268,21 +268,22 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // mDialog.dismiss();
                     // }
                     // 每天初始化一次触摸按钮
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat(
-                            BTConstants.PATTERN_YYYY_MM_DD);
-                    String dateStr = sdf.format(calendar.getTime());
-                    if (!TextUtils.isEmpty(SPUtiles.getStringValue(
-                            BTConstants.SP_KEY_TOUCHBUTTON, ""))
-                            && SPUtiles.getStringValue(
-                            BTConstants.SP_KEY_TOUCHBUTTON, "").equals(
-                            dateStr)) {
-                        return;
-                    } else {
-                        mBtService.synTouchButton();
-                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
-                                dateStr);
-                    }
+//                    Calendar calendar = Calendar.getInstance();
+//                    SimpleDateFormat sdf = new SimpleDateFormat(
+//                            BTConstants.PATTERN_YYYY_MM_DD);
+//                    String dateStr = sdf.format(calendar.getTime());
+//                    if (!TextUtils.isEmpty(SPUtiles.getStringValue(
+//                            BTConstants.SP_KEY_TOUCHBUTTON, ""))
+//                            && SPUtiles.getStringValue(
+//                            BTConstants.SP_KEY_TOUCHBUTTON, "").equals(
+//                            dateStr)) {
+//                        return;
+//                    } else {
+//                        mBtService.synTouchButton();
+//                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
+//                                dateStr);
+//                    }
+                    mBtService.getVersionData();
                 }
                 if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
                     String strLog = intent.getStringExtra("log");
@@ -308,6 +309,14 @@ public class MainActivity extends SlidingFragmentActivity implements
                 // .getAction())) {
                 //
                 // }
+                if (BTConstants.ACTION_REFRESH_DATA_VERSION.equals(intent
+                        .getAction())) {
+                    String version = intent.getStringExtra(BTConstants.EXTRA_KEY_VERSION_VALUE);
+                    if (TextUtils.isEmpty(version)) {
+                        return;
+                    }
+                    SPUtiles.setStringValue(BTConstants.SP_KEY_VERSION, version);
+                }
                 if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
                     int ack = intent.getIntExtra(
                             BTConstants.EXTRA_KEY_ACK_VALUE, 0);

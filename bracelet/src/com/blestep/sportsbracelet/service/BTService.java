@@ -256,6 +256,20 @@ public class BTService extends Service implements LeScanCallback {
 //                        return;
 //
 //                    }
+                    if (header == BTConstants.HEADER_FIRMWARE_VERSION) {
+                        int major = Integer.valueOf(Utils
+                                .decodeToString(formatDatas[0]));
+                        int minor = Integer.valueOf(Utils
+                                .decodeToString(formatDatas[1]));
+                        int revision = Integer.valueOf(Utils
+                                .decodeToString(formatDatas[2]));
+                        Intent intent = new Intent(BTConstants.ACTION_REFRESH_DATA_VERSION);
+                        intent.putExtra(BTConstants.EXTRA_KEY_VERSION_VALUE, String.format("%s.%s.%s", major, minor, revision));
+                        BTService.this.sendBroadcast(intent);
+                        return;
+                    }
+
+                    // count--;
                     BTModule.saveBleData(formatDatas, getApplicationContext());
                     stepsCount--;
                     if (stepsCount == 0) {
@@ -374,6 +388,13 @@ public class BTService extends Service implements LeScanCallback {
      */
     public void getBatteryData() {
         BTModule.getBatteryData(mBluetoothGatt, this);
+    }
+
+    /**
+     * 获取手环固件版本号
+     */
+    public void getVersionData() {
+        BTModule.getVersionData(mBluetoothGatt,this);
     }
 
     /**
