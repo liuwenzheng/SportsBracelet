@@ -1,13 +1,5 @@
 package com.blestep.sportsbracelet.module;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
@@ -22,9 +14,16 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.entity.Step;
-import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class BTModule {
     public static BluetoothAdapter mBluetoothAdapter;
@@ -90,7 +89,7 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void setCurrentTime(BluetoothGatt mBluetoothGatt) {
+    public static void setCurrentTime(BluetoothGatt mBluetoothGatt, Context context) {
         // 取得手机当前时间，并设置到手环上
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -107,7 +106,7 @@ public class BTModule {
         byteArray[4] = (byte) hour;
         byteArray[5] = (byte) minute;
         byteArray[6] = (byte) second;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -115,10 +114,10 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void setTouchButton(BluetoothGatt mBluetoothGatt) {
+    public static void setTouchButton(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[1];
         byteArray[0] = BTConstants.HEADER_SYNTOUCHBUTTON;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -126,7 +125,7 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void setUserInfo(BluetoothGatt mBluetoothGatt) {
+    public static void setUserInfo(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[5];
         int weight = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 30);
         int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
@@ -137,7 +136,7 @@ public class BTModule {
         byteArray[2] = (byte) height;
         byteArray[3] = (byte) age;
         byteArray[4] = (byte) gender;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -154,7 +153,7 @@ public class BTModule {
             byteArray[2] = 0x00;
             byteArray[3] = 0x00;
             byteArray[4] = 0x00;
-            writeCharacteristicData(mBluetoothGatt, byteArray);
+            writeCharacteristicData(mBluetoothGatt, byteArray, context);
             return;
         }
         for (int i = 0; i < alarms.size(); i++) {
@@ -167,7 +166,7 @@ public class BTModule {
                     .valueOf(alarm.time.split(":")[1])), 16);
         }
 
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -183,7 +182,7 @@ public class BTModule {
         byteArray[3] = 0x00;
         byteArray[4] = 0x07;
         byteArray[5] = 0x00;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -191,11 +190,11 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void getBatteryData(BluetoothGatt mBluetoothGatt) {
+    public static void getBatteryData(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x00;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -203,11 +202,11 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void getStepData(BluetoothGatt mBluetoothGatt) {
+    public static void getStepData(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x01;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -215,10 +214,10 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void clearData(BluetoothGatt mBluetoothGatt) {
+    public static void clearData(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[1];
         byteArray[0] = 0x15;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -230,7 +229,7 @@ public class BTModule {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x02;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, null);
     }
 
     /**
@@ -242,7 +241,7 @@ public class BTModule {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x03;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, null);
     }
 
     /**
@@ -257,7 +256,7 @@ public class BTModule {
         byteArray[2] = 0x03;
         byteArray[3] = 0x03;
         byteArray[4] = 0x03;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, null);
     }
 
     /**
@@ -265,14 +264,14 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void shakeFindBand(BluetoothGatt mBluetoothGatt) {
+    public static void shakeFindBand(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[5];
         byteArray[0] = 0x17;
         byteArray[1] = 0x02;
         byteArray[2] = 0x02;
         byteArray[3] = 0x0A;
         byteArray[4] = 0x0A;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -280,7 +279,7 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void phoneComingShakeBand(BluetoothGatt mBluetoothGatt, String showText, boolean isPhoneNumber) {
+    public static void phoneComingShakeBand(BluetoothGatt mBluetoothGatt, String showText, boolean isPhoneNumber, Context context) {
         try {
             LogModule.e("来电显示：" + showText);
             byte[] byteArray = new byte[20];
@@ -296,7 +295,7 @@ public class BTModule {
                 int c = (int) showText.charAt(i);
                 byteArray[i + 4] = Integer.valueOf(Integer.toHexString(c), 16).byteValue();
             }
-            writeCharacteristicData(mBluetoothGatt, byteArray);
+            writeCharacteristicData(mBluetoothGatt, byteArray, context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -307,7 +306,7 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void smsComingShakeBand(BluetoothGatt mBluetoothGatt, String showText, boolean isPhoneNumber) {
+    public static void smsComingShakeBand(BluetoothGatt mBluetoothGatt, String showText, boolean isPhoneNumber, Context context) {
         byte[] byteArray = new byte[20];
         byteArray[0] = Integer.valueOf(Integer.toHexString(154), 16).byteValue();
         if (isPhoneNumber) {
@@ -321,7 +320,7 @@ public class BTModule {
             int c = (int) showText.charAt(i);
             byteArray[i + 4] = Integer.valueOf(Integer.toHexString(c), 16).byteValue();
         }
-        writeCharacteristicData(mBluetoothGatt, byteArray);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -393,7 +392,7 @@ public class BTModule {
     }
 
     public static void writeCharacteristicData(BluetoothGatt mBluetoothGatt,
-                                               byte[] byteArray) {
+                                               byte[] byteArray, Context context) {
         if (mBluetoothGatt == null) {
             return;
         }
@@ -409,6 +408,16 @@ public class BTModule {
                 + characteristic);
         if (characteristic == null) {
             return;
+        }
+        if (LogModule.debug) {
+            Intent intent = new Intent(BTConstants.ACTION_LOG);
+            StringBuilder sb = new StringBuilder("发给手环命令：");
+            for (int i = 0; i < byteArray.length; i++) {
+                sb.append(byteArray[i]);
+                sb.append(" ");
+            }
+            intent.putExtra("log", sb.toString());
+            context.sendBroadcast(intent);
         }
         characteristic.setValue(byteArray);
         characteristic

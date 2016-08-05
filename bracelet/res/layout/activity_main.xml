@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -142,8 +144,9 @@
 
     <ScrollView
         android:id="@+id/sv_log"
+        android:layout_marginTop="200dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="200dp" >
 
         <TextView
             android:id="@+id/log"
@@ -151,5 +154,5 @@
             android:layout_height="wrap_content"
             android:text="" />
     </ScrollView>
-
+    </FrameLayout>
 </LinearLayout>

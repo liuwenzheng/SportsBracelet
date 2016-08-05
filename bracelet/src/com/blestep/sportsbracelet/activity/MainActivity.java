@@ -101,7 +101,7 @@ public class MainActivity extends SlidingFragmentActivity implements
         filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
-        // filter.addAction(BTConstants.ACTION_LOG);
+        filter.addAction(BTConstants.ACTION_LOG);
         registerReceiver(mReceiver, filter);
 
     }
@@ -126,13 +126,13 @@ public class MainActivity extends SlidingFragmentActivity implements
 
         log = (TextView) findViewById(R.id.log);
         sv_log = (ScrollView) findViewById(R.id.sv_log);
-        // if (LogModule.debug) {
-        // sv_log.setVisibility(View.VISIBLE);
-        // log.setVisibility(View.VISIBLE);
-        // } else {
+         if (LogModule.debug) {
+         sv_log.setVisibility(View.VISIBLE);
+         log.setVisibility(View.VISIBLE);
+         } else {
         sv_log.setVisibility(View.GONE);
         log.setVisibility(View.GONE);
-        // }
+         }
     }
 
     private void initListener() {

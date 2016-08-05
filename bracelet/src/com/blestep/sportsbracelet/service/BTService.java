@@ -208,6 +208,16 @@ public class BTService extends Service implements LeScanCallback {
                     // 获取总记录数
                     int header = Integer.valueOf(Utils
                             .decodeToString(formatDatas[0]));
+                    if (LogModule.debug) {
+                        Intent intent = new Intent(BTConstants.ACTION_LOG);
+                        StringBuilder sb = new StringBuilder("发给手机数据：");
+                        for (int i = 0; i < formatDatas.length; i++) {
+                            sb.append(formatDatas[i]);
+                            sb.append(" ");
+                        }
+                        intent.putExtra("log", sb.toString());
+                        BTService.this.sendBroadcast(intent);
+                    }
                     if (header == BTConstants.HEADER_BACK_ACK) {
                         int ack = Integer.valueOf(Utils
                                 .decodeToString(formatDatas[1]));
@@ -307,21 +317,21 @@ public class BTService extends Service implements LeScanCallback {
      * 同步时间
      */
     public void synTimeData() {
-        BTModule.setCurrentTime(mBluetoothGatt);
+        BTModule.setCurrentTime(mBluetoothGatt, this);
     }
 
     /**
      * 初始化触摸按键
      */
     public void synTouchButton() {
-        BTModule.setTouchButton(mBluetoothGatt);
+        BTModule.setTouchButton(mBluetoothGatt, this);
     }
 
     /**
      * 同步用户数据
      */
     public void synUserInfoData() {
-        BTModule.setUserInfo(mBluetoothGatt);
+        BTModule.setUserInfo(mBluetoothGatt, this);
     }
 
     /**
@@ -342,7 +352,7 @@ public class BTService extends Service implements LeScanCallback {
      * 获取手环记步
      */
     public void getStepData() {
-        BTModule.getStepData(mBluetoothGatt);
+        BTModule.getStepData(mBluetoothGatt, this);
     }
 
     /**
@@ -363,21 +373,21 @@ public class BTService extends Service implements LeScanCallback {
      * 获取手环电量数据
      */
     public void getBatteryData() {
-        BTModule.getBatteryData(mBluetoothGatt);
+        BTModule.getBatteryData(mBluetoothGatt, this);
     }
 
     /**
      * 清空手环数据
      */
     public void clearData() {
-        BTModule.clearData(mBluetoothGatt);
+        BTModule.clearData(mBluetoothGatt, this);
     }
 
     /**
      * 寻找手环
      */
     public void shakeFindBand() {
-        BTModule.shakeFindBand(mBluetoothGatt);
+        BTModule.shakeFindBand(mBluetoothGatt, this);
     }
 
     /**
@@ -488,14 +498,14 @@ public class BTService extends Service implements LeScanCallback {
                     Pattern p = Pattern.compile("[^a-zA-Z0-9 ]");
                     if (TextUtils.isEmpty(contactName)) {
                         Matcher m = p.matcher(mobile);
-                        BTModule.smsComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), true);
+                        BTModule.smsComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), true, BTService.this);
                     } else {
                         Matcher m = p.matcher(contactName);
                         if (m.find()) {
                             Matcher matcher = p.matcher(mobile);
-                            BTModule.phoneComingShakeBand(mBluetoothGatt, matcher.replaceAll("").trim(), true);
+                            BTModule.phoneComingShakeBand(mBluetoothGatt, matcher.replaceAll("").trim(), true, BTService.this);
                         } else {
-                            BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), false);
+                            BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), false, BTService.this);
                         }
                     }
                 }
@@ -518,28 +528,28 @@ public class BTService extends Service implements LeScanCallback {
                     && !TextUtils.isEmpty(contactName)) {
                 if (TextUtils.isEmpty(contactName)) {
                     Matcher m = p.matcher(incoming_number);
-                    BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), true);
+                    BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), true, BTService.this);
                 } else {
                     Matcher m = p.matcher(contactName);
                     if (m.find()) {
                         Matcher matcher = p.matcher(incoming_number);
-                        BTModule.phoneComingShakeBand(mBluetoothGatt, matcher.replaceAll("").trim(), true);
+                        BTModule.phoneComingShakeBand(mBluetoothGatt, matcher.replaceAll("").trim(), true, BTService.this);
                     } else {
-                        BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), false);
+                        BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), false, BTService.this);
                     }
                 }
             }
         } else {
             if (TextUtils.isEmpty(contactName)) {
                 Matcher m = p.matcher(incoming_number);
-                BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), true);
+                BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), true, BTService.this);
             } else {
                 Matcher m = p.matcher(contactName);
                 if (m.find()) {
                     Matcher matcher = p.matcher(incoming_number);
-                    BTModule.phoneComingShakeBand(mBluetoothGatt, matcher.replaceAll("").trim(), true);
+                    BTModule.phoneComingShakeBand(mBluetoothGatt, matcher.replaceAll("").trim(), true, BTService.this);
                 } else {
-                    BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), false);
+                    BTModule.phoneComingShakeBand(mBluetoothGatt, m.replaceAll("").trim(), false, BTService.this);
                 }
             }
         }
