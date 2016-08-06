@@ -238,7 +238,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // mDialog.dismiss();
                     // }
                     LogModule.i("配对完开始同步数据");
-                    syncData();
+                    // syncData();
                     // tv_main_tips.setText(R.string.step_syncdata_waiting);
                     // tv_main_tips.setVisibility(View.VISIBLE);
                     // mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -352,7 +352,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                 if (mBtService.isConnDevice()) {
                     LogModule.i("已经连接手环开始同步数据");
                     autoPullUpdate(getString(R.string.step_syncdata_waiting));
-                    syncData();
+                    // syncData();
                     tv_main_conn_tips.setVisibility(View.GONE);
                     // tv_main_tips.setText(R.string.step_syncdata_waiting);
                     // tv_main_tips.setVisibility(View.VISIBLE);

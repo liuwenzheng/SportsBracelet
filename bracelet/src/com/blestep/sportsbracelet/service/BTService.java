@@ -198,8 +198,10 @@ public class BTService extends Service implements LeScanCallback {
                     LogModule.d("onCharacteristicChanged...");
                     // BTModule.setCharacteristicNotify(mBluetoothGatt);
                     byte[] data = characteristic.getValue();
-                    String[] formatDatas = Utils.formatData(data,
-                            characteristic);
+                    if (data == null || data.length == 0) {
+                        return;
+                    }
+                    String[] formatDatas = Utils.formatData(data, characteristic);
                     // StringBuilder stringBuilder = new
                     // StringBuilder(formatDatas.length);
                     // for (String string : formatDatas)
@@ -394,7 +396,7 @@ public class BTService extends Service implements LeScanCallback {
      * 获取手环固件版本号
      */
     public void getVersionData() {
-        BTModule.getVersionData(mBluetoothGatt,this);
+        BTModule.getVersionData(mBluetoothGatt, this);
     }
 
     /**
