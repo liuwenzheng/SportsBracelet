@@ -28,6 +28,8 @@ public class BTConstants {
     public static final String ACTION_REFRESH_DATA_SLEEP_RECORD = "action_refresh_data_sleep_record";
     // 手环应答
     public static final String ACTION_ACK = "action_ack";
+    // 刷新版本号
+    public static final String ACTION_REFRESH_DATA_VERSION = "action_refresh_data_version";
     // 连接超时
     public static final String ACTION_CONN_STATUS_TIMEOUT = "action_conn_status_timeout";
     // log
@@ -41,6 +43,7 @@ public class BTConstants {
     public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";
     public static final String SP_KEY_DEVICE_NAME = "sp_key_device_NAME";
     public static final String SP_KEY_BATTERY = "sp_key_battery";
+    public static final String SP_KEY_VERSION = "sp_key_version";
     public static final String SP_KEY_STEP_AIM = "sp_key_aim";
     public static final String SP_KEY_STEP_AIM_POINT_X = "sp_key_aim_point_x";
     public static final String SP_KEY_STEP_AIM_POINT_Y = "sp_key_aim_point_y";
@@ -73,12 +76,15 @@ public class BTConstants {
     public static final String EXTRA_KEY_HISTORY = "extra_key_history";
     public static final String EXTRA_KEY_ACK_VALUE = "extra_key_ack_value";
     public static final String EXTRA_KEY_BATTERY_VALUE = "extra_key_battery_value";
+    public static final String EXTRA_KEY_VERSION_VALUE = "extra_key_version_value";
     // request_code
     public static final int REQUEST_CODE_SYSTEM = 1001;
 
     /**
      * 返回数据header
      */
+    // 固件版本号
+    public static final int HEADER_FIRMWARE_VERSION = 144;
     // 存储状态及电量
     public static final int HEADER_BACK_RECORD = 145;
     // 记步记录

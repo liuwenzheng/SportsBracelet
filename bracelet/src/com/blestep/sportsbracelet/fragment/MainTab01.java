@@ -67,6 +67,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
         circleView.setMaxValue(SPUtiles.getIntValue(
                 BTConstants.SP_KEY_STEP_AIM, 100));
         circleView.setValue(0);
+        tv_calorie.setText("0");
         circleView.setmProgressValue(this);
     }
 

@@ -1,13 +1,5 @@
 package com.blestep.sportsbracelet.module;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
@@ -22,9 +14,16 @@ import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.entity.Step;
-import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class BTModule {
     public static BluetoothAdapter mBluetoothAdapter;
@@ -195,6 +194,18 @@ public class BTModule {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x00;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
+     * 获取当前版本号
+     *
+     * @param mBluetoothGatt
+     */
+    public static void getVersionData(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[1] = 0x06;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 

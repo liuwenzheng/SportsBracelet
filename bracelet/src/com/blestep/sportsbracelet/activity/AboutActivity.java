@@ -4,12 +4,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
+import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.umeng.analytics.MobclickAgent;
 
 public class AboutActivity extends BaseActivity implements OnClickListener {
@@ -46,6 +49,10 @@ public class AboutActivity extends BaseActivity implements OnClickListener {
 		if (packInfo != null) {
 			String version = packInfo.versionName;
 			tv_app_version.setText("v" + version);
+		}
+		String version = SPUtiles.getStringValue(BTConstants.SP_KEY_VERSION, "");
+		if (!TextUtils.isEmpty(version)) {
+			tv_about_firmware.setText(version);
 		}
 	}
 

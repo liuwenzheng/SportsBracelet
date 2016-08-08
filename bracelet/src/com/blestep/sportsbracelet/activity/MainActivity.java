@@ -13,6 +13,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -40,9 +41,8 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.umeng.analytics.MobclickAgent;
 
-import java.text.SimpleDateFormat;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends SlidingFragmentActivity implements
@@ -52,25 +52,6 @@ public class MainActivity extends SlidingFragmentActivity implements
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private ProgressDialog mDialog;
     private BTService mBtService;
-
-    public BTService getmBtService() {
-        return mBtService;
-    }
-
-    public void setmBtService(BTService mBtService) {
-        this.mBtService = mBtService;
-    }
-
-    private TextView tv_main_conn_tips, tv_main_tips, log;
-    private MainTab01 tab01;
-    private MainTab02 tab02;
-    private MainTab03 tab03;
-    private Fragment leftMenuFragment, rightMenuFragment;
-    private ScrollView sv_log;
-    private PullToRefreshViewPager pull_refresh_viewpager;
-    private ViewPager mViewPager;
-    private boolean isConnDevice = false;
-    private boolean isSyncData = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,15 +72,64 @@ public class MainActivity extends SlidingFragmentActivity implements
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
         // filter.addAction(BTConstants.ACTION_LOG);
         registerReceiver(mReceiver, filter);
-
+        bindService(new Intent(this, BTService.class), mServiceConnection,
+                BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStart() {
-        bindService(new Intent(this, BTService.class), mServiceConnection,
-                BIND_AUTO_CREATE);
         super.onStart();
+        if (mBtService != null && mBtService.isConnDevice() && !isConnDevice) {
+            LogModule.i("打开页面同步数据");
+            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+        }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onStop() {
+        // stopService(new Intent(this, BTService.class));
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        // 注销广播接收器
+        unregisterReceiver(mReceiver);
+        unbindService(mServiceConnection);
+        super.onDestroy();
+    }
+
+    public BTService getmBtService() {
+        return mBtService;
+    }
+
+    public void setmBtService(BTService mBtService) {
+        this.mBtService = mBtService;
+    }
+
+    private TextView tv_main_conn_tips, tv_main_tips, log;
+    private MainTab01 tab01;
+    private MainTab02 tab02;
+    private MainTab03 tab03;
+    private Fragment leftMenuFragment, rightMenuFragment;
+    private ScrollView sv_log;
+    private PullToRefreshViewPager pull_refresh_viewpager;
+    private ViewPager mViewPager;
+    private boolean isConnDevice = false;
+    private boolean isSyncData = false;
 
     private void initView() {
         pull_refresh_viewpager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);
@@ -131,29 +161,22 @@ public class MainActivity extends SlidingFragmentActivity implements
                     @Override
                     public void onRefresh(
                             PullToRefreshBase<ViewPager> refreshView) {
-                        if (mBtService.isConnDevice() && !isConnDevice && !isSyncData) {
-                            LogModule.i("下拉刷新同步数据");
-                            syncData();
+                        if (mBtService.isConnDevice()) {
+                            if (!isSyncData) {
+                                LogModule.i("下拉刷新同步数据");
+                                syncData();
+                            }
                         } else {
-                            // pull_refresh_viewpager.onRefreshComplete();
+                            if (!isConnDevice) {
+                                LogModule.i("未连接，先连接手环");
+                                isConnDevice = true;
+                                autoPullUpdate(getString(R.string.setting_device));
+                                mBtService.connectBle(SPUtiles.getStringValue(
+                                        BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+                            }
                         }
                     }
                 });
-    }
-
-    @Override
-    protected void onStop() {
-        // stopService(new Intent(this, BTService.class));
-        unbindService(mServiceConnection);
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        // 注销广播接收器
-        unregisterReceiver(mReceiver);
-        super.onDestroy();
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -202,7 +225,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // mDialog.dismiss();
                     // }
                     LogModule.i("配对完开始同步数据");
-                    syncData();
+                    // syncData();
                     // tv_main_tips.setText(R.string.step_syncdata_waiting);
                     // tv_main_tips.setVisibility(View.VISIBLE);
                     // mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -232,21 +255,22 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // mDialog.dismiss();
                     // }
                     // 每天初始化一次触摸按钮
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat(
-                            BTConstants.PATTERN_YYYY_MM_DD);
-                    String dateStr = sdf.format(calendar.getTime());
-                    if (!TextUtils.isEmpty(SPUtiles.getStringValue(
-                            BTConstants.SP_KEY_TOUCHBUTTON, ""))
-                            && SPUtiles.getStringValue(
-                            BTConstants.SP_KEY_TOUCHBUTTON, "").equals(
-                            dateStr)) {
-                        return;
-                    } else {
-                        mBtService.synTouchButton();
-                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
-                                dateStr);
-                    }
+//                    Calendar calendar = Calendar.getInstance();
+//                    SimpleDateFormat sdf = new SimpleDateFormat(
+//                            BTConstants.PATTERN_YYYY_MM_DD);
+//                    String dateStr = sdf.format(calendar.getTime());
+//                    if (!TextUtils.isEmpty(SPUtiles.getStringValue(
+//                            BTConstants.SP_KEY_TOUCHBUTTON, ""))
+//                            && SPUtiles.getStringValue(
+//                            BTConstants.SP_KEY_TOUCHBUTTON, "").equals(
+//                            dateStr)) {
+//                        return;
+//                    } else {
+//                        mBtService.synTouchButton();
+//                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
+//                                dateStr);
+//                    }
+                    mBtService.getVersionData();
                 }
                 if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
                     String strLog = intent.getStringExtra("log");
@@ -272,6 +296,14 @@ public class MainActivity extends SlidingFragmentActivity implements
                 // .getAction())) {
                 //
                 // }
+                if (BTConstants.ACTION_REFRESH_DATA_VERSION.equals(intent
+                        .getAction())) {
+                    String version = intent.getStringExtra(BTConstants.EXTRA_KEY_VERSION_VALUE);
+                    if (TextUtils.isEmpty(version)) {
+                        return;
+                    }
+                    SPUtiles.setStringValue(BTConstants.SP_KEY_VERSION, version);
+                }
                 if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
                     int ack = intent.getIntExtra(
                             BTConstants.EXTRA_KEY_ACK_VALUE, 0);
@@ -303,30 +335,8 @@ public class MainActivity extends SlidingFragmentActivity implements
             if (!BTModule.isBluetoothOpen()) {
                 BTModule.openBluetooth(MainActivity.this);
             } else {
-                LogModule.i("连接手环or同步数据？");
-                if (mBtService.isConnDevice()) {
-                    LogModule.i("已经连接手环开始同步数据");
-                    autoPullUpdate(getString(R.string.step_syncdata_waiting));
-                    syncData();
-                    tv_main_conn_tips.setVisibility(View.GONE);
-                    // tv_main_tips.setText(R.string.step_syncdata_waiting);
-                    // tv_main_tips.setVisibility(View.VISIBLE);
-                    // mDialog = ProgressDialog.show(MainActivity.this, null,
-                    // getString(R.string.step_syncdata_waiting),
-                    // false, false);
-                } else {
-                    LogModule.i("未连接，先连接手环");
-                    isConnDevice = true;
-                    autoPullUpdate(getString(R.string.setting_device));
-                    mBtService.connectBle(SPUtiles.getStringValue(
-                            BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-                    // tv_main_tips.setText(R.string.setting_device);
-                    // tv_main_tips.setVisibility(View.VISIBLE);
-                    // mDialog = ProgressDialog.show(MainActivity.this, null,
-                    // getString(R.string.setting_device), false,
-                    // false);
-                }
-
+                LogModule.d("连接手环or同步数据？");
+                isConnService();
             }
         }
 
@@ -338,21 +348,62 @@ public class MainActivity extends SlidingFragmentActivity implements
         }
     };
 
+    private void isConnService() {
+        if (mBtService.isConnDevice()) {
+            LogModule.i("已经连接手环开始同步数据");
+            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+            // syncData();
+            tv_main_conn_tips.setVisibility(View.GONE);
+            // tv_main_tips.setText(R.string.step_syncdata_waiting);
+            // tv_main_tips.setVisibility(View.VISIBLE);
+            // mDialog = ProgressDialog.show(MainActivity.this, null,
+            // getString(R.string.step_syncdata_waiting),
+            // false, false);
+        } else {
+            LogModule.i("未连接，先连接手环");
+            isConnDevice = true;
+            autoPullUpdate(getString(R.string.setting_device));
+            mBtService.connectBle(SPUtiles.getStringValue(
+                    BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+            // tv_main_tips.setText(R.string.setting_device);
+            // tv_main_tips.setVisibility(View.VISIBLE);
+            // mDialog = ProgressDialog.show(MainActivity.this, null,
+            // getString(R.string.setting_device), false,
+            // false);
+        }
+    }
+
+    private static class MyHandler extends Handler {
+        private WeakReference<MainActivity> weakReference;
+
+        public MyHandler(MainActivity activity) {
+            weakReference = new WeakReference<>(activity);
+        }
+
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity activity = weakReference.get();
+            super.handleMessage(msg);
+            if (activity != null) {
+                // ...
+            }
+        }
+    }
+
     /**
      * 同步数据
      */
     private void syncData() {
         isSyncData = true;
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
-        BTService.mHandler.postDelayed(new Runnable() {
+        new MyHandler(this).postDelayed(new Runnable() {
 
             @Override
             public void run() {
-
                 mBtService.synTimeData();
-
             }
-        }, 200);
+        }, 500);
         // 10s后若未获取数据自动结束刷新
         // BTService.mHandler.postDelayed(new Runnable() {
         // @Override
@@ -482,7 +533,7 @@ public class MainActivity extends SlidingFragmentActivity implements
      */
     private void autoPullUpdate(String tips) {
         pull_refresh_viewpager.getLoadingLayoutProxy().setRefreshingLabel(tips);
-        new Handler().postDelayed(new Runnable() {
+        new MyHandler(this).postDelayed(new Runnable() {
 
             @Override
             public void run() {
@@ -515,15 +566,4 @@ public class MainActivity extends SlidingFragmentActivity implements
         builder.show();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
 }
