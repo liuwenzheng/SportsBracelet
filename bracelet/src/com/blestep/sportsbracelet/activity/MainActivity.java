@@ -84,15 +84,18 @@ public class MainActivity extends SlidingFragmentActivity implements
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
         filter.addAction(BTConstants.ACTION_LOG);
         registerReceiver(mReceiver, filter);
-
+        log.setText(new StringBuilder(log.getText().toString()).append("\n").append("绑定服务").toString());
+        bindService(new Intent(this, BTService.class), mServiceConnection,
+                BIND_AUTO_CREATE);
+        LogModule.i("taskid : " + getTaskId());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        log.setText(new StringBuilder(log.getText().toString()).append("\n").append("绑定服务").toString());
-        bindService(new Intent(this, BTService.class), mServiceConnection,
-                BIND_AUTO_CREATE);
+        if (mBtService != null && mBtService.isConnDevice() && !isConnDevice) {
+            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+        }
     }
 
     @Override
@@ -111,22 +114,22 @@ public class MainActivity extends SlidingFragmentActivity implements
     protected void onStop() {
         // stopService(new Intent(this, BTService.class));
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         log.setText(new StringBuilder(log.getText().toString()).append("\n").append("解绑服务").toString());
         unbindService(mServiceConnection);
+        // 注销广播接收器
+        unregisterReceiver(mReceiver);
+        log.setText(new StringBuilder(log.getText().toString()).append("\n").append("onDestroy...").toString());
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         log.setText(new StringBuilder(log.getText().toString()).append("\n").append("被系统回收...").toString());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // 注销广播接收器
-        unregisterReceiver(mReceiver);
-        log.setText(new StringBuilder(log.getText().toString()).append("\n").append("onDestroy...").toString());
     }
 
 
@@ -179,12 +182,21 @@ public class MainActivity extends SlidingFragmentActivity implements
                     @Override
                     public void onRefresh(
                             PullToRefreshBase<ViewPager> refreshView) {
-                        if (mBtService.isConnDevice() && !isConnDevice && !isSyncData) {
-                            LogModule.i("下拉刷新同步数据");
-                            log.setText(new StringBuilder(log.getText().toString()).append("\n").append("下拉刷新同步数据").toString());
-                            syncData();
+                        if (mBtService.isConnDevice()) {
+                            if (!isSyncData) {
+                                LogModule.i("下拉刷新同步数据");
+                                log.setText(new StringBuilder(log.getText().toString()).append("\n").append("下拉刷新同步数据").toString());
+                                syncData();
+                            }
                         } else {
-                            // pull_refresh_viewpager.onRefreshComplete();
+                            if (!isConnDevice) {
+                                LogModule.i("未连接，先连接手环");
+                                log.setText(new StringBuilder(log.getText().toString()).append("\n").append("未连接，先连接手环").toString());
+                                isConnDevice = true;
+                                autoPullUpdate(getString(R.string.setting_device));
+                                mBtService.connectBle(SPUtiles.getStringValue(
+                                        BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+                            }
                         }
                     }
                 });
@@ -377,31 +389,7 @@ public class MainActivity extends SlidingFragmentActivity implements
             } else {
                 LogModule.d("连接手环or同步数据？");
                 log.setText(new StringBuilder(log.getText().toString()).append("\n").append("连接手环or同步数据？").toString());
-                if (mBtService.isConnDevice()) {
-                    LogModule.i("已经连接手环开始同步数据");
-                    log.setText(new StringBuilder(log.getText().toString()).append("\n").append("已经连接手环开始同步数据").toString());
-                    autoPullUpdate(getString(R.string.step_syncdata_waiting));
-                    // syncData();
-                    tv_main_conn_tips.setVisibility(View.GONE);
-                    // tv_main_tips.setText(R.string.step_syncdata_waiting);
-                    // tv_main_tips.setVisibility(View.VISIBLE);
-                    // mDialog = ProgressDialog.show(MainActivity.this, null,
-                    // getString(R.string.step_syncdata_waiting),
-                    // false, false);
-                } else {
-                    LogModule.i("未连接，先连接手环");
-                    log.setText(new StringBuilder(log.getText().toString()).append("\n").append("未连接，先连接手环").toString());
-                    isConnDevice = true;
-                    autoPullUpdate(getString(R.string.setting_device));
-                    mBtService.connectBle(SPUtiles.getStringValue(
-                            BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-                    // tv_main_tips.setText(R.string.setting_device);
-                    // tv_main_tips.setVisibility(View.VISIBLE);
-                    // mDialog = ProgressDialog.show(MainActivity.this, null,
-                    // getString(R.string.setting_device), false,
-                    // false);
-                }
-
+                isConnService();
             }
         }
 
@@ -412,6 +400,33 @@ public class MainActivity extends SlidingFragmentActivity implements
             mBtService = null;
         }
     };
+
+    private void isConnService() {
+        if (mBtService.isConnDevice()) {
+            LogModule.i("已经连接手环开始同步数据");
+            log.setText(new StringBuilder(log.getText().toString()).append("\n").append("已经连接手环开始同步数据").toString());
+            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+            // syncData();
+            tv_main_conn_tips.setVisibility(View.GONE);
+            // tv_main_tips.setText(R.string.step_syncdata_waiting);
+            // tv_main_tips.setVisibility(View.VISIBLE);
+            // mDialog = ProgressDialog.show(MainActivity.this, null,
+            // getString(R.string.step_syncdata_waiting),
+            // false, false);
+        } else {
+            LogModule.i("未连接，先连接手环");
+            log.setText(new StringBuilder(log.getText().toString()).append("\n").append("未连接，先连接手环").toString());
+            isConnDevice = true;
+            autoPullUpdate(getString(R.string.setting_device));
+            mBtService.connectBle(SPUtiles.getStringValue(
+                    BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+            // tv_main_tips.setText(R.string.setting_device);
+            // tv_main_tips.setVisibility(View.VISIBLE);
+            // mDialog = ProgressDialog.show(MainActivity.this, null,
+            // getString(R.string.setting_device), false,
+            // false);
+        }
+    }
 
     private static class MyHandler extends Handler {
         private WeakReference<MainActivity> weakReference;
@@ -426,7 +441,7 @@ public class MainActivity extends SlidingFragmentActivity implements
             MainActivity activity = weakReference.get();
             super.handleMessage(msg);
             if (activity != null) {
-
+                // ...
             }
         }
     }
