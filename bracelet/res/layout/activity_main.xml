@@ -1,158 +1,157 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_ffffff"
-        android:orientation="vertical" >
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="58dp"
-            android:background="@color/grey_f4f4f4" >
-
-            <ImageView
-                android:id="@+id/id_iv_left"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:onClick="showLeftMenu"
-                android:paddingLeft="17dp"
-                android:paddingRight="17dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/main_left_button" />
-
-            <ImageView
-                android:id="@+id/id_iv_right"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:onClick="showRightMenu"
-                android:paddingLeft="17dp"
-                android:paddingRight="17dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/main_right_button" />
-        </RelativeLayout>
-
-        <RadioGroup
-            android:id="@+id/rg_main_tab"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="visible" >
+            android:layout_height="match_parent"
+            android:background="@color/white_ffffff"
+            android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/rb_main_tab_step"
-                android:layout_width="0dp"
-                android:layout_weight="1.0"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:drawableBottom="@drawable/main_tab_selector"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:padding="17dp"
-                android:text="@string/main_tab_step"
-                android:textColor="@drawable/main_tab_text_selector"
-                android:textSize="20sp" />
-            <!--
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1.0" />
-                -->
-
-            <RadioButton
-                android:id="@+id/rb_main_tab_sleep"
-                android:layout_width="0dp"
-                android:layout_weight="1.0"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:drawableBottom="@drawable/main_tab_selector"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:padding="17dp"
-                android:text="@string/main_tab_sleep"
-                android:textColor="@drawable/main_tab_text_selector"
-                android:textSize="20sp" />
-            <!--
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1.0" />
-
-            <RadioButton
-                android:id="@+id/rb_main_tab_run"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:drawableBottom="@drawable/main_tab_selector"
-                android:drawablePadding="5dp"
-                android:gravity="right|center_vertical"
-                android:padding="17dp"
-                android:text="@string/main_tab_run"
-                android:textColor="@drawable/main_tab_text_selector"
-                android:textSize="20sp" />
-                -->
-        </RadioGroup>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-
-            <com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager
-                xmlns:ptr="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/pull_refresh_viewpager"
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                ptr:ptrAnimationStyle="flip"
-                ptr:ptrHeaderBackground="@color/white_ffffff"
-                ptr:ptrMode="both" >
-            </com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager>
+                android:layout_height="58dp"
+                android:background="@color/grey_f4f4f4">
 
-            <TextView
-                android:id="@+id/tv_main_conn_tips"
+                <ImageView
+                    android:id="@+id/id_iv_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:onClick="showLeftMenu"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/main_left_button" />
+
+                <ImageView
+                    android:id="@+id/id_iv_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:onClick="showRightMenu"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/main_right_button" />
+            </RelativeLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_main_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/grey_d5d5d5"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/main_conn_tips"
-                android:textSize="18sp"
-                android:visibility="gone" />
+                android:orientation="horizontal"
+                android:visibility="visible">
 
-            <TextView
-                android:id="@+id/tv_main_tips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/grey_d5d5d5"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text=""
-                android:textSize="18sp"
-                android:visibility="gone" />
-        </RelativeLayout>
-    </LinearLayout>
+                <RadioButton
+                    android:id="@+id/rb_main_tab_step"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:button="@null"
+                    android:drawableBottom="@drawable/main_tab_selector"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:padding="17dp"
+                    android:text="@string/main_tab_step"
+                    android:textColor="@drawable/main_tab_text_selector"
+                    android:textSize="20sp" />
+                <!--
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1.0" />
+                    -->
 
-    <ScrollView
-        android:id="@+id/sv_log"
-        android:layout_marginTop="200dp"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" >
+                <RadioButton
+                    android:id="@+id/rb_main_tab_sleep"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:button="@null"
+                    android:drawableBottom="@drawable/main_tab_selector"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:padding="17dp"
+                    android:text="@string/main_tab_sleep"
+                    android:textColor="@drawable/main_tab_text_selector"
+                    android:textSize="20sp" />
+                <!--
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1.0" />
 
-        <TextView
-            android:id="@+id/log"
+                <RadioButton
+                    android:id="@+id/rb_main_tab_run"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableBottom="@drawable/main_tab_selector"
+                    android:drawablePadding="5dp"
+                    android:gravity="right|center_vertical"
+                    android:padding="17dp"
+                    android:text="@string/main_tab_run"
+                    android:textColor="@drawable/main_tab_text_selector"
+                    android:textSize="20sp" />
+                    -->
+            </RadioGroup>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager xmlns:ptr="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/pull_refresh_viewpager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    ptr:ptrAnimationStyle="flip"
+                    ptr:ptrHeaderBackground="@color/white_ffffff"
+                    ptr:ptrMode="both"></com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager>
+
+                <TextView
+                    android:id="@+id/tv_main_conn_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey_d5d5d5"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/main_conn_tips"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_main_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey_d5d5d5"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/sv_log"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
-    </ScrollView>
+            android:layout_height="200dp"
+            android:layout_marginTop="200dp">
+
+            <TextView
+                android:id="@+id/log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </ScrollView>
     </FrameLayout>
 </LinearLayout>

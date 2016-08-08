@@ -423,7 +423,7 @@ public class BTModule {
         }
         if (LogModule.debug) {
             Intent intent = new Intent(BTConstants.ACTION_LOG);
-            StringBuilder sb = new StringBuilder("发给手环命令：");
+            StringBuilder sb = new StringBuilder("phone：");
             for (int i = 0; i < byteArray.length; i++) {
                 sb.append(String.format("%02X ", byteArray[i]));
                 sb.append(" ");
@@ -477,29 +477,29 @@ public class BTModule {
                 String dateStr = sdf.format(date);
                 LogModule.e("日期：" + dateStr);
                 Intent intent = new Intent(BTConstants.ACTION_LOG);
-                intent.putExtra("log", "日期：" + dateStr);
+                intent.putExtra("log", "date：" + dateStr);
                 context.sendBroadcast(intent);
 
                 String count = Utils.decodeToString(sb.toString());
                 LogModule.e("步数：" + count);
-                intent.putExtra("log", "步数：" + count);
+                intent.putExtra("log", "step：" + count);
                 context.sendBroadcast(intent);
 
                 String duration = Utils.decodeToString(duration1 + duration0);
                 LogModule.e("时长：" + duration);
-                intent.putExtra("log", "时长：" + duration);
+                intent.putExtra("log", "duration：" + duration);
                 context.sendBroadcast(intent);
 
                 String distance = new DecimalFormat().format(Integer.valueOf(Utils
                         .decodeToString(distance1 + distance0)) * 0.1);
                 LogModule.e("距离：" + distance);
-                intent.putExtra("log", "距离：" + distance);
+                intent.putExtra("log", "distance：" + distance);
                 context.sendBroadcast(intent);
 
                 String calories = Utils.decodeToString(calories1 + calories0);
                 LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
                 intent.putExtra("log",
-                        "卡路里：" + Utils.decodeToString(calories1 + calories0));
+                        "calorie：" + Utils.decodeToString(calories1 + calories0));
                 context.sendBroadcast(intent);
 
                 Step step = new Step();

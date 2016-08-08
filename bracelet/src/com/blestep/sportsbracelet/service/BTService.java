@@ -212,7 +212,7 @@ public class BTService extends Service implements LeScanCallback {
                             .decodeToString(formatDatas[0]));
                     if (LogModule.debug) {
                         Intent intent = new Intent(BTConstants.ACTION_LOG);
-                        StringBuilder sb = new StringBuilder("发给手机数据：");
+                        StringBuilder sb = new StringBuilder("band：");
                         for (int i = 0; i < formatDatas.length; i++) {
                             sb.append(formatDatas[i]);
                             sb.append(" ");
