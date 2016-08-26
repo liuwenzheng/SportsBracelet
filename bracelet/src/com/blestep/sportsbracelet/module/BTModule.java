@@ -202,11 +202,11 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void getVersionData(BluetoothGatt mBluetoothGatt,Context context) {
+    public static void getVersionData(BluetoothGatt mBluetoothGatt, Context context) {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x06;
-        writeCharacteristicData(mBluetoothGatt, byteArray,context);
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
     /**
@@ -510,12 +510,9 @@ public class BTModule {
                 step.calories = calories;
                 if (!DBTools.getInstance(context).isStepExist(step.date)) {
                     DBTools.getInstance(context).insertStep(step);
-                    // 更新最新记录
                 } else {
-                    Step current = DBTools.getInstance(context).selectCurrentStep();
-                    if (current != null && current.date.equals(step.date)) {
-                        DBTools.getInstance(context).updateStep(step);
-                    }
+                    // 更新全部记录
+                    DBTools.getInstance(context).updateStep(step);
                 }
 
                 break;
