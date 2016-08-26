@@ -106,6 +106,9 @@ public class BTService extends Service implements LeScanCallback {
      * 连接手环
      */
     public void connectBle(String address) {
+        if (TextUtils.isEmpty(address)) {
+            return;
+        }
         final BluetoothDevice device = BTModule.mBluetoothAdapter
                 .getRemoteDevice(address);
         if (device == null) {

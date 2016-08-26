@@ -94,9 +94,7 @@ public class HistoryActivity extends FragmentActivity implements
 
 	private void initData() {
 		// 拿到最新的数据开始计算日期
-		Step step = mSteps.get(mSteps.size() - 1);
-		mTodayCalendar = Utils.strDate2Calendar(step.date,
-				BTConstants.PATTERN_YYYY_MM_DD);
+		mTodayCalendar = Calendar.getInstance();
 		m7YearAgoCalendar = (Calendar) mTodayCalendar.clone();
 		m7YearAgoCalendar.add(Calendar.YEAR, -7);
 		m3WeekAgoCalendar = (Calendar) mTodayCalendar.clone();
@@ -111,9 +109,6 @@ public class HistoryActivity extends FragmentActivity implements
 
 	private void initViewPager() {
 		mSteps = DBTools.getInstance(this).selectAllStep();
-		if (mSteps.size() == 0) {
-			finish();
-		}
 		mStepsMap = new HashMap<String, Step>();
 		for (Step step : mSteps) {
 			mStepsMap.put(step.date, step);

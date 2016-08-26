@@ -1,14 +1,17 @@
 package com.blestep.sportsbracelet.db;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.entity.Step;
+import com.blestep.sportsbracelet.utils.Utils;
 
 public class DBTools {
 	private DBOpenHelper myDBOpenHelper;
@@ -28,26 +31,28 @@ public class DBTools {
 		db = myDBOpenHelper.getWritableDatabase();
 	}
 
-	public Step selectCurrentStep() {
-		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null,
-				null, null, null);
-		Step step = null;
-		while (cursor.moveToLast()) {
-			step = new Step();
-			step.date = cursor.getString(cursor
-					.getColumnIndex(DBConstants.STEP_FIELD_DATE));
-			step.count = cursor.getString(cursor
-					.getColumnIndex(DBConstants.STEP_FIELD_COUNT));
-			step.duration = cursor.getString(cursor
-					.getColumnIndex(DBConstants.STEP_FIELD_DURATION));
-			step.distance = cursor.getString(cursor
-					.getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
-			step.calories = cursor.getString(cursor
-					.getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
-			break;
-		}
-		return step;
-	}
+    public Step selectCurrentStep() {
+        String selectDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, DBConstants.STEP_FIELD_DATE + " = ?",
+                new String[]{selectDate},
+                null, null, null);
+        Step step = null;
+        while (cursor.moveToLast()) {
+            step = new Step();
+            step.date = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.STEP_FIELD_DATE));
+            step.count = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.STEP_FIELD_COUNT));
+            step.duration = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.STEP_FIELD_DURATION));
+            step.distance = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.STEP_FIELD_DISTANCE));
+            step.calories = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.STEP_FIELD_CALORIES));
+            break;
+        }
+        return step;
+    }
 
 	public ArrayList<Step> selectAllStep() {
 		Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, null, null,

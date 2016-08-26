@@ -197,8 +197,10 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
             if (requestCode == BTConstants.REQUEST_CODE_SYSTEM) {
                 SPUtiles.clearAllData();
                 DBTools.getInstance(mainActivity).deleteAllData();
-                mainActivity.getmBtService().mBluetoothGatt.close();
-                mainActivity.getmBtService().mBluetoothGatt = null;
+                if (mainActivity.getmBtService() != null && mainActivity.getmBtService().mBluetoothGatt != null) {
+                    mainActivity.getmBtService().mBluetoothGatt.close();
+                    mainActivity.getmBtService().mBluetoothGatt = null;
+                }
                 mainActivity.finish();
             }
         }
