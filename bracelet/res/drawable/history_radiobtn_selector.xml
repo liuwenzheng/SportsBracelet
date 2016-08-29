@@ -3,6 +3,5 @@
 
     <item android:drawable="@drawable/history_radiobtn_checked_true" android:state_checked="true" android:state_enabled="true"/>
     <item android:drawable="@drawable/history_radiobtn_checked_false" android:state_checked="false" android:state_enabled="true"/>
-    <item android:drawable="@drawable/history_radiobtn_enable_false" android:state_enabled="false"/>
 
 </selector>

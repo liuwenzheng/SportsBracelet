@@ -162,5 +162,17 @@
         <attr name="chart_barSpacing" format="dimension" />
         <attr name="chart_setSpacing" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="tlcTimelineChartView">
 
+        <!-- Footer bar height -->
+        <attr name="tlcFooterBarHeight" format="dimension" />
+
+        <!-- Bar item width -->
+        <attr name="tlcBarItemWidth" format="dimension" />
+
+        <!-- Space between bar items -->
+        <attr name="tlcBarItemSpace" format="dimension" />
+        <attr name="tlcFooterLabelSize" format="dimension" />
+        <attr name="tlcTopSpace" format="dimension" />
+    </declare-styleable>
 </resources>

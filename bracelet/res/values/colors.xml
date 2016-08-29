@@ -10,10 +10,12 @@
     <color name="blue_97e5fb">#97e5fb</color>
     <color name="blue_2eb7dd">#2eb7dd</color>
     <color name="blue_40acaf">#40acaf</color>
+    <color name="blue_1940acaf">#1940acaf</color>
     <color name="blue_20bac0">#20bac0</color>
     <color name="blue_b4efff">#b4efff</color>
     <color name="blue_4dc1c6">#4dc1c6</color>
     <color name="blue_0099ff">#0099ff</color>
+    <color name="blue_04b6bb">#04b6bb</color>
     <color name="black_242424">#242424</color>
     <color name="black_373737">#373737</color>
     <color name="black_484848">#484848</color>
@@ -85,5 +87,12 @@
     <color name="guide3_end_6a89f2">#6a89f2</color>
     <color name="guide4_start_6614ac">#6614ac</color>
     <color name="guide4_end_8735cc">#8735cc</color>
+
+    <!-- history-timeLineChartView -->
+    <color name="tlcDefFooterLabelColor">#4c4c4c</color>
+    <color name="tlcDefHighlightBarItemBg">#cbfeff</color>
+    <color name="tlcDefBarItemBg">#82f0f3</color>
+    <color name="tlcDefGraphBgColorStart">#00bdc2</color>
+    <color name="tlcDefGraphBgColorEnd">#00d8de</color>
 
 </resources>

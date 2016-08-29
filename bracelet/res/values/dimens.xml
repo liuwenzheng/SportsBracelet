@@ -35,5 +35,15 @@
     <!-- BarChartView -->
     <dimen name="bar_spacing">6dp</dimen>
     <dimen name="set_spacing">3dp</dimen>
+    <!--TimelineChartView -->
+    <dimen name="tlcDefFooterBarHeight">45dp</dimen>
+    <dimen name="tlcDefBarItemWidth">16dp</dimen>
+    <dimen name="tlcDefBarItemSpace">16dp</dimen>
+    <dimen name="tlcDefFooterLabelSize">10sp</dimen>
+    <dimen name="tlcDefTopSpace">14dp</dimen>
+    <dimen name="tlcDefChartViewHeight">228dp</dimen>
+
+    <dimen name="tlcWideBarItemWidth">56dp</dimen>
+    <dimen name="tlcWideBarItemSpace">4dp</dimen>
 
 </resources>
