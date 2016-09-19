@@ -130,7 +130,7 @@ public class BTModule {
         int weight = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 30);
         int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
         int age = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_AGE, 5);
-        int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0);
+        int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, 0);
         byteArray[0] = BTConstants.HEADER_SYNUSERINFO;
         byteArray[1] = (byte) weight;
         byteArray[2] = (byte) height;
