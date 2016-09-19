@@ -401,6 +401,11 @@ public class BTService extends Service implements LeScanCallback {
     public void getVersionData() {
         BTModule.getVersionData(mBluetoothGatt, this);
     }
+    public void getAAData() {
+        BTModule.getAAData(mBluetoothGatt, this);
+    }
+
+
 
     /**
      * 清空手环数据

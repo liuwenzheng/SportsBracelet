@@ -19,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -139,6 +140,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     private ViewPager mViewPager;
     private boolean isConnDevice = false;
     private boolean isSyncData = false;
+    private EditText et_space;
 
     private void initView() {
         pull_refresh_viewpager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);
@@ -150,7 +152,8 @@ public class MainActivity extends SlidingFragmentActivity implements
         tv_main_conn_tips.setVisibility(View.GONE);
         tv_main_tips = (TextView) findViewById(R.id.tv_main_tips);
         tv_main_tips.setVisibility(View.GONE);
-
+        et_space = (EditText) findViewById(R.id.et_space);
+        et_space.setText(SPUtiles.getStringValue("space", "500"));
         log = (TextView) findViewById(R.id.log);
         sv_log = (ScrollView) findViewById(R.id.sv_log);
         if (LogModule.debug) {
@@ -339,6 +342,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                         return;
                     }
                     SPUtiles.setStringValue(BTConstants.SP_KEY_VERSION, version);
+                    mBtService.getAAData();
                 }
                 if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
                     int ack = intent.getIntExtra(
@@ -431,6 +435,7 @@ public class MainActivity extends SlidingFragmentActivity implements
      * 同步数据
      */
     private void syncData() {
+        SPUtiles.setStringValue("space", et_space.getText().toString());
         isSyncData = true;
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
         new MyHandler(this).postDelayed(new Runnable() {

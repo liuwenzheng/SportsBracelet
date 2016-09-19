@@ -130,7 +130,7 @@ public class BTModule {
         int weight = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 30);
         int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
         int age = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_AGE, 5);
-        int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0);
+        int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, 0);
         byteArray[0] = BTConstants.HEADER_SYNUSERINFO;
         byteArray[1] = (byte) weight;
         byteArray[2] = (byte) height;
@@ -206,6 +206,14 @@ public class BTModule {
         byte[] byteArray = new byte[2];
         byteArray[0] = BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x06;
+        writeCharacteristicData(mBluetoothGatt, byteArray, context);
+    }
+
+
+    public static void getAAData(BluetoothGatt mBluetoothGatt, Context context) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[1] = (byte) 0xAA;
         writeCharacteristicData(mBluetoothGatt, byteArray, context);
     }
 
@@ -403,8 +411,8 @@ public class BTModule {
         }
     }
 
-    public static void writeCharacteristicData(BluetoothGatt mBluetoothGatt,
-                                               byte[] byteArray, Context context) {
+    public static void writeCharacteristicData(final BluetoothGatt mBluetoothGatt,
+                                               final byte[] byteArray, final Context context) {
         if (mBluetoothGatt == null) {
             return;
         }
@@ -421,20 +429,31 @@ public class BTModule {
         if (characteristic == null) {
             return;
         }
-        if (LogModule.debug) {
-            Intent intent = new Intent(BTConstants.ACTION_LOG);
-            StringBuilder sb = new StringBuilder("phone：");
-            for (int i = 0; i < byteArray.length; i++) {
-                sb.append(String.format("%02X ", byteArray[i]));
-                sb.append(" ");
+        final BluetoothGattCharacteristic finalCharacteristic = characteristic;
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(Integer.parseInt(SPUtiles.getStringValue("space", "500")));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (LogModule.debug) {
+                    Intent intent = new Intent(BTConstants.ACTION_LOG);
+                    StringBuilder sb = new StringBuilder("phone：");
+                    for (int i = 0; i < byteArray.length; i++) {
+                        sb.append(String.format("%02X ", byteArray[i]));
+                        sb.append(" ");
+                    }
+                    intent.putExtra("log", sb.toString());
+                    context.sendBroadcast(intent);
+                }
+                finalCharacteristic.setValue(byteArray);
+                finalCharacteristic
+                        .setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+                mBluetoothGatt.writeCharacteristic(finalCharacteristic);
             }
-            intent.putExtra("log", sb.toString());
-            context.sendBroadcast(intent);
-        }
-        characteristic.setValue(byteArray);
-        characteristic
-                .setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothGatt.writeCharacteristic(characteristic);
+        }.run();
     }
 
     /**
