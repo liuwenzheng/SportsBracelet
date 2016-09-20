@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.activity.HistoryActivity;
+import com.blestep.sportsbracelet.activity.HistoryStepActivity;
 import com.blestep.sportsbracelet.activity.MainActivity;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Step;
@@ -30,8 +32,8 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
         OnClickListener {
     private View mView;
     private CircleProgressView circleView;
-    private Button btn_step_history;
-    private TextView tv_step, tv_calorie, step_heart_rate, tv_step_duration,
+    private RelativeLayout rl_step_history;
+    private TextView tv_step, tv_calorie, tv_step_duration,
             tv_step_distance, tv_step_distance_unit;
     private MainActivity mainActivity;
 
@@ -74,11 +76,10 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     private void initView() {
         circleView = (CircleProgressView) mView.findViewById(R.id.circleView);
 
-        btn_step_history = (Button) mView.findViewById(R.id.btn_step_history);
-        btn_step_history.setOnClickListener(this);
+        rl_step_history = (RelativeLayout) mView.findViewById(R.id.rl_step_history);
+        rl_step_history.setOnClickListener(this);
         tv_step = (TextView) mView.findViewById(R.id.tv_step);
         tv_calorie = (TextView) mView.findViewById(R.id.tv_calorie);
-        step_heart_rate = (TextView) mView.findViewById(R.id.step_heart_rate);
         tv_step_duration = (TextView) mView.findViewById(R.id.tv_step_duration);
         setStepDuration(0, 0);
     }
@@ -89,10 +90,10 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
         SpannableString spannableString = new SpannableString(getString(
                 R.string.step_duration_unit, hour + " ", " " + min + " "));
         spannableString.setSpan(new ForegroundColorSpan(getResources()
-                        .getColor(R.color.grey_d5d5d5)), hourLength, hourLength + 1,
+                        .getColor(R.color.white_ffffff)), hourLength, hourLength + 1,
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ForegroundColorSpan(getResources()
-                        .getColor(R.color.grey_d5d5d5)), hourLength + 1 + minLength,
+                        .getColor(R.color.white_ffffff)), hourLength + 1 + minLength,
                 spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_step_duration.setText(spannableString);
         tv_step_distance = (TextView) mView.findViewById(R.id.tv_step_distance);
@@ -102,9 +103,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     public void updateView() {
         Step step = DBTools.getInstance(mainActivity).selectCurrentStep();
         if (step != null) {
-            int count = Integer.valueOf(step.count);
             circleView.setValueAnimated(Float.valueOf(step.count));
-            tv_step.setText(0 + "");
             String duration = step.duration;
             if (Utils.isNotEmpty(duration)) {
                 int hour = Integer.valueOf(duration) / 60;
@@ -134,10 +133,9 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_step_history:
-                startActivity(new Intent(mainActivity, HistoryActivity.class));
-                mainActivity.overridePendingTransition(R.anim.page_down_in,
-                        R.anim.page_up_out);
+            case R.id.rl_step_history:
+                startActivity(new Intent(mainActivity, HistoryStepActivity.class));
+                mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
 
             default:

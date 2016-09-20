@@ -6,6 +6,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -54,6 +55,8 @@ public class HistoryStepActivity extends BaseActivity {
     TextView tv_step_calorie_daily_value;
     @Bind(R.id.rg_history_bottom_tab_parent)
     RadioGroup rg_history_bottom_tab_parent;
+    @Bind(R.id.iv_back)
+    ImageView iv_back;
     private ArrayList<Step> mSteps;
     private HashMap<String, Step> mStepsMap;
     private Calendar mStart = Calendar.getInstance();
