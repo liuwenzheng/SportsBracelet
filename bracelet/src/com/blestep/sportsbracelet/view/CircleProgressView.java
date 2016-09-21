@@ -302,8 +302,8 @@ public class CircleProgressView extends View {
         a.recycle();
 
         mCircleDot = BitmapFactory.decodeResource(getResources(), R.drawable.circle_dot);
-        mCircleDotHeight = mCircleDot.getHeight() / 2;
-        mCircleDotWidth = mCircleDot.getWidth() / 2;
+        mCircleDotHeight = mCircleDot.getHeight();
+        mCircleDotWidth = mCircleDot.getWidth();
     }
 
     /*
@@ -860,7 +860,7 @@ public class CircleProgressView extends View {
 
         mFullRadius = (width - mPaddingRight - mBarWidth) / 2;
         mCircleRadius = (mFullRadius - mBarWidth) + 1;
-        mCircleDotRadius = width / 2 - mPaddingRight;
+        mCircleDotRadius = width / 2 - mPaddingLeft;
     }
 
     // endregion Setting up stuff
@@ -1051,8 +1051,8 @@ public class CircleProgressView extends View {
             mDotPointX = mCenterX;
             mDotPointY = mPaddingTop;
         } else {
-            mDotPointX = (int) (mCenterX + mCircleRadius * Math.sin(degrees));
-            mDotPointY = (int) (mCenterY + mCircleRadius * (1 - Math.cos(degrees)));
+            mDotPointX = (int) (mCenterX + mCircleDotRadius * Math.cos(Math.toRadians(degrees - 90)));
+            mDotPointY = (int) (mCenterY + mCircleDotRadius * Math.sin(Math.toRadians(degrees - 90)));
         }
     }
 

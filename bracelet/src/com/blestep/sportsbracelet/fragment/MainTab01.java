@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.activity.HistoryActivity;
 import com.blestep.sportsbracelet.activity.HistoryStepActivity;
 import com.blestep.sportsbracelet.activity.MainActivity;
 import com.blestep.sportsbracelet.db.DBTools;
@@ -28,13 +27,25 @@ import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainTab01 extends Fragment implements ICircleProgressValue,
         OnClickListener {
+    @Bind(R.id.circleView)
+    CircleProgressView circleView;
+    @Bind(R.id.tv_step)
+    TextView tv_step;
+    @Bind(R.id.tv_calorie)
+    TextView tv_calorie;
+    @Bind(R.id.tv_step_duration)
+    TextView tv_step_duration;
+    @Bind(R.id.tv_step_distance)
+    TextView tv_step_distance;
+    @Bind(R.id.tv_step_distance_unit)
+    TextView tv_step_distance_unit;
     private View mView;
-    private CircleProgressView circleView;
-    private RelativeLayout rl_step_history;
-    private TextView tv_step, tv_calorie, tv_step_duration,
-            tv_step_distance, tv_step_distance_unit;
     private MainActivity mainActivity;
 
     @Override
@@ -61,7 +72,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.main_tab_01, container, false);
-        initView();
+        ButterKnife.bind(this, mView);
         return mView;
     }
 
@@ -71,16 +82,6 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
         circleView.setValue(0);
         tv_calorie.setText("0");
         circleView.setmProgressValue(this);
-    }
-
-    private void initView() {
-        circleView = (CircleProgressView) mView.findViewById(R.id.circleView);
-
-        rl_step_history = (RelativeLayout) mView.findViewById(R.id.rl_step_history);
-        rl_step_history.setOnClickListener(this);
-        tv_step = (TextView) mView.findViewById(R.id.tv_step);
-        tv_calorie = (TextView) mView.findViewById(R.id.tv_calorie);
-        tv_step_duration = (TextView) mView.findViewById(R.id.tv_step_duration);
         setStepDuration(0, 0);
     }
 
@@ -103,7 +104,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     public void updateView() {
         Step step = DBTools.getInstance(mainActivity).selectCurrentStep();
         if (step != null) {
-            circleView.setValueAnimated(Float.valueOf(step.count));
+            circleView.setValueAnimated(Float.parseFloat(step.count));
             String duration = step.duration;
             if (Utils.isNotEmpty(duration)) {
                 int hour = Integer.valueOf(duration) / 60;
@@ -131,17 +132,20 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick(R.id.rl_step_history)
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_step_history:
                 startActivity(new Intent(mainActivity, HistoryStepActivity.class));
                 mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
-
             default:
                 break;
         }
-
     }
-
 }

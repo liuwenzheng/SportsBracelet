@@ -30,7 +30,7 @@
                 CircleProgressView:contourSize="0dp"
                 CircleProgressView:outerBarColor="#00000000"
                 CircleProgressView:outerBarWidth="0dp"
-                CircleProgressView:outerPadding="8dp"
+                CircleProgressView:outerPadding="7.5dp"
                 CircleProgressView:rimColor="#00000000"
                 CircleProgressView:rimWidth="0dp"
                 CircleProgressView:unitColor="#00000000" />
@@ -127,5 +127,4 @@
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
-
 </RelativeLayout>
