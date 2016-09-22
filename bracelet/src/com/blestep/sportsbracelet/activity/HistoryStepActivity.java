@@ -6,7 +6,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.widget.ImageView;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.blestep.sportsbracelet.R.layout.history_step;
 
@@ -55,8 +57,6 @@ public class HistoryStepActivity extends BaseActivity {
     TextView tv_step_calorie_daily_value;
     @Bind(R.id.rg_history_bottom_tab_parent)
     RadioGroup rg_history_bottom_tab_parent;
-    @Bind(R.id.iv_back)
-    ImageView iv_back;
     private ArrayList<Step> mSteps;
     private HashMap<String, Step> mStepsMap;
     private Calendar mStart = Calendar.getInstance();
@@ -370,5 +370,30 @@ public class HistoryStepActivity extends BaseActivity {
             item[5] = 0;
         }
         return item;
+    }
+
+    @OnClick(R.id.iv_back)
+    public void OnClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finishActivityAnim();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finishActivityAnim();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void finishActivityAnim() {
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

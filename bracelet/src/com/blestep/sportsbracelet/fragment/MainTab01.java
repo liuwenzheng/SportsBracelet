@@ -3,6 +3,7 @@ package com.blestep.sportsbracelet.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -10,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
@@ -24,8 +23,10 @@ import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.module.UnitManagerModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
+import com.blestep.sportsbracelet.utils.WaveHelper;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
+import com.gelitenight.waveview.library.WaveView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,8 +46,11 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     TextView tv_step_distance;
     @Bind(R.id.tv_step_distance_unit)
     TextView tv_step_distance_unit;
+    @Bind(R.id.wave)
+    WaveView wave;
     private View mView;
     private MainActivity mainActivity;
+    private WaveHelper mWaveHelper;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -58,14 +62,19 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     @Override
     public void onResume() {
         LogModule.i("onResume");
-        initData();
         super.onResume();
+        initData();
+        wave.setShapeType(WaveView.ShapeType.SQUARE);
+        wave.setWaveColor(ContextCompat.getColor(mainActivity, R.color.blue_82f0f3),
+                ContextCompat.getColor(mainActivity, R.color.white_ffffff));
+        mWaveHelper.start();
     }
 
     @Override
     public void onPause() {
         LogModule.i("onPause");
         super.onPause();
+        mWaveHelper.cancel();
     }
 
     @Override
@@ -73,6 +82,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.main_tab_01, container, false);
         ButterKnife.bind(this, mView);
+        mWaveHelper = new WaveHelper(wave);
         return mView;
     }
 

@@ -127,4 +127,11 @@
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
+
+    <com.gelitenight.waveview.library.WaveView
+        android:id="@+id/wave"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/rl_step"
+        android:background="@color/blue_00d8de" />
 </RelativeLayout>
