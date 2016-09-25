@@ -45,5 +45,7 @@
 
     <dimen name="tlcWideBarItemWidth">56dp</dimen>
     <dimen name="tlcWideBarItemSpace">4dp</dimen>
+    <!--GradientBarChart-->
+    <dimen name="aimLabelSize">8sp</dimen>
 
 </resources>

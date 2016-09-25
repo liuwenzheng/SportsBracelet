@@ -159,4 +159,13 @@
         <attr name="tlcFooterLabelSize" format="dimension" />
         <attr name="tlcTopSpace" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="GradientBarChartAttrs">
+        <attr name="gbcBarWidth" format="dimension" />
+        <attr name="gbcBarSpace" format="dimension" />
+        <attr name="gbcAxisColor" format="color" />
+        <attr name="gbcAxisWidth" format="dimension" />
+        <attr name="gbcLabelSize" format="dimension" />
+        <attr name="gbcLabelColor" format="color" />
+        <attr name="gbcLabelAxisSpace" format="dimension" />
+    </declare-styleable>
 </resources>
