@@ -75,6 +75,7 @@ public class MatchDevicesActivity extends BaseActivity {
     private int mScanTimes = 0;
     private boolean mIsScanContinue = false;
     private BleDevice mScanDevice;
+    private boolean mIsDisConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,9 @@ public class MatchDevicesActivity extends BaseActivity {
         mDevices = new ArrayList<>();
         mAdapter = new DeviceAdapter();
         lv_match_devices.setAdapter(mAdapter);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            mIsDisConnection = getIntent().getBooleanExtra("service_disconnection", false);
+        }
         bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -315,7 +319,7 @@ public class MatchDevicesActivity extends BaseActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             LogModule.d("连接服务onServiceConnected...");
             mBtService = ((BTService.LocalBinder) service).getService();
-            if (mBtService.mBluetoothGatt != null) {
+            if (!mIsDisConnection && mBtService.mBluetoothGatt != null) {
                 mBtService.disConnectBle();
             }
             // 开启蓝牙

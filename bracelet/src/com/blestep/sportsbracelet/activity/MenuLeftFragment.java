@@ -24,7 +24,7 @@ import com.blestep.sportsbracelet.utils.ToastUtils;
 public class MenuLeftFragment extends Fragment implements OnClickListener {
     private View mView;
     private MainActivity mainActivity;
-    private TextView tv_bracelet_name, tv_alert_coming_call_state;
+    private TextView tv_bracelet_name, tv_alert_coming_call_state, tv_battery_value;
     private ImageView iv_battery_state, iv_conn_state;
     private CheckBox cb_alert_low_battery, cb_alert_find_band;
     private BTService mBtService;
@@ -56,6 +56,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 
     private void initView() {
         tv_bracelet_name = (TextView) mView.findViewById(R.id.tv_bracelet_name);
+        tv_battery_value = (TextView) mView.findViewById(R.id.tv_battery_value);
         tv_alert_coming_call_state = (TextView) mView
                 .findViewById(R.id.tv_alert_coming_call_state);
         iv_battery_state = (ImageView) mView
@@ -161,7 +162,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
         if (battery_percent >= 4) {
             iv_battery_state.setImageResource(R.drawable.battery_four);
         }
-
+        tv_battery_value.setText(battery + "%");
     }
 
     @Override
@@ -174,7 +175,9 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
                 startActivity(new Intent(mainActivity, AlarmActivity.class));
                 break;
             case R.id.rl_bind_bracelet:
-                startActivity(new Intent(mainActivity, MatchDevicesActivity.class));
+                Intent i = new Intent(mainActivity, MatchDevicesActivity.class);
+                i.putExtra("service_disconnection", true);
+                startActivity(i);
                 break;
             case R.id.rl_bracelet_system:
                 Intent intent = new Intent(mainActivity, SystemActivity.class);

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_484848"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="17dp"
-        android:paddingRight="17dp" >
+        android:paddingRight="17dp">
 
         <TextView
             android:id="@+id/tv_bracelet_name"
@@ -22,10 +22,18 @@
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_battery_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_ffffff"
+            android:textSize="18sp" />
+
         <ImageView
             android:id="@+id/iv_battery_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
             android:scaleType="fitCenter"
             android:src="@drawable/battery_one" />
 
@@ -46,7 +54,7 @@
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
         android:paddingTop="13dp"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_alert_low_battery"
@@ -81,12 +89,19 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/find_band_icon" />
 
         <TextView
             android:id="@+id/tv_alert_find_band"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:text="@string/alert_find_band"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
@@ -94,6 +109,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_alert_find_band"
             android:layout_below="@id/tv_alert_find_band"
             android:layout_marginTop="6dp"
             android:text="@string/alert_find_band_tips"
@@ -118,12 +134,19 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/coming_call_icon" />
 
         <TextView
             android:id="@+id/tv_alert_coming_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:text="@string/alert_coming_call"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
@@ -131,6 +154,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_alert_coming_call"
             android:layout_below="@id/tv_alert_coming_call"
             android:layout_marginTop="6dp"
             android:text="@string/alert_coming_call_tips"
@@ -166,12 +190,19 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/alarm_icon" />
 
         <TextView
             android:id="@+id/tv_alert_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:text="@string/alert_alarm"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
@@ -179,6 +210,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_alert_alarm"
             android:layout_below="@id/tv_alert_alarm"
             android:layout_marginTop="6dp"
             android:text="@string/alert_alarm_tips"
@@ -203,12 +235,19 @@
         android:paddingBottom="13dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="13dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/bind_icon" />
 
         <TextView
             android:id="@+id/tv_bind_bracelet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:text="@string/bind_bracelet"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
@@ -216,6 +255,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_bind_bracelet"
             android:layout_below="@id/tv_bind_bracelet"
             android:layout_marginTop="6dp"
             android:text="@string/bind_bracelet_tips"
@@ -237,27 +277,33 @@
         android:id="@+id/rl_bracelet_system"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="13dp"
+        android:paddingBottom="20dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp" >
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/system_icon" />
 
         <TextView
             android:id="@+id/tv_bracelet_system"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:text="@string/bracelet_system"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_bracelet_system"
-            android:layout_marginTop="6dp"
-            android:text=""
-            android:textColor="@color/grey_979797"
-            android:textSize="12sp" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/go" />
     </RelativeLayout>
 
     <View style="@style/divider_line" />
@@ -269,11 +315,18 @@
         android:paddingBottom="20dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="20dp" >
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/about_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:text="@string/about"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />

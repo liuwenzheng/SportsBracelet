@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,6 +43,8 @@ public class GuideActivity extends BaseActivity {
     ImageView ivGuideSplash;
     @Bind(R.id.ll_guide_dot)
     LinearLayout ll_guide_dot;
+    @Bind(R.id.btn_start)
+    Button btn_start;
     private int[] colors = new int[8];
     private List<Fragment> views = new ArrayList<>();
     private ArgbEvaluator mArgbEvaluator;
@@ -77,13 +80,18 @@ public class GuideActivity extends BaseActivity {
         ((ImageView) ll_guide_dot.getChildAt(0)).setImageResource(R.drawable.guide_checked_true);
     }
 
-    @OnClick({R.id.tv_register, R.id.tv_login})
+    @OnClick({R.id.tv_register, R.id.tv_login, R.id.btn_start})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_register:
                 // TODO: 2016/7/12 注册
                 break;
             case R.id.tv_login:
+                // TODO: 2016/7/12 登录
+                startActivity(new Intent(this, ActivateBraceletActivity.class));
+                finish();
+                break;
+            case R.id.btn_start:
                 // TODO: 2016/7/12 登录
                 startActivity(new Intent(this, ActivateBraceletActivity.class));
                 finish();
@@ -107,6 +115,11 @@ public class GuideActivity extends BaseActivity {
                 ((ImageView) ll_guide_dot.getChildAt(i)).setImageResource(R.drawable.guide_checked_false);
             }
             ((ImageView) ll_guide_dot.getChildAt(position)).setImageResource(R.drawable.guide_checked_true);
+            if (position == 4) {
+                btn_start.setVisibility(View.VISIBLE);
+            } else {
+                btn_start.setVisibility(View.GONE);
+            }
         }
 
         @Override

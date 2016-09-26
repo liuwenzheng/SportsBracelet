@@ -28,9 +28,44 @@ public class ActivateBraceletActivity extends BaseActivity {
         bnv_nav.setPreVisible(false);
         bnv_nav.setNextEnable(true);
         bnv_nav.setListener(this);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.activate_hand_translate);
-        iv_activate_hand.setAnimation(animation);
-        animation.start();
+        final Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.activate_hand_translate);
+        final Animation animation2 = AnimationUtils.loadAnimation(this, R.anim.activate_hand_translate_stop);
+        iv_activate_hand.setAnimation(animation1);
+        animation1.start();
+        animation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                iv_activate_hand.setAnimation(animation2);
+                animation2.start();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        animation2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                iv_activate_hand.setAnimation(animation1);
+                animation1.start();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
 

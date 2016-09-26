@@ -3,8 +3,4 @@
     android:duration="1000"
     android:fromXDelta="-100%"
     android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-    android:repeatCount="infinite"
-    android:repeatMode="reverse"
-    android:toXDelta="0%">
-
-</translate>
+    android:toXDelta="0%" />

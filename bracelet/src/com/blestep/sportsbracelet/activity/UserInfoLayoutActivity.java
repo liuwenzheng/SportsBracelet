@@ -79,6 +79,8 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
 
     private void initData() {
         String name = SPUtiles.getStringValue(BTConstants.SP_KEY_USER_NAME, "");
+        // 姓名
+        et_user_name.setText(name);
         if (Utils.isEmpty(name)) {
             // 个人设置引导页
             rl_user_titlebar.setVisibility(View.GONE);
@@ -87,9 +89,8 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
             // 个人设置修改页
             rl_user_titlebar.setVisibility(View.VISIBLE);
             btn_next.setVisibility(View.GONE);
+            tv_user_confirm.setEnabled(isFillin());
         }
-        // 姓名
-        et_user_name.setText(name);
         et_user_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -168,7 +169,7 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
             tv_user_birthday.setText(birthday);
             tv_user_birthday.setTextColor(getResources().getColor(R.color.orange_ff9c00));
         } else {
-            birthday = "1989-01-01";
+            birthday = "1985-06-01";
         }
         mCalendar = Calendar.getInstance();
         Date date;
@@ -220,7 +221,12 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
                 CustomDialog.Builder builder = new CustomDialog.Builder(this);
                 builder.setContentView(v);
                 builder.setTitle("性别");
-                builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         int gender = wv_gender.getSelected();
                         tv_user_sex.setText(wv_gender.getSelectedText());
@@ -238,11 +244,6 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
                             tv_user_height.setTextColor(getResources().getColor(R.color.red_fe82b5));
                         }
                         SPUtiles.setIntValue(BTConstants.SP_KEY_USER_GENDER, gender);
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });

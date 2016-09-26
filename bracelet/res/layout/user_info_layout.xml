@@ -61,7 +61,7 @@
         android:hint="@string/userinfo_name_hint"
         android:text=""
         android:textColor="@color/black_333333"
-        android:textColorHint="@color/grey_cccccc"
+        android:textColorHint="@color/grey_999999"
         android:textSize="17sp" />
 
     <View

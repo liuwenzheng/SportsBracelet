@@ -115,8 +115,8 @@ public class GradientBarChart extends View {
         mAimLabelPaint.setColor(ContextCompat.getColor(context, R.color.grey_999999));
         mAimLabelPaint.setTextSize(getResources().getDimension(R.dimen.aimLabelSize));
         mAimLabelHeight = Utils.dip2px(getContext(), Math.abs(mAimLabelPaint.descent() + mAimLabelPaint.ascent()));
-        mAreaTopPadding = mAimLabelHeight + 10;
-        mAreaBottomPadding = mLabelAxisSpace + mAimLabelHeight + 10;
+        mAreaTopPadding = mAimLabelHeight + Utils.dip2px(getContext(), 5);
+        mAreaBottomPadding = mLabelAxisSpace + mAimLabelHeight + Utils.dip2px(getContext(), 5);
 
         // 目标值虚线
         mAimDashedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -168,8 +168,9 @@ public class GradientBarChart extends View {
                 paint = mBarPaint;
             } else {
                 Shader paintShader = new LinearGradient(0, mBarAreaHeight - barHeight, 0, mBarAreaHeight,
-                        ContextCompat.getColor(getContext(), R.color.blue_00d4da),
-                        ContextCompat.getColor(getContext(), R.color.yellow_fffc00),
+                        new int[]{ContextCompat.getColor(getContext(), R.color.blue_00d4da),
+                                ContextCompat.getColor(getContext(), R.color.yellow_fffc00)},
+                        new float[]{0, 0.7f},
                         Shader.TileMode.CLAMP);
                 mBarGadientPaint.setShader(paintShader);
                 paint = mBarGadientPaint;
@@ -193,7 +194,7 @@ public class GradientBarChart extends View {
             path.moveTo(0, aimY);
             path.lineTo(mWidth, aimY);
             canvas.drawPath(path, mAimDashedPaint);
-            canvas.drawText(mAimValue + getResources().getString(R.string.setting_target_step), 0, aimY - mAimLabelHeight, mAimLabelPaint);
+            canvas.drawText(mAimValue + getResources().getString(R.string.setting_target_step), 0, aimY - (mAreaTopPadding - mAimLabelHeight), mAimLabelPaint);
         }
     }
 
@@ -221,6 +222,10 @@ public class GradientBarChart extends View {
         int labelX = (int) (mCenterX - labelWidth * (3 + 0.5) - 3 * labelSpace);
         int labelY = mBarAreaHeight + mAreaBottomPadding - mLabelHeight;
         for (String label : labels) {
+            if (label.equals(getResources().getString(R.string.history_today))) {
+                int today = (int) mLabelPaint.measureText(label);
+                labelX += (labelWidth - today) / 2;
+            }
             canvas.drawText(label, labelX, labelY, mLabelPaint);
             labelX += labelWidth + labelSpace;
         }

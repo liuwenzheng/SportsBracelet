@@ -74,7 +74,9 @@ public class MenuRightFragment extends Fragment implements OnClickListener {
 			startActivity(new Intent(mainActivity, UserInfoLayoutActivity.class));
 			break;
 		case R.id.rl_center_target:
-			startActivity(new Intent(mainActivity, TargetLayoutActivity.class));
+			Intent i = new Intent(mainActivity, TargetLayoutActivity.class);
+			i.putExtra("is_setting", true);
+			startActivity(i);
 			break;
 		case R.id.rl_center_clear:
 			startActivity(new Intent(mainActivity, ClearDataActivity.class));

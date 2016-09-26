@@ -38,6 +38,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
     @Bind(R.id.tv_target_bike)
     TextView tv_target_bike;
     private static final int STEP_UNIT = 200;
+    private boolean mIsSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,14 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
         tv_target_walk.setText(getString(R.string.setting_target_minutes, 0));
         tv_target_run.setText(getString(R.string.setting_target_minutes, 0));
         tv_target_bike.setText(getString(R.string.setting_target_minutes, 0));
-        int aim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 0);
+        int aim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 8000);
         sb_target.setOnSeekBarChangeListener(this);
         if (aim != 0) {
             tv_target_steps_value.setText(aim + "");
             sb_target.setProgress(aim / STEP_UNIT);
+        }
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            mIsSetting = getIntent().getBooleanExtra("is_setting", false);
         }
     }
 
@@ -65,6 +69,11 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
 
                 if (Integer.valueOf(tv_target_steps_value.getText().toString()) < STEP_UNIT) {
                     ToastUtils.showToast(this, getString(R.string.setting_target_min));
+                    return;
+                }
+                if (mIsSetting) {
+                    SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_target_steps_value.getText().toString()));
+                    finish();
                     return;
                 }
                 SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_target_steps_value.getText().toString()));

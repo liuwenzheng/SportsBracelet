@@ -91,45 +91,45 @@ public class UserUnitManagerModule {
 
         builder.setContentView(view);
         builder.setTitle(R.string.setting_userinfo_height);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                listener.heightFinished();
-                boolean isBritish = selectedHeightUnit == 1;
-                if (!isBritish) {
-                    heightValue = Integer.valueOf(wv_height_cm.getSelectedText());
-                    tv_user_height.setText(String.format("%s%s",
-                            heightValue,
-                            wv_height_unit.getSelectedText()));
-                    tv_user_height.setTag(heightValue + "");
-                    if (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0) != 0) {
-                        tv_user_weight.setText(String.format("%s%s",
-                                tv_user_weight.getTag().toString(),
-                                activity.getString(R.string.setting_userinfo_weight_unit)));
-                    }
-                } else {
-                    heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectedText()), Integer.valueOf(wv_height_in.getSelectedText()));
-                    tv_user_height.setText(String.format("%s'%s''%s",
-                            wv_height_ft.getSelectedText(),
-                            wv_height_in.getSelectedText(),
-                            wv_height_unit.getSelectedText()));
-                    tv_user_height.setTag(heightValue + "");
-                    if (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0) != 0) {
-                        tv_user_weight.setText(String.format("%s%s",
-                                kgToLb(Integer.valueOf(tv_user_weight.getTag().toString())),
-                                activity.getString(R.string.setting_userinfo_weight_unit_british)));
-                    }
-
-                }
-                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, isBritish);
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
+        builder.setNegativeButton(
+                R.string.confirm, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.heightFinished();
+                        boolean isBritish = selectedHeightUnit == 1;
+                        if (!isBritish) {
+                            heightValue = Integer.valueOf(wv_height_cm.getSelectedText());
+                            tv_user_height.setText(String.format("%s%s",
+                                    heightValue,
+                                    wv_height_unit.getSelectedText()));
+                            tv_user_height.setTag(heightValue + "");
+                            if (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0) != 0) {
+                                tv_user_weight.setText(String.format("%s%s",
+                                        tv_user_weight.getTag().toString(),
+                                        activity.getString(R.string.setting_userinfo_weight_unit)));
+                            }
+                        } else {
+                            heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectedText()), Integer.valueOf(wv_height_in.getSelectedText()));
+                            tv_user_height.setText(String.format("%s'%s''%s",
+                                    wv_height_ft.getSelectedText(),
+                                    wv_height_in.getSelectedText(),
+                                    wv_height_unit.getSelectedText()));
+                            tv_user_height.setTag(heightValue + "");
+                            if (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0) != 0) {
+                                tv_user_weight.setText(String.format("%s%s",
+                                        kgToLb(Integer.valueOf(tv_user_weight.getTag().toString())),
+                                        activity.getString(R.string.setting_userinfo_weight_unit_british)));
+                            }
+
+                        }
+                        SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, isBritish);
+                        dialog.dismiss();
+                    }
+                });
         builder.create().show();
     }
 
@@ -206,7 +206,13 @@ public class UserUnitManagerModule {
 
         builder.setContentView(view);
         builder.setTitle(R.string.setting_userinfo_weight);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 listener.weightFinished();
                 boolean isBritish = selectedWeightUnit == 1;
@@ -237,12 +243,6 @@ public class UserUnitManagerModule {
                     }
                 }
                 SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, isBritish);
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });

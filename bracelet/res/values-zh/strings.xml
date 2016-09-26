@@ -124,7 +124,7 @@
     <string name="bracelet_reset_alert">是否确定清空手机的所有设置？</string>
     <string name="bracelet_reset_alert_confirm">确定</string>
     <string name="bracelet_reset_alert_cancel">取消</string>
-    <string name="bracelet_system">系统设置</string>
+    <string name="bracelet_system">高级</string>
     <string name="bracelet_unit">单位</string>
     <string name="bracelet_unit_british">英制</string>
     <string name="bracelet_unit_metric">公制</string>
