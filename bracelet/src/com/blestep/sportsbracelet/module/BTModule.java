@@ -186,6 +186,32 @@ public class BTModule {
     }
 
     /**
+     * 设置单位制式
+     *
+     * @param mBluetoothGatt
+     */
+    public static void setUnit(Context context, BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_UNIT_SYSTEM;
+        boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
+        byteArray[1] = isBritish ? (byte) 0x01 : (byte) 0x00;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
+     * 设置时间格式
+     *
+     * @param mBluetoothGatt
+     */
+    public static void setTime(Context context, BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_TIME_SYSTEM;
+        int time_system = SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0);
+        byteArray[1] = time_system == 0 ? (byte) 0x00 : (byte) 0x01;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
      * 获取当前电量
      *
      * @param mBluetoothGatt
