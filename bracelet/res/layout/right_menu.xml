@@ -32,7 +32,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="9dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/pic_male" />
+        android:src="@drawable/user_head_male" />
 
     <RelativeLayout
         android:id="@+id/rl_center_userinfo"
