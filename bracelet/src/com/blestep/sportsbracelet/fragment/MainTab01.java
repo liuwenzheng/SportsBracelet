@@ -26,7 +26,11 @@ import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.utils.WaveHelper;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
+import com.blestep.sportsbracelet.view.GradientBarChart;
 import com.gelitenight.waveview.library.WaveView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +52,8 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     TextView tv_step_distance_unit;
     @Bind(R.id.wave)
     WaveView wave;
+    @Bind(R.id.gbc_step_week_history)
+    GradientBarChart gbc_step_week_history;
     private View mView;
     private MainActivity mainActivity;
     private WaveHelper mWaveHelper;
@@ -93,6 +99,8 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
         tv_calorie.setText("0");
         circleView.setmProgressValue(this);
         setStepDuration(0, 0);
+        gbc_step_week_history.setAimValue(SPUtiles.getIntValue(
+                BTConstants.SP_KEY_STEP_AIM, 100));
     }
 
     private void setStepDuration(int hour, int min) {
@@ -133,6 +141,19 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
             }
             String calories = step.calories;
             tv_calorie.setText(calories);
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, -6);
+            ArrayList<Integer> datas = new ArrayList<>();
+            for (int i = 0; i < 7; i++) {
+                Step s = DBTools.getInstance(mainActivity).selectStep(calendar);
+                if (s == null) {
+                    datas.add(0);
+                } else {
+                    datas.add(Integer.parseInt(s.count));
+                }
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            gbc_step_week_history.setDatas(datas);
         }
     }
 

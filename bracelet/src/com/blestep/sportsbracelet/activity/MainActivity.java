@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -120,7 +121,8 @@ public class MainActivity extends SlidingFragmentActivity implements
         this.mBtService = mBtService;
     }
 
-    private TextView tv_main_conn_tips, tv_main_tips, log;
+    private TextView log;
+    private FrameLayout frame_main_conn_tips, frame_main_tips;
     private MainTab01 tab01;
     private MainTab02 tab02;
     private MainTab03 tab03;
@@ -137,10 +139,10 @@ public class MainActivity extends SlidingFragmentActivity implements
         initRightMenu();
         // 初始化ViewPager
         initViewPager();
-        tv_main_conn_tips = (TextView) findViewById(R.id.tv_main_conn_tips);
-        tv_main_conn_tips.setVisibility(View.GONE);
-        tv_main_tips = (TextView) findViewById(R.id.tv_main_tips);
-        tv_main_tips.setVisibility(View.GONE);
+        frame_main_conn_tips = (FrameLayout) findViewById(R.id.frame_main_conn_tips);
+        frame_main_conn_tips.setVisibility(View.GONE);
+        frame_main_tips = (FrameLayout) findViewById(R.id.frame_main_tips);
+        frame_main_tips.setVisibility(View.GONE);
 
         log = (TextView) findViewById(R.id.log);
         sv_log = (ScrollView) findViewById(R.id.sv_log);
@@ -154,7 +156,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     }
 
     private void initListener() {
-        tv_main_conn_tips.setOnClickListener(this);
+        frame_main_conn_tips.setOnClickListener(this);
         pull_refresh_viewpager
                 .setOnRefreshListener(new OnRefreshListener<ViewPager>() {
 
@@ -200,8 +202,8 @@ public class MainActivity extends SlidingFragmentActivity implements
                     pull_refresh_viewpager.onRefreshComplete();
                     ToastUtils.showToast(MainActivity.this,
                             R.string.setting_device_conn_failure);
-                    tv_main_conn_tips.setVisibility(View.VISIBLE);
-                    tv_main_tips.setVisibility(View.GONE);
+                    frame_main_conn_tips.setVisibility(View.VISIBLE);
+                    frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
                     // }
@@ -219,15 +221,15 @@ public class MainActivity extends SlidingFragmentActivity implements
                             R.string.setting_device_conn_success);
                     pull_refresh_viewpager.onRefreshComplete();
                     autoPullUpdate(getString(R.string.step_syncdata_waiting));
-                    tv_main_conn_tips.setVisibility(View.GONE);
-                    tv_main_tips.setVisibility(View.GONE);
+                    frame_main_conn_tips.setVisibility(View.GONE);
+                    frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
                     // }
                     LogModule.i("配对完开始同步数据");
                     // syncData();
-                    // tv_main_tips.setText(R.string.step_syncdata_waiting);
-                    // tv_main_tips.setVisibility(View.VISIBLE);
+                    // frame_main_tips.setText(R.string.step_syncdata_waiting);
+                    // frame_main_tips.setVisibility(View.VISIBLE);
                     // mDialog = ProgressDialog.show(MainActivity.this, null,
                     // getString(R.string.step_syncdata_waiting),
                     // false, false);
@@ -242,7 +244,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     int battery = SPUtiles.getIntValue(
                             BTConstants.SP_KEY_BATTERY, 0);
                     LogModule.i("电量为" + battery + "%");
-                    tv_main_tips.setVisibility(View.GONE);
+                    frame_main_tips.setVisibility(View.GONE);
                     if (leftMenuFragment != null
                             && leftMenuFragment.isVisible()) {
                         ((MenuLeftFragment) leftMenuFragment)
@@ -353,9 +355,9 @@ public class MainActivity extends SlidingFragmentActivity implements
             LogModule.i("已经连接手环开始同步数据");
             autoPullUpdate(getString(R.string.step_syncdata_waiting));
             // syncData();
-            tv_main_conn_tips.setVisibility(View.GONE);
-            // tv_main_tips.setText(R.string.step_syncdata_waiting);
-            // tv_main_tips.setVisibility(View.VISIBLE);
+            frame_main_conn_tips.setVisibility(View.GONE);
+            // frame_main_tips.setText(R.string.step_syncdata_waiting);
+            // frame_main_tips.setVisibility(View.VISIBLE);
             // mDialog = ProgressDialog.show(MainActivity.this, null,
             // getString(R.string.step_syncdata_waiting),
             // false, false);
@@ -365,8 +367,8 @@ public class MainActivity extends SlidingFragmentActivity implements
             autoPullUpdate(getString(R.string.setting_device));
             mBtService.connectBle(SPUtiles.getStringValue(
                     BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-            // tv_main_tips.setText(R.string.setting_device);
-            // tv_main_tips.setVisibility(View.VISIBLE);
+            // frame_main_tips.setText(R.string.setting_device);
+            // frame_main_tips.setVisibility(View.VISIBLE);
             // mDialog = ProgressDialog.show(MainActivity.this, null,
             // getString(R.string.setting_device), false,
             // false);
@@ -432,8 +434,8 @@ public class MainActivity extends SlidingFragmentActivity implements
                     autoPullUpdate(getString(R.string.setting_device));
                     mBtService.connectBle(SPUtiles.getStringValue(
                             BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-                    // tv_main_tips.setText(R.string.setting_device);
-                    // tv_main_tips.setVisibility(View.VISIBLE);
+                    // frame_main_tips.setText(R.string.setting_device);
+                    // frame_main_tips.setVisibility(View.VISIBLE);
                     // mDialog = ProgressDialog
                     // .show(MainActivity.this, null,
                     // getString(R.string.setting_device), false, false);
@@ -506,8 +508,8 @@ public class MainActivity extends SlidingFragmentActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_main_conn_tips:
-                tv_main_conn_tips.setVisibility(View.GONE);
+            case R.id.frame_main_conn_tips:
+                frame_main_conn_tips.setVisibility(View.GONE);
                 if (!BTModule.isBluetoothOpen()) {
                     BTModule.openBluetooth(MainActivity.this);
                     return;
@@ -516,8 +518,8 @@ public class MainActivity extends SlidingFragmentActivity implements
                         BTConstants.SP_KEY_DEVICE_ADDRESS, null));
                 isConnDevice = true;
                 autoPullUpdate(getString(R.string.setting_device));
-                // tv_main_tips.setText(R.string.setting_device);
-                // tv_main_tips.setVisibility(View.VISIBLE);
+                // frame_main_tips.setText(R.string.setting_device);
+                // frame_main_tips.setVisibility(View.VISIBLE);
                 // mDialog = ProgressDialog.show(MainActivity.this, null,
                 // getString(R.string.setting_device), false, false);
                 break;

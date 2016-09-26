@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PathEffect;
+import android.graphics.Shader;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +50,8 @@ public class GradientBarChart extends View {
     private int mHeight;
     private int mCenterX;
     private int mBarAreaHeight;
+    private int mAreaTopPadding;
+    private int mAreaBottomPadding;
     /**
      * 画笔
      *
@@ -92,7 +98,7 @@ public class GradientBarChart extends View {
         a.recycle();
         // 纯色柱子
         mBarPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBarPaint.setColor(ContextCompat.getColor(context, R.color.blue_00d4da));
+        mBarPaint.setColor(ContextCompat.getColor(context, R.color.yellow_fffc00));
         // 渐变柱子
         mBarGadientPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         // X轴
@@ -103,12 +109,14 @@ public class GradientBarChart extends View {
         mLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
         mLabelPaint.setColor(mLabelColor);
         mLabelPaint.setTextSize(mLabelSize);
-        mLabelHeight = (int) (mLabelPaint.descent() + mLabelPaint.ascent());
+        mLabelHeight = Utils.dip2px(getContext(), Math.abs(mLabelPaint.descent() + mLabelPaint.ascent()));
         // 目标值
         mAimLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
         mAimLabelPaint.setColor(ContextCompat.getColor(context, R.color.grey_999999));
         mAimLabelPaint.setTextSize(getResources().getDimension(R.dimen.aimLabelSize));
-        mAimLabelHeight = (int) (mAimLabelPaint.descent() + mAimLabelPaint.ascent());
+        mAimLabelHeight = Utils.dip2px(getContext(), Math.abs(mAimLabelPaint.descent() + mAimLabelPaint.ascent()));
+        mAreaTopPadding = mAimLabelHeight + 10;
+        mAreaBottomPadding = mLabelAxisSpace + mAimLabelHeight + 10;
 
         // 目标值虚线
         mAimDashedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -125,31 +133,66 @@ public class GradientBarChart extends View {
         super.onDraw(canvas);
         if (mWidth == 0 || mHeight == 0)
             return;
-        drawAxis(canvas);
-        drawLabels(canvas);
+        mBarAreaHeight = mHeight - mAreaBottomPadding;
         if (!mBarDatas.isEmpty())
             drawBar(canvas);
         if (mAimValue != 0)
             drawAim(canvas);
+        drawAxis(canvas);
+        drawLabels(canvas);
     }
 
     private void drawBar(Canvas canvas) {
+        mMaxStepValue = 0;
         // 拿到最大值
         for (int i = 0; i < mBarDatas.size(); i++) {
             if (mBarDatas.get(i) > mMaxStepValue)
                 mMaxStepValue = mBarDatas.get(i);
         }
-        int maxHeight = mHeight - mAimLabelHeight;
-
+        int maxHeight = mBarAreaHeight - mAreaTopPadding;
+        int barX = (int) (mCenterX - mBarWidth * (3 + 0.5) - 3 * mBarSpace);
+        int barY;
+        for (int i = 0; i < mBarDatas.size(); i++) {
+            int barValue = mBarDatas.get(i);
+            int barHeight;
+            int aimHeight;
+            if (mAimValue > mMaxStepValue) {
+                barHeight = (int) (Float.valueOf(barValue) / mAimValue * maxHeight);
+                aimHeight = maxHeight;
+            } else {
+                barHeight = (int) (Float.valueOf(barValue) / mMaxStepValue * maxHeight);
+                aimHeight = (int) (Float.valueOf(mAimValue) / mMaxStepValue * maxHeight);
+            }
+            Paint paint;
+            if (barHeight < Float.valueOf(aimHeight) * 4 / 5) {
+                paint = mBarPaint;
+            } else {
+                Shader paintShader = new LinearGradient(0, mBarAreaHeight - barHeight, 0, mBarAreaHeight,
+                        ContextCompat.getColor(getContext(), R.color.blue_00d4da),
+                        ContextCompat.getColor(getContext(), R.color.yellow_fffc00),
+                        Shader.TileMode.CLAMP);
+                mBarGadientPaint.setShader(paintShader);
+                paint = mBarGadientPaint;
+            }
+            barY = mHeight - mAreaBottomPadding - barHeight;
+            canvas.drawRect(barX, barY, barX + mBarWidth, barY + barHeight, paint);
+            barX += mBarWidth + mBarSpace;
+        }
     }
 
     private void drawAim(Canvas canvas) {
         if (mAimValue > mMaxStepValue) {
-            canvas.drawLine(0, mAimLabelHeight, mWidth, mAimLabelHeight, mAimDashedPaint);
-            canvas.drawText(mAimValue + getResources().getString(R.string.setting_target_step), 0, 0, mAimLabelPaint);
+            Path path = new Path();
+            path.moveTo(0, mAreaTopPadding);
+            path.lineTo(mWidth, mAreaTopPadding);
+            canvas.drawPath(path, mAimDashedPaint);
+            canvas.drawText(mAimValue + getResources().getString(R.string.setting_target_step), 0, mAimLabelHeight, mAimLabelPaint);
         } else {
-            int aimY = mHeight - (mAimValue / mMaxStepValue * (mHeight - mAimLabelHeight));
-            canvas.drawLine(0, aimY, mWidth, aimY, mAimDashedPaint);
+            int aimY = mBarAreaHeight - (int) (Float.valueOf(mAimValue) / mMaxStepValue * (mBarAreaHeight - mAreaTopPadding));
+            Path path = new Path();
+            path.moveTo(0, aimY);
+            path.lineTo(mWidth, aimY);
+            canvas.drawPath(path, mAimDashedPaint);
             canvas.drawText(mAimValue + getResources().getString(R.string.setting_target_step), 0, aimY - mAimLabelHeight, mAimLabelPaint);
         }
     }
@@ -176,7 +219,7 @@ public class GradientBarChart extends View {
         int labelSpace = mBarSpace - (labelWidth - mBarWidth);
         // 标签起始x点
         int labelX = (int) (mCenterX - labelWidth * (3 + 0.5) - 3 * labelSpace);
-        int labelY = mBarAreaHeight + mLabelAxisSpace;
+        int labelY = mBarAreaHeight + mAreaBottomPadding - mLabelHeight;
         for (String label : labels) {
             canvas.drawText(label, labelX, labelY, mLabelPaint);
             labelX += labelWidth + labelSpace;
@@ -184,7 +227,6 @@ public class GradientBarChart extends View {
     }
 
     private void drawAxis(Canvas canvas) {
-        mBarAreaHeight = mHeight - mLabelHeight - mLabelAxisSpace;
         canvas.drawLine(0, mBarAreaHeight, mWidth, mBarAreaHeight, mAxisPaint);
     }
 
@@ -194,16 +236,6 @@ public class GradientBarChart extends View {
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
         mCenterX = mWidth / 2;
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
-    static class StepBar {
-        public String label;
-        public String count;
     }
 
     public void setAimValue(int aim) {

@@ -219,7 +219,7 @@ public class WaveView extends View {
         mDefaultAmplitude = getHeight() * DEFAULT_AMPLITUDE_RATIO;
         mDefaultWaterLevel = getHeight() * DEFAULT_WATER_LEVEL_RATIO;
         mDefaultWaveLength = getWidth();
-        if (getWidth() == 0 && getHeight() == 0)
+        if (getWidth() == 0 || getHeight() == 0)
             return;
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
