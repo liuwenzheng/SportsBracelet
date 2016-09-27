@@ -55,10 +55,10 @@ public class MenuRightFragment extends Fragment implements OnClickListener {
 		String name = SPUtiles.getStringValue(BTConstants.SP_KEY_USER_NAME, "");
 		switch (gender) {
 		case 0:
-			iv_user_pic.setImageResource(R.drawable.user_height_male);
+			iv_user_pic.setImageResource(R.drawable.user_head_male);
 			break;
 		case 1:
-			iv_user_pic.setImageResource(R.drawable.user_height_female);
+			iv_user_pic.setImageResource(R.drawable.user_head_female);
 			break;
 
 		default:
