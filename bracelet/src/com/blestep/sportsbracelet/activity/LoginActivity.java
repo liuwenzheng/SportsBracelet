@@ -2,19 +2,27 @@ package com.blestep.sportsbracelet.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.blestep.sportsbracelet.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class LoginActivity extends Activity {
 
 
-    @Bind(R.id.ll_bg)
-    LinearLayout ll_bg;
+    @Bind(R.id.rl_bg)
+    RelativeLayout rl_bg;
+    @Bind(R.id.et_user_name)
+    EditText et_user_name;
+    @Bind(R.id.et_password)
+    EditText et_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +32,42 @@ public class LoginActivity extends Activity {
         if (getIntent() != null && getIntent().getExtras() != null) {
             int index = getIntent().getIntExtra("bg_index", 0);
             if (index == 1) {
-                ll_bg.setBackgroundResource(R.drawable.guide_step_bg);
+                rl_bg.setBackgroundResource(R.drawable.guide_step_bg);
             } else if (index == 2) {
-                ll_bg.setBackgroundResource(R.drawable.guide_calories_bg);
+                rl_bg.setBackgroundResource(R.drawable.guide_calories_bg);
             } else if (index == 3) {
-                ll_bg.setBackgroundResource(R.drawable.guide_alarm_bg);
+                rl_bg.setBackgroundResource(R.drawable.guide_alarm_bg);
             } else if (index == 4) {
-                ll_bg.setBackgroundResource(R.drawable.guide_cloud_bg);
+                rl_bg.setBackgroundResource(R.drawable.guide_cloud_bg);
             }
         }
 
     }
 
+    @OnClick({R.id.frame_close, R.id.tv_forget_password})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.frame_close:
+                finishActivityAnim();
+                break;
+            case R.id.tv_forget_password:
+                break;
+            case R.id.btn_login:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finishActivityAnim();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void finishActivityAnim() {
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 }

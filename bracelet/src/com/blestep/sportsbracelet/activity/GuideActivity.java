@@ -43,12 +43,12 @@ public class GuideActivity extends BaseActivity {
     ImageView ivGuideSplash;
     @Bind(R.id.ll_guide_dot)
     LinearLayout ll_guide_dot;
-//    @Bind(R.id.btn_start)
+    //    @Bind(R.id.btn_start)
 //    Button btn_start;
     private int[] colors = new int[8];
     private List<Fragment> views = new ArrayList<>();
     private ArgbEvaluator mArgbEvaluator;
-    private int mGuideIndex;
+    private int mGuideIndex = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +83,24 @@ public class GuideActivity extends BaseActivity {
 
     @OnClick({R.id.tv_register, R.id.tv_login, R.id.btn_start})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.tv_register:
-                // TODO: 2016/7/12 注册
+                // 注册
+                intent = new Intent(this, RegisterActivity.class);
+                intent.putExtra("bg_index", mGuideIndex);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.tv_login:
-                // TODO: 2016/7/12 登录
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
+                // 登录
+                intent = new Intent(this, LoginActivity.class);
+                intent.putExtra("bg_index", mGuideIndex);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.btn_start:
-                // TODO: 2016/7/12 登录
+                // 开始
                 startActivity(new Intent(this, ActivateBraceletActivity.class));
                 finish();
                 break;
@@ -121,9 +128,7 @@ public class GuideActivity extends BaseActivity {
 //            } else {
 //                btn_start.setVisibility(View.GONE);
 //            }
-            if (position == 0) {
-
-            }
+            mGuideIndex = position + 1;
         }
 
         @Override
