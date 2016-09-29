@@ -272,7 +272,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 //                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
 //                                dateStr);
 //                    }
-                    mBtService.getVersionData();
+                    mBtService.syncUnit();
                 }
                 if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
                     String strLog = intent.getStringExtra("log");
@@ -321,11 +321,11 @@ public class MainActivity extends SlidingFragmentActivity implements
 
                         // }
                         // else if (ack == BTConstants.HEADER_SYNSLEEP) {
-                        mBtService.syncUnit();
+                        mBtService.getBatteryData();
                     } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
                         mBtService.syncTime();
                     } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
-                        mBtService.getBatteryData();
+                        mBtService.getVersionData();
                     }
                 }
             }
