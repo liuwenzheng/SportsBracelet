@@ -86,10 +86,10 @@
         android:id="@+id/rl_alert_find_band"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="13dp"
+        android:paddingBottom="20dp"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:paddingTop="13dp">
+        android:paddingTop="20dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -107,22 +107,16 @@
             android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_alert_find_band"
-            android:layout_below="@id/tv_alert_find_band"
-            android:layout_marginTop="6dp"
-            android:text="@string/alert_find_band_tips"
-            android:textColor="@color/grey_979797"
-            android:textSize="12sp" />
-
-        <CheckBox
-            android:id="@+id/cb_alert_find_band"
+            android:id="@+id/tv_alert_find_band_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:button="@drawable/checkbox_selector" />
+            android:layout_marginRight="20dp"
+            android:text="5s"
+            android:textColor="@color/white_ffffff"
+            android:textSize="18sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <View style="@style/divider_line" />
