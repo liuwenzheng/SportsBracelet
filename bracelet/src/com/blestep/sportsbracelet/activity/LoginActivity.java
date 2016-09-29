@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -44,7 +45,7 @@ public class LoginActivity extends Activity {
 
     }
 
-    @OnClick({R.id.frame_close, R.id.tv_forget_password})
+    @OnClick({R.id.frame_close, R.id.tv_forget_password, R.id.btn_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.frame_close:
@@ -53,6 +54,8 @@ public class LoginActivity extends Activity {
             case R.id.tv_forget_password:
                 break;
             case R.id.btn_login:
+                startActivity(new Intent(this, ActivateBraceletActivity.class));
+                finish();
                 break;
         }
     }

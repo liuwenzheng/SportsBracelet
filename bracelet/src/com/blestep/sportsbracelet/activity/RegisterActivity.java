@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,6 +53,8 @@ public class RegisterActivity extends BaseActivity {
                 finishActivityAnim();
                 break;
             case R.id.btn_register:
+                startActivity(new Intent(this, ActivateBraceletActivity.class));
+                finish();
                 break;
         }
     }
