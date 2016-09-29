@@ -213,6 +213,9 @@ public class HistoryStepActivity extends BaseActivity {
             int daysInYear = 0;
             while (startDay.get(Calendar.YEAR) == year && startDay.compareTo(mToday) <= 0) {
                 Step step = mStepsMap.get(Utils.calendar2strDate(startDay, BTConstants.PATTERN_YYYY_MM_DD));
+                if (step == null) {
+                    step = new Step("0", "0", "0", "0");
+                }
                 count += Double.parseDouble(step.count);
                 duration += Double.parseDouble(step.duration);
                 distance += Double.parseDouble(step.distance);
@@ -258,6 +261,9 @@ public class HistoryStepActivity extends BaseActivity {
             int daysInMonth = 0;
             while (startDay.get(Calendar.MONTH) == month && startDay.compareTo(mToday) <= 0) {
                 Step step = mStepsMap.get(Utils.calendar2strDate(startDay, BTConstants.PATTERN_YYYY_MM_DD));
+                if (step == null) {
+                    step = new Step("0", "0", "0", "0");
+                }
                 count += Double.parseDouble(step.count);
                 duration += Double.parseDouble(step.duration);
                 distance += Double.parseDouble(step.distance);
@@ -299,6 +305,9 @@ public class HistoryStepActivity extends BaseActivity {
             double count = 0, duration = 0, distance = 0, calories = 0;
             while (Utils.getWeekInChina(startDay) == week && startDay.compareTo(mToday) <= 0) {
                 Step step = mStepsMap.get(Utils.calendar2strDate(startDay, BTConstants.PATTERN_YYYY_MM_DD));
+                if (step == null) {
+                    step = new Step("0", "0", "0", "0");
+                }
                 int day = Utils.getWeekDayInChina(startDay);
                 if (day == 1) {
                     startWeekDay = Utils.calendar2strDate(startDay, BTConstants.PATTERN_MM_DD);

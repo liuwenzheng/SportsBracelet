@@ -3,6 +3,8 @@ package com.blestep.sportsbracelet.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
@@ -24,9 +27,10 @@ import com.blestep.sportsbracelet.utils.ToastUtils;
 public class MenuLeftFragment extends Fragment implements OnClickListener {
     private View mView;
     private MainActivity mainActivity;
-    private TextView tv_bracelet_name, tv_alert_coming_call_state, tv_battery_value;
+    private TextView tv_bracelet_name, tv_alert_coming_call_state, tv_battery_value,
+            tv_alert_find_band, tv_alert_find_band_time;
     private ImageView iv_battery_state, iv_conn_state;
-    private CheckBox cb_alert_low_battery, cb_alert_find_band;
+    private RelativeLayout rl_alert_find_band;
     private BTService mBtService;
     private boolean isContinue = false;
 
@@ -57,69 +61,100 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
     private void initView() {
         tv_bracelet_name = (TextView) mView.findViewById(R.id.tv_bracelet_name);
         tv_battery_value = (TextView) mView.findViewById(R.id.tv_battery_value);
+        tv_alert_find_band_time = (TextView) mView.findViewById(R.id.tv_alert_find_band_time);
+        tv_alert_find_band = (TextView) mView.findViewById(R.id.tv_alert_find_band);
         tv_alert_coming_call_state = (TextView) mView
                 .findViewById(R.id.tv_alert_coming_call_state);
         iv_battery_state = (ImageView) mView
                 .findViewById(R.id.iv_battery_state);
         iv_conn_state = (ImageView) mView.findViewById(R.id.iv_conn_state);
-        cb_alert_low_battery = (CheckBox) mView
-                .findViewById(R.id.cb_alert_low_battery);
-        cb_alert_find_band = (CheckBox) mView
-                .findViewById(R.id.cb_alert_find_band);
+        rl_alert_find_band = (RelativeLayout) mView
+                .findViewById(R.id.rl_alert_find_band);
         // if (mainActivity.getmBtService() != null &&
         // mainActivity.getmBtService().isConnDevice()) {
         // cb_alert_find_band.setEnabled(true);
         // } else {
         // cb_alert_find_band.setEnabled(false);
         // }
-        cb_alert_find_band
-                .setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView,
-                                                 boolean isChecked) {
-                        if (isChecked) {
-                            if (mainActivity.getmBtService() != null) {
-                                mBtService = mainActivity.getmBtService();
-                                if (mBtService.isConnDevice()) {
-                                    isContinue = true;
-                                    startFindBandShake();
-                                } else {
-                                    ToastUtils
-                                            .showToast(
-                                                    mainActivity,
-                                                    R.string.alert_find_band_conn_false);
-                                    cb_alert_find_band.setChecked(false);
-                                }
-                            } else {
-                                ToastUtils.showToast(mainActivity,
-                                        R.string.alert_find_band_conn_false);
-                                cb_alert_find_band.setChecked(false);
-                            }
-                        } else {
-                            isContinue = false;
-                        }
-
-                    }
-                });
+//        cb_alert_find_band
+//                .setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//
+//                    @Override
+//                    public void onCheckedChanged(CompoundButton buttonView,
+//                                                 boolean isChecked) {
+//                        if (isChecked) {
+//                            if (mainActivity.getmBtService() != null) {
+//                                mBtService = mainActivity.getmBtService();
+//                                if (mBtService.isConnDevice()) {
+//                                    isContinue = true;
+//                                    startFindBandShake();
+//                                } else {
+//                                    ToastUtils
+//                                            .showToast(
+//                                                    mainActivity,
+//                                                    R.string.alert_find_band_conn_false);
+//                                    cb_alert_find_band.setChecked(false);
+//                                }
+//                            } else {
+//                                ToastUtils.showToast(mainActivity,
+//                                        R.string.alert_find_band_conn_false);
+//                                cb_alert_find_band.setChecked(false);
+//                            }
+//                        } else {
+//                            isContinue = false;
+//                        }
+//
+//                    }
+//                });
     }
 
     private void startFindBandShake() {
-        new Thread() {
+        tv_alert_find_band_time.setVisibility(View.VISIBLE);
+        tv_alert_find_band.setText("正在搜索手环...");
+        new Thread(new Runnable() {
+            @Override
             public void run() {
-                while (isContinue) {
-                    mBtService.shakeFindBand();
+                int i = 5;
+                while (i > 0) {
+                    if (i == 5 || i == 3) {
+                        mBtService.shakeFindBand();
+                    }
+                    Message message = mHandler.obtainMessage();
+                    message.what = 0;
+                    message.obj = i;
+                    mHandler.sendMessage(message);
                     try {
-                        Thread.sleep(4000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    i--;
                 }
+                Message message = mHandler.obtainMessage();
+                message.what = 0;
+                message.obj = i;
+                mHandler.sendMessage(message);
             }
-
-            ;
-        }.start();
+        }).start();
     }
+
+    Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                int i = (int) msg.obj;
+                if (i == 0) {
+                    tv_alert_find_band_time.setVisibility(View.GONE);
+                    tv_alert_find_band.setText(getString(R.string.alert_find_band));
+                    isContinue = false;
+                    return;
+                }
+                tv_alert_find_band_time.setText(i + "s");
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     private void initListener() {
         mView.findViewById(R.id.rl_alert_coming_call).setOnClickListener(this);
@@ -127,6 +162,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
         mView.findViewById(R.id.rl_bind_bracelet).setOnClickListener(this);
         mView.findViewById(R.id.rl_bracelet_system).setOnClickListener(this);
         mView.findViewById(R.id.rl_about).setOnClickListener(this);
+        mView.findViewById(R.id.rl_alert_find_band).setOnClickListener(this);
     }
 
     private void initData() {
@@ -186,7 +222,25 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
             case R.id.rl_about:
                 startActivity(new Intent(mainActivity, AboutActivity.class));
                 break;
-
+            case R.id.rl_alert_find_band:
+                if (mainActivity.getmBtService() != null) {
+                    mBtService = mainActivity.getmBtService();
+                    if (mBtService.isConnDevice()) {
+                        if (!isContinue) {
+                            isContinue = true;
+                            startFindBandShake();
+                        }
+                    } else {
+                        ToastUtils
+                                .showToast(
+                                        mainActivity,
+                                        R.string.alert_find_band_conn_false);
+                    }
+                } else {
+                    ToastUtils.showToast(mainActivity,
+                            R.string.alert_find_band_conn_false);
+                }
+                break;
             default:
                 break;
         }
@@ -205,6 +259,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
                     mainActivity.getmBtService().mBluetoothGatt = null;
                 }
                 mainActivity.finish();
+                mainActivity.startActivity(new Intent(mainActivity, GuideActivity.class));
             }
         }
     }
