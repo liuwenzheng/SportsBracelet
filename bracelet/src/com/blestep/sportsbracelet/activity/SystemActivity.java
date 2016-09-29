@@ -20,6 +20,8 @@ public class SystemActivity extends Activity {
 
     @Bind(R.id.tv_unit)
     TextView tvUnit;
+    @Bind(R.id.tv_time)
+    TextView tv_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +29,11 @@ public class SystemActivity extends Activity {
         setContentView(R.layout.activity_system);
         ButterKnife.bind(this);
         tvUnit.setText(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? getString(R.string.bracelet_unit_british) : getString(R.string.bracelet_unit_metric));
+        tv_time.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0) == 0 ?
+                getString(R.string.bracelet_time_format_24) : getString(R.string.bracelet_time_format_12));
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_reset, R.id.ll_unit})
+    @OnClick({R.id.iv_back, R.id.tv_reset, R.id.ll_unit, R.id.ll_time})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -60,8 +64,17 @@ public class SystemActivity extends Activity {
                 break;
             case R.id.ll_unit:
                 SPUtiles.getInstance(this);
-                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, !SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false));
-                tvUnit.setText(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? getString(R.string.bracelet_unit_british) : getString(R.string.bracelet_unit_metric));
+                SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT,
+                        !SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false));
+                tvUnit.setText(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ?
+                        getString(R.string.bracelet_unit_british) : getString(R.string.bracelet_unit_metric));
+                break;
+            case R.id.ll_time:
+                SPUtiles.getInstance(this);
+                SPUtiles.setIntValue(BTConstants.SP_KEY_TIME_SYSTEM,
+                        SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0) == 0 ? 1 : 0);
+                tv_time.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0) == 0 ?
+                        getString(R.string.bracelet_time_format_24) : getString(R.string.bracelet_time_format_12));
                 break;
         }
     }

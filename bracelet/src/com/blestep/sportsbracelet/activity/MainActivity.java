@@ -313,13 +313,18 @@ public class MainActivity extends SlidingFragmentActivity implements
                         return;
                     }
                     if (ack == BTConstants.HEADER_SYNTIMEDATA) {
-                        mBtService.synUserInfoData();
+                        mBtService.syncUserInfoData();
                     } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
-                        mBtService.synAlarmData();
+                        mBtService.syncAlarmData();
                     } else if (ack == BTConstants.HEADER_SYNALARM) {
                         // mBtService.synSleepTime();
+
                         // }
                         // else if (ack == BTConstants.HEADER_SYNSLEEP) {
+                        mBtService.syncUnit();
+                    } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
+                        mBtService.syncTime();
+                    } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
                         mBtService.getBatteryData();
                     }
                 }
@@ -403,7 +408,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
             @Override
             public void run() {
-                mBtService.synTimeData();
+                mBtService.syncTimeData();
             }
         }, 500);
         // 10s后若未获取数据自动结束刷新
