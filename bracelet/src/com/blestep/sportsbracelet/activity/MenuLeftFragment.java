@@ -205,6 +205,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
                     mainActivity.getmBtService().mBluetoothGatt = null;
                 }
                 mainActivity.finish();
+                mainActivity.startActivity(new Intent(mainActivity, GuideActivity.class));
             }
         }
     }
