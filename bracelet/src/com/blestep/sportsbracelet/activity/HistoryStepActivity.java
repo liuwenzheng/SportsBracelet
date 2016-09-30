@@ -295,6 +295,10 @@ public class HistoryStepActivity extends BaseActivity {
         InMemoryCursor cursor = new InMemoryCursor(COLUMN_NAMES);
         List<Object[]> data = new ArrayList<>();
         Calendar startDay = (Calendar) mStart.clone();
+        // 不是周一从周一开始算
+        if (Utils.getWeekDayInChina(startDay) != 1) {
+            startDay.add(Calendar.DAY_OF_MONTH, 1 - Utils.getWeekDayInChina(startDay));
+        }
         int lastWeek = Utils.getWeekInChina(mToday) - 1;
         int position = 0;
         while (startDay.compareTo(mToday) <= 0) {
