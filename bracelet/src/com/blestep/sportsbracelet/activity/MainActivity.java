@@ -69,6 +69,7 @@ public class MainActivity extends SlidingFragmentActivity implements
         filter.addAction(BTConstants.ACTION_REFRESH_DATA);
         filter.addAction(BTConstants.ACTION_ACK);
         filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
+        filter.addAction(BTConstants.ACTION_REFRESH_DATA_VERSION);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
         // filter.addAction(BTConstants.ACTION_LOG);

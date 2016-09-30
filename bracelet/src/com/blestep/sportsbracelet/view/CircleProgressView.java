@@ -875,7 +875,7 @@ public class CircleProgressView extends View {
             drawDebug(canvas);
         }
 
-        float degrees = (360f / mMaxValue * mCurrentValue);
+        float degrees = (360f / (mMaxValue > mCurrentValue ? mMaxValue : mCurrentValue) * mCurrentValue);
 
         // Draw the inner circle
         canvas.drawArc(mCircleBounds, 360, 360, false, mCirclePaint);
