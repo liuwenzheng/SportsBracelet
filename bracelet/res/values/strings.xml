@@ -128,6 +128,9 @@
     <string name="bracelet_unit">Unit</string>
     <string name="bracelet_unit_british">British system</string>
     <string name="bracelet_unit_metric">Metric system</string>
+    <string name="bracelet_time_format">Time Format</string>
+    <string name="bracelet_time_format_24">24-hour</string>
+    <string name="bracelet_time_format_12">12-hour</string>
     <string name="about">About</string>
     <!-- phone_coming -->
     <string name="phone_coming_alert_title">Call Reminder</string>

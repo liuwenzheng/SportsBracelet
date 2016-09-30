@@ -61,4 +61,28 @@
             android:text="@string/bracelet_unit_metric" />
     </LinearLayout>
 
+    <View style="@style/divider_line" />
+
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="@string/bracelet_time_format" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bracelet_time_format_24" />
+    </LinearLayout>
+
+    <View style="@style/divider_line" />
 </LinearLayout>

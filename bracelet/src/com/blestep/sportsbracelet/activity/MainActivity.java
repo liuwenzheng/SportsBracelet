@@ -273,7 +273,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 //                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
 //                                dateStr);
 //                    }
-                    mBtService.getVersionData();
+                    mBtService.syncUnit();
                 }
                 if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
                     String strLog = intent.getStringExtra("log");
@@ -314,14 +314,19 @@ public class MainActivity extends SlidingFragmentActivity implements
                         return;
                     }
                     if (ack == BTConstants.HEADER_SYNTIMEDATA) {
-                        mBtService.synUserInfoData();
+                        mBtService.syncUserInfoData();
                     } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
-                        mBtService.synAlarmData();
+                        mBtService.syncAlarmData();
                     } else if (ack == BTConstants.HEADER_SYNALARM) {
                         // mBtService.synSleepTime();
+
                         // }
                         // else if (ack == BTConstants.HEADER_SYNSLEEP) {
                         mBtService.getBatteryData();
+                    } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
+                        mBtService.syncTime();
+                    } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
+                        mBtService.getVersionData();
                     }
                 }
             }
@@ -404,7 +409,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
             @Override
             public void run() {
-                mBtService.synTimeData();
+                mBtService.syncTimeData();
             }
         }, 500);
         // 10s后若未获取数据自动结束刷新

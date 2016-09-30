@@ -325,7 +325,7 @@ public class BTService extends Service implements LeScanCallback {
     /**
      * 同步时间
      */
-    public void synTimeData() {
+    public void syncTimeData() {
         BTModule.setCurrentTime(mBluetoothGatt);
     }
 
@@ -339,14 +339,14 @@ public class BTService extends Service implements LeScanCallback {
     /**
      * 同步用户数据
      */
-    public void synUserInfoData() {
+    public void syncUserInfoData() {
         BTModule.setUserInfo(mBluetoothGatt);
     }
 
     /**
      * 同步闹钟
      */
-    public void synAlarmData() {
+    public void syncAlarmData() {
         BTModule.setAlarm(this, mBluetoothGatt);
     }
 
@@ -355,6 +355,20 @@ public class BTService extends Service implements LeScanCallback {
      */
     public void synSleepTime() {
         BTModule.setSleep(this, mBluetoothGatt);
+    }
+
+    /**
+     * 同步单位制式
+     */
+    public void syncUnit() {
+        BTModule.setUnit(this, mBluetoothGatt);
+    }
+
+    /**
+     * 同步时间格式
+     */
+    public void syncTime() {
+        BTModule.setTime(this, mBluetoothGatt);
     }
 
     /**

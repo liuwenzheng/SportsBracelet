@@ -128,6 +128,9 @@
     <string name="bracelet_unit">单位</string>
     <string name="bracelet_unit_british">英制</string>
     <string name="bracelet_unit_metric">公制</string>
+    <string name="bracelet_time_format">时间格式</string>
+    <string name="bracelet_time_format_24">24小时</string>
+    <string name="bracelet_time_format_12">12小时</string>
     <string name="about">关于</string>
     <!-- phone_coming -->
     <string name="phone_coming_alert_title">来电提醒</string>

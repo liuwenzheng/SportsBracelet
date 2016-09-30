@@ -66,6 +66,7 @@ public class BTConstants {
     public static final String SP_KEY_COMING_PHONE_NODISTURB_END_TIME = "sp_key_coming_phone_nodisturb_end_time";
     public static final String SP_KEY_TOUCHBUTTON = "sp_key_touchbutton";
     public static final String SP_KEY_IS_BRITISH_UNIT = "sp_key_is_british_unit";
+    public static final String SP_KEY_TIME_SYSTEM = "sp_key_time_system";
     // Extra_key
     /**
      * intent传值key
@@ -107,4 +108,8 @@ public class BTConstants {
     public static final byte HEADER_GETDATA = 0x16;
     // 初始化触摸按键
     public static final byte HEADER_SYNTOUCHBUTTON = 0x1B;
+    // 单位制式
+    public static final byte HEADER_UNIT_SYSTEM = 0x23;
+    // 时间格式
+    public static final byte HEADER_TIME_SYSTEM = 0x24;
 }
