@@ -1,7 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.math.BigDecimal;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +16,8 @@ import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.view.CircularSeekBar;
 import com.blestep.sportsbracelet.view.CircularSeekBar.OnSeekChangeListener;
 import com.umeng.analytics.MobclickAgent;
+
+import java.math.BigDecimal;
 
 public class SettingTargetActivity extends BaseActivity implements
 		OnClickListener {
@@ -116,13 +116,13 @@ public class SettingTargetActivity extends BaseActivity implements
 		case R.id.btn_target_finish:
 			// ToastUtils.showToast(this, "设置目标为：" +
 			// tv_step.getText().toString());
-			if (Integer.valueOf(tv_step.getText().toString()) < 200) {
+			if (Integer.parseInt(tv_step.getText().toString()) < 200) {
 				ToastUtils.showToast(this, getString(R.string.setting_target_min));
 				return;
 			}
 
 			SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM,
-					Integer.valueOf(tv_step.getText().toString()));
+					Integer.parseInt(tv_step.getText().toString()));
 			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_X,
 					circularSeekbar.markPointX);
 			SPUtiles.setFloatValue(BTConstants.SP_KEY_STEP_AIM_POINT_Y,

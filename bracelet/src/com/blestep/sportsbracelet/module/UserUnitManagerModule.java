@@ -3,7 +3,6 @@ package com.blestep.sportsbracelet.module;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
@@ -53,10 +52,10 @@ public class UserUnitManagerModule {
     public void createHeightDialog(final Activity activity) {
         listener = (UserInfoLayoutActivity)activity;
         tv_user_height = ButterKnife.findById(activity, R.id.tv_user_height);
-        heightValue = Integer.valueOf(tv_user_height.getTag().toString());
+        heightValue = Integer.parseInt(tv_user_height.getTag().toString());
 
         tv_user_weight = ButterKnife.findById(activity, R.id.tv_user_weight);
-        weightValue = Integer.valueOf(tv_user_weight.getTag().toString());
+        weightValue = Integer.parseInt(tv_user_weight.getTag().toString());
 
         final CustomDialog.Builder builder = new CustomDialog.Builder(activity);
         View view = activity.getLayoutInflater().inflate(R.layout.wheelview_height, null);
@@ -75,10 +74,10 @@ public class UserUnitManagerModule {
                     return;
                 }
                 if (id == 0) {
-                    heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectedText()), Integer.valueOf(wv_height_in.getSelectedText()));
+                    heightValue = InToCm(Integer.parseInt(wv_height_ft.getSelectedText()), Integer.parseInt(wv_height_in.getSelectedText()));
                 }
                 if (id == 1) {
-                    heightValue = Integer.valueOf(wv_height_cm.getSelectedText());
+                    heightValue = Integer.parseInt(wv_height_cm.getSelectedText());
                 }
                 resetHeightWheel(id == 1);
             }
@@ -102,7 +101,7 @@ public class UserUnitManagerModule {
                         listener.heightFinished();
                         boolean isBritish = selectedHeightUnit == 1;
                         if (!isBritish) {
-                            heightValue = Integer.valueOf(wv_height_cm.getSelectedText());
+                            heightValue = Integer.parseInt(wv_height_cm.getSelectedText());
                             tv_user_height.setText(String.format("%s%s",
                                     heightValue,
                                     wv_height_unit.getSelectedText()));
@@ -113,7 +112,7 @@ public class UserUnitManagerModule {
                                         activity.getString(R.string.setting_userinfo_weight_unit)));
                             }
                         } else {
-                            heightValue = InToCm(Integer.valueOf(wv_height_ft.getSelectedText()), Integer.valueOf(wv_height_in.getSelectedText()));
+                            heightValue = InToCm(Integer.parseInt(wv_height_ft.getSelectedText()), Integer.parseInt(wv_height_in.getSelectedText()));
                             tv_user_height.setText(String.format("%s'%s''%s",
                                     wv_height_ft.getSelectedText(),
                                     wv_height_in.getSelectedText(),
@@ -121,7 +120,7 @@ public class UserUnitManagerModule {
                             tv_user_height.setTag(heightValue + "");
                             if (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0) != 0) {
                                 tv_user_weight.setText(String.format("%s%s",
-                                        kgToLb(Integer.valueOf(tv_user_weight.getTag().toString())),
+                                        kgToLb(Integer.parseInt(tv_user_weight.getTag().toString())),
                                         activity.getString(R.string.setting_userinfo_weight_unit_british)));
                             }
 
@@ -169,10 +168,10 @@ public class UserUnitManagerModule {
     public void createWeightDialog(final Activity activity) {
         listener = (UserInfoLayoutActivity)activity;
         tv_user_height = ButterKnife.findById(activity, R.id.tv_user_height);
-        heightValue = Integer.valueOf(tv_user_height.getTag().toString());
+        heightValue = Integer.parseInt(tv_user_height.getTag().toString());
 
         tv_user_weight = ButterKnife.findById(activity, R.id.tv_user_weight);
-        weightValue = Integer.valueOf(tv_user_weight.getTag().toString());
+        weightValue = Integer.parseInt(tv_user_weight.getTag().toString());
 
         final CustomDialog.Builder builder = new CustomDialog.Builder(activity);
         View view = activity.getLayoutInflater().inflate(R.layout.wheelview_weight, null);
@@ -190,10 +189,10 @@ public class UserUnitManagerModule {
                     return;
                 }
                 if (id == 0) {
-                    weightValue = LbToKg(Integer.valueOf(wv_weight_lb.getSelectedText()));
+                    weightValue = LbToKg(Integer.parseInt(wv_weight_lb.getSelectedText()));
                 }
                 if (id == 1) {
-                    weightValue = Integer.valueOf(wv_weight_kg.getSelectedText());
+                    weightValue = Integer.parseInt(wv_weight_kg.getSelectedText());
                 }
                 resetWeightWheel(id == 1);
             }
@@ -217,7 +216,7 @@ public class UserUnitManagerModule {
                 listener.weightFinished();
                 boolean isBritish = selectedWeightUnit == 1;
                 if (!isBritish) {
-                    weightValue = Integer.valueOf(wv_weight_kg.getSelectedText());
+                    weightValue = Integer.parseInt(wv_weight_kg.getSelectedText());
                     tv_user_weight.setText(String.format("%s%s",
                             weightValue,
                             wv_weight_unit.getSelectedText()));
@@ -229,7 +228,7 @@ public class UserUnitManagerModule {
                                 activity.getString(R.string.setting_userinfo_height_unit)));
                     }
                 } else {
-                    weightValue = LbToKg(Integer.valueOf(wv_weight_lb.getSelectedText()));
+                    weightValue = LbToKg(Integer.parseInt(wv_weight_lb.getSelectedText()));
                     tv_user_weight.setText(String.format("%s%s",
                             wv_weight_lb.getSelectedText(),
                             wv_weight_unit.getSelectedText()));
@@ -237,8 +236,8 @@ public class UserUnitManagerModule {
 
                     if (SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 0) != 0) {
                         tv_user_height.setText(String.format("%s'%s''%s",
-                                cmToFt(Integer.valueOf(tv_user_height.getTag().toString())),
-                                cmToIn(Integer.valueOf(tv_user_height.getTag().toString())),
+                                cmToFt(Integer.parseInt(tv_user_height.getTag().toString())),
+                                cmToIn(Integer.parseInt(tv_user_height.getTag().toString())),
                                 activity.getString(R.string.setting_userinfo_height_unit_british)));
                     }
                 }

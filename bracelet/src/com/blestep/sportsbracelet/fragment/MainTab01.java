@@ -125,8 +125,8 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
             circleView.setValueAnimated(Float.parseFloat(step.count));
             String duration = step.duration;
             if (Utils.isNotEmpty(duration)) {
-                int hour = Integer.valueOf(duration) / 60;
-                int min = Integer.valueOf(duration) % 60;
+                int hour = Integer.parseInt(duration) / 60;
+                int min = Integer.parseInt(duration) % 60;
                 setStepDuration(hour, min);
             }
             boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);

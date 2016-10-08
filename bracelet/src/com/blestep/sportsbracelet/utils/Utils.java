@@ -78,7 +78,7 @@ public class Utils {
         String[] datas = data.split(" ");
         String[] stringDatas = new String[datas.length];
         for (int i = 0; i < datas.length; i++) {
-            stringDatas[i] = Integer.toString(Integer.valueOf(datas[i], 16));
+            stringDatas[i] = Integer.toString(Integer.parseInt(datas[i], 16));
         }
         return stringDatas;
     }
@@ -90,7 +90,7 @@ public class Utils {
      * @return
      */
     public static String decodeToHex(String data) {
-        String string = Integer.toHexString(Integer.valueOf(data));
+        String string = Integer.toHexString(Integer.parseInt(data));
         return string;
     }
 
@@ -101,7 +101,7 @@ public class Utils {
      * @return
      */
     public static String decodeToString(String data) {
-        String string = Integer.toString(Integer.valueOf(data, 16));
+        String string = Integer.toString(Integer.parseInt(data, 16));
         return string;
     }
 

@@ -83,7 +83,7 @@ public class MatchDevicesActivity extends BaseActivity {
         setContentView(R.layout.match_devices_layout);
         ButterKnife.bind(this);
         bnv_nav.setPreEnable(true);
-        bnv_nav.setNextText("重试");
+        bnv_nav.setNextText(getString(R.string.match_retry));
         bnv_nav.setListener(this);
         mDevices = new ArrayList<>();
         mAdapter = new DeviceAdapter();

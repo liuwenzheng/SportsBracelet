@@ -1,8 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
@@ -20,6 +17,9 @@ import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.umeng.analytics.MobclickAgent;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class AlarmAddActivity extends BaseActivity implements OnClickListener {
 
@@ -111,8 +111,8 @@ public class AlarmAddActivity extends BaseActivity implements OnClickListener {
 										.getTime()));
 								mDialog.dismiss();
 							}
-						}, Integer.valueOf(alarm_time.split(":")[0]),
-						Integer.valueOf(alarm_time.split(":")[1]), true);
+						}, Integer.parseInt(alarm_time.split(":")[0]),
+						Integer.parseInt(alarm_time.split(":")[1]), true);
 				mDialog.show();
 			}
 			break;

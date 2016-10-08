@@ -126,7 +126,7 @@
         android:background="@drawable/stroke_guide_btn"
         android:paddingLeft="34dp"
         android:paddingRight="34dp"
-        android:text="开始使用"
+        android:text="@string/guide_start"
         android:textColor="@color/white_ffffff"
         android:textSize="14sp"
         android:visibility="gone" />

@@ -159,7 +159,7 @@ public class BTModule {
         for (int i = 0; i < alarms.size(); i++) {
             Alarm alarm = alarms.get(i);
             byteArray[i * 3 + 2] = Byte.valueOf(
-                    Integer.toHexString(Integer.valueOf(alarm.state)), 16);
+                    Integer.toHexString(Integer.parseInt(alarm.state)), 16);
             byteArray[i * 3 + 3] = Byte.valueOf(Integer.toHexString(Integer
                     .valueOf(alarm.time.split(":")[0])), 16);
             byteArray[i * 3 + 4] = Byte.valueOf(Integer.toHexString(Integer
@@ -460,7 +460,7 @@ public class BTModule {
      * @param context
      */
     public static void saveBleData(String[] formatDatas, final Context context) {
-        int header = Integer.valueOf(Utils.decodeToString(formatDatas[0]));
+        int header = Integer.parseInt(Utils.decodeToString(formatDatas[0]));
         switch (header) {
             case BTConstants.HEADER_BACK_STEP:
                 // 保存步数
@@ -469,9 +469,9 @@ public class BTModule {
                 String month = formatDatas[3];
                 String day = formatDatas[4];
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(2000 + Integer.valueOf(Utils.decodeToString(year)),
-                        Integer.valueOf(Utils.decodeToString(month)) - 1,
-                        Integer.valueOf(Utils.decodeToString(day)));
+                calendar.set(2000 + Integer.parseInt(Utils.decodeToString(year)),
+                        Integer.parseInt(Utils.decodeToString(month)) - 1,
+                        Integer.parseInt(Utils.decodeToString(day)));
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = calendar.getTime();
                 // 步数
@@ -506,7 +506,7 @@ public class BTModule {
                 intent.putExtra("log", "时长：" + duration);
                 context.sendBroadcast(intent);
 
-                String distance = new DecimalFormat().format(Integer.valueOf(Utils
+                String distance = new DecimalFormat().format(Integer.parseInt(Utils
                         .decodeToString(distance1 + distance0)) * 0.1);
                 LogModule.e("距离：" + distance);
                 intent.putExtra("log", "距离：" + distance);

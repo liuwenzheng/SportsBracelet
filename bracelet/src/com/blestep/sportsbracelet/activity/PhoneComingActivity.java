@@ -1,8 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
@@ -21,6 +18,9 @@ import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.umeng.analytics.MobclickAgent;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class PhoneComingActivity extends BaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
@@ -118,8 +118,8 @@ public class PhoneComingActivity extends BaseActivity implements
 										mSdf.format(mCalendar.getTime()));
 								mDialog.dismiss();
 							}
-						}, Integer.valueOf(start_time.split(":")[0]),
-						Integer.valueOf(start_time.split(":")[1]), true);
+						}, Integer.parseInt(start_time.split(":")[0]),
+						Integer.parseInt(start_time.split(":")[1]), true);
 				mDialog.show();
 			}
 			break;
@@ -142,8 +142,8 @@ public class PhoneComingActivity extends BaseActivity implements
 									mSdf.format(mCalendar.getTime()));
 							mDialog.dismiss();
 						}
-					}, Integer.valueOf(end_time.split(":")[0]),
-					Integer.valueOf(end_time.split(":")[1]), true);
+					}, Integer.parseInt(end_time.split(":")[0]),
+					Integer.parseInt(end_time.split(":")[1]), true);
 			mDialog.show();
 			break;
 

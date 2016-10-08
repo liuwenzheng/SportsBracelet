@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:text="蓝牙未开启"
+        android:text="@string/bluetooth_open_false"
         android:textColor="@color/black_333333"
         android:textSize="34sp" />
 
@@ -24,7 +24,7 @@
         android:gravity="center_horizontal"
         android:paddingLeft="45dp"
         android:paddingRight="45dp"
-        android:text="您的手机蓝牙未打开，请打开后点击下一步"
+        android:text="@string/bluetooth_open_false_content"
         android:textColor="@color/black_333333"
         android:textSize="15sp" />
 
@@ -54,7 +54,7 @@
                 android:layout_below="@id/iv_bluetooth_icon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="点击开启"
+                android:text="@string/bluetooth_open"
                 android:textColor="@color/grey_bfbfbf"
                 android:textSize="14sp" />
         </RelativeLayout>

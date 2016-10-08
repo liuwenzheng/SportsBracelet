@@ -1,9 +1,5 @@
 package com.blestep.sportsbracelet.fragment;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Comparator;
-
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +33,10 @@ import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.XController;
 import com.db.chart.view.YController;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Comparator;
 
 import de.greenrobot.event.EventBus;
 
@@ -298,7 +298,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
             if (Utils.isEmpty(mValues[i])) {
                 stepSum += 0;
             } else {
-                stepSum += Integer.valueOf(mValues[i]);
+                stepSum += Integer.parseInt(mValues[i]);
             }
         }
         tv_history_step_sum.setText(stepSum + "");
@@ -418,7 +418,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
         // for (int i = 0; i < 7; i++) {
         // if (mActivity.mStepsMap.get(Utils.calendar2strDate(
         // mLastWeekCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-        // weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+        // weekCount += Integer.parseInt(mActivity.mStepsMap.get(Utils
         // .calendar2strDate(mLastWeekCalendar,
         // BTConstants.PATTERN_YYYY_MM_DD)).count);
         // }
@@ -496,7 +496,7 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 		 * daysInMonth; i++) { if
 		 * (mActivity.mStepsMap.get(Utils.calendar2strDate( mLastMonthCalendar,
 		 * BTConstants.PATTERN_YYYY_MM_DD)) != null) { monthCount +=
-		 * Integer.valueOf(mActivity.mStepsMap.get(Utils
+		 * Integer.parseInt(mActivity.mStepsMap.get(Utils
 		 * .calendar2strDate(mLastMonthCalendar,
 		 * BTConstants.PATTERN_YYYY_MM_DD)).count); }
 		 * mLastMonthCalendar.add(Calendar.DAY_OF_MONTH, 1); }
@@ -616,9 +616,9 @@ public class HistoryStepCount extends Fragment implements OnEntryClickListener,
 
         @Override
         public int compare(Step lhs, Step rhs) {
-            if (Integer.valueOf(lhs.count) > Integer.valueOf(rhs.count)) {
+            if (Integer.parseInt(lhs.count) > Integer.parseInt(rhs.count)) {
                 return -1;
-            } else if (Integer.valueOf(lhs.count) < Integer.valueOf(rhs.count)) {
+            } else if (Integer.parseInt(lhs.count) < Integer.parseInt(rhs.count)) {
                 return 1;
             }
             return 0;

@@ -67,16 +67,16 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
                 break;
             case R.id.btn_target_finish:
 
-                if (Integer.valueOf(tv_target_steps_value.getText().toString()) < STEP_UNIT) {
+                if (Integer.parseInt(tv_target_steps_value.getText().toString()) < STEP_UNIT) {
                     ToastUtils.showToast(this, getString(R.string.setting_target_min));
                     return;
                 }
                 if (mIsSetting) {
-                    SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_target_steps_value.getText().toString()));
+                    SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.parseInt(tv_target_steps_value.getText().toString()));
                     finish();
                     return;
                 }
-                SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.valueOf(tv_target_steps_value.getText().toString()));
+                SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.parseInt(tv_target_steps_value.getText().toString()));
                 SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, false);
                 // TODO: 2016/7/28 跳转主页面
                 startActivity(new Intent(this, MainActivity.class));

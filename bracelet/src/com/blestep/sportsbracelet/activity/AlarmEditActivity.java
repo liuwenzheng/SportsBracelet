@@ -1,7 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -26,6 +24,8 @@ import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.ArrayList;
 
 public class AlarmEditActivity extends BaseActivity implements OnClickListener,
 		OnItemClickListener {
@@ -98,7 +98,7 @@ public class AlarmEditActivity extends BaseActivity implements OnClickListener,
 							for (int i = 0; i < mDelIndexs.size(); i++) {
 								DBTools.getInstance(AlarmEditActivity.this)
 										.deleteAlarm(
-												Integer.valueOf(mDelIndexs
+												Integer.parseInt(mDelIndexs
 														.get(i)));
 							}
 							mAlarms = DBTools.getInstance(
