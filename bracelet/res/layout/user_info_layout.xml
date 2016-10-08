@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="年龄"
+                    android:text="@string/user_gender"
                     android:textColor="@color/grey_cccccc"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -121,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="身高"
+                    android:text="@string/user_height"
                     android:textColor="@color/grey_cccccc"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -150,7 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="体重"
+                    android:text="@string/user_weight"
                     android:textColor="@color/grey_cccccc"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -173,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="生日"
+                    android:text="@string/user_birthday"
                     android:textColor="@color/grey_cccccc"
                     android:textSize="15sp" />
             </LinearLayout>

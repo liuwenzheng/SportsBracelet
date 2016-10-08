@@ -112,12 +112,12 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
         if (gender == 0) {
             iv_user_header.setImageResource(R.drawable.user_head_male);
             iv_user_sex.setImageResource(R.drawable.user_sex_male);
-            tv_user_sex.setText("男");
+            tv_user_sex.setText(R.string.user_gender_male);
             tv_user_sex.setTextColor(getResources().getColor(R.color.blue_0099ff));
         } else if (gender == 1) {
             iv_user_header.setImageResource(R.drawable.user_head_female);
             iv_user_sex.setImageResource(R.drawable.user_sex_female);
-            tv_user_sex.setText("女");
+            tv_user_sex.setText(R.string.user_gender_female);
             tv_user_sex.setTextColor(getResources().getColor(R.color.red_fe82b5));
         }
         module = new UserUnitManagerModule();
@@ -135,8 +135,8 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
             tv_user_height.setTag(height + "");
             if (isBritish) {
                 tv_user_height.setText(String.format("%s'%s''%s",
-                        UserUnitManagerModule.cmToFt(Integer.valueOf(height)),
-                        UserUnitManagerModule.cmToIn(Integer.valueOf(height)),
+                        UserUnitManagerModule.cmToFt(height),
+                        UserUnitManagerModule.cmToIn(height),
                         getString(R.string.setting_userinfo_height_unit_british)));
             } else {
                 tv_user_height.setText(String.format("%s%s", height,
@@ -153,7 +153,7 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
             tv_user_weight.setTextColor(getResources().getColor(R.color.green_10b46c));
             if (isBritish) {
                 tv_user_weight.setText(String.format("%s%s",
-                        UserUnitManagerModule.kgToLb(Integer.valueOf(weight)),
+                        UserUnitManagerModule.kgToLb(weight),
                         getString(R.string.setting_userinfo_weight_unit_british)));
             } else {
                 tv_user_weight.setText(String.format("%s%s", weight,
@@ -220,7 +220,7 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
                 initGender(wv_gender);
                 CustomDialog.Builder builder = new CustomDialog.Builder(this);
                 builder.setContentView(v);
-                builder.setTitle("性别");
+                builder.setTitle(getString(R.string.user_gender));
                 builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -294,7 +294,7 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
     private ArrayList<String> createGender() {
         ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i <= 1; i++) {
-            list.add(i == 0 ? "男" : "女");
+            list.add(i == 0 ? getString(R.string.user_gender_male) : getString(R.string.user_gender_female));
         }
         return list;
     }

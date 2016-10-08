@@ -1,12 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -35,6 +28,13 @@ import com.blestep.sportsbracelet.view.ControlScrollViewPager;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.umeng.analytics.MobclickAgent;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -283,10 +283,10 @@ public class HistoryActivity extends FragmentActivity implements
 			float dayDistance = 0;
 			if (mStepsMap.get(Utils.calendar2strDate(calendar,
 					BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-				dayCount = Integer.valueOf(mStepsMap.get(Utils
+				dayCount = Integer.parseInt(mStepsMap.get(Utils
 						.calendar2strDate(calendar,
 								BTConstants.PATTERN_YYYY_MM_DD)).count);
-				dayCalorie = Integer.valueOf(mStepsMap.get(Utils
+				dayCalorie = Integer.parseInt(mStepsMap.get(Utils
 						.calendar2strDate(calendar,
 								BTConstants.PATTERN_YYYY_MM_DD)).calories);
 				dayDistance = Float.valueOf(mStepsMap.get(Utils
@@ -374,10 +374,10 @@ public class HistoryActivity extends FragmentActivity implements
 			for (int j = 0; j < daysInYear; j++) {
 				if (mStepsMap.get(Utils.calendar2strDate(calendar,
 						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-					yearCount += Integer.valueOf(mStepsMap.get(Utils
+					yearCount += Integer.parseInt(mStepsMap.get(Utils
 							.calendar2strDate(calendar,
 									BTConstants.PATTERN_YYYY_MM_DD)).count);
-					yearCalorie += Integer.valueOf(mStepsMap.get(Utils
+					yearCalorie += Integer.parseInt(mStepsMap.get(Utils
 							.calendar2strDate(calendar,
 									BTConstants.PATTERN_YYYY_MM_DD)).calories);
 					yearDistance += Float.valueOf(mStepsMap.get(Utils
@@ -485,10 +485,10 @@ public class HistoryActivity extends FragmentActivity implements
 			for (int j = 0; j < daysInMonth; j++) {
 				if (mStepsMap.get(Utils.calendar2strDate(calendar,
 						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-					monthCount += Integer.valueOf(mStepsMap.get(Utils
+					monthCount += Integer.parseInt(mStepsMap.get(Utils
 							.calendar2strDate(calendar,
 									BTConstants.PATTERN_YYYY_MM_DD)).count);
-					monthCalorie += Integer.valueOf(mStepsMap.get(Utils
+					monthCalorie += Integer.parseInt(mStepsMap.get(Utils
 							.calendar2strDate(calendar,
 									BTConstants.PATTERN_YYYY_MM_DD)).calories);
 					monthDistance += Float.valueOf(mStepsMap.get(Utils
@@ -618,10 +618,10 @@ public class HistoryActivity extends FragmentActivity implements
 			for (int j = 0; j < COUNT_NUMBER_WEEK; j++) {
 				if (mStepsMap.get(Utils.calendar2strDate(calendar,
 						BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-					weekCount += Integer.valueOf(mStepsMap.get(Utils
+					weekCount += Integer.parseInt(mStepsMap.get(Utils
 							.calendar2strDate(calendar,
 									BTConstants.PATTERN_YYYY_MM_DD)).count);
-					weekCalorie += Integer.valueOf(mStepsMap.get(Utils
+					weekCalorie += Integer.parseInt(mStepsMap.get(Utils
 							.calendar2strDate(calendar,
 									BTConstants.PATTERN_YYYY_MM_DD)).calories);
 					weekDistance += Float.valueOf(mStepsMap.get(Utils

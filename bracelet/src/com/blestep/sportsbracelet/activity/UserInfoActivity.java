@@ -138,9 +138,9 @@ public class UserInfoActivity extends BaseActivity {
             tv_userinfo_weight.setText(weight + "");
             tv_weight_unit.setText(getString(R.string.setting_userinfo_weight_unit));
         } else {
-            tv_userinfo_height.setText(String.format("%s'%s''", UnitManagerModule.cmToFt(Integer.valueOf(height)), UnitManagerModule.cmToIn(Integer.valueOf(height))));
+            tv_userinfo_height.setText(String.format("%s'%s''", UnitManagerModule.cmToFt(height), UnitManagerModule.cmToIn(height)));
             tv_height_unit.setText(getString(R.string.setting_userinfo_height_unit_british));
-            tv_userinfo_weight.setText(UnitManagerModule.kgToLb(Integer.valueOf(weight)) + "");
+            tv_userinfo_weight.setText(UnitManagerModule.kgToLb(weight) + "");
             tv_weight_unit.setText(getString(R.string.setting_userinfo_weight_unit_british));
         }
 
@@ -200,13 +200,13 @@ public class UserInfoActivity extends BaseActivity {
                 SPUtiles.setStringValue(BTConstants.SP_KEY_USER_NAME,
                         et_userinfo_name.getText().toString());
                 SPUtiles.setIntValue(BTConstants.SP_KEY_USER_HEIGHT,
-                        Integer.valueOf(tv_userinfo_height.getTag().toString()));
+                        Integer.parseInt(tv_userinfo_height.getTag().toString()));
                 SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT,
-                        Integer.valueOf(tv_userinfo_height.getTag().toString()));
+                        Integer.parseInt(tv_userinfo_height.getTag().toString()));
 
                 SPUtiles.setIntValue(
                         BTConstants.SP_KEY_USER_GENDER,
-                        Integer.valueOf((String) findViewById(
+                        Integer.parseInt((String) findViewById(
                                 rg_userinfo_sex.getCheckedRadioButtonId()).getTag()));
                 this.finish();
                 break;

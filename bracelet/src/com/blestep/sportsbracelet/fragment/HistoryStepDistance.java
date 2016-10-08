@@ -422,7 +422,7 @@ public class HistoryStepDistance extends Fragment implements
         // for (int i = 0; i < 7; i++) {
         // if (mActivity.mStepsMap.get(Utils.calendar2strDate(
         // mLastWeekCalendar, BTConstants.PATTERN_YYYY_MM_DD)) != null) {
-        // weekCount += Integer.valueOf(mActivity.mStepsMap.get(Utils
+        // weekCount += Integer.parseInt(mActivity.mStepsMap.get(Utils
         // .calendar2strDate(mLastWeekCalendar,
         // BTConstants.PATTERN_YYYY_MM_DD)).count);
         // }
@@ -501,7 +501,7 @@ public class HistoryStepDistance extends Fragment implements
 		 * daysInMonth; i++) { if
 		 * (mActivity.mStepsMap.get(Utils.calendar2strDate( mLastMonthCalendar,
 		 * BTConstants.PATTERN_YYYY_MM_DD)) != null) { monthCount +=
-		 * Integer.valueOf(mActivity.mStepsMap.get(Utils
+		 * Integer.parseInt(mActivity.mStepsMap.get(Utils
 		 * .calendar2strDate(mLastMonthCalendar,
 		 * BTConstants.PATTERN_YYYY_MM_DD)).count); }
 		 * mLastMonthCalendar.add(Calendar.DAY_OF_MONTH, 1); }

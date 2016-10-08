@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="运动历史"
+            android:text="@string/history_walk_title"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp" />
     </RelativeLayout>
@@ -68,7 +68,7 @@
                         android:id="@+id/tv_step_count_daily"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="步数"
+                        android:text="@string/history_average_step"
                         android:textColor="@color/grey_999999"
                         android:textSize="10sp" />
 
@@ -102,7 +102,7 @@
                         android:id="@+id/tv_step_duration_daily"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="时长"
+                        android:text="@string/history_average_duration"
                         android:textColor="@color/grey_999999"
                         android:textSize="10sp" />
 
@@ -143,7 +143,7 @@
                         android:id="@+id/tv_step_distance_daily"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="里程"
+                        android:text="@string/history_total_distance"
                         android:textColor="@color/grey_999999"
                         android:textSize="10sp" />
 
@@ -177,7 +177,7 @@
                         android:id="@+id/tv_step_calorie_daily"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="消耗"
+                        android:text="@string/history_total_calorie"
                         android:textColor="@color/grey_999999"
                         android:textSize="10sp" />
 

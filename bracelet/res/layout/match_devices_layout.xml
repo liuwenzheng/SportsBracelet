@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:text="连接手环"
+        android:text="@string/match_pair_band"
         android:textColor="@color/black_333333"
         android:textSize="34sp" />
 
@@ -29,7 +29,7 @@
             android:gravity="center_horizontal"
             android:paddingLeft="45dp"
             android:paddingRight="45dp"
-            android:text="自动配对失败！\n请手动选择手环进行配对,或点击“重试”按钮重新自动配对"
+            android:text="@string/match_failed_tips"
             android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:visibility="gone" />
@@ -45,7 +45,7 @@
             android:drawablePadding="6dp"
             android:paddingLeft="45dp"
             android:paddingRight="45dp"
-            android:text="使其他设备远离手机"
+            android:text="@string/match_keep_other_away"
             android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:visibility="visible" />
@@ -59,10 +59,9 @@
             android:layout_marginTop="15dp"
             android:drawableLeft="@drawable/match_point"
             android:drawablePadding="6dp"
-            android:gravity="center_horizontal"
             android:paddingLeft="45dp"
             android:paddingRight="45dp"
-            android:text="长按手环触点5秒"
+            android:text="@string/match_press_band"
             android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:visibility="visible" />
@@ -76,10 +75,9 @@
             android:layout_marginTop="15dp"
             android:drawableLeft="@drawable/match_point"
             android:drawablePadding="6dp"
-            android:gravity="center_horizontal"
             android:paddingLeft="45dp"
             android:paddingRight="45dp"
-            android:text="手环贴近手机"
+            android:text="@string/match_close_band"
             android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:visibility="visible" />
@@ -93,10 +91,9 @@
             android:layout_marginTop="15dp"
             android:drawableLeft="@drawable/match_point"
             android:drawablePadding="6dp"
-            android:gravity="center_horizontal"
             android:paddingLeft="45dp"
             android:paddingRight="45dp"
-            android:text="点击下方按钮"
+            android:text="@string/match_tap_button"
             android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:visibility="visible" />
@@ -125,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="自动配对"
+                    android:text="@string/match_button"
                     android:textColor="@color/white_ffffff"
                     android:textSize="19sp" />
             </RelativeLayout>
@@ -159,12 +156,12 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="70dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:layout_marginTop="70dp"
             android:divider="@color/grey_dddddd"
             android:dividerHeight="1dp"
             android:listSelector="@android:color/transparent"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
             android:scrollbars="none"
             android:visibility="gone" />
     </RelativeLayout>

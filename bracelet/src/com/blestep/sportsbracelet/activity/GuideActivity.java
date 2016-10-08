@@ -233,12 +233,12 @@ public class GuideActivity extends BaseActivity {
     private void initFragment() {
         GuideTipsFragment fragment1 = new GuideTipsFragment();
         Bundle bundle1 = new Bundle();
-        bundle1.putString("tips", getString(R.string.guide_count_steps_accurately));
+        bundle1.putString("tips", getString(R.string.guide_track_steps));
         fragment1.setArguments(bundle1);
         views.add(fragment1);
         GuideTipsFragment fragment2 = new GuideTipsFragment();
         Bundle bundle2 = new Bundle();
-        bundle2.putString("tips", getString(R.string.guide_control_your_calorie_consumption));
+        bundle2.putString("tips", getString(R.string.guide_calorie_control));
         fragment2.setArguments(bundle2);
         views.add(fragment2);
         GuideTipsFragment fragment3 = new GuideTipsFragment();
@@ -248,7 +248,7 @@ public class GuideActivity extends BaseActivity {
         views.add(fragment3);
         GuideTipsFragment fragment4 = new GuideTipsFragment();
         Bundle bundle4 = new Bundle();
-        bundle4.putString("tips", getString(R.string.guide_health_management_in_the_cloud));
+        bundle4.putString("tips", getString(R.string.guide_cloud_sync));
         fragment4.setArguments(bundle4);
         views.add(fragment4);
         GuideTipsFragment fragment5 = new GuideTipsFragment();

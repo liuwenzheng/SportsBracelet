@@ -41,23 +41,30 @@
             android:layout_height="230dp"
             android:layout_centerInParent="true">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="56dp"
-                android:text="今日步数"
-                android:textColor="@color/white_ffffff" />
+                android:layout_centerInParent="true">
 
-            <TextView
-                android:id="@+id/tv_step"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@color/white_ffffff"
-                android:textSize="50sp" />
+                <TextView
+                    android:id="@+id/tv_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="50sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/tv_step"
+                    android:layout_toRightOf="@id/tv_step"
+                    android:gravity="center"
+                    android:text="@string/setting_target_step"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="15sp" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_step_duration"
@@ -67,7 +74,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="45dp"
                 android:singleLine="true"
-                android:text="0 h 0 min"
+                android:text="0 hour 0 min"
                 android:textColor="@color/white_ffffff"
                 android:textSize="8sp" />
 

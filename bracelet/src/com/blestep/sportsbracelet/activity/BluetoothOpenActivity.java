@@ -74,8 +74,8 @@ public class BluetoothOpenActivity extends BaseActivity {
     }
 
     private void setBluetoothClose() {
-        tv_bluetooth_status.setText("蓝牙未开启");
-        tv_bluetooth_desc.setText("您的手机蓝牙未打开，请打开后点击下一步");
+        tv_bluetooth_status.setText(R.string.bluetooth_open_false);
+        tv_bluetooth_desc.setText(R.string.bluetooth_open_false_content);
         rl_bluetooth_ring.setBackgroundResource(R.drawable.bluetooth_ring_close);
         iv_bluetooth_icon.setImageResource(R.drawable.bluetooth_close);
         tv_open_bluetooth.setVisibility(View.VISIBLE);
@@ -83,8 +83,8 @@ public class BluetoothOpenActivity extends BaseActivity {
     }
 
     private void setBluetoothOpen() {
-        tv_bluetooth_status.setText("蓝牙开启");
-        tv_bluetooth_desc.setText("在手机设置中，打开 蓝牙设备,以便可以与手环进行连接");
+        tv_bluetooth_status.setText(R.string.bluetooth_open_true);
+        tv_bluetooth_desc.setText(R.string.bluetooth_open_true_content);
         rl_bluetooth_ring.setBackgroundResource(R.drawable.bluetooth_ring_open);
         iv_bluetooth_icon.setImageResource(R.drawable.bluetooth_open);
         tv_open_bluetooth.setVisibility(View.GONE);

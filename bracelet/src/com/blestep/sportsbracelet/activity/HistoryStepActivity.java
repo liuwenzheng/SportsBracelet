@@ -98,7 +98,7 @@ public class HistoryStepActivity extends BaseActivity {
                 tv_step_count_daily_value.setText((int) selectedItem.stepCount + "");
                 // 时长
                 String strDuration = String.valueOf((int) selectedItem.stepDuration);
-                SpannableString durationSpan = new SpannableString(strDuration + "分钟");
+                SpannableString durationSpan = new SpannableString(strDuration + getString(R.string.history_duration_unit));
                 durationSpan.setSpan(new ForegroundColorSpan(ContextCompat.getColor(HistoryStepActivity.this, R.color.grey_666666))
                         , 0, strDuration.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 durationSpan.setSpan(new AbsoluteSizeSpan(16, true)
@@ -134,10 +134,10 @@ public class HistoryStepActivity extends BaseActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i) {
                     case R.id.rb_history_unit_day:
-                        tv_step_count_daily.setText("步数");
-                        tv_step_duration_daily.setText("活动时长");
-                        tv_step_distance_daily.setText("里程");
-                        tv_step_calorie_daily.setText("消耗");
+                        tv_step_count_daily.setText(R.string.history_average_step);
+                        tv_step_duration_daily.setText(R.string.history_average_duration);
+                        tv_step_distance_daily.setText(R.string.history_total_distance);
+                        tv_step_calorie_daily.setText(R.string.history_total_calorie);
                         buildDayView();
                         return;
                     case R.id.rb_history_unit_week:
@@ -150,10 +150,10 @@ public class HistoryStepActivity extends BaseActivity {
                         buildYearView();
                         break;
                 }
-                tv_step_count_daily.setText("日均步数");
-                tv_step_duration_daily.setText("日均活动");
-                tv_step_distance_daily.setText("总里程");
-                tv_step_calorie_daily.setText("总消耗");
+                tv_step_count_daily.setText(R.string.history_average_steps);
+                tv_step_duration_daily.setText(R.string.history_average_durations);
+                tv_step_distance_daily.setText(R.string.history_total_distances);
+                tv_step_calorie_daily.setText(R.string.history_total_calories);
             }
         });
         int barStepAim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 100);
@@ -204,7 +204,7 @@ public class HistoryStepActivity extends BaseActivity {
         List<Object[]> data = new ArrayList<>();
         Calendar startDay = (Calendar) mStart.clone();
         int position = 0;
-        int lastYear = mToday.get(Calendar.YEAR) - 1;
+        // int lastYear = mToday.get(Calendar.YEAR) - 1;
         while (startDay.compareTo(mToday) <= 0) {
             int year = startDay.get(Calendar.YEAR);
             Object[] item = new Object[6];
@@ -225,10 +225,12 @@ public class HistoryStepActivity extends BaseActivity {
             }
 
             if (year == mToday.get(Calendar.YEAR)) {
-                item[1] = "今年";
-            } else if (year == lastYear) {
-                item[1] = "去年";
-            } else {
+                item[1] = getString(R.string.history_this_year);
+            }
+//            else if (year == lastYear) {
+//                item[1] = "去年";
+//            }
+            else {
                 item[1] = year;
             }
             item[2] = count / daysInYear;
@@ -247,12 +249,12 @@ public class HistoryStepActivity extends BaseActivity {
         List<Object[]> data = new ArrayList<>();
         Calendar startDay = (Calendar) mStart.clone();
         int position = 0;
-        int lastMonth = mToday.get(Calendar.MONTH);
-        if (lastMonth == 1) {
-            lastMonth = 12;
-        } else {
-            lastMonth = lastMonth - 1;
-        }
+//        int lastMonth = mToday.get(Calendar.MONTH);
+//        if (lastMonth == 1) {
+//            lastMonth = 12;
+//        } else {
+//            lastMonth = lastMonth - 1;
+//        }
         while (startDay.compareTo(mToday) <= 0) {
             int month = startDay.get(Calendar.MONTH);
             Object[] item = new Object[6];
@@ -273,12 +275,15 @@ public class HistoryStepActivity extends BaseActivity {
             }
             if (startDay.get(Calendar.YEAR) == mToday.get(Calendar.YEAR) && month == mToday.get(Calendar.MONTH)) {
                 item[1] = getString(R.string.history_this_month);
-            } else if (startDay.get(Calendar.YEAR) == mToday.get(Calendar.YEAR) && month == lastMonth) {
-                item[1] = "上月";
-            } else if (month == 1) {
-                item[1] = String.format("%s/%s月", startDay.get(Calendar.YEAR), month);
+            }
+//            else if (startDay.get(Calendar.YEAR) == mToday.get(Calendar.YEAR) && month == lastMonth) {
+//                item[1] = "上月";
+//            }
+            else if (month == 12) {
+                month = 1;
+                item[1] = getString(R.string.history_month_unit, startDay.get(Calendar.YEAR), month);
             } else {
-                item[1] = String.format("%s月", month);
+                item[1] = getString(R.string.history_month_units, month + 1);
             }
             item[2] = count / daysInMonth;
             item[3] = duration / daysInMonth;
@@ -299,7 +304,7 @@ public class HistoryStepActivity extends BaseActivity {
         if (Utils.getWeekDayInChina(startDay) != 1) {
             startDay.add(Calendar.DAY_OF_MONTH, 1 - Utils.getWeekDayInChina(startDay));
         }
-        int lastWeek = Utils.getWeekInChina(mToday) - 1;
+        // int lastWeek = Utils.getWeekInChina(mToday) - 1;
         int position = 0;
         while (startDay.compareTo(mToday) <= 0) {
             int week = Utils.getWeekInChina(startDay);
@@ -327,9 +332,11 @@ public class HistoryStepActivity extends BaseActivity {
             }
             if (week == Utils.getWeekInChina(mToday)) {
                 item[1] = getString(R.string.history_this_week);
-            } else if (week == lastWeek) {
-                item[1] = "上周";
-            } else {
+            }
+//            else if (week == lastWeek) {
+//                item[1] = "上周";
+//            }
+            else {
                 item[1] = String.format("%s~%s", startWeekDay, endWeekDay);
             }
             item[2] = count / 7;
@@ -361,13 +368,15 @@ public class HistoryStepActivity extends BaseActivity {
     private Object[] createItemByDay(int position, Calendar selectDate) {
         Object[] item = new Object[6];
         item[0] = position;
-        Calendar yesterday = (Calendar) mToday.clone();
-        yesterday.add(Calendar.DAY_OF_MONTH, -1);
+//        Calendar yesterday = (Calendar) mToday.clone();
+//        yesterday.add(Calendar.DAY_OF_MONTH, -1);
         if (selectDate.compareTo(mToday) == 0) {
             item[1] = getString(R.string.history_today);
-        } else if (selectDate.compareTo(yesterday) == 0) {
-            item[1] = getString(R.string.history_yesterday);
-        } else {
+        }
+//        else if (selectDate.compareTo(yesterday) == 0) {
+//            item[1] = getString(R.string.history_yesterday);
+//        }
+        else {
             item[1] = Utils.calendar2strDate(selectDate, BTConstants.PATTERN_MM_DD);
         }
         Step step = mStepsMap.get(Utils.calendar2strDate(selectDate, BTConstants.PATTERN_YYYY_MM_DD));

@@ -211,10 +211,10 @@ public class BTService extends Service implements LeScanCallback {
                     // stringBuilder.append(string + " ");
                     // LogModule.i("转化后：" + stringBuilder.toString());
                     // 获取总记录数
-                    int header = Integer.valueOf(Utils
+                    int header = Integer.parseInt(Utils
                             .decodeToString(formatDatas[0]));
                     if (header == BTConstants.HEADER_BACK_ACK) {
-                        int ack = Integer.valueOf(Utils
+                        int ack = Integer.parseInt(Utils
                                 .decodeToString(formatDatas[1]));
                         Intent intent = new Intent(BTConstants.ACTION_ACK);
                         intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
@@ -223,11 +223,10 @@ public class BTService extends Service implements LeScanCallback {
                     }
                     if (header == BTConstants.HEADER_BACK_RECORD) {
                         stepsCount = 0;
-                        int stepRecord = Integer.valueOf(formatDatas[1]);
-                        // int sleepRecord = Integer.valueOf(formatDatas[2]);
+                        int stepRecord = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
+                        // int sleepRecord = Integer.parseInt(Utils.decodeToString(formatDatas[2]));
                         // 保存电量
-                        int battery = Integer.valueOf(Utils
-                                .decodeToString(formatDatas[3]));
+                        int battery = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
                         stepsCount = stepRecord;
                         LogModule.i("手环中的记录总数为：" + stepsCount);
                         Intent intent = new Intent(
@@ -252,12 +251,12 @@ public class BTService extends Service implements LeScanCallback {
 //
 //                    }
                     if (header == BTConstants.HEADER_FIRMWARE_VERSION) {
-                        int major = Integer.valueOf(Utils
-                                .decodeToString(formatDatas[0]));
-                        int minor = Integer.valueOf(Utils
+                        int major = Integer.parseInt(Utils
                                 .decodeToString(formatDatas[1]));
-                        int revision = Integer.valueOf(Utils
+                        int minor = Integer.parseInt(Utils
                                 .decodeToString(formatDatas[2]));
+                        int revision = Integer.parseInt(Utils
+                                .decodeToString(formatDatas[3]));
                         Intent intent = new Intent(BTConstants.ACTION_REFRESH_DATA_VERSION);
                         intent.putExtra(BTConstants.EXTRA_KEY_VERSION_VALUE, String.format("%s.%s.%s", major, minor, revision));
                         BTService.this.sendBroadcast(intent);
@@ -477,16 +476,16 @@ public class BTService extends Service implements LeScanCallback {
                                                 "00:00");
                                 Calendar startCalendar = Calendar.getInstance();
                                 startCalendar.set(Calendar.HOUR_OF_DAY,
-                                        Integer.valueOf(startTime.split(":")[0]));
+                                        Integer.parseInt(startTime.split(":")[0]));
                                 startCalendar.set(Calendar.MINUTE,
-                                        Integer.valueOf(startTime.split(":")[1]));
+                                        Integer.parseInt(startTime.split(":")[1]));
                                 startCalendar.set(Calendar.SECOND, 0);
 
                                 Calendar endCalendar = Calendar.getInstance();
                                 endCalendar.set(Calendar.HOUR_OF_DAY,
-                                        Integer.valueOf(endTime.split(":")[0]));
+                                        Integer.parseInt(endTime.split(":")[0]));
                                 endCalendar.set(Calendar.MINUTE,
-                                        Integer.valueOf(endTime.split(":")[1]));
+                                        Integer.parseInt(endTime.split(":")[1]));
                                 endCalendar.set(Calendar.SECOND, 0);
 
                                 if (startCalendar.equals(endCalendar)) {
