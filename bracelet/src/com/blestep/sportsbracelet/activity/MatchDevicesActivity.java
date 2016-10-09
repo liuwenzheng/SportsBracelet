@@ -306,8 +306,12 @@ public class MatchDevicesActivity extends BaseActivity {
                     SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
                             mScanDevice == null ? mDevices.get(mPosition).name : mScanDevice.name.substring(0, mScanDevice.name.indexOf("-D")));
                     // showInitUI();
-                    startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
-                    finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
+                    if (!mIsDisConnection) {
+                        startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
+                        finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
+                    } else {
+                        finish();
+                    }
                 }
             }
 

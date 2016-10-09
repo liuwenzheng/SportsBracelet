@@ -43,7 +43,8 @@ public class BTService extends Service implements LeScanCallback {
     // private ArrayList<BleDevice> mDevices;
     public BluetoothGatt mBluetoothGatt;
     private BluetoothGattCallback mGattCallback;
-    private boolean isReconnect = false;
+    private boolean mIsReconnect = false;
+    private boolean mIsAutoDisConnect = false;
 
     @Override
     public void onCreate() {
@@ -114,6 +115,10 @@ public class BTService extends Service implements LeScanCallback {
         if (device == null) {
             return;
         } else {
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.disconnect();
+                mIsAutoDisConnect = true;
+            }
             mGattCallback = new BluetoothGattCallback() {
                 private int stepsCount;
 
@@ -144,12 +149,15 @@ public class BTService extends Service implements LeScanCallback {
                             }
                             break;
                         case BluetoothProfile.STATE_DISCONNECTED:
+                            if (mIsAutoDisConnect) {
+                                return;
+                            }
                             disConnectBle();
                             Intent intent = new Intent(
                                     BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
                             sendBroadcast(intent);
                             // 2016/7/9 当来电提醒打开时才启动重连机制
-                            if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !isReconnect) {
+                            if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !mIsReconnect) {
                                 LogModule.d("开始重连...");
                                 // TODO: 2016/7/9 此处可用线程池控制，减少创建线程导致的内存消耗
                                 new Thread(runnableReconnect).start();
@@ -162,6 +170,7 @@ public class BTService extends Service implements LeScanCallback {
                     super.onServicesDiscovered(gatt, status);
                     LogModule.d("onServicesDiscovered...status:" + status);
                     if (status == BluetoothGatt.GATT_SUCCESS) {
+                        mIsAutoDisConnect = false;
                         BTModule.setCharacteristicNotify(mBluetoothGatt);
                         mHandler.postDelayed(new Runnable() {
                             @Override
@@ -706,7 +715,7 @@ public class BTService extends Service implements LeScanCallback {
 
         @Override
         public void run() {
-            isReconnect = true;
+            mIsReconnect = true;
             if (!isConnDevice()) {
                 LogModule.d("重连中...");
                 mHandler.postDelayed(this, 10 * 1000);
@@ -716,7 +725,7 @@ public class BTService extends Service implements LeScanCallback {
                     LogModule.d("蓝牙未开启...");
                 }
             } else {
-                isReconnect = false;
+                mIsReconnect = false;
                 LogModule.d("设备已连接...");
             }
         }
