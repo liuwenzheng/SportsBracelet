@@ -44,7 +44,8 @@ public class BTService extends Service implements LeScanCallback {
     public BluetoothGatt mBluetoothGatt;
     private BluetoothGattCallback mGattCallback;
     private boolean mIsReconnect = false;
-    private boolean mIsAutoDisConnect = false;
+    private volatile boolean mIsAutoDisConnect = false;
+    private static final Object LOCK = new Object();
 
     @Override
     public void onCreate() {
@@ -116,8 +117,10 @@ public class BTService extends Service implements LeScanCallback {
             return;
         } else {
             if (mBluetoothGatt != null) {
+                synchronized (LOCK) {
+                    mIsAutoDisConnect = true;
+                }
                 mBluetoothGatt.disconnect();
-                mIsAutoDisConnect = true;
             }
             mGattCallback = new BluetoothGattCallback() {
                 private int stepsCount;
@@ -170,14 +173,16 @@ public class BTService extends Service implements LeScanCallback {
                     super.onServicesDiscovered(gatt, status);
                     LogModule.d("onServicesDiscovered...status:" + status);
                     if (status == BluetoothGatt.GATT_SUCCESS) {
-                        mIsAutoDisConnect = false;
+                        synchronized (LOCK) {
+                            mIsAutoDisConnect = false;
+                        }
                         BTModule.setCharacteristicNotify(mBluetoothGatt);
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 Intent intent = new Intent(
                                         BTConstants.ACTION_DISCOVER_SUCCESS);
-                                sendBroadcast(intent);
+                                sendOrderedBroadcast(intent, null);
                             }
                         }, 1000);
                     } else {

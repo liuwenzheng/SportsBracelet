@@ -100,6 +100,7 @@ public class MatchDevicesActivity extends BaseActivity {
         filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
         filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
         filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
+        filter.setPriority(200);
         registerReceiver(mReceiver, filter);
     }
 
@@ -294,6 +295,7 @@ public class MatchDevicesActivity extends BaseActivity {
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
                     LogModule.d("配对成功...");
+                    abortBroadcast();
                     ToastUtils.showToast(MatchDevicesActivity.this, R.string.setting_device_conn_success);
                     if (mDialog != null) {
                         mDialog.dismiss();

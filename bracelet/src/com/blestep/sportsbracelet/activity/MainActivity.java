@@ -70,6 +70,7 @@ public class MainActivity extends SlidingFragmentActivity implements
         filter.addAction(BTConstants.ACTION_ACK);
         filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
         filter.addAction(BTConstants.ACTION_REFRESH_DATA_VERSION);
+        filter.setPriority(100);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
         // filter.addAction(BTConstants.ACTION_LOG);
@@ -207,7 +208,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
-                    // }
+                       // }
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
