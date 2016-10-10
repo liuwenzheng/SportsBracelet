@@ -81,6 +81,7 @@ public class BTService extends Service implements LeScanCallback {
         // SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, "");
         // mDevices = new ArrayList<BleDevice>();
         if (!mIsStartScan) {
+            LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
             mIsStartScan = true;
             BTModule.scanDevice(this);
             // Stops scanning after a pre-defined scan period.
@@ -88,7 +89,6 @@ public class BTService extends Service implements LeScanCallback {
                 @Override
                 public void run() {
                     if (mIsStartScan) {
-                        LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
                         BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
                         mIsStartScan = false;
                         Intent intent = new Intent(
@@ -182,7 +182,6 @@ public class BTService extends Service implements LeScanCallback {
                             public void run() {
                                 Intent intent = new Intent(
                                         BTConstants.ACTION_DISCOVER_SUCCESS);
-                                intent.putExtra("name", "111");
                                 sendOrderedBroadcast(intent, null);
                             }
                         }, 1000);
@@ -229,8 +228,7 @@ public class BTService extends Service implements LeScanCallback {
                     int header = Integer.parseInt(Utils
                             .decodeToString(formatDatas[0]));
                     if (header == BTConstants.HEADER_BACK_ACK) {
-                        int ack = Integer.parseInt(Utils
-                                .decodeToString(formatDatas[1]));
+                        int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
                         Intent intent = new Intent(BTConstants.ACTION_ACK);
                         intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
                         BTService.this.sendBroadcast(intent);
@@ -281,7 +279,7 @@ public class BTService extends Service implements LeScanCallback {
                     // count--;
                     BTModule.saveBleData(formatDatas, getApplicationContext());
                     stepsCount--;
-                    if (stepsCount == 0) {
+                    if (stepsCount <= 0) {
                         LogModule.i("延迟1s发送广播更新数据");
                         mHandler.postDelayed(new Runnable() {
                             @Override
@@ -299,8 +297,7 @@ public class BTService extends Service implements LeScanCallback {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mBluetoothGatt = device.connectGatt(BTService.this, false,
-                            mGattCallback);
+                    mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
                 }
             }, 1000);
 

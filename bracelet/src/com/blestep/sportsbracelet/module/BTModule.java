@@ -423,8 +423,10 @@ public class BTModule {
         if (CHARACTERISTIC_UUID_NOTIFY.equals(characteristic.getUuid())) {
             BluetoothGattDescriptor descriptor = characteristic
                     .getDescriptor(CHARACTERISTIC_DESCRIPTOR_UUID);
-            descriptor
-                    .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            if (descriptor == null) {
+                return;
+            }
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);
         }
     }

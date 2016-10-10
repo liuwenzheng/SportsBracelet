@@ -231,7 +231,6 @@ public class MatchDevicesActivity extends BaseActivity {
         mScanDevice = null;
         LogModule.i("开始扫描..." + mScanTimes);
         mBtService.scanDevice();
-        mScanTimes++;
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -268,7 +267,7 @@ public class MatchDevicesActivity extends BaseActivity {
                         .getAction())) {
                     LogModule.i("结束扫描..." + mScanTimes);
                     if (!mIsScanContinue) {
-                        if (mScanTimes < 4) {
+                        if (mScanTimes < 3) {
                             mScanTimes++;
                             LogModule.i("开始扫描..." + mScanTimes);
                             mDevices.clear();
@@ -287,10 +286,13 @@ public class MatchDevicesActivity extends BaseActivity {
                         || BTConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
                         || BTConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
                     LogModule.i("配对失败...");
+                    mIsScanContinue = true;
                     if (mDialog != null) {
                         mDialog.dismiss();
                     }
                     showMatchManualUI();
+                    mDevices.clear();
+                    mAdapter.notifyDataSetChanged();
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
@@ -312,6 +314,7 @@ public class MatchDevicesActivity extends BaseActivity {
                         startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
                         finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
                     } else {
+                        MatchDevicesActivity.this.setResult(RESULT_OK);
                         finish();
                     }
                 }

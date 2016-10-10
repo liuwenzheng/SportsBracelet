@@ -52,6 +52,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private ProgressDialog mDialog;
     private BTService mBtService;
+    public static final int REQUEST_RECONNECT = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,8 +83,8 @@ public class MainActivity extends SlidingFragmentActivity implements
     protected void onStart() {
         super.onStart();
         if (mBtService != null && mBtService.isConnDevice() && !mIsConnDevice) {
-            // LogModule.i("打开页面同步数据");
-            // autoPullUpdate(getString(R.string.step_syncdata_waiting));
+             LogModule.i("打开页面同步数据");
+             autoPullUpdate(getString(R.string.step_syncdata_waiting));
         }
     }
 
@@ -133,6 +134,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     private ViewPager mViewPager;
     private boolean mIsConnDevice = false;
     private boolean mIsSyncData = false;
+    private boolean mIsReConnectSuccess = false;
 
     private void initView() {
         pull_refresh_viewpager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);
@@ -211,7 +213,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
-                    if (mIsSyncData) {
+                    if (mIsReConnectSuccess) {
                         return;
                     }
                     mIsConnDevice = false;
@@ -240,6 +242,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                 }
                 if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
                     mIsSyncData = false;
+                    mIsReConnectSuccess = false;
                     pull_refresh_viewpager.onRefreshComplete();
                     if (tab01 != null && tab01.isVisible()) {
                         tab01.updateView();
@@ -448,7 +451,9 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // mDialog = ProgressDialog
                     // .show(MainActivity.this, null,
                     // getString(R.string.setting_device), false, false);
-
+                    break;
+                case REQUEST_RECONNECT:
+                    mIsReConnectSuccess = true;
                     break;
             }
         }
