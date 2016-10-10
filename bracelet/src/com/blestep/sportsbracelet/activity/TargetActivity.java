@@ -88,7 +88,7 @@ public class TargetActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onProgressChange(CircularSeekBar view, int newProgress) {
-				LogModule.d("Progress:" + view.getProgress() * STEP_UNIT + "/"
+				LogModule.i("Progress:" + view.getProgress() * STEP_UNIT + "/"
 						+ view.getMaxProgress() * STEP_UNIT);
 				float activity_consumed = (0.000693f * (SPUtiles.getIntValue(
 						BTConstants.SP_KEY_USER_WEIGHT, 75) - 15) + 0.005895f)

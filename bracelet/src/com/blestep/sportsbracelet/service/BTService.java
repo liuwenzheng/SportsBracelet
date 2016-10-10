@@ -50,7 +50,7 @@ public class BTService extends Service implements LeScanCallback {
     @Override
     public void onCreate() {
         mHandler = new Handler(getApplication().getMainLooper());
-        LogModule.d("创建BTService...onCreate");
+        LogModule.i("创建BTService...onCreate");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BTConstants.ACTION_PHONE_STATE);
@@ -61,7 +61,7 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogModule.d("启动BTService...onStartCommand");
+        LogModule.i("启动BTService...onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -69,7 +69,7 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public IBinder onBind(Intent intent) {
-        LogModule.d("绑定BTService...onBind");
+        LogModule.i("绑定BTService...onBind");
         return mBinder;
     }
 
@@ -128,7 +128,7 @@ public class BTService extends Service implements LeScanCallback {
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
-                    LogModule.d("onConnectionStateChange...status:" + status
+                    LogModule.e("onConnectionStateChange...status:" + status
                             + "...newState:" + newState);
                     switch (newState) {
                         case BluetoothProfile.STATE_CONNECTED:
@@ -161,8 +161,7 @@ public class BTService extends Service implements LeScanCallback {
                             sendBroadcast(intent);
                             // 2016/7/9 当来电提醒打开时才启动重连机制
                             if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !mIsReconnect) {
-                                LogModule.d("开始重连...");
-                                // TODO: 2016/7/9 此处可用线程池控制，减少创建线程导致的内存消耗
+                                LogModule.i("开始重连...");
                                 new Thread(runnableReconnect).start();
                             }
                             break;
@@ -171,7 +170,7 @@ public class BTService extends Service implements LeScanCallback {
 
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
-                    LogModule.d("onServicesDiscovered...status:" + status);
+                    LogModule.e("onServicesDiscovered...status:" + status);
                     if (status == BluetoothGatt.GATT_SUCCESS) {
                         synchronized (LOCK) {
                             mIsAutoDisConnect = false;
@@ -195,24 +194,24 @@ public class BTService extends Service implements LeScanCallback {
                 public void onCharacteristicRead(BluetoothGatt gatt,
                                                  BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
-                    LogModule.d("onCharacteristicRead...");
+                    // LogModule.i("onCharacteristicRead...");
                 }
 
                 public void onCharacteristicWrite(BluetoothGatt gatt,
                                                   BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicWrite(gatt, characteristic, status);
-                    LogModule.d("onCharacteristicWrite...");
+                    // LogModule.i("onCharacteristicWrite...");
                     if (status == BluetoothGatt.GATT_SUCCESS) {
-                        LogModule.d("onCharacteristicWrite...success");
+                        LogModule.i("onCharacteristicWrite...success");
                     } else {
-                        LogModule.d("onCharacteristicWrite...failure");
+                        LogModule.i("onCharacteristicWrite...failure");
                     }
                 }
 
                 public void onCharacteristicChanged(BluetoothGatt gatt,
                                                     BluetoothGattCharacteristic characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
-                    LogModule.d("onCharacteristicChanged...");
+                    // LogModule.i("onCharacteristicChanged...");
                     // BTModule.setCharacteristicNotify(mBluetoothGatt);
                     byte[] data = characteristic.getValue();
                     if (data == null || data.length == 0) {
@@ -470,7 +469,7 @@ public class BTService extends Service implements LeScanCallback {
                         // 来电
                         String incoming_number = intent
                                 .getStringExtra("incoming_number");
-                        LogModule.d("来电号码:" + incoming_number);
+                        LogModule.i("来电号码:" + incoming_number);
                         // log:来电号码:18801283616
                         if (!TextUtils.isEmpty(incoming_number) && isConnDevice() && SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false)) {
                             // ToastUtils.showToast(context, "phone number:" + incoming_number);
@@ -503,7 +502,7 @@ public class BTService extends Service implements LeScanCallback {
                                 endCalendar.set(Calendar.SECOND, 0);
 
                                 if (startCalendar.equals(endCalendar)) {
-                                    LogModule.d("勿扰时段开始结束相同...");
+                                    LogModule.i("勿扰时段开始结束相同...");
                                     isAllowConstants(incoming_number);
                                     return;
                                 }
@@ -514,7 +513,7 @@ public class BTService extends Service implements LeScanCallback {
                                 }
                                 if (current.after(startCalendar)
                                         && current.before(endCalendar)) {
-                                    LogModule.d("勿扰时段内不震动...");
+                                    LogModule.i("勿扰时段内不震动...");
                                     return;
                                 }
                                 isAllowConstants(incoming_number);
@@ -675,13 +674,13 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        LogModule.d("解绑BTService...onUnbind");
+        LogModule.i("解绑BTService...onUnbind");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
-        LogModule.d("销毁BTService...onDestroy");
+        LogModule.i("销毁BTService...onDestroy");
         disConnectBle();
         unregisterReceiver(mReceiver);
         super.onDestroy();
@@ -722,16 +721,16 @@ public class BTService extends Service implements LeScanCallback {
         public void run() {
             mIsReconnect = true;
             if (!isConnDevice()) {
-                LogModule.d("重连中...");
+                LogModule.i("重连中...");
                 mHandler.postDelayed(this, 10 * 1000);
                 if (BTModule.isBluetoothOpen()) {
                     connectGatt();
                 } else {
-                    LogModule.d("蓝牙未开启...");
+                    LogModule.i("蓝牙未开启...");
                 }
             } else {
                 mIsReconnect = false;
-                LogModule.d("设备已连接...");
+                LogModule.i("设备已连接...");
             }
         }
     };

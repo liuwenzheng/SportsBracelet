@@ -78,7 +78,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
                 }
                 SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.parseInt(tv_target_steps_value.getText().toString()));
                 SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, false);
-                // TODO: 2016/7/28 跳转主页面
+                // 跳转主页面
                 startActivity(new Intent(this, MainActivity.class));
                 finishActivities(GuideActivity.class, ActivateBraceletActivity.class,
                         BluetoothOpenActivity.class, MatchDevicesActivity.class,
@@ -89,7 +89,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        LogModule.d("Progress:" + progress * STEP_UNIT + "/" + 100 * STEP_UNIT);
+        LogModule.i("Progress:" + progress * STEP_UNIT + "/" + 100 * STEP_UNIT);
         float activity_consumed = (0.000693f * (SPUtiles.getIntValue(
                 BTConstants.SP_KEY_USER_WEIGHT, 75) - 15) + 0.005895f)
                 * (progress * STEP_UNIT);

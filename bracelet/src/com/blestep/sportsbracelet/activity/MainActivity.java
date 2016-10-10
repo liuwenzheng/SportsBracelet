@@ -200,7 +200,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                                 .updateView(mBtService);
                     }
                     isConnDevice = false;
-                    LogModule.d("配对失败...");
+                    LogModule.i("配对失败...");
                     pull_refresh_viewpager.onRefreshComplete();
                     ToastUtils.showToast(MainActivity.this,
                             R.string.setting_device_conn_failure);
@@ -213,7 +213,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
                     isConnDevice = false;
-                    LogModule.d("配对成功...");
+                    LogModule.i("配对成功...");
                     if (leftMenuFragment != null
                             && leftMenuFragment.isVisible()) {
                         ((MenuLeftFragment) leftMenuFragment)
@@ -242,7 +242,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     if (tab01 != null && tab01.isVisible()) {
                         tab01.updateView();
                     }
-                    LogModule.d("同步成功...");
+                    LogModule.i("同步成功...");
                     int battery = SPUtiles.getIntValue(
                             BTConstants.SP_KEY_BATTERY, 0);
                     LogModule.i("电量为" + battery + "%");
@@ -338,20 +338,20 @@ public class MainActivity extends SlidingFragmentActivity implements
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LogModule.d("连接服务onServiceConnected...");
+            LogModule.i("连接服务onServiceConnected...");
             mBtService = ((LocalBinder) service).getService();
             // 开启蓝牙
             if (!BTModule.isBluetoothOpen()) {
                 BTModule.openBluetooth(MainActivity.this);
             } else {
-                LogModule.d("连接手环or同步数据？");
+                LogModule.i("连接手环or同步数据？");
                 isConnService();
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            LogModule.d("断开服务onServiceDisconnected...");
+            LogModule.i("断开服务onServiceDisconnected...");
             mBtService.mBluetoothGatt = null;
             mBtService = null;
         }

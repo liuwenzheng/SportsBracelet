@@ -67,7 +67,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
 
     @Override
     public void onResume() {
-        LogModule.i("onResume");
+        LogModule.i(this.getClass().getSimpleName() + "onResume");
         super.onResume();
         initData();
         wave.setShapeType(WaveView.ShapeType.SQUARE);
@@ -78,7 +78,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
 
     @Override
     public void onPause() {
-        LogModule.i("onPause");
+        LogModule.i(this.getClass().getSimpleName() + "onPause");
         super.onPause();
         mWaveHelper.cancel();
     }

@@ -88,15 +88,10 @@ public class GuideActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_register:
-                // TODO: 2016/7/12 注册
                 break;
             case R.id.tv_login:
-                // TODO: 2016/7/12 登录
-                startActivity(new Intent(this, ActivateBraceletActivity.class));
-                finish();
                 break;
             case R.id.btn_start:
-                // TODO: 2016/7/12 登录
                 startActivity(new Intent(this, ActivateBraceletActivity.class));
                 finish();
                 break;

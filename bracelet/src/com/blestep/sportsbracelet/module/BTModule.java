@@ -436,14 +436,12 @@ public class BTModule {
         }
         BluetoothGattService service = mBluetoothGatt.getService(SERVIE_UUID);
 
-        LogModule.i("writeCharacteristicData...service:" + service);
+        // LogModule.i("writeCharacteristicData...service:" + service);
         if (service == null) {
             return;
         }
-        BluetoothGattCharacteristic characteristic = null;
-        characteristic = service.getCharacteristic(CHARACTERISTIC_UUID_WRITE);
-        LogModule.i("writeCharacteristicData...characteristic:"
-                + characteristic);
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(CHARACTERISTIC_UUID_WRITE);
+        // LogModule.i("writeCharacteristicData...characteristic:" + characteristic);
         if (characteristic == null) {
             return;
         }
