@@ -1,6 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -82,9 +81,9 @@ public class MainActivity extends SlidingFragmentActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        if (mBtService != null && mBtService.isConnDevice() && !isConnDevice) {
-            LogModule.i("打开页面同步数据");
-            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+        if (mBtService != null && mBtService.isConnDevice() && !mIsConnDevice) {
+            // LogModule.i("打开页面同步数据");
+            // autoPullUpdate(getString(R.string.step_syncdata_waiting));
         }
     }
 
@@ -132,8 +131,8 @@ public class MainActivity extends SlidingFragmentActivity implements
     private ScrollView sv_log;
     private PullToRefreshViewPager pull_refresh_viewpager;
     private ViewPager mViewPager;
-    private boolean isConnDevice = false;
-    private boolean isSyncData = false;
+    private boolean mIsConnDevice = false;
+    private boolean mIsSyncData = false;
 
     private void initView() {
         pull_refresh_viewpager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);
@@ -166,14 +165,14 @@ public class MainActivity extends SlidingFragmentActivity implements
                     public void onRefresh(
                             PullToRefreshBase<ViewPager> refreshView) {
                         if (mBtService.isConnDevice()) {
-                            if (!isSyncData) {
+                            if (!mIsSyncData) {
                                 LogModule.i("下拉刷新同步数据");
                                 syncData();
                             }
                         } else {
-                            if (!isConnDevice) {
+                            if (!mIsConnDevice) {
                                 LogModule.i("未连接，先连接手环");
-                                isConnDevice = true;
+                                mIsConnDevice = true;
                                 autoPullUpdate(getString(R.string.setting_device));
                                 mBtService.connectBle(SPUtiles.getStringValue(
                                         BTConstants.SP_KEY_DEVICE_ADDRESS, null));
@@ -199,7 +198,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                         ((MenuLeftFragment) leftMenuFragment)
                                 .updateView(mBtService);
                     }
-                    isConnDevice = false;
+                    mIsConnDevice = false;
                     LogModule.i("配对失败...");
                     pull_refresh_viewpager.onRefreshComplete();
                     ToastUtils.showToast(MainActivity.this,
@@ -208,11 +207,14 @@ public class MainActivity extends SlidingFragmentActivity implements
                     frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
-                       // }
+                    // }
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
-                    isConnDevice = false;
+                    if (mIsSyncData) {
+                        return;
+                    }
+                    mIsConnDevice = false;
                     LogModule.i("配对成功...");
                     if (leftMenuFragment != null
                             && leftMenuFragment.isVisible()) {
@@ -237,7 +239,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // false, false);
                 }
                 if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
-                    isSyncData = false;
+                    mIsSyncData = false;
                     pull_refresh_viewpager.onRefreshComplete();
                     if (tab01 != null && tab01.isVisible()) {
                         tab01.updateView();
@@ -370,7 +372,7 @@ public class MainActivity extends SlidingFragmentActivity implements
             // false, false);
         } else {
             LogModule.i("未连接，先连接手环");
-            isConnDevice = true;
+            mIsConnDevice = true;
             autoPullUpdate(getString(R.string.setting_device));
             mBtService.connectBle(SPUtiles.getStringValue(
                     BTConstants.SP_KEY_DEVICE_ADDRESS, null));
@@ -404,7 +406,7 @@ public class MainActivity extends SlidingFragmentActivity implements
      * 同步数据
      */
     private void syncData() {
-        isSyncData = true;
+        mIsSyncData = true;
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
         new MyHandler(this).postDelayed(new Runnable() {
 
@@ -437,7 +439,7 @@ public class MainActivity extends SlidingFragmentActivity implements
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case BTModule.REQUEST_ENABLE_BT:
-                    isConnDevice = true;
+                    mIsConnDevice = true;
                     autoPullUpdate(getString(R.string.setting_device));
                     mBtService.connectBle(SPUtiles.getStringValue(
                             BTConstants.SP_KEY_DEVICE_ADDRESS, null));
@@ -523,7 +525,7 @@ public class MainActivity extends SlidingFragmentActivity implements
                 }
                 mBtService.connectBle(SPUtiles.getStringValue(
                         BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-                isConnDevice = true;
+                mIsConnDevice = true;
                 autoPullUpdate(getString(R.string.setting_device));
                 // frame_main_tips.setText(R.string.setting_device);
                 // frame_main_tips.setVisibility(View.VISIBLE);
@@ -553,7 +555,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new Builder(this);
+        Builder builder = new Builder(this);
         builder.setMessage(R.string.main_exit_tips);
         builder.setPositiveButton(R.string.main_exit_tips_confirm,
                 new DialogInterface.OnClickListener() {

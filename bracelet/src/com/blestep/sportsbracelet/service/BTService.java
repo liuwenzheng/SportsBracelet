@@ -108,6 +108,7 @@ public class BTService extends Service implements LeScanCallback {
      * 连接手环
      */
     public void connectBle(String address) {
+        LogModule.i("开始连接手环：" + address);
         if (TextUtils.isEmpty(address)) {
             return;
         }
@@ -181,6 +182,7 @@ public class BTService extends Service implements LeScanCallback {
                             public void run() {
                                 Intent intent = new Intent(
                                         BTConstants.ACTION_DISCOVER_SUCCESS);
+                                intent.putExtra("name", "111");
                                 sendOrderedBroadcast(intent, null);
                             }
                         }, 1000);
