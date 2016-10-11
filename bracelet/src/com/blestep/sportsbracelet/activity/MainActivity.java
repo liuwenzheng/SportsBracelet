@@ -52,7 +52,6 @@ public class MainActivity extends SlidingFragmentActivity implements
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private ProgressDialog mDialog;
     private BTService mBtService;
-    public static final int REQUEST_RECONNECT = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,7 +133,6 @@ public class MainActivity extends SlidingFragmentActivity implements
     private ViewPager mViewPager;
     private boolean mIsConnDevice = false;
     private boolean mIsSyncData = false;
-    // private boolean mIsReConnectSuccess = false;
 
     private void initView() {
         pull_refresh_viewpager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);

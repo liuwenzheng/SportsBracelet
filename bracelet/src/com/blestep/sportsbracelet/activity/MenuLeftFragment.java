@@ -10,9 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -213,7 +210,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
             case R.id.rl_bind_bracelet:
                 Intent i = new Intent(mainActivity, MatchDevicesActivity.class);
                 i.putExtra("service_disconnection", true);
-                mainActivity.startActivityForResult(i, MainActivity.REQUEST_RECONNECT);
+                startActivity(i);
                 break;
             case R.id.rl_bracelet_system:
                 Intent intent = new Intent(mainActivity, SystemActivity.class);
