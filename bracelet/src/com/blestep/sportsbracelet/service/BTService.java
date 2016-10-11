@@ -120,8 +120,11 @@ public class BTService extends Service implements LeScanCallback {
             if (mBluetoothGatt != null) {
                 synchronized (LOCK) {
                     mIsAutoDisConnect = true;
+                    BTModule.mNotifyCharacteristic = null;
                 }
                 mBluetoothGatt.disconnect();
+                mBluetoothGatt.close();
+                mBluetoothGatt = null;
             }
             mGattCallback = new BluetoothGattCallback() {
                 private int stepsCount;
@@ -159,7 +162,7 @@ public class BTService extends Service implements LeScanCallback {
                             disConnectBle();
                             Intent intent = new Intent(
                                     BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
-                            sendBroadcast(intent);
+                            sendOrderedBroadcast(intent, null);
                             // 2016/7/9 当来电提醒打开时才启动重连机制
                             if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !mIsReconnect) {
                                 LogModule.i("开始重连...");

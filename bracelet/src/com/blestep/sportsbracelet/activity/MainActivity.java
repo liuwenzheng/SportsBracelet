@@ -134,7 +134,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     private ViewPager mViewPager;
     private boolean mIsConnDevice = false;
     private boolean mIsSyncData = false;
-    private boolean mIsReConnectSuccess = false;
+    // private boolean mIsReConnectSuccess = false;
 
     private void initView() {
         pull_refresh_viewpager = (PullToRefreshViewPager) findViewById(R.id.pull_refresh_viewpager);
@@ -213,9 +213,6 @@ public class MainActivity extends SlidingFragmentActivity implements
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
-                    if (mIsReConnectSuccess) {
-                        return;
-                    }
                     mIsConnDevice = false;
                     LogModule.i("配对成功...");
                     if (leftMenuFragment != null
@@ -242,7 +239,6 @@ public class MainActivity extends SlidingFragmentActivity implements
                 }
                 if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
                     mIsSyncData = false;
-                    mIsReConnectSuccess = false;
                     pull_refresh_viewpager.onRefreshComplete();
                     if (tab01 != null && tab01.isVisible()) {
                         tab01.updateView();
@@ -451,9 +447,6 @@ public class MainActivity extends SlidingFragmentActivity implements
                     // mDialog = ProgressDialog
                     // .show(MainActivity.this, null,
                     // getString(R.string.setting_device), false, false);
-                    break;
-                case REQUEST_RECONNECT:
-                    mIsReConnectSuccess = true;
                     break;
             }
         }

@@ -286,6 +286,7 @@ public class MatchDevicesActivity extends BaseActivity {
                         || BTConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
                         || BTConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
                     LogModule.i("配对失败...");
+                    abortBroadcast();
                     mIsScanContinue = true;
                     if (mDialog != null) {
                         mDialog.dismiss();
@@ -314,7 +315,6 @@ public class MatchDevicesActivity extends BaseActivity {
                         startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
                         finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
                     } else {
-                        MatchDevicesActivity.this.setResult(RESULT_OK);
                         finish();
                     }
                 }
