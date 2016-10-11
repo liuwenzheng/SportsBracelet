@@ -423,8 +423,10 @@ public class BTModule {
         if (CHARACTERISTIC_UUID_NOTIFY.equals(characteristic.getUuid())) {
             BluetoothGattDescriptor descriptor = characteristic
                     .getDescriptor(CHARACTERISTIC_DESCRIPTOR_UUID);
-            descriptor
-                    .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            if (descriptor == null) {
+                return;
+            }
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);
         }
     }
@@ -436,14 +438,12 @@ public class BTModule {
         }
         BluetoothGattService service = mBluetoothGatt.getService(SERVIE_UUID);
 
-        LogModule.i("writeCharacteristicData...service:" + service);
+        // LogModule.i("writeCharacteristicData...service:" + service);
         if (service == null) {
             return;
         }
-        BluetoothGattCharacteristic characteristic = null;
-        characteristic = service.getCharacteristic(CHARACTERISTIC_UUID_WRITE);
-        LogModule.i("writeCharacteristicData...characteristic:"
-                + characteristic);
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(CHARACTERISTIC_UUID_WRITE);
+        // LogModule.i("writeCharacteristicData...characteristic:" + characteristic);
         if (characteristic == null) {
             return;
         }

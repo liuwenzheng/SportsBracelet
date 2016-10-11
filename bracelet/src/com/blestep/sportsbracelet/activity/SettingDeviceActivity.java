@@ -1,9 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -39,6 +35,9 @@ import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class SettingDeviceActivity extends BaseActivity implements
 		OnClickListener, OnItemClickListener {
@@ -149,7 +148,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 	private void startScanDevice() {
 		mScanTimes = 0;
 		mIsScanContinue = false;
-		LogModule.d("开始扫描..." + mScanTimes);
+		LogModule.i("开始扫描..." + mScanTimes);
 		mBtService.scanDevice();
 		mDialog = ProgressDialog.show(SettingDeviceActivity.this, null,
 				getString(R.string.setting_device_search), false, false);
@@ -272,7 +271,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 					// 判断是否有正在敲击的手环，有则开始配对
 					if (Utils.isNotEmpty(bleDevice.name)
 							&& bleDevice.name.lastIndexOf("-D") > 0) {
-						LogModule.d("可以配对...");
+						LogModule.i("可以配对...");
 						mIsScanContinue = true;
 						mScanDevice = bleDevice;
 						if (mDialog != null) {
@@ -288,11 +287,11 @@ public class SettingDeviceActivity extends BaseActivity implements
 				}
 				if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent
 						.getAction())) {
-					LogModule.d("结束扫描..." + mScanTimes);
+					LogModule.i("结束扫描..." + mScanTimes);
 					if (!mIsScanContinue) {
 						if (mScanTimes < 4) {
 							mScanTimes++;
-							LogModule.d("开始扫描..." + mScanTimes);
+							LogModule.i("开始扫描..." + mScanTimes);
 							mDevices.clear();
 							mBtService.scanDevice();
 							mAdapter.notifyDataSetChanged();
@@ -310,7 +309,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 								.equals(intent.getAction())
 						|| BTConstants.ACTION_DISCOVER_FAILURE.equals(intent
 								.getAction())) {
-					LogModule.d("配对失败...");
+					LogModule.i("配对失败...");
 					ToastUtils.showToast(SettingDeviceActivity.this,
 							R.string.setting_device_conn_failure);
 					if (mDialog != null) {
@@ -322,7 +321,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 				}
 				if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
 						.getAction())) {
-					LogModule.d("配对成功...");
+					LogModule.i("配对成功...");
 					ToastUtils.showToast(SettingDeviceActivity.this,
 							R.string.setting_device_conn_success);
 					if (mDialog != null) {
@@ -352,7 +351,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			LogModule.d("连接服务onServiceConnected...");
+			LogModule.i("连接服务onServiceConnected...");
 			mBtService = ((LocalBinder) service).getService();
 			if (mBtService.mBluetoothGatt != null) {
 				mBtService.disConnectBle();
@@ -373,7 +372,7 @@ public class SettingDeviceActivity extends BaseActivity implements
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			LogModule.d("断开服务onServiceDisconnected...");
+			LogModule.i("断开服务onServiceDisconnected...");
 			mBtService = null;
 		}
 	};

@@ -100,6 +100,7 @@ public class MatchDevicesActivity extends BaseActivity {
         filter.addAction(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
         filter.addAction(BTConstants.ACTION_DISCOVER_SUCCESS);
         filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
+        filter.setPriority(200);
         registerReceiver(mReceiver, filter);
     }
 
@@ -228,9 +229,8 @@ public class MatchDevicesActivity extends BaseActivity {
         mScanTimes = 0;
         mIsScanContinue = false;
         mScanDevice = null;
-        LogModule.d("开始扫描..." + mScanTimes);
+        LogModule.i("开始扫描..." + mScanTimes);
         mBtService.scanDevice();
-        mScanTimes++;
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -253,7 +253,7 @@ public class MatchDevicesActivity extends BaseActivity {
                     }
                     // 判断是否有正在敲击的手环，有则开始配对
                     if (Utils.isNotEmpty(bleDevice.name) && bleDevice.name.lastIndexOf("-D") > 0) {
-                        LogModule.d("可以配对...");
+                        LogModule.i("可以配对...");
                         mIsScanContinue = true;
                         mScanDevice = bleDevice;
                         if (mDialog != null) {
@@ -265,11 +265,11 @@ public class MatchDevicesActivity extends BaseActivity {
                 }
                 if (BTConstants.ACTION_BLE_DEVICES_DATA_END.equals(intent
                         .getAction())) {
-                    LogModule.d("结束扫描..." + mScanTimes);
+                    LogModule.i("结束扫描..." + mScanTimes);
                     if (!mIsScanContinue) {
-                        if (mScanTimes < 4) {
+                        if (mScanTimes < 3) {
                             mScanTimes++;
-                            LogModule.d("开始扫描..." + mScanTimes);
+                            LogModule.i("开始扫描..." + mScanTimes);
                             mDevices.clear();
                             mBtService.scanDevice();
                             mAdapter.notifyDataSetChanged();
@@ -285,15 +285,20 @@ public class MatchDevicesActivity extends BaseActivity {
                 if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())
                         || BTConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
                         || BTConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
-                    LogModule.d("配对失败...");
+                    LogModule.i("配对失败...");
+                    abortBroadcast();
+                    mIsScanContinue = true;
                     if (mDialog != null) {
                         mDialog.dismiss();
                     }
                     showMatchManualUI();
+                    mDevices.clear();
+                    mAdapter.notifyDataSetChanged();
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
                         .getAction())) {
-                    LogModule.d("配对成功...");
+                    LogModule.i("配对成功...");
+                    abortBroadcast();
                     ToastUtils.showToast(MatchDevicesActivity.this, R.string.setting_device_conn_success);
                     if (mDialog != null) {
                         mDialog.dismiss();
@@ -306,8 +311,12 @@ public class MatchDevicesActivity extends BaseActivity {
                     SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
                             mScanDevice == null ? mDevices.get(mPosition).name : mScanDevice.name.substring(0, mScanDevice.name.indexOf("-D")));
                     // showInitUI();
-                    startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
-                    finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
+                    if (!mIsDisConnection) {
+                        startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
+                        finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
+                    } else {
+                        finish();
+                    }
                 }
             }
 
@@ -317,7 +326,7 @@ public class MatchDevicesActivity extends BaseActivity {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LogModule.d("连接服务onServiceConnected...");
+            LogModule.i("连接服务onServiceConnected...");
             mBtService = ((BTService.LocalBinder) service).getService();
             if (!mIsDisConnection && mBtService.mBluetoothGatt != null) {
                 mBtService.disConnectBle();
@@ -330,7 +339,7 @@ public class MatchDevicesActivity extends BaseActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            LogModule.d("断开服务onServiceDisconnected...");
+            LogModule.i("断开服务onServiceDisconnected...");
             mBtService = null;
         }
     };

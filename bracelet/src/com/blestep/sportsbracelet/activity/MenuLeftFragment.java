@@ -213,7 +213,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
             case R.id.rl_bind_bracelet:
                 Intent i = new Intent(mainActivity, MatchDevicesActivity.class);
                 i.putExtra("service_disconnection", true);
-                startActivity(i);
+                mainActivity.startActivityForResult(i, MainActivity.REQUEST_RECONNECT);
                 break;
             case R.id.rl_bracelet_system:
                 Intent intent = new Intent(mainActivity, SystemActivity.class);

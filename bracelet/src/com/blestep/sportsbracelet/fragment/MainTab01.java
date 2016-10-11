@@ -60,14 +60,14 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        LogModule.i("onActivityCreated");
+        LogModule.i(this.getClass().getSimpleName() + "-->onActivityCreated");
         mainActivity = (MainActivity) getActivity();
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onResume() {
-        LogModule.i("onResume");
+        LogModule.i(this.getClass().getSimpleName() + "-->onResume");
         super.onResume();
         initData();
         wave.setShapeType(WaveView.ShapeType.SQUARE);
@@ -78,7 +78,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
 
     @Override
     public void onPause() {
-        LogModule.i("onPause");
+        LogModule.i(this.getClass().getSimpleName() + "-->onPause");
         super.onPause();
         mWaveHelper.cancel();
     }
@@ -86,6 +86,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        LogModule.i(this.getClass().getSimpleName() + "-->onCreateView");
         mView = inflater.inflate(R.layout.main_tab_01, container, false);
         ButterKnife.bind(this, mView);
         mWaveHelper = new WaveHelper(wave);
@@ -165,6 +166,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        LogModule.i(this.getClass().getSimpleName() + "-->onDestroyView");
         ButterKnife.unbind(this);
     }
 

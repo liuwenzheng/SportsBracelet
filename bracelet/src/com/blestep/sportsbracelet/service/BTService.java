@@ -43,12 +43,14 @@ public class BTService extends Service implements LeScanCallback {
     // private ArrayList<BleDevice> mDevices;
     public BluetoothGatt mBluetoothGatt;
     private BluetoothGattCallback mGattCallback;
-    private boolean isReconnect = false;
+    private boolean mIsReconnect = false;
+    private volatile boolean mIsAutoDisConnect = false;
+    private static final Object LOCK = new Object();
 
     @Override
     public void onCreate() {
         mHandler = new Handler(getApplication().getMainLooper());
-        LogModule.d("创建BTService...onCreate");
+        LogModule.i("创建BTService...onCreate");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BTConstants.ACTION_PHONE_STATE);
@@ -59,7 +61,7 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogModule.d("启动BTService...onStartCommand");
+        LogModule.i("启动BTService...onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -67,7 +69,7 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public IBinder onBind(Intent intent) {
-        LogModule.d("绑定BTService...onBind");
+        LogModule.i("绑定BTService...onBind");
         return mBinder;
     }
 
@@ -79,6 +81,7 @@ public class BTService extends Service implements LeScanCallback {
         // SPUtiles.getStringValue(SPUtiles.SP_KEY_DEVICE_ADDRESS, "");
         // mDevices = new ArrayList<BleDevice>();
         if (!mIsStartScan) {
+            LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
             mIsStartScan = true;
             BTModule.scanDevice(this);
             // Stops scanning after a pre-defined scan period.
@@ -86,7 +89,6 @@ public class BTService extends Service implements LeScanCallback {
                 @Override
                 public void run() {
                     if (mIsStartScan) {
-                        LogModule.i(SCAN_PERIOD / 1000 + "s后停止扫描");
                         BTModule.mBluetoothAdapter.stopLeScan(BTService.this);
                         mIsStartScan = false;
                         Intent intent = new Intent(
@@ -106,6 +108,7 @@ public class BTService extends Service implements LeScanCallback {
      * 连接手环
      */
     public void connectBle(String address) {
+        LogModule.i("开始连接手环：" + address);
         if (TextUtils.isEmpty(address)) {
             return;
         }
@@ -114,13 +117,22 @@ public class BTService extends Service implements LeScanCallback {
         if (device == null) {
             return;
         } else {
+            if (mBluetoothGatt != null) {
+                synchronized (LOCK) {
+                    mIsAutoDisConnect = true;
+                    BTModule.mNotifyCharacteristic = null;
+                }
+                mBluetoothGatt.disconnect();
+                mBluetoothGatt.close();
+                mBluetoothGatt = null;
+            }
             mGattCallback = new BluetoothGattCallback() {
                 private int stepsCount;
 
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
-                    LogModule.d("onConnectionStateChange...status:" + status
+                    LogModule.e("onConnectionStateChange...status:" + status
                             + "...newState:" + newState);
                     switch (newState) {
                         case BluetoothProfile.STATE_CONNECTED:
@@ -144,14 +156,16 @@ public class BTService extends Service implements LeScanCallback {
                             }
                             break;
                         case BluetoothProfile.STATE_DISCONNECTED:
+                            if (mIsAutoDisConnect) {
+                                return;
+                            }
                             disConnectBle();
                             Intent intent = new Intent(
                                     BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
-                            sendBroadcast(intent);
+                            sendOrderedBroadcast(intent, null);
                             // 2016/7/9 当来电提醒打开时才启动重连机制
-                            if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !isReconnect) {
-                                LogModule.d("开始重连...");
-                                // TODO: 2016/7/9 此处可用线程池控制，减少创建线程导致的内存消耗
+                            if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !mIsReconnect) {
+                                LogModule.i("开始重连...");
                                 new Thread(runnableReconnect).start();
                             }
                             break;
@@ -160,15 +174,18 @@ public class BTService extends Service implements LeScanCallback {
 
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
-                    LogModule.d("onServicesDiscovered...status:" + status);
+                    LogModule.e("onServicesDiscovered...status:" + status);
                     if (status == BluetoothGatt.GATT_SUCCESS) {
+                        synchronized (LOCK) {
+                            mIsAutoDisConnect = false;
+                        }
                         BTModule.setCharacteristicNotify(mBluetoothGatt);
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 Intent intent = new Intent(
                                         BTConstants.ACTION_DISCOVER_SUCCESS);
-                                sendBroadcast(intent);
+                                sendOrderedBroadcast(intent, null);
                             }
                         }, 1000);
                     } else {
@@ -181,24 +198,24 @@ public class BTService extends Service implements LeScanCallback {
                 public void onCharacteristicRead(BluetoothGatt gatt,
                                                  BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
-                    LogModule.d("onCharacteristicRead...");
+                    // LogModule.i("onCharacteristicRead...");
                 }
 
                 public void onCharacteristicWrite(BluetoothGatt gatt,
                                                   BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicWrite(gatt, characteristic, status);
-                    LogModule.d("onCharacteristicWrite...");
+                    // LogModule.i("onCharacteristicWrite...");
                     if (status == BluetoothGatt.GATT_SUCCESS) {
-                        LogModule.d("onCharacteristicWrite...success");
+                        LogModule.i("onCharacteristicWrite...success");
                     } else {
-                        LogModule.d("onCharacteristicWrite...failure");
+                        LogModule.i("onCharacteristicWrite...failure");
                     }
                 }
 
                 public void onCharacteristicChanged(BluetoothGatt gatt,
                                                     BluetoothGattCharacteristic characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
-                    LogModule.d("onCharacteristicChanged...");
+                    // LogModule.i("onCharacteristicChanged...");
                     // BTModule.setCharacteristicNotify(mBluetoothGatt);
                     byte[] data = characteristic.getValue();
                     if (data == null || data.length == 0) {
@@ -214,8 +231,7 @@ public class BTService extends Service implements LeScanCallback {
                     int header = Integer.parseInt(Utils
                             .decodeToString(formatDatas[0]));
                     if (header == BTConstants.HEADER_BACK_ACK) {
-                        int ack = Integer.parseInt(Utils
-                                .decodeToString(formatDatas[1]));
+                        int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
                         Intent intent = new Intent(BTConstants.ACTION_ACK);
                         intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
                         BTService.this.sendBroadcast(intent);
@@ -266,7 +282,7 @@ public class BTService extends Service implements LeScanCallback {
                     // count--;
                     BTModule.saveBleData(formatDatas, getApplicationContext());
                     stepsCount--;
-                    if (stepsCount == 0) {
+                    if (stepsCount <= 0) {
                         LogModule.i("延迟1s发送广播更新数据");
                         mHandler.postDelayed(new Runnable() {
                             @Override
@@ -284,8 +300,7 @@ public class BTService extends Service implements LeScanCallback {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mBluetoothGatt = device.connectGatt(BTService.this, false,
-                            mGattCallback);
+                    mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
                 }
             }, 1000);
 
@@ -456,7 +471,7 @@ public class BTService extends Service implements LeScanCallback {
                         // 来电
                         String incoming_number = intent
                                 .getStringExtra("incoming_number");
-                        LogModule.d("来电号码:" + incoming_number);
+                        LogModule.i("来电号码:" + incoming_number);
                         // log:来电号码:18801283616
                         if (!TextUtils.isEmpty(incoming_number) && isConnDevice() && SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false)) {
                             // ToastUtils.showToast(context, "phone number:" + incoming_number);
@@ -489,7 +504,7 @@ public class BTService extends Service implements LeScanCallback {
                                 endCalendar.set(Calendar.SECOND, 0);
 
                                 if (startCalendar.equals(endCalendar)) {
-                                    LogModule.d("勿扰时段开始结束相同...");
+                                    LogModule.i("勿扰时段开始结束相同...");
                                     isAllowConstants(incoming_number);
                                     return;
                                 }
@@ -500,7 +515,7 @@ public class BTService extends Service implements LeScanCallback {
                                 }
                                 if (current.after(startCalendar)
                                         && current.before(endCalendar)) {
-                                    LogModule.d("勿扰时段内不震动...");
+                                    LogModule.i("勿扰时段内不震动...");
                                     return;
                                 }
                                 isAllowConstants(incoming_number);
@@ -661,13 +676,13 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        LogModule.d("解绑BTService...onUnbind");
+        LogModule.i("解绑BTService...onUnbind");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
-        LogModule.d("销毁BTService...onDestroy");
+        LogModule.i("销毁BTService...onDestroy");
         disConnectBle();
         unregisterReceiver(mReceiver);
         super.onDestroy();
@@ -706,18 +721,18 @@ public class BTService extends Service implements LeScanCallback {
 
         @Override
         public void run() {
-            isReconnect = true;
+            mIsReconnect = true;
             if (!isConnDevice()) {
-                LogModule.d("重连中...");
+                LogModule.i("重连中...");
                 mHandler.postDelayed(this, 10 * 1000);
                 if (BTModule.isBluetoothOpen()) {
                     connectGatt();
                 } else {
-                    LogModule.d("蓝牙未开启...");
+                    LogModule.i("蓝牙未开启...");
                 }
             } else {
-                isReconnect = false;
-                LogModule.d("设备已连接...");
+                mIsReconnect = false;
+                LogModule.i("设备已连接...");
             }
         }
     };

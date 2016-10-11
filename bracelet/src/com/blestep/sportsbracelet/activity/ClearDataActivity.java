@@ -57,13 +57,13 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			LogModule.d("连接服务onServiceConnected...");
+			LogModule.i("连接服务onServiceConnected...");
 			mBtService = ((LocalBinder) service).getService();
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			LogModule.d("断开服务onServiceDisconnected...");
+			LogModule.i("断开服务onServiceDisconnected...");
 			mBtService = null;
 		}
 	};

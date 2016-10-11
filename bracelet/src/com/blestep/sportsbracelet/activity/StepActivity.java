@@ -1,8 +1,5 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,7 +16,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
-import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.db.DBTools;
@@ -33,6 +29,9 @@ import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.view.CircleProgressView;
 import com.blestep.sportsbracelet.view.CircleProgressView.ICircleProgressValue;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StepActivity extends BaseActivity implements OnItemClickListener,
 		ICircleProgressValue {
@@ -169,7 +168,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			LogModule.d("连接服务onServiceConnected...");
+			LogModule.i("连接服务onServiceConnected...");
 			mBtService = ((LocalBinder) service).getService();
 			// 开启蓝牙
 			if (!BTModule.isBluetoothOpen()) {
@@ -182,7 +181,7 @@ public class StepActivity extends BaseActivity implements OnItemClickListener,
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			LogModule.d("断开服务onServiceDisconnected...");
+			LogModule.i("断开服务onServiceDisconnected...");
 			mBtService = null;
 		}
 	};
