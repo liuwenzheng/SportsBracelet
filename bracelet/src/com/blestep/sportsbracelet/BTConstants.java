@@ -67,6 +67,7 @@ public class BTConstants {
     public static final String SP_KEY_TOUCHBUTTON = "sp_key_touchbutton";
     public static final String SP_KEY_IS_BRITISH_UNIT = "sp_key_is_british_unit";
     public static final String SP_KEY_TIME_SYSTEM = "sp_key_time_system";
+    public static final String SP_KEY_LIGHT_SYSTEM = "sp_key_light_system";
     // Extra_key
     /**
      * intent传值key
@@ -112,4 +113,6 @@ public class BTConstants {
     public static final byte HEADER_UNIT_SYSTEM = 0x23;
     // 时间格式
     public static final byte HEADER_TIME_SYSTEM = 0x24;
+    // 自动亮屏幕
+    public static final byte HEADER_LIGHT_SYSTEM = 0x25;
 }

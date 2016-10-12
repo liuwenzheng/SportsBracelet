@@ -386,6 +386,13 @@ public class BTService extends Service implements LeScanCallback {
     }
 
     /**
+     * 同步点亮屏幕开关
+     */
+    public void syncLight() {
+        BTModule.setLight(this, mBluetoothGatt);
+    }
+
+    /**
      * 获取手环记步
      */
     public void getStepData() {

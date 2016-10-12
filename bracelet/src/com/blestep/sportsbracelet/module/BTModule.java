@@ -210,6 +210,18 @@ public class BTModule {
         byteArray[1] = time_system == 0 ? (byte) 0x00 : (byte) 0x01;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
+    /**
+     * 设置时间格式
+     *
+     * @param mBluetoothGatt
+     */
+    public static void setLight(Context context, BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = BTConstants.HEADER_LIGHT_SYSTEM;
+        int light_system = SPUtiles.getIntValue(BTConstants.SP_KEY_LIGHT_SYSTEM, 1);
+        byteArray[1] = light_system == 0 ? (byte) 0x00 : (byte) 0x01;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
 
     /**
      * 获取当前电量

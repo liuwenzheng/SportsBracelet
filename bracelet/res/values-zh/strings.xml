@@ -256,5 +256,8 @@
     <string name="history_this_year">今年</string>
     <string name="history_month_unit">%1$s/%2$s月</string>
     <string name="history_month_units">%s月</string>
+    <string name="bracelet_light_switch">翻腕亮屏</string>
+    <string name="bracelet_light_off">关闭</string>
+    <string name="bracelet_light_on">打开</string>
 
 </resources>
