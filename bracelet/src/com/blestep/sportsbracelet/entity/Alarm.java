@@ -10,5 +10,6 @@ public class Alarm implements Serializable {
 	public String id;
 	public String time;
 	public String state;
+	public String type;
 	public String name;
 }

@@ -104,16 +104,17 @@ public class DBTools {
     public ArrayList<Alarm> selectAllAlarm() {
         Cursor cursor = db.query(DBConstants.TABLE_NAME_ALARM, null, null,
                 null, null, null, null);
-        ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+        ArrayList<Alarm> alarms = new ArrayList<>();
         while (cursor.moveToNext()) {
             Alarm alarm = new Alarm();
-            alarm = new Alarm();
             alarm.id = cursor.getString(cursor
                     .getColumnIndex(DBConstants.ALARM_FIELD_ID));
             alarm.name = cursor.getString(cursor
                     .getColumnIndex(DBConstants.ALARM_FIELD_NAME));
             alarm.time = cursor.getString(cursor
                     .getColumnIndex(DBConstants.ALARM_FIELD_TIME));
+            alarm.type = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.ALARM_FIELD_TYPE));
             alarm.state = cursor.getString(cursor
                     .getColumnIndex(DBConstants.ALARM_FIELD_STATE));
             alarms.add(alarm);
@@ -136,6 +137,7 @@ public class DBTools {
         ContentValues cv = new ContentValues();
         cv.put(DBConstants.ALARM_FIELD_NAME, alarm.name);
         cv.put(DBConstants.ALARM_FIELD_TIME, alarm.time);
+        cv.put(DBConstants.ALARM_FIELD_TYPE, alarm.type);
         cv.put(DBConstants.ALARM_FIELD_STATE, alarm.state);
         long row = db.insert(DBConstants.TABLE_NAME_ALARM, null, cv);
         return row;
@@ -185,6 +187,7 @@ public class DBTools {
         ContentValues cv = new ContentValues();
         cv.put(DBConstants.ALARM_FIELD_NAME, alarm.name);
         cv.put(DBConstants.ALARM_FIELD_TIME, alarm.time);
+        cv.put(DBConstants.ALARM_FIELD_TYPE, alarm.type);
         cv.put(DBConstants.ALARM_FIELD_STATE, alarm.state);
         db.update(DBConstants.TABLE_NAME_ALARM, cv, where, whereValue);
     }

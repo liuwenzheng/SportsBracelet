@@ -14,5 +14,6 @@ public class DBConstants {
 	public static final String ALARM_FIELD_ID = "id";
 	public static final String ALARM_FIELD_NAME = "name";
 	public static final String ALARM_FIELD_TIME = "time";
+	public static final String ALARM_FIELD_TYPE = "type";
 	public static final String ALARM_FIELD_STATE = "state";
 }

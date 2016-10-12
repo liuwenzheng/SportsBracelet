@@ -74,6 +74,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 			+ DBConstants.ALARM_FIELD_NAME + " TEXT,"
 			// 时间
 			+ DBConstants.ALARM_FIELD_TIME + " TEXT,"
+			// 类型
+			+ DBConstants.ALARM_FIELD_TYPE + " TEXT,"
 			// 状态
 			+ DBConstants.ALARM_FIELD_STATE + " TEXT);";
 

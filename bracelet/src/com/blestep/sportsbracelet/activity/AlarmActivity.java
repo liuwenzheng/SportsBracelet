@@ -108,6 +108,10 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
 						.findViewById(R.id.tv_alarm_item_name);
 				holder.tv_alarm_item_time = (TextView) convertView
 						.findViewById(R.id.tv_alarm_item_time);
+				holder.tv_alarm_item_period = (TextView) convertView
+						.findViewById(R.id.tv_alarm_item_period);
+				holder.tv_alarm_item_type = (TextView) convertView
+						.findViewById(R.id.tv_alarm_item_type);
 				holder.cb_alarm_item_switch = (CheckBox) convertView
 						.findViewById(R.id.cb_alarm_item_switch);
 				convertView.setTag(holder);
@@ -116,6 +120,9 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
 			}
 			holder.tv_alarm_item_name.setText(alarm.name);
 			holder.tv_alarm_item_time.setText(alarm.time);
+			// TODO: 2016/10/12 0012 拆分state 
+			holder.tv_alarm_item_period.setText(alarm.type);
+			holder.tv_alarm_item_type.setText(alarm.type);
 			holder.cb_alarm_item_switch
 					.setChecked(alarm.state.equals("1") ? true : false);
 			holder.cb_alarm_item_switch
@@ -137,6 +144,8 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
 		class ViewHolder {
 			TextView tv_alarm_item_name;
 			TextView tv_alarm_item_time;
+			TextView tv_alarm_item_period;
+			TextView tv_alarm_item_type;
 			CheckBox cb_alarm_item_switch;
 		}
 	}
