@@ -151,7 +151,7 @@
     <string name="alarm_del_cancel">取消</string>
     <string name="alarm_finish">完成</string>
     <string name="alarm_add">添加闹钟</string>
-    <string name="alarm_add_hint">闹钟名称</string>
+    <string name="alarm_add_hint">输入闹钟名称</string>
     <string name="alarm_add_time">时间</string>
     <string name="alarm_add_name_null">闹钟名称不能为空！</string>
     <string name="alarm_add_count_max">最多可添加5个闹钟！</string>
@@ -259,5 +259,21 @@
     <string name="bracelet_light_switch">翻腕亮屏</string>
     <string name="bracelet_light_off">关闭</string>
     <string name="bracelet_light_on">打开</string>
-
+    <string-array name="alarm_types">
+        <item>普通</item>
+        <item>喝水</item>
+        <item>运动</item>
+        <item>睡眠</item>
+        <item>吃药</item>
+        <item>锻炼</item>
+    </string-array>
+    <string-array name="alarm_period">
+        <item>周日</item>
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+    </string-array>
 </resources>

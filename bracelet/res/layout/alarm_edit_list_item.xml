@@ -72,6 +72,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/tv_alarm_edit_item_name"
         android:scaleType="fitCenter"
-        android:src="@drawable/go" />
+        android:src="@drawable/go_black" />
 
 </RelativeLayout>

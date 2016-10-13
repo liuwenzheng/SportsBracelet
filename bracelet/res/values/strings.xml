@@ -259,5 +259,21 @@
     <string name="bracelet_light_switch">翻腕亮屏</string>
     <string name="bracelet_light_off">off</string>
     <string name="bracelet_light_on">on</string>
-
+    <string-array name="alarm_types">
+        <item>普通</item>
+        <item>喝水</item>
+        <item>运动</item>
+        <item>睡眠</item>
+        <item>吃药</item>
+        <item>锻炼</item>
+    </string-array>
+    <string-array name="alarm_period">
+        <item>周日</item>
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+    </string-array>
 </resources>

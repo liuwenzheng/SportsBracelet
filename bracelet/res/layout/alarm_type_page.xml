@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="类型"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_alarm_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:text="@string/alarm_finish"
+            android:textColor="@color/blue_40acaf"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_alarm_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb_alarm_type_normal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="普通"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_alarm_type_drink"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="喝水"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_alarm_type_sport"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="运动"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_alarm_type_sleep"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="睡眠"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_alarm_type_medicine"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="吃药"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_alarm_type_exercise"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="锻炼"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+    </RadioGroup>
+</LinearLayout>

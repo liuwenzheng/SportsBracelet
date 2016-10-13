@@ -4,7 +4,6 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -21,116 +20,115 @@ import com.umeng.analytics.MobclickAgent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class AlarmAddActivity extends BaseActivity implements OnClickListener {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-	private TextView tv_alarm_add_time;
-	private EditText et_alarm_add_name;
-	private Alarm mAlarm;
-	private boolean mIsEdit = false;
-	private TimePickerDialog mDialog;
-	private Calendar mCalendar = Calendar.getInstance();
-	private SimpleDateFormat mSdf;
+public class AlarmAddActivity extends BaseActivity {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.alarm_add_page);
-		initView();
-		initListener();
-		initData();
-	}
+    @Bind(R.id.et_alarm_add_name)
+    EditText et_alarm_add_name;
+    @Bind(R.id.tv_alarm_add_type)
+    TextView tv_alarm_add_type;
+    @Bind(R.id.tv_alarm_add_period)
+    TextView tv_alarm_add_period;
+    @Bind(R.id.tv_alarm_add_time)
+    TextView tv_alarm_add_time;
+    private Alarm mAlarm;
+    private boolean mIsEdit = false;
+    private TimePickerDialog mDialog;
+    private Calendar mCalendar = Calendar.getInstance();
+    private SimpleDateFormat mSdf;
 
-	private void initView() {
-		tv_alarm_add_time = (TextView) findViewById(R.id.tv_alarm_add_time);
-		et_alarm_add_name = (EditText) findViewById(R.id.et_alarm_add_name);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.alarm_add_page);
+        ButterKnife.bind(this);
+        initData();
+    }
 
-	private void initListener() {
-		findViewById(R.id.iv_back).setOnClickListener(this);
-		findViewById(R.id.tv_alarm_finish).setOnClickListener(this);
-		tv_alarm_add_time.setOnClickListener(this);
-	}
+    private void initData() {
+        mSdf = new SimpleDateFormat(BTConstants.PATTERN_HH_MM);
 
-	private void initData() {
-		mSdf = new SimpleDateFormat(BTConstants.PATTERN_HH_MM);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            mAlarm = (Alarm) getIntent().getExtras().getSerializable(
+                    BTConstants.EXTRA_KEY_ALARM);
+            mIsEdit = true;
+        } else {
+            mAlarm = new Alarm();
+            mIsEdit = false;
+        }
+        if (mIsEdit) {
+            et_alarm_add_name.setText(mAlarm.name);
+            tv_alarm_add_time.setText(mAlarm.time);
+        } else {
+            tv_alarm_add_time.setText("00:00");
+        }
+    }
 
-		if (getIntent() != null && getIntent().getExtras() != null) {
-			mAlarm = (Alarm) getIntent().getExtras().getSerializable(
-					BTConstants.EXTRA_KEY_ALARM);
-			mIsEdit = true;
-		} else {
-			mAlarm = new Alarm();
-			mIsEdit = false;
-		}
-		if (mIsEdit) {
-			et_alarm_add_name.setText(mAlarm.name);
-			tv_alarm_add_time.setText(mAlarm.time);
-		} else {
-			tv_alarm_add_time.setText("00:00");
-		}
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
 
-	@Override
-	public void onClick(final View v) {
-		switch (v.getId()) {
-		case R.id.iv_back:
-			finish();
-			break;
-		case R.id.tv_alarm_finish:
-			if (Utils.isEmpty(et_alarm_add_name.getText().toString())) {
-				ToastUtils.showToast(this, R.string.alarm_add_name_null);
-				return;
-			}
-			if (DBTools.getInstance(this).selectAllAlarm().size() == 5) {
-				ToastUtils.showToast(this, R.string.alarm_add_count_max);
-				return;
-			}
-			mAlarm.name = et_alarm_add_name.getText().toString();
-			mAlarm.time = tv_alarm_add_time.getText().toString();
-			if (mIsEdit) {
-				DBTools.getInstance(this).updateAlarm(mAlarm);
-			} else {
-				mAlarm.state = "1";
-				DBTools.getInstance(this).insertAlarm(mAlarm);
-			}
-			ToastUtils.showToast(this, R.string.alarm_add_success);
-			finish();
-			break;
-		case R.id.tv_alarm_add_time:
-			String alarm_time = tv_alarm_add_time.getText().toString();
-			if (Utils.isNotEmpty(alarm_time)) {
-				mDialog = new TimePickerDialog(this, R.style.AppTheme_Dialog,
-						new OnTimeSetListener() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
-							@Override
-							public void onTimeSet(TimePicker view,
-									int hourOfDay, int minute) {
-								mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-								mCalendar.set(Calendar.MINUTE, minute);
-								tv_alarm_add_time.setText(mSdf.format(mCalendar
-										.getTime()));
-								mDialog.dismiss();
-							}
-						}, Integer.parseInt(alarm_time.split(":")[0]),
-						Integer.parseInt(alarm_time.split(":")[1]), true);
-				mDialog.show();
-			}
-			break;
+    @OnClick({R.id.iv_back, R.id.tv_alarm_finish, R.id.tv_alarm_add_time, R.id.ll_alarm_add_type, R.id.ll_alarm_add_period})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.tv_alarm_finish:
+                if (Utils.isEmpty(et_alarm_add_name.getText().toString())) {
+                    ToastUtils.showToast(this, R.string.alarm_add_name_null);
+                    return;
+                }
+                if (DBTools.getInstance(this).selectAllAlarm().size() == 5) {
+                    ToastUtils.showToast(this, R.string.alarm_add_count_max);
+                    return;
+                }
+                mAlarm.name = et_alarm_add_name.getText().toString();
+                mAlarm.time = tv_alarm_add_time.getText().toString();
+                if (mIsEdit) {
+                    DBTools.getInstance(this).updateAlarm(mAlarm);
+                } else {
+                    mAlarm.state = "1";
+                    DBTools.getInstance(this).insertAlarm(mAlarm);
+                }
+                ToastUtils.showToast(this, R.string.alarm_add_success);
+                finish();
+                break;
+            case R.id.tv_alarm_add_time:
+                String alarm_time = tv_alarm_add_time.getText().toString();
+                if (Utils.isNotEmpty(alarm_time)) {
+                    mDialog = new TimePickerDialog(this, R.style.AppTheme_Dialog,
+                            new OnTimeSetListener() {
 
-		default:
-			break;
-		}
-
-	}
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	}
+                                @Override
+                                public void onTimeSet(TimePicker view,
+                                                      int hourOfDay, int minute) {
+                                    mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                    mCalendar.set(Calendar.MINUTE, minute);
+                                    tv_alarm_add_time.setText(mSdf.format(mCalendar
+                                            .getTime()));
+                                    mDialog.dismiss();
+                                }
+                            }, Integer.parseInt(alarm_time.split(":")[0]),
+                            Integer.parseInt(alarm_time.split(":")[1]), true);
+                    mDialog.show();
+                }
+                break;
+            case R.id.ll_alarm_add_type:
+                break;
+            case R.id.ll_alarm_add_period:
+                break;
+        }
+    }
 }
