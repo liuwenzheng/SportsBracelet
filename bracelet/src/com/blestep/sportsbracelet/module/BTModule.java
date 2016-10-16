@@ -145,28 +145,47 @@ public class BTModule {
      * @param mBluetoothGatt
      */
     public static void setAlarm(Context context, BluetoothGatt mBluetoothGatt) {
-        byte[] byteArray = new byte[17];
-        byteArray[0] = BTConstants.HEADER_SYNALARM;
-        byteArray[1] = 0x01;
+        byte[] byteArray = new byte[18];
+        byteArray[0] = BTConstants.HEADER_SYNALARM_NEW;
         ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
-        if (alarms.size() == 0) {
-            byteArray[2] = 0x00;
-            byteArray[3] = 0x00;
-            byteArray[4] = 0x00;
+        if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
+            // 第一组
+            byteArray[1] = 0x00;
+            for (int i = 0; i < 4; i++) {
+                if (alarms.size() > i) {
+                    Alarm alarm = alarms.get(i);
+                    byteArray[i * 4 + 2] = Byte.valueOf(Integer.toHexString(Integer.parseInt(alarm.type)), 16);
+                    byteArray[i * 4 + 3] = (byte) Integer.parseInt(Utils.binaryString2hexString(alarm.state), 16);
+                    byteArray[i * 4 + 4] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[0])), 16);
+                    byteArray[i * 4 + 5] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[1])), 16);
+                } else {
+                    byteArray[i * 4 + 2] = Byte.valueOf(Integer.toHexString(3), 16);
+                    byteArray[i * 4 + 3] = (byte) Integer.parseInt(Utils.binaryString2hexString("00000000"), 16);
+                    byteArray[i * 4 + 4] = Byte.valueOf(Integer.toHexString(0), 16);
+                    byteArray[i * 4 + 5] = Byte.valueOf(Integer.toHexString(0), 16);
+                }
+            }
             writeCharacteristicData(mBluetoothGatt, byteArray);
-            return;
+        } else {
+            // 第二组
+            byteArray[1] = 0x01;
+            for (int i = 0; i < 4; i++) {
+                int index = i + 4;
+                if (alarms.size() > index) {
+                    Alarm alarm = alarms.get(index);
+                    byteArray[i * 4 + 2] = Byte.valueOf(Integer.toHexString(Integer.parseInt(alarm.type)), 16);
+                    byteArray[i * 4 + 3] = (byte) Integer.parseInt(Utils.binaryString2hexString(alarm.state), 16);
+                    byteArray[i * 4 + 4] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[0])), 16);
+                    byteArray[i * 4 + 5] = Byte.valueOf(Integer.toHexString(Integer.valueOf(alarm.time.split(":")[1])), 16);
+                } else {
+                    byteArray[i * 4 + 2] = Byte.valueOf(Integer.toHexString(3), 16);
+                    byteArray[i * 4 + 3] = (byte) Integer.parseInt(Utils.binaryString2hexString("00000000"), 16);
+                    byteArray[i * 4 + 4] = Byte.valueOf(Integer.toHexString(0), 16);
+                    byteArray[i * 4 + 5] = Byte.valueOf(Integer.toHexString(0), 16);
+                }
+            }
+            writeCharacteristicData(mBluetoothGatt, byteArray);
         }
-        for (int i = 0; i < alarms.size(); i++) {
-            Alarm alarm = alarms.get(i);
-            byteArray[i * 3 + 2] = Byte.valueOf(
-                    Integer.toHexString(Integer.parseInt(alarm.state)), 16);
-            byteArray[i * 3 + 3] = Byte.valueOf(Integer.toHexString(Integer
-                    .valueOf(alarm.time.split(":")[0])), 16);
-            byteArray[i * 3 + 4] = Byte.valueOf(Integer.toHexString(Integer
-                    .valueOf(alarm.time.split(":")[1])), 16);
-        }
-
-        writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
     /**
@@ -210,6 +229,7 @@ public class BTModule {
         byteArray[1] = time_system == 0 ? (byte) 0x00 : (byte) 0x01;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
+
     /**
      * 设置时间格式
      *

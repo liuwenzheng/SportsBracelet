@@ -288,4 +288,24 @@ public class Utils {
         }
         return day;
     }
+
+    /**
+     * 将二进制字符转换成16进制字符
+     * @param bString
+     * @return
+     */
+    public static String binaryString2hexString(String bString) {
+        if (bString == null || bString.equals("") || bString.length() % 8 != 0)
+            return null;
+        StringBuffer tmp = new StringBuffer();
+        int iTmp = 0;
+        for (int i = 0; i < bString.length(); i += 4) {
+            iTmp = 0;
+            for (int j = 0; j < 4; j++) {
+                iTmp += Integer.parseInt(bString.substring(i + j, i + j + 1)) << (4 - j - 1);
+            }
+            tmp.append(Integer.toHexString(iTmp));
+        }
+        return tmp.toString();
+    }
 }

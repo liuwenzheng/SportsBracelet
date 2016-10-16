@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.db.DBTools;
+import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.fragment.MainTab01;
 import com.blestep.sportsbracelet.fragment.MainTab02;
 import com.blestep.sportsbracelet.fragment.MainTab03;
@@ -82,8 +84,8 @@ public class MainActivity extends SlidingFragmentActivity implements
     protected void onStart() {
         super.onStart();
         if (mBtService != null && mBtService.isConnDevice() && !mIsConnDevice) {
-             LogModule.i("打开页面同步数据");
-             autoPullUpdate(getString(R.string.step_syncdata_waiting));
+            LogModule.i("打开页面同步数据");
+            autoPullUpdate(getString(R.string.step_syncdata_waiting));
         }
     }
 
@@ -318,12 +320,23 @@ public class MainActivity extends SlidingFragmentActivity implements
                         mBtService.syncUserInfoData();
                     } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
                         mBtService.syncAlarmData();
-                    } else if (ack == BTConstants.HEADER_SYNALARM) {
+                    } else if (ack == BTConstants.HEADER_SYNALARM_NEW) {
                         // mBtService.synSleepTime();
 
                         // }
                         // else if (ack == BTConstants.HEADER_SYNSLEEP) {
-                        mBtService.getBatteryData();
+                        ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
+                        if (alarms.size() > 4) {
+                            if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
+                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
+                                mBtService.syncAlarmData();
+                            } else {
+                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
+                                mBtService.getBatteryData();
+                            }
+                        } else {
+                            mBtService.getBatteryData();
+                        }
                     } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
                         mBtService.syncTime();
                     } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {

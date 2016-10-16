@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.activity;
 
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -39,6 +40,12 @@ public class AlarmAddActivity extends BaseActivity {
     private TimePickerDialog mDialog;
     private Calendar mCalendar = Calendar.getInstance();
     private SimpleDateFormat mSdf;
+    public static final int REQUEST_CODE_TYPE = 100;
+    public static final int REQUEST_CODE_PERIOD = 101;
+    private int mType;
+    private String[] mAlarmTypes;
+    private String mPeriod;
+    private String[] mAlarmDates;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,8 +56,9 @@ public class AlarmAddActivity extends BaseActivity {
     }
 
     private void initData() {
+        mAlarmTypes = getResources().getStringArray(R.array.alarm_types);
+        mAlarmDates = getResources().getStringArray(R.array.alarm_period);
         mSdf = new SimpleDateFormat(BTConstants.PATTERN_HH_MM);
-
         if (getIntent() != null && getIntent().getExtras() != null) {
             mAlarm = (Alarm) getIntent().getExtras().getSerializable(
                     BTConstants.EXTRA_KEY_ALARM);
@@ -60,11 +68,41 @@ public class AlarmAddActivity extends BaseActivity {
             mIsEdit = false;
         }
         if (mIsEdit) {
+            mType = Integer.parseInt(mAlarm.type);
+            mPeriod = mAlarm.state;
             et_alarm_add_name.setText(mAlarm.name);
             tv_alarm_add_time.setText(mAlarm.time);
         } else {
-            tv_alarm_add_time.setText("00:00");
+            mType = 3;
+            mPeriod = "11111111";
+            et_alarm_add_name.setText(getString(R.string.alarm_title));
+            tv_alarm_add_time.setText(mSdf.format(Calendar.getInstance().getTime()));
         }
+        setPeriodText();
+        tv_alarm_add_type.setText(mAlarmTypes[mType]);
+    }
+
+    private void setPeriodText() {
+        StringBuilder sb = new StringBuilder();
+        if ("1111111".equals(mPeriod.substring(1, mPeriod.length()))) {
+            sb.append(getString(R.string.alarm_every_day));
+        } else if ("11111".equals(mPeriod.substring(3, mPeriod.length()))
+                && "00".equals(mPeriod.substring(1, 3))) {
+            sb.append(getString(R.string.alarm_weekdays));
+        } else if ("00000".equals(mPeriod.substring(3, mPeriod.length()))
+                && "11".equals(mPeriod.substring(1, 3))) {
+            sb.append(getString(R.string.alarm_weekends));
+        } else {
+            for (int i = 1; i < mPeriod.length(); i++) {
+                if ("1".equals(mPeriod.substring(i, i + 1))) {
+                    sb.append(mAlarmDates[i - 1]);
+                    if (i < mPeriod.length()) {
+                        sb.append(" ");
+                    }
+                }
+            }
+        }
+        tv_alarm_add_period.setText(sb.toString());
     }
 
     @Override
@@ -90,16 +128,17 @@ public class AlarmAddActivity extends BaseActivity {
                     ToastUtils.showToast(this, R.string.alarm_add_name_null);
                     return;
                 }
-                if (DBTools.getInstance(this).selectAllAlarm().size() == 5) {
+                if (DBTools.getInstance(this).selectAllAlarm().size() == 8) {
                     ToastUtils.showToast(this, R.string.alarm_add_count_max);
                     return;
                 }
                 mAlarm.name = et_alarm_add_name.getText().toString();
                 mAlarm.time = tv_alarm_add_time.getText().toString();
+                mAlarm.type = String.valueOf(mType);
+                mAlarm.state = mPeriod;
                 if (mIsEdit) {
                     DBTools.getInstance(this).updateAlarm(mAlarm);
                 } else {
-                    mAlarm.state = "1";
                     DBTools.getInstance(this).insertAlarm(mAlarm);
                 }
                 ToastUtils.showToast(this, R.string.alarm_add_success);
@@ -126,9 +165,32 @@ public class AlarmAddActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_alarm_add_type:
+                Intent intent = new Intent(this, AlarmTypeActivity.class);
+                intent.putExtra("alarm_type", mType);
+                startActivityForResult(intent, REQUEST_CODE_TYPE);
                 break;
             case R.id.ll_alarm_add_period:
+                Intent i = new Intent(this, AlarmPeriodActivity.class);
+                i.putExtra("alarm_period", mPeriod);
+                startActivityForResult(i, REQUEST_CODE_PERIOD);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_TYPE:
+                    mType = data.getIntExtra("alarm_type", 3);
+                    tv_alarm_add_type.setText(mAlarmTypes[mType]);
+                    break;
+                case REQUEST_CODE_PERIOD:
+                    mPeriod = data.getStringExtra("alarm_period");
+                    setPeriodText();
+                    break;
+            }
         }
     }
 }

@@ -74,7 +74,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="名称"
+            android:text="@string/alarm_label"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -101,15 +101,16 @@
         android:id="@+id/ll_alarm_add_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:orientation="horizontal"
+        android:paddingBottom="10dp"
         android:paddingLeft="40dp"
-        android:paddingRight="17dp">
+        android:paddingRight="17dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="类型"
+            android:text="@string/alarm_type"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -134,22 +135,22 @@
     <View
         style="@style/divider_line"
         android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginRight="17dp" />
 
     <LinearLayout
         android:id="@+id/ll_alarm_add_period"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:orientation="horizontal"
+        android:paddingBottom="10dp"
         android:paddingLeft="40dp"
-        android:paddingRight="17dp">
+        android:paddingRight="17dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="重复"
+            android:text="@string/alarm_period_repeat"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -160,6 +161,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1.0"
+            android:singleLine="true"
             android:text=""
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
@@ -174,6 +176,5 @@
     <View
         style="@style/divider_line"
         android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginRight="17dp" />
 </LinearLayout>

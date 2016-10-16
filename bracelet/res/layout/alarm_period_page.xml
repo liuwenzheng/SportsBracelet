@@ -22,20 +22,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/alarm_type"
+            android:text="@string/alarm_period_repeat"
             android:textColor="@color/grey_323232"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_alarm_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:text="@string/alarm_finish"
+            android:textColor="@color/blue_40acaf"
+            android:textSize="14sp" />
     </RelativeLayout>
 
-    <RadioGroup
-        android:id="@+id/rg_alarm_type"
+    <LinearLayout
+        android:id="@+id/ll_alarm_period"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white_ffffff"
         android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/rb_alarm_type_normal"
+        <CheckBox
+            android:id="@+id/cb_alarm_period_sunday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -44,15 +56,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:tag="3"
-            android:text="普通"
+            android:text="@string/alarm_every_sunday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
         <View style="@style/divider_line" />
 
-        <RadioButton
-            android:id="@+id/rb_alarm_type_drink"
+        <CheckBox
+            android:id="@+id/cb_alarm_period_saturday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -61,15 +72,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:tag="1"
-            android:text="喝水"
+            android:text="@string/alarm_every_saturday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
         <View style="@style/divider_line" />
 
-        <RadioButton
-            android:id="@+id/rb_alarm_type_sport"
+        <CheckBox
+            android:id="@+id/cb_alarm_period_friday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -78,15 +88,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:tag="6"
-            android:text="运动"
+            android:text="@string/alarm_every_friday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
         <View style="@style/divider_line" />
 
-        <RadioButton
-            android:id="@+id/rb_alarm_type_sleep"
+        <CheckBox
+            android:id="@+id/cb_alarm_period_thursday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -95,15 +104,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:tag="4"
-            android:text="睡眠"
+            android:text="@string/alarm_every_thursday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
         <View style="@style/divider_line" />
 
-        <RadioButton
-            android:id="@+id/rb_alarm_type_medicine"
+        <CheckBox
+            android:id="@+id/cb_alarm_period_wednesday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -112,15 +120,14 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:tag="0"
-            android:text="吃药"
+            android:text="@string/alarm_every_wednesday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
         <View style="@style/divider_line" />
 
-        <RadioButton
-            android:id="@+id/rb_alarm_type_exercise"
+        <CheckBox
+            android:id="@+id/cb_alarm_period_tuesday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -129,11 +136,26 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:tag="5"
-            android:text="锻炼"
+            android:text="@string/alarm_every_tuesday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
         <View style="@style/divider_line" />
-    </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/cb_alarm_period_monday"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/alarm_every_monday"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+    </LinearLayout>
 </LinearLayout>

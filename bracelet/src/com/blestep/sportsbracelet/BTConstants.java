@@ -68,6 +68,7 @@ public class BTConstants {
     public static final String SP_KEY_IS_BRITISH_UNIT = "sp_key_is_british_unit";
     public static final String SP_KEY_TIME_SYSTEM = "sp_key_time_system";
     public static final String SP_KEY_LIGHT_SYSTEM = "sp_key_light_system";
+    public static final String SP_KEY_ALARM_SYNC_FINISH = "sp_key_alarm_sync_finish";
     // Extra_key
     /**
      * intent传值key
@@ -115,4 +116,6 @@ public class BTConstants {
     public static final byte HEADER_TIME_SYSTEM = 0x24;
     // 自动亮屏幕
     public static final byte HEADER_LIGHT_SYSTEM = 0x25;
+    // 新同步闹钟
+    public static final byte HEADER_SYNALARM_NEW = 0x26;
 }
