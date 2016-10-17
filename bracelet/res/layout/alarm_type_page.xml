@@ -45,7 +45,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:tag="3"
-            android:text="普通"
+            android:text="@string/alarm_type_common"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -62,7 +62,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:tag="1"
-            android:text="喝水"
+            android:text="@string/alarm_type_water"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -79,7 +79,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:tag="6"
-            android:text="运动"
+            android:text="@string/alarm_type_sports"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -96,7 +96,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:tag="4"
-            android:text="睡眠"
+            android:text="@string/alarm_type_sleep"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -113,7 +113,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:tag="0"
-            android:text="吃药"
+            android:text="@string/alarm_type_medicine"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -130,7 +130,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:tag="5"
-            android:text="锻炼"
+            android:text="@string/alarm_type_exercise"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 

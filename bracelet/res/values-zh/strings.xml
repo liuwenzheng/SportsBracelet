@@ -272,6 +272,12 @@
     <string name="alarm_weekends">周末</string>
     <string name="alarm_type">类型</string>
     <string name="alarm_label">名称</string>
+    <string name="alarm_type_common">普通</string>
+    <string name="alarm_type_medicine">吃药</string>
+    <string name="alarm_type_sports">运动</string>
+    <string name="alarm_type_water">喝水</string>
+    <string name="alarm_type_exercise">锻炼</string>
+    <string name="alarm_type_sleep">睡眠</string>
     <string-array name="alarm_types">
         <item>吃药</item>
         <item>喝水</item>

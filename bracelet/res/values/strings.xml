@@ -272,14 +272,20 @@
     <string name="alarm_weekends">Weekneds</string>
     <string name="alarm_type">Type</string>
     <string name="alarm_label">Label</string>
+    <string name="alarm_type_common">common</string>
+    <string name="alarm_type_medicine">medicine</string>
+    <string name="alarm_type_sports">sports</string>
+    <string name="alarm_type_water">water</string>
+    <string name="alarm_type_exercise">exercise</string>
+    <string name="alarm_type_sleep">sleep</string>
     <string-array name="alarm_types">
-        <item>吃药</item>
-        <item>喝水</item>
-        <item>咖啡</item>
-        <item>普通</item>
-        <item>睡眠</item>
-        <item>锻炼</item>
-        <item>运动</item>
+        <item>medicine</item>
+        <item>water</item>
+        <item>coffee</item>
+        <item>common</item>
+        <item>sleep</item>
+        <item>exercise</item>
+        <item>sports</item>
     </string-array>
     <string-array name="alarm_period">
         <item>Sun</item>

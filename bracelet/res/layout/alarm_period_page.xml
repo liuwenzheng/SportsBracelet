@@ -63,7 +63,7 @@
         <View style="@style/divider_line" />
 
         <CheckBox
-            android:id="@+id/cb_alarm_period_saturday"
+            android:id="@+id/cb_alarm_period_monday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -72,55 +72,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:text="@string/alarm_every_saturday"
-            android:textColor="@color/grey_3a3a3a"
-            android:textSize="18sp" />
-
-        <View style="@style/divider_line" />
-
-        <CheckBox
-            android:id="@+id/cb_alarm_period_friday"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:button="@null"
-            android:checked="false"
-            android:drawableRight="@drawable/alarm_checked_selector"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/alarm_every_friday"
-            android:textColor="@color/grey_3a3a3a"
-            android:textSize="18sp" />
-
-        <View style="@style/divider_line" />
-
-        <CheckBox
-            android:id="@+id/cb_alarm_period_thursday"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:button="@null"
-            android:checked="false"
-            android:drawableRight="@drawable/alarm_checked_selector"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/alarm_every_thursday"
-            android:textColor="@color/grey_3a3a3a"
-            android:textSize="18sp" />
-
-        <View style="@style/divider_line" />
-
-        <CheckBox
-            android:id="@+id/cb_alarm_period_wednesday"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:button="@null"
-            android:checked="false"
-            android:drawableRight="@drawable/alarm_checked_selector"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/alarm_every_wednesday"
+            android:text="@string/alarm_every_monday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
@@ -143,7 +95,7 @@
         <View style="@style/divider_line" />
 
         <CheckBox
-            android:id="@+id/cb_alarm_period_monday"
+            android:id="@+id/cb_alarm_period_wednesday"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -152,7 +104,55 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:text="@string/alarm_every_monday"
+            android:text="@string/alarm_every_wednesday"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <CheckBox
+            android:id="@+id/cb_alarm_period_thursday"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/alarm_every_thursday"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <CheckBox
+            android:id="@+id/cb_alarm_period_friday"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/alarm_every_friday"
+            android:textColor="@color/grey_3a3a3a"
+            android:textSize="18sp" />
+
+        <View style="@style/divider_line" />
+
+        <CheckBox
+            android:id="@+id/cb_alarm_period_saturday"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/alarm_every_saturday"
             android:textColor="@color/grey_3a3a3a"
             android:textSize="18sp" />
 
