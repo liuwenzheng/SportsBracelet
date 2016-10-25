@@ -104,8 +104,6 @@ public class BTConstants {
     public static final byte HEADER_SYNUSERINFO = 0x12;
     // 同步闹钟
     public static final byte HEADER_SYNALARM = 0x13;
-    // 同步睡眠
-    public static final byte HEADER_SYNSLEEP = 0x14;
     // 获取数据
     public static final byte HEADER_GETDATA = 0x16;
     // 初始化触摸按键

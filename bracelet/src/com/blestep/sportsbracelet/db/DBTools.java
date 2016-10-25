@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.entity.Alarm;
+import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.utils.Utils;
 
@@ -54,6 +55,7 @@ public class DBTools {
         return step;
     }
 
+
     public Step selectStep(Calendar calendar) {
         String selectDate = Utils.calendar2strDate(calendar, BTConstants.PATTERN_YYYY_MM_DD);
         Cursor cursor = db.query(DBConstants.TABLE_NAME_STEP, null, DBConstants.STEP_FIELD_DATE + " = ?",
@@ -75,6 +77,56 @@ public class DBTools {
             break;
         }
         return step;
+    }
+
+    public Sleep selectCurrentSleep() {
+        String start = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_END + " = ?",
+                new String[]{start},
+                null, null, null);
+        Sleep sleep = null;
+        while (cursor.moveToLast()) {
+            sleep = new Sleep();
+            sleep.start = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_START));
+            sleep.end = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_END));
+            sleep.deep = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DEEP));
+            sleep.light = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_LIGHT));
+            sleep.awake = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_AWAKE));
+            sleep.record = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_RECORD));
+            break;
+        }
+        return sleep;
+    }
+
+    public Sleep selectSleep(Calendar calendar) {
+        String start = Utils.calendar2strDate(calendar, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_END + " = ?",
+                new String[]{start},
+                null, null, null);
+        Sleep sleep = null;
+        while (cursor.moveToLast()) {
+            sleep = new Sleep();
+            sleep.start = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_START));
+            sleep.end = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_END));
+            sleep.deep = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DEEP));
+            sleep.light = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_LIGHT));
+            sleep.awake = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_AWAKE));
+            sleep.record = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_RECORD));
+            break;
+        }
+        return sleep;
     }
 
     public ArrayList<Step> selectAllStep() {
@@ -122,6 +174,31 @@ public class DBTools {
         return alarms;
     }
 
+    public ArrayList<Sleep> selectAllSleep() {
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, null,
+                null, null, null, null);
+        ArrayList<Sleep> sleeps = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Sleep sleep = new Sleep();
+            sleep.id = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_ID));
+            sleep.start = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_START));
+            sleep.end = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_END));
+            sleep.deep = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DEEP));
+            sleep.light = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_LIGHT));
+            sleep.awake = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_AWAKE));
+            sleep.record = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_RECORD));
+            sleeps.add(sleep);
+        }
+        return sleeps;
+    }
+
     public long insertStep(Step step) {
         ContentValues cv = new ContentValues();
         cv.put(DBConstants.STEP_FIELD_DATE, step.date);
@@ -143,6 +220,18 @@ public class DBTools {
         return row;
     }
 
+    public long insertSleep(Sleep sleep) {
+        ContentValues cv = new ContentValues();
+        cv.put(DBConstants.SLEEP_FIELD_START, sleep.start);
+        cv.put(DBConstants.SLEEP_FIELD_END, sleep.end);
+        cv.put(DBConstants.SLEEP_FIELD_DEEP, sleep.deep);
+        cv.put(DBConstants.SLEEP_FIELD_LIGHT, sleep.light);
+        cv.put(DBConstants.SLEEP_FIELD_AWAKE, sleep.awake);
+        cv.put(DBConstants.SLEEP_FIELD_RECORD, sleep.record);
+        long row = db.insert(DBConstants.TABLE_NAME_SLEEP, null, cv);
+        return row;
+    }
+
     public void deleteStep(int id) {
         String where = DBConstants.STEP_FIELD_ID + " = ?";
         String[] whereValue = {Integer.toString(id)};
@@ -160,6 +249,20 @@ public class DBTools {
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + DBConstants.TABLE_NAME_STEP + " WHERE "
                 + DBConstants.STEP_FIELD_DATE + " = ?", args);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        } else {
+            cursor.close();
+            return true;
+        }
+    }
+
+    public boolean isSleepExist(String start) {
+        String[] args = new String[]{start};
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + DBConstants.TABLE_NAME_SLEEP + " WHERE "
+                + DBConstants.SLEEP_FIELD_START + " = ?", args);
         if (cursor.getCount() == 0) {
             cursor.close();
             return false;
@@ -192,9 +295,23 @@ public class DBTools {
         db.update(DBConstants.TABLE_NAME_ALARM, cv, where, whereValue);
     }
 
+    public void updateSleep(Sleep sleep) {
+        String where = DBConstants.SLEEP_FIELD_START + " = ?";
+        String[] whereValue = {sleep.start};
+        ContentValues cv = new ContentValues();
+        cv.put(DBConstants.SLEEP_FIELD_START, sleep.start);
+        cv.put(DBConstants.SLEEP_FIELD_END, sleep.end);
+        cv.put(DBConstants.SLEEP_FIELD_DEEP, sleep.deep);
+        cv.put(DBConstants.SLEEP_FIELD_LIGHT, sleep.light);
+        cv.put(DBConstants.SLEEP_FIELD_AWAKE, sleep.awake);
+        cv.put(DBConstants.SLEEP_FIELD_RECORD, sleep.record);
+        db.update(DBConstants.TABLE_NAME_SLEEP, cv, where, whereValue);
+    }
+
     public void deleteAllData() {
         db.delete(DBConstants.TABLE_NAME_STEP, null, null);
         db.delete(DBConstants.TABLE_NAME_ALARM, null, null);
+        db.delete(DBConstants.TABLE_NAME_SLEEP, null, null);
     }
 
     // drop table;

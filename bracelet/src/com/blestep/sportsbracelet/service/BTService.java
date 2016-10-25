@@ -228,8 +228,7 @@ public class BTService extends Service implements LeScanCallback {
                     // stringBuilder.append(string + " ");
                     // LogModule.i("转化后：" + stringBuilder.toString());
                     // 获取总记录数
-                    int header = Integer.parseInt(Utils
-                            .decodeToString(formatDatas[0]));
+                    int header = Integer.parseInt(Utils.decodeToString(formatDatas[0]));
                     if (header == BTConstants.HEADER_BACK_ACK) {
                         int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
                         Intent intent = new Intent(BTConstants.ACTION_ACK);
@@ -239,33 +238,23 @@ public class BTService extends Service implements LeScanCallback {
                     }
                     if (header == BTConstants.HEADER_BACK_RECORD) {
                         stepsCount = 0;
+                        // 记步总数、睡眠指数总数、睡眠记录总数、电量
                         int stepRecord = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
-                        // int sleepRecord = Integer.parseInt(Utils.decodeToString(formatDatas[2]));
-                        // 保存电量
+                        String sleepIndexAndrRecord = Utils.hexString2binaryString(Utils.decodeToString(formatDatas[2]));
+                        if (sleepIndexAndrRecord.length() >= 8) {
+                            int sleepIndex = Integer.parseInt(sleepIndexAndrRecord.substring(0, 4), 2);
+                            int sleepRecord = Integer.parseInt(sleepIndexAndrRecord.substring(4, 8), 2);
+                            LogModule.i("手环中的睡眠总数为：" + sleepIndex);
+                            LogModule.i("手环中的睡眠记录总数为：" + sleepRecord);
+                        }
                         int battery = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
                         stepsCount = stepRecord;
-                        LogModule.i("手环中的记录总数为：" + stepsCount);
-                        Intent intent = new Intent(
-                                BTConstants.ACTION_REFRESH_DATA_BATTERY);
-                        intent.putExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE,
-                                battery);
+                        LogModule.i("手环中的记步总数为：" + stepsCount);
+                        Intent intent = new Intent(BTConstants.ACTION_REFRESH_DATA_BATTERY);
+                        intent.putExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE, battery);
                         sendBroadcast(intent);
                         return;
                     }
-//                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
-//                        Intent intent = new Intent(
-//                                BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
-//                        sendBroadcast(intent);
-//                        return;
-//
-//                    }
-//                    if (header == BTConstants.HEADER_BACK_SLEEP_RECORD) {
-//                        Intent intent = new Intent(
-//                                BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
-//                        sendBroadcast(intent);
-//                        return;
-//
-//                    }
                     if (header == BTConstants.HEADER_FIRMWARE_VERSION) {
                         int major = Integer.parseInt(Utils
                                 .decodeToString(formatDatas[1]));
@@ -278,10 +267,11 @@ public class BTService extends Service implements LeScanCallback {
                         BTService.this.sendBroadcast(intent);
                         return;
                     }
-
-                    // count--;
-                    BTModule.saveBleData(formatDatas, getApplicationContext());
-                    stepsCount--;
+                    if (header == BTConstants.HEADER_BACK_STEP) {
+                        // count--;
+                        BTModule.saveStepData(formatDatas, getApplicationContext());
+                        stepsCount--;
+                    }
                     if (stepsCount <= 0) {
                         LogModule.i("延迟1s发送广播更新数据");
                         mHandler.postDelayed(new Runnable() {
@@ -293,7 +283,7 @@ public class BTService extends Service implements LeScanCallback {
                             }
                         }, 1000);
                     } else {
-                        LogModule.i("还有" + stepsCount + "条数据未同步");
+                        LogModule.i("还有" + stepsCount + "条记步数据未同步");
                     }
                 }
             };
@@ -362,13 +352,6 @@ public class BTService extends Service implements LeScanCallback {
      */
     public void syncAlarmData() {
         BTModule.setAlarm(this, mBluetoothGatt);
-    }
-
-    /**
-     * 同步睡眠时间
-     */
-    public void synSleepTime() {
-        BTModule.setSleep(this, mBluetoothGatt);
     }
 
     /**

@@ -189,22 +189,6 @@ public class BTModule {
     }
 
     /**
-     * 设置闹钟
-     *
-     * @param mBluetoothGatt
-     */
-    public static void setSleep(Context context, BluetoothGatt mBluetoothGatt) {
-        byte[] byteArray = new byte[6];
-        byteArray[0] = BTConstants.HEADER_SYNSLEEP;
-        byteArray[1] = 0x01;
-        byteArray[2] = 0x17;
-        byteArray[3] = 0x00;
-        byteArray[4] = 0x07;
-        byteArray[5] = 0x00;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
-    }
-
-    /**
      * 设置单位制式
      *
      * @param mBluetoothGatt
@@ -491,82 +475,73 @@ public class BTModule {
      * @param formatDatas
      * @param context
      */
-    public static void saveBleData(String[] formatDatas, final Context context) {
-        int header = Integer.parseInt(Utils.decodeToString(formatDatas[0]));
-        switch (header) {
-            case BTConstants.HEADER_BACK_STEP:
-                // 保存步数
-                // 日期
-                String year = formatDatas[2];
-                String month = formatDatas[3];
-                String day = formatDatas[4];
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(2000 + Integer.parseInt(Utils.decodeToString(year)),
-                        Integer.parseInt(Utils.decodeToString(month)) - 1,
-                        Integer.parseInt(Utils.decodeToString(day)));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = calendar.getTime();
-                // 步数
-                String step3 = formatDatas[5];
-                String step2 = formatDatas[6];
-                String step1 = formatDatas[7];
-                String step0 = formatDatas[8];
-                StringBuilder sb = new StringBuilder();
-                sb.append(step3).append(step2).append(step1).append(step0);
-                // 时长
-                String duration1 = formatDatas[9];
-                String duration0 = formatDatas[10];
-                // 距离
-                String distance1 = formatDatas[11];
-                String distance0 = formatDatas[12];
-                // 卡路里
-                String calories1 = formatDatas[13];
-                String calories0 = formatDatas[14];
-                String dateStr = sdf.format(date);
-                LogModule.e("日期：" + dateStr);
-                Intent intent = new Intent(BTConstants.ACTION_LOG);
-                intent.putExtra("log", "日期：" + dateStr);
-                context.sendBroadcast(intent);
+    public static void saveStepData(String[] formatDatas, final Context context) {
+        // 保存步数
+        // 日期
+        String year = formatDatas[2];
+        String month = formatDatas[3];
+        String day = formatDatas[4];
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000 + Integer.parseInt(Utils.decodeToString(year)),
+                Integer.parseInt(Utils.decodeToString(month)) - 1,
+                Integer.parseInt(Utils.decodeToString(day)));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = calendar.getTime();
+        // 步数
+        String step3 = formatDatas[5];
+        String step2 = formatDatas[6];
+        String step1 = formatDatas[7];
+        String step0 = formatDatas[8];
+        StringBuilder sb = new StringBuilder();
+        sb.append(step3).append(step2).append(step1).append(step0);
+        // 时长
+        String duration1 = formatDatas[9];
+        String duration0 = formatDatas[10];
+        // 距离
+        String distance1 = formatDatas[11];
+        String distance0 = formatDatas[12];
+        // 卡路里
+        String calories1 = formatDatas[13];
+        String calories0 = formatDatas[14];
+        String dateStr = sdf.format(date);
+        LogModule.e("日期：" + dateStr);
+        Intent intent = new Intent(BTConstants.ACTION_LOG);
+        intent.putExtra("log", "日期：" + dateStr);
+        context.sendBroadcast(intent);
 
-                String count = Utils.decodeToString(sb.toString());
-                LogModule.e("步数：" + count);
-                intent.putExtra("log", "步数：" + count);
-                context.sendBroadcast(intent);
+        String count = Utils.decodeToString(sb.toString());
+        LogModule.e("步数：" + count);
+        intent.putExtra("log", "步数：" + count);
+        context.sendBroadcast(intent);
 
-                String duration = Utils.decodeToString(duration1 + duration0);
-                LogModule.e("时长：" + duration);
-                intent.putExtra("log", "时长：" + duration);
-                context.sendBroadcast(intent);
+        String duration = Utils.decodeToString(duration1 + duration0);
+        LogModule.e("时长：" + duration);
+        intent.putExtra("log", "时长：" + duration);
+        context.sendBroadcast(intent);
 
-                String distance = new DecimalFormat().format(Integer.parseInt(Utils
-                        .decodeToString(distance1 + distance0)) * 0.1);
-                LogModule.e("距离：" + distance);
-                intent.putExtra("log", "距离：" + distance);
-                context.sendBroadcast(intent);
+        String distance = new DecimalFormat().format(Integer.parseInt(Utils
+                .decodeToString(distance1 + distance0)) * 0.1);
+        LogModule.e("距离：" + distance);
+        intent.putExtra("log", "距离：" + distance);
+        context.sendBroadcast(intent);
 
-                String calories = Utils.decodeToString(calories1 + calories0);
-                LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
-                intent.putExtra("log",
-                        "卡路里：" + Utils.decodeToString(calories1 + calories0));
-                context.sendBroadcast(intent);
+        String calories = Utils.decodeToString(calories1 + calories0);
+        LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
+        intent.putExtra("log",
+                "卡路里：" + Utils.decodeToString(calories1 + calories0));
+        context.sendBroadcast(intent);
 
-                Step step = new Step();
-                step.date = dateStr;
-                step.count = count;
-                step.duration = duration;
-                step.distance = distance;
-                step.calories = calories;
-                if (!DBTools.getInstance(context).isStepExist(step.date)) {
-                    DBTools.getInstance(context).insertStep(step);
-                } else {
-                    // 更新全部记录
-                    DBTools.getInstance(context).updateStep(step);
-                }
-
-                break;
-
-            default:
-                break;
+        Step step = new Step();
+        step.date = dateStr;
+        step.count = count;
+        step.duration = duration;
+        step.distance = distance;
+        step.calories = calories;
+        if (!DBTools.getInstance(context).isStepExist(step.date)) {
+            DBTools.getInstance(context).insertStep(step);
+        } else {
+            // 更新全部记录
+            DBTools.getInstance(context).updateStep(step);
         }
     }
 }
