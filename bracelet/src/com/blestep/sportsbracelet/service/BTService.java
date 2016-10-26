@@ -268,9 +268,11 @@ public class BTService extends Service implements LeScanCallback {
                         return;
                     }
                     if (header == BTConstants.HEADER_BACK_STEP) {
-                        // count--;
                         BTModule.saveStepData(formatDatas, getApplicationContext());
                         stepsCount--;
+                    }
+                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
+                        BTModule.saveSleepIndex(formatDatas, getApplicationContext());
                     }
                     if (stepsCount <= 0) {
                         LogModule.i("延迟1s发送广播更新数据");

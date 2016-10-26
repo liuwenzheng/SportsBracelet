@@ -13,6 +13,7 @@ import android.content.Intent;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
+import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
@@ -475,7 +476,7 @@ public class BTModule {
      * @param formatDatas
      * @param context
      */
-    public static void saveStepData(String[] formatDatas, final Context context) {
+    public static void saveStepData(String[] formatDatas, Context context) {
         // 保存步数
         // 日期
         String year = formatDatas[2];
@@ -485,7 +486,7 @@ public class BTModule {
         calendar.set(2000 + Integer.parseInt(Utils.decodeToString(year)),
                 Integer.parseInt(Utils.decodeToString(month)) - 1,
                 Integer.parseInt(Utils.decodeToString(day)));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD);
         Date date = calendar.getTime();
         // 步数
         String step3 = formatDatas[5];
@@ -543,5 +544,45 @@ public class BTModule {
             // 更新全部记录
             DBTools.getInstance(context).updateStep(step);
         }
+    }
+
+    public static void saveSleepIndex(String[] formatDatas, Context context) {
+        SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
+        Calendar calendar = Calendar.getInstance();
+        // 起始时间
+        String startYear = formatDatas[2];
+        String startMonth = formatDatas[3];
+        String startDay = formatDatas[4];
+        String startHour = formatDatas[5];
+        String startMin = formatDatas[6];
+        calendar.set(2000 + Integer.parseInt(Utils.decodeToString(startYear)),
+                Integer.parseInt(Utils.decodeToString(startMonth)) - 1,
+                Integer.parseInt(Utils.decodeToString(startDay)),
+                Integer.parseInt(Utils.decodeToString(startHour)),
+                Integer.parseInt(Utils.decodeToString(startMin)));
+        Date startDate = calendar.getTime();
+        String startDateStr = sdf.format(startDate);
+        // 结束时间
+        String endYear = formatDatas[7];
+        String endMonth = formatDatas[8];
+        String endDay = formatDatas[9];
+        String endHour = formatDatas[10];
+        String endMin = formatDatas[11];
+        calendar.set(2000 + Integer.parseInt(Utils.decodeToString(endYear)),
+                Integer.parseInt(Utils.decodeToString(endMonth)) - 1,
+                Integer.parseInt(Utils.decodeToString(endDay)),
+                Integer.parseInt(Utils.decodeToString(endHour)),
+                Integer.parseInt(Utils.decodeToString(endMin)));
+        Date endDate = calendar.getTime();
+        String endDateStr = sdf.format(endDate);
+        // 深睡
+        String deep1 = formatDatas[12];
+        String deep0 = formatDatas[13];
+
+        // 构造睡眠数据
+        Sleep sleep = new Sleep();
+        sleep.start = startDateStr;
+        sleep.end = endDateStr;
+
     }
 }
