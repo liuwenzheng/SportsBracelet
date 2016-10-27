@@ -31,6 +31,8 @@ import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,6 +130,9 @@ public class BTService extends Service implements LeScanCallback {
             }
             mGattCallback = new BluetoothGattCallback() {
                 private int stepsCount;
+                private int sleepRecordCount;
+                private int sleepIndexCount;
+                private Map<Integer, String> sleepMaps = new HashMap<>();
 
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
@@ -229,63 +234,78 @@ public class BTService extends Service implements LeScanCallback {
                     // LogModule.i("转化后：" + stringBuilder.toString());
                     // 获取总记录数
                     int header = Integer.parseInt(Utils.decodeToString(formatDatas[0]));
-                    if (header == BTConstants.HEADER_BACK_ACK) {
-                        int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
-                        Intent intent = new Intent(BTConstants.ACTION_ACK);
-                        intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
-                        BTService.this.sendBroadcast(intent);
-                        return;
-                    }
-                    if (header == BTConstants.HEADER_BACK_RECORD) {
-                        stepsCount = 0;
-                        // 记步总数、睡眠指数总数、睡眠记录总数、电量
-                        int stepRecord = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
-                        String sleepIndexAndrRecord = Utils.hexString2binaryString(Utils.decodeToString(formatDatas[2]));
-                        if (sleepIndexAndrRecord.length() >= 8) {
-                            int sleepIndex = Integer.parseInt(sleepIndexAndrRecord.substring(0, 4), 2);
-                            int sleepRecord = Integer.parseInt(sleepIndexAndrRecord.substring(4, 8), 2);
-                            LogModule.i("手环中的睡眠总数为：" + sleepIndex);
-                            LogModule.i("手环中的睡眠记录总数为：" + sleepRecord);
-                        }
-                        int battery = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
-                        stepsCount = stepRecord;
-                        LogModule.i("手环中的记步总数为：" + stepsCount);
-                        Intent intent = new Intent(BTConstants.ACTION_REFRESH_DATA_BATTERY);
-                        intent.putExtra(BTConstants.EXTRA_KEY_BATTERY_VALUE, battery);
-                        sendBroadcast(intent);
-                        return;
-                    }
-                    if (header == BTConstants.HEADER_FIRMWARE_VERSION) {
-                        int major = Integer.parseInt(Utils
-                                .decodeToString(formatDatas[1]));
-                        int minor = Integer.parseInt(Utils
-                                .decodeToString(formatDatas[2]));
-                        int revision = Integer.parseInt(Utils
-                                .decodeToString(formatDatas[3]));
-                        Intent intent = new Intent(BTConstants.ACTION_REFRESH_DATA_VERSION);
-                        intent.putExtra(BTConstants.EXTRA_KEY_VERSION_VALUE, String.format("%s.%s.%s", major, minor, revision));
-                        BTService.this.sendBroadcast(intent);
-                        return;
-                    }
-                    if (header == BTConstants.HEADER_BACK_STEP) {
-                        BTModule.saveStepData(formatDatas, getApplicationContext());
-                        stepsCount--;
-                    }
-                    if (header == BTConstants.HEADER_BACK_SLEEP_INDEX) {
-                        BTModule.saveSleepIndex(formatDatas, getApplicationContext());
-                    }
-                    if (stepsCount <= 0) {
-                        LogModule.i("延迟1s发送广播更新数据");
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new
-                                        Intent(BTConstants.ACTION_REFRESH_DATA);
-                                sendBroadcast(intent);
+                    switch (header) {
+                        case BTConstants.HEADER_BACK_ACK:
+                            int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
+                            Intent intent = new Intent(BTConstants.ACTION_ACK);
+                            intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
+                            BTService.this.sendBroadcast(intent);
+                            break;
+                        case BTConstants.HEADER_BACK_RECORD:
+                            // 记步总数、睡眠指数总数、睡眠记录总数、电量
+                            stepsCount = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
+                            String sleepIndexAndrRecord = Utils.hexString2binaryString(formatDatas[2]);
+                            if (sleepIndexAndrRecord.length() >= 8) {
+                                sleepIndexCount = Integer.parseInt(sleepIndexAndrRecord.substring(0, 4), 2);
+                                sleepRecordCount = Integer.parseInt(sleepIndexAndrRecord.substring(4, 8), 2);
+                                LogModule.i("手环中的睡眠总数为：" + sleepIndexCount);
+                                LogModule.i("手环中的睡眠记录总数为：" + sleepRecordCount);
                             }
-                        }, 1000);
-                    } else {
-                        LogModule.i("还有" + stepsCount + "条记步数据未同步");
+                            int battery = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
+                            LogModule.i("手环中的记步总数为：" + stepsCount);
+                            SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
+                            if (sleepIndexCount > 0) {
+                                getSleepIndex();
+                            } else {
+                                // 没有睡眠数据直接获取记步数据
+                                getStepData();
+                            }
+                            break;
+                        case BTConstants.HEADER_FIRMWARE_VERSION:
+                            int major = Integer.parseInt(Utils
+                                    .decodeToString(formatDatas[1]));
+                            int minor = Integer.parseInt(Utils
+                                    .decodeToString(formatDatas[2]));
+                            int revision = Integer.parseInt(Utils
+                                    .decodeToString(formatDatas[3]));
+                            Intent i = new Intent(BTConstants.ACTION_REFRESH_DATA_VERSION);
+                            i.putExtra(BTConstants.EXTRA_KEY_VERSION_VALUE, String.format("%s.%s.%s", major, minor, revision));
+                            BTService.this.sendBroadcast(i);
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_INDEX:
+                            BTModule.saveSleepIndex(formatDatas, getApplicationContext(), sleepMaps);
+                            sleepIndexCount--;
+                            if (sleepIndexCount <= 0) {
+                                getSleepRecord();
+                            }
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_RECORD:
+                            BTModule.updateSleepRecord(formatDatas, getApplicationContext(), sleepMaps);
+                            sleepRecordCount--;
+                            if (sleepRecordCount <= 0) {
+                                sleepMaps.clear();
+                                getStepData();
+                            }
+                            break;
+                        case BTConstants.HEADER_BACK_STEP:
+                            BTModule.saveStepData(formatDatas, getApplicationContext());
+                            stepsCount--;
+                            if (stepsCount <= 0) {
+                                LogModule.i("延迟1s发送广播更新数据");
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new
+                                                Intent(BTConstants.ACTION_REFRESH_DATA);
+                                        sendBroadcast(intent);
+                                    }
+                                }, 1000);
+                            } else {
+                                LogModule.i("还有" + stepsCount + "条记步数据未同步");
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             };

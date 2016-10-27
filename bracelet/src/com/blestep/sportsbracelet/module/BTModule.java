@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class BTModule {
@@ -471,7 +472,7 @@ public class BTModule {
     }
 
     /**
-     * 根据不同命令头保存数据
+     * 解析保存更新记步数据
      *
      * @param formatDatas
      * @param context
@@ -546,7 +547,14 @@ public class BTModule {
         }
     }
 
-    public static void saveSleepIndex(String[] formatDatas, Context context) {
+    /**
+     * 解析保存睡眠数据
+     *
+     * @param formatDatas
+     * @param context
+     * @param sleepMaps
+     */
+    public static void saveSleepIndex(String[] formatDatas, Context context, Map<Integer, String> sleepMaps) {
         SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
         Calendar calendar = Calendar.getInstance();
         // 起始时间
@@ -578,11 +586,57 @@ public class BTModule {
         // 深睡
         String deep1 = formatDatas[12];
         String deep0 = formatDatas[13];
+        String deep = Utils.decodeToString(deep1 + deep0);
+        // 浅睡
+        String light1 = formatDatas[14];
+        String light0 = formatDatas[15];
+        String light = Utils.decodeToString(light1 + light0);
+        // 清醒
+        String awake1 = formatDatas[16];
+        String awake0 = formatDatas[17];
+        String awake = Utils.decodeToString(awake1 + awake0);
+
+        // 记录睡眠日期
+        String date = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD).format(endDate);
+        // 暂存睡眠数据，以index为key，以日期为value，方便更新record;
+        sleepMaps.put(Integer.valueOf(Utils.decodeToString(formatDatas[1])), date);
 
         // 构造睡眠数据
         Sleep sleep = new Sleep();
+        sleep.date = date;
         sleep.start = startDateStr;
         sleep.end = endDateStr;
+        sleep.deep = deep;
+        sleep.light = light;
+        sleep.awake = awake;
+        LogModule.i(sleep.toString());
+        if (!DBTools.getInstance(context).isSleepExist(sleep.date)) {
+            DBTools.getInstance(context).insertSleep(sleep);
+        } else {
+            // 更新全部记录
+            DBTools.getInstance(context).updateSleep(sleep);
+        }
+    }
 
+    /**
+     * 更新睡眠记录
+     *
+     * @param formatDatas
+     * @param context
+     * @param sleepMaps
+     */
+    public static void updateSleepRecord(String[] formatDatas, Context context, Map<Integer, String> sleepMaps) {
+        String date = sleepMaps.get(Integer.valueOf(Utils.decodeToString(formatDatas[1])));
+        Sleep sleep = DBTools.getInstance(context).selectSleep(date);
+        if (sleep != null) {
+            int len = Integer.valueOf(Utils.decodeToString(formatDatas[3]));
+            StringBuilder builder = new StringBuilder(sleep.record == null ? "" : sleep.record);
+            for (int i = 0; i < len && 4 + i < formatDatas.length; i++) {
+                builder.append(formatDatas[4 + i]);
+            }
+            sleep.record = builder.toString();
+            LogModule.i(sleep.toString());
+            DBTools.getInstance(context).updateSleep(sleep);
+        }
     }
 }

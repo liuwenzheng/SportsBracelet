@@ -19,6 +19,7 @@ public class DBConstants {
     // 睡眠
     public static final String TABLE_NAME_SLEEP = "sleep";
     public static final String SLEEP_FIELD_ID = "id";
+    public static final String SLEEP_FIELD_DATE = "date";
     public static final String SLEEP_FIELD_START = "start";
     public static final String SLEEP_FIELD_END = "end";
     public static final String SLEEP_FIELD_DEEP = "deep";

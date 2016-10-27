@@ -77,6 +77,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             // id
             + " (" + DBConstants.SLEEP_FIELD_ID
             + " INTEGER primary key autoincrement, "
+            // 日期
+            + DBConstants.SLEEP_FIELD_DATE + " TEXT,"
             // 开始时间
             + DBConstants.SLEEP_FIELD_START + " TEXT,"
             // 结束时间

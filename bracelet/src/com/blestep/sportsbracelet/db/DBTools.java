@@ -80,13 +80,15 @@ public class DBTools {
     }
 
     public Sleep selectCurrentSleep() {
-        String start = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
-        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_END + " = ?",
-                new String[]{start},
+        String date = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_DATE + " = ?",
+                new String[]{date},
                 null, null, null);
         Sleep sleep = null;
         while (cursor.moveToLast()) {
             sleep = new Sleep();
+            sleep.date = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DATE));
             sleep.start = cursor.getString(cursor
                     .getColumnIndex(DBConstants.SLEEP_FIELD_START));
             sleep.end = cursor.getString(cursor
@@ -105,13 +107,41 @@ public class DBTools {
     }
 
     public Sleep selectSleep(Calendar calendar) {
-        String start = Utils.calendar2strDate(calendar, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
-        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_END + " = ?",
-                new String[]{start},
+        String date = Utils.calendar2strDate(calendar, BTConstants.PATTERN_YYYY_MM_DD);
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_DATE + " = ?",
+                new String[]{date},
                 null, null, null);
         Sleep sleep = null;
         while (cursor.moveToLast()) {
             sleep = new Sleep();
+            sleep.date = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DATE));
+            sleep.start = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_START));
+            sleep.end = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_END));
+            sleep.deep = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DEEP));
+            sleep.light = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_LIGHT));
+            sleep.awake = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_AWAKE));
+            sleep.record = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_RECORD));
+            break;
+        }
+        return sleep;
+    }
+
+    public Sleep selectSleep(String date) {
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_SLEEP, null, DBConstants.SLEEP_FIELD_DATE + " = ?",
+                new String[]{date},
+                null, null, null);
+        Sleep sleep = null;
+        while (cursor.moveToLast()) {
+            sleep = new Sleep();
+            sleep.date = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DATE));
             sleep.start = cursor.getString(cursor
                     .getColumnIndex(DBConstants.SLEEP_FIELD_START));
             sleep.end = cursor.getString(cursor
@@ -180,8 +210,8 @@ public class DBTools {
         ArrayList<Sleep> sleeps = new ArrayList<>();
         while (cursor.moveToNext()) {
             Sleep sleep = new Sleep();
-            sleep.id = cursor.getString(cursor
-                    .getColumnIndex(DBConstants.SLEEP_FIELD_ID));
+            sleep.date = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.SLEEP_FIELD_DATE));
             sleep.start = cursor.getString(cursor
                     .getColumnIndex(DBConstants.SLEEP_FIELD_START));
             sleep.end = cursor.getString(cursor
@@ -222,6 +252,7 @@ public class DBTools {
 
     public long insertSleep(Sleep sleep) {
         ContentValues cv = new ContentValues();
+        cv.put(DBConstants.SLEEP_FIELD_DATE, sleep.date);
         cv.put(DBConstants.SLEEP_FIELD_START, sleep.start);
         cv.put(DBConstants.SLEEP_FIELD_END, sleep.end);
         cv.put(DBConstants.SLEEP_FIELD_DEEP, sleep.deep);
@@ -258,11 +289,11 @@ public class DBTools {
         }
     }
 
-    public boolean isSleepExist(String start) {
-        String[] args = new String[]{start};
+    public boolean isSleepExist(String date) {
+        String[] args = new String[]{date};
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + DBConstants.TABLE_NAME_SLEEP + " WHERE "
-                + DBConstants.SLEEP_FIELD_START + " = ?", args);
+                + DBConstants.SLEEP_FIELD_DATE + " = ?", args);
         if (cursor.getCount() == 0) {
             cursor.close();
             return false;
@@ -296,9 +327,10 @@ public class DBTools {
     }
 
     public void updateSleep(Sleep sleep) {
-        String where = DBConstants.SLEEP_FIELD_START + " = ?";
-        String[] whereValue = {sleep.start};
+        String where = DBConstants.SLEEP_FIELD_DATE + " = ?";
+        String[] whereValue = {sleep.date};
         ContentValues cv = new ContentValues();
+        cv.put(DBConstants.SLEEP_FIELD_DATE, sleep.date);
         cv.put(DBConstants.SLEEP_FIELD_START, sleep.start);
         cv.put(DBConstants.SLEEP_FIELD_END, sleep.end);
         cv.put(DBConstants.SLEEP_FIELD_DEEP, sleep.deep);

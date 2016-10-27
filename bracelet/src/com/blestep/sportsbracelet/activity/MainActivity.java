@@ -280,7 +280,6 @@ public class MainActivity extends SlidingFragmentActivity implements
                 if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
                     String strLog = intent.getStringExtra("log");
                     log.setText(log.getText().toString() + "\n" + strLog);
-
                 }
                 if (BTConstants.ACTION_REFRESH_DATA_BATTERY.equals(intent
                         .getAction())) {
@@ -290,17 +289,8 @@ public class MainActivity extends SlidingFragmentActivity implements
                         return;
                     }
                     SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
-                    mBtService.getStepData();
+                    mBtService.getSleepIndex();
                 }
-                // if (BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX.equals(intent
-                // .getAction())) {
-                // mBtService.getSleepRecord();
-                // }
-                // if
-                // (BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD.equals(intent
-                // .getAction())) {
-                //
-                // }
                 if (BTConstants.ACTION_REFRESH_DATA_VERSION.equals(intent
                         .getAction())) {
                     mBtService.syncUnit();
@@ -342,7 +332,6 @@ public class MainActivity extends SlidingFragmentActivity implements
                     } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
                         mBtService.syncLight();
                     } else if (ack == BTConstants.HEADER_LIGHT_SYSTEM) {
-
                     }
                 }
             }
