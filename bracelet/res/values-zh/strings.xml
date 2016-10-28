@@ -278,6 +278,14 @@
     <string name="alarm_type_water">喝水</string>
     <string name="alarm_type_exercise">锻炼</string>
     <string name="alarm_type_sleep">睡眠</string>
+    <string name="sleep_asleep_duration">全天睡眠</string>
+    <string name="sleep_awake_duratioon">清醒时长</string>
+    <string name="sleep_wake_up">今天醒来</string>
+    <string name="sleep_bed_time">昨晚入睡</string>
+    <string name="sleep_light">全天浅睡</string>
+    <string name="sleep_deep">全天深睡</string>
+    <string name="sleep_duration_unit_hour">小时</string>
+    <string name="sleep_duration_unit_min">分钟</string>
     <string-array name="alarm_types">
         <item>吃药</item>
         <item>喝水</item>

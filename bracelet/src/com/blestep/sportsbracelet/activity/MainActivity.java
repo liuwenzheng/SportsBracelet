@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -47,11 +48,17 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends SlidingFragmentActivity implements
-        OnClickListener {
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
+public class MainActivity extends SlidingFragmentActivity implements OnClickListener {
+
+    @Bind(R.id.rb_indicator_step)
+    RadioButton rb_indicator_step;
+    @Bind(R.id.rb_indicator_sleep)
+    RadioButton rb_indicator_sleep;
     private FragmentPagerAdapter mAdapter;
-    private List<Fragment> mFragments = new ArrayList<Fragment>();
+    private List<Fragment> mFragments = new ArrayList<>();
     private ProgressDialog mDialog;
     private BTService mBtService;
 
@@ -59,6 +66,7 @@ public class MainActivity extends SlidingFragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initView();
         initListener();
         // 注册广播接收器
@@ -182,9 +190,32 @@ public class MainActivity extends SlidingFragmentActivity implements
                         }
                     }
                 });
+        rb_indicator_step.setChecked(true);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == 0) {
+                    rb_indicator_step.setChecked(true);
+                }
+                if (i == 1) {
+                    rb_indicator_sleep.setChecked(true);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver
+            mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -242,6 +273,9 @@ public class MainActivity extends SlidingFragmentActivity implements
                     pull_refresh_viewpager.onRefreshComplete();
                     if (tab01 != null && tab01.isVisible()) {
                         tab01.updateView();
+                    }
+                    if (tab02 != null && tab02.isVisible()) {
+                        tab02.updateView();
                     }
                     LogModule.i("同步成功...");
                     int battery = SPUtiles.getIntValue(
@@ -462,7 +496,7 @@ public class MainActivity extends SlidingFragmentActivity implements
         tab02 = new MainTab02();
         tab03 = new MainTab03();
         mFragments.add(tab01);
-        // mFragments.add(tab02);
+        mFragments.add(tab02);
         // mFragments.add(tab03);
         /**
          * 初始化Adapter
@@ -577,5 +611,4 @@ public class MainActivity extends SlidingFragmentActivity implements
                 });
         builder.show();
     }
-
 }

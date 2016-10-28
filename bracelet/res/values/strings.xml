@@ -278,6 +278,14 @@
     <string name="alarm_type_water">water</string>
     <string name="alarm_type_exercise">exercise</string>
     <string name="alarm_type_sleep">sleep</string>
+    <string name="sleep_asleep_duration">Asleep</string>
+    <string name="sleep_awake_duratioon">Awake</string>
+    <string name="sleep_wake_up">Wake up</string>
+    <string name="sleep_bed_time">Bed time</string>
+    <string name="sleep_light">Light</string>
+    <string name="sleep_deep">Deep</string>
+    <string name="sleep_duration_unit_hour">hour</string>
+    <string name="sleep_duration_unit_min">min</string>
     <string-array name="alarm_types">
         <item>medicine</item>
         <item>water</item>
