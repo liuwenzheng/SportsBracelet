@@ -42,7 +42,7 @@ public class SleepStatusView extends View {
     private void initParam(Context context, AttributeSet attrs, int defStyleAttr) {
         mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mStatusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBgPaint.setColor(ContextCompat.getColor(context, R.color.red_d90000));
+        mBgPaint.setColor(ContextCompat.getColor(context, R.color.blue_01a1bc));
     }
 
     @Override
@@ -80,11 +80,11 @@ public class SleepStatusView extends View {
                     String status = binary.substring(j, j + 2);
                     if ("01".equals(status)) {
                         // 浅睡
-                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.blue_01a1bc));
+                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.blue_006a94));
                         canvas.drawRect(statusX, 0, statusX + mStatusWidth, mHeight, mStatusPaint);
                     } else if ("10".equals(status)) {
                         // 深睡
-                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.blue_006a94));
+                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.red_d90000));
                         canvas.drawRect(statusX, 0, statusX + mStatusWidth, mHeight, mStatusPaint);
                     }
                     statusX += mStatusWidth;
