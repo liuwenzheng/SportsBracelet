@@ -118,9 +118,8 @@ public class Utils {
     /**
      * 计算两个日期的时间间隔
      *
-     * @param sDate开始时间
-     * @param eDate结束时间
-     * @param type间隔类型  ("Y/y"--年 "M/m"--月 "D/d"--日)
+     * @param sDate 开始时间
+     * @param eDate 结束时间
      * @return interval时间间隔
      */
     public static int calInterval(Date sDate, Date eDate) {
@@ -189,8 +188,8 @@ public class Utils {
     /**
      * 比较两个Date类型的日期大小
      *
-     * @param sDate开始时间
-     * @param eDate结束时间
+     * @param sDate 开始时间
+     * @param eDate 结束时间
      * @return result返回结果(0--相同 1--前者大 2--后者大)
      */
     public static int compareDate(Date sDate, Date eDate) {
@@ -210,7 +209,7 @@ public class Utils {
     /**
      * 字符串去除两头空格，如果为空，则返回""，如果不空，则返回该字符串去掉前后空格
      *
-     * @param tStr输入字符串
+     * @param tStr 输入字符串
      * @return 如果为空，则返回""，如果不空，则返回该字符串去掉前后空格
      */
     public static String cTrim(String tStr) {
@@ -225,7 +224,7 @@ public class Utils {
     /**
      * 判定某个年份是否是闰年
      *
-     * @param year待判定的年份
+     * @param year 待判定的年份
      * @return 判定结果
      */
     public static boolean isLeapYear(int year) {
@@ -249,6 +248,29 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 获取间隔时间（分钟）
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
+     * @param pattern   时间格式
+     * @return intervalMin 间隔分钟
+     */
+    public static int getIntervalMin(String startDate, String endDate, String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        int intervalMin = 0;
+        try {
+            Date start = sdf.parse(startDate);
+            Date end = sdf.parse(endDate);
+            long interval = end.getTime() - start.getTime();
+            intervalMin = (int) (interval / 1000 / 60);
+            return intervalMin;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return intervalMin;
         }
     }
 

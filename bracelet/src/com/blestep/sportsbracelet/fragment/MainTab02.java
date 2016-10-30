@@ -16,6 +16,7 @@ import com.blestep.sportsbracelet.activity.MainActivity;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.module.LogModule;
+import com.blestep.sportsbracelet.view.SleepStatusView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +35,12 @@ public class MainTab02 extends Fragment {
     TextView tv_wake_up_time;
     @Bind(R.id.tv_awake_duration)
     TextView tv_awake_duration;
+    @Bind(R.id.tv_sleep_start_time)
+    TextView tv_sleep_start_time;
+    @Bind(R.id.tv_sleep_end_time)
+    TextView tv_sleep_end_time;
+    @Bind(R.id.ssv_sleep_status)
+    SleepStatusView ssv_sleep_status;
     private MainActivity mainActivity;
 
     @Override
@@ -61,6 +68,8 @@ public class MainTab02 extends Fragment {
             tv_light_sleep.setText(setSleepDuration(0, 0));
             tv_bed_time.setText("00:00");
             tv_wake_up_time.setText("00:00");
+            tv_sleep_start_time.setText("00:00");
+            tv_sleep_end_time.setText("00:00");
         } else {
             int light = Integer.parseInt(sleep.light);
             int deep = Integer.parseInt(sleep.deep);
@@ -71,7 +80,10 @@ public class MainTab02 extends Fragment {
             tv_deep_sleep.setText(setSleepDuration(deep / 60, deep % 60));
             tv_light_sleep.setText(setSleepDuration(light / 60, light % 60));
             tv_bed_time.setText(sleep.start.substring(sleep.start.length() - 5, sleep.start.length()));
+            tv_sleep_start_time.setText(sleep.start.substring(sleep.start.length() - 5, sleep.start.length()));
             tv_wake_up_time.setText(sleep.end.substring(sleep.end.length() - 5, sleep.end.length()));
+            tv_sleep_end_time.setText(sleep.end.substring(sleep.end.length() - 5, sleep.end.length()));
+            ssv_sleep_status.setData(sleep);
         }
     }
 
