@@ -15,12 +15,14 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -57,6 +59,16 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     RadioButton rb_indicator_step;
     @Bind(R.id.rb_indicator_sleep)
     RadioButton rb_indicator_sleep;
+    @Bind(R.id.rl_main_header)
+    RelativeLayout rl_main_header;
+    @Bind(R.id.rl_main_content)
+    RelativeLayout rl_main_content;
+    @Bind(R.id.tv_header_center_title)
+    TextView tv_header_center_title;
+    @Bind(R.id.tv_header_left_title)
+    TextView tv_header_left_title;
+    @Bind(R.id.tv_header_right_title)
+    TextView tv_header_right_title;
     private FragmentPagerAdapter mAdapter;
     private List<Fragment> mFragments = new ArrayList<>();
     private ProgressDialog mDialog;
@@ -191,6 +203,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     }
                 });
         rb_indicator_step.setChecked(true);
+        tv_header_left_title.setVisibility(View.GONE);
+        tv_header_center_title.setVisibility(View.VISIBLE);
+        tv_header_center_title.setText(getString(R.string.main_tab_step));
+
+        tv_header_right_title.setVisibility(View.VISIBLE);
+        tv_header_right_title.setText(getString(R.string.main_tab_sleep));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -201,9 +219,28 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             public void onPageSelected(int i) {
                 if (i == 0) {
                     rb_indicator_step.setChecked(true);
+                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                    rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
+                    tv_header_left_title.setVisibility(View.GONE);
+                    tv_header_center_title.setVisibility(View.VISIBLE);
+                    tv_header_center_title.setText(getString(R.string.main_tab_step));
+
+                    tv_header_right_title.setVisibility(View.VISIBLE);
+                    tv_header_right_title.setText(getString(R.string.main_tab_sleep));
+                    tv_header_right_title.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.grey_95d7d9));
                 }
                 if (i == 1) {
                     rb_indicator_sleep.setChecked(true);
+                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                    rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                    tv_header_right_title.setVisibility(View.GONE);
+                    tv_header_center_title.setVisibility(View.VISIBLE);
+                    tv_header_center_title.setText(getString(R.string.main_tab_sleep));
+
+                    tv_header_left_title.setVisibility(View.VISIBLE);
+                    tv_header_left_title.setText(getString(R.string.main_tab_step));
+                    tv_header_left_title.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.grey_a3adb5));
+
                 }
             }
 
@@ -366,6 +403,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
                         mBtService.syncLight();
                     } else if (ack == BTConstants.HEADER_LIGHT_SYSTEM) {
+                        LogModule.i("数据更新完毕！");
                     }
                 }
             }

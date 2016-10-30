@@ -9,6 +9,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/rl_main_header"
             android:layout_width="fill_parent"
             android:layout_height="54dp"
             android:background="@color/blue_04b6bb">
@@ -30,22 +31,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="运动"
+                android:text=""
                 android:textColor="@color/white_ffffff"
                 android:textSize="18sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <TextView
+                android:id="@+id/tv_header_right_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_header_center_title"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="24dp"
                 android:layout_toRightOf="@id/tv_header_center_title"
-                android:text="睡眠"
+                android:text=""
                 android:textColor="@color/grey_95d7d9"
                 android:textSize="14sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_header_left_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tv_header_center_title"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="24dp"
+                android:layout_toLeftOf="@id/tv_header_center_title"
+                android:text=""
+                android:textColor="@color/grey_95d7d9"
+                android:textSize="14sp"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/id_iv_right"
@@ -119,16 +134,18 @@
         </RadioGroup>
 
         <RelativeLayout
+            android:id="@+id/rl_main_content"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/blue_00bdc2">
 
             <com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager xmlns:ptr="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/pull_refresh_viewpager"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 ptr:ptrAnimationStyle="flip"
-                ptr:ptrHeaderBackground="@color/blue_00bdc2"
+                ptr:ptrHeaderBackground="@android:color/transparent"
                 ptr:ptrMode="both"></com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager>
 
             <FrameLayout
