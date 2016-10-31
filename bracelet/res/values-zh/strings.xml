@@ -237,7 +237,7 @@
     <string name="match_close_band">手环贴近手机</string>
     <string name="match_tap_button">点击下方按钮</string>
     <string name="match_button">自动配对</string>
-    <string name="user_gender">年龄</string>
+    <string name="user_gender">性别</string>
     <string name="user_height">身高</string>
     <string name="user_weight">体重</string>
     <string name="user_birthday">生日</string>

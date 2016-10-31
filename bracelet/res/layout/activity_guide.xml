@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/gll_bg"
         android:scaleType="centerCrop"
-        android:src="@drawable/guide_splash" />
+        android:src="@drawable/splash" />
 
     <com.blestep.sportsbracelet.view.ControlScrollViewPager
         android:id="@+id/csvp_guide"
