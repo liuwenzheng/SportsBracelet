@@ -42,7 +42,7 @@ public class SleepStatusView extends View {
     private void initParam(Context context, AttributeSet attrs, int defStyleAttr) {
         mBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mStatusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBgPaint.setColor(ContextCompat.getColor(context, R.color.blue_01a1bc));
+        mBgPaint.setColor(ContextCompat.getColor(context, R.color.blue_d8a86f));
     }
 
     @Override
@@ -62,9 +62,9 @@ public class SleepStatusView extends View {
         super.onDraw(canvas);
         if (mWidth == 0 || mHeight == 0)
             return;
-        // 红色背景，默认清醒
-        canvas.drawRect(0, 0, mWidth, mHeight, mBgPaint);
         if (mSleep != null) {
+            // 红色背景，默认清醒
+            canvas.drawRect(0, 0, mWidth, mHeight, mBgPaint);
             int intervalMin = Utils.getIntervalMin(mSleep.start, mSleep.end, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
             mStatusWidth = (float) mWidth / (intervalMin / 5);
             String record = mSleep.record;
@@ -80,11 +80,11 @@ public class SleepStatusView extends View {
                     String status = binary.substring(j, j + 2);
                     if ("01".equals(status)) {
                         // 浅睡
-                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.blue_006a94));
+                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.blue_01a1bc));
                         canvas.drawRect(statusX, 0, statusX + mStatusWidth, mHeight, mStatusPaint);
                     } else if ("10".equals(status)) {
                         // 深睡
-                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.red_d90000));
+                        mStatusPaint.setColor(ContextCompat.getColor(getContext(), R.color.blue_006a94));
                         canvas.drawRect(statusX, 0, statusX + mStatusWidth, mHeight, mStatusPaint);
                     }
                     statusX += mStatusWidth;

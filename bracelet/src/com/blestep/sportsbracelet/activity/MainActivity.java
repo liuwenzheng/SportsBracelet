@@ -269,6 +269,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                                 .updateView(mBtService);
                     }
                     mIsConnDevice = false;
+                    mIsSyncData = false;
                     LogModule.i("配对失败...");
                     pull_refresh_viewpager.onRefreshComplete();
                     ToastUtils.showToast(MainActivity.this,
