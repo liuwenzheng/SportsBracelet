@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.activity;
 
+import android.animation.ArgbEvaluator;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -210,16 +211,27 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         tv_header_right_title.setVisibility(View.VISIBLE);
         tv_header_right_title.setText(getString(R.string.main_tab_sleep));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
+            ArgbEvaluator evaluator = new ArgbEvaluator();
 
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position % 2 == 0) {
+                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                    int bgColor = (int) evaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
+                            ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                    rl_main_header.setBackgroundColor(bgColor);
+                } else {
+                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                    int bgColor = (int) evaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
+                            ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                    rl_main_header.setBackgroundColor(bgColor);
+                }
             }
 
             @Override
             public void onPageSelected(int i) {
                 if (i == 0) {
                     rb_indicator_step.setChecked(true);
-                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
                     tv_header_left_title.setVisibility(View.GONE);
                     tv_header_center_title.setVisibility(View.VISIBLE);
@@ -227,11 +239,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
                     tv_header_right_title.setVisibility(View.VISIBLE);
                     tv_header_right_title.setText(getString(R.string.main_tab_sleep));
-                    tv_header_right_title.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.grey_95d7d9));
+                    tv_header_right_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
                 }
                 if (i == 1) {
                     rb_indicator_sleep.setChecked(true);
-                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
                     tv_header_right_title.setVisibility(View.GONE);
                     tv_header_center_title.setVisibility(View.VISIBLE);
@@ -239,7 +250,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
                     tv_header_left_title.setVisibility(View.VISIBLE);
                     tv_header_left_title.setText(getString(R.string.main_tab_step));
-                    tv_header_left_title.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.grey_a3adb5));
+                    tv_header_left_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
 
                 }
             }
