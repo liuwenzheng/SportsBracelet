@@ -575,6 +575,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         menu.setSecondaryShadowDrawable(R.drawable.shadow_right);
         // 设置右边（二级）侧滑菜单
         menu.setSecondaryMenu(R.layout.right_menu_frame);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
         rightMenuFragment = new MenuRightFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.id_right_menu_frame, rightMenuFragment).commit();
