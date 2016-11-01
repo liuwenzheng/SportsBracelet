@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,7 @@ public class MatchDevicesActivity extends BaseActivity {
     private boolean mIsScanContinue = false;
     private BleDevice mScanDevice;
     private boolean mIsDisConnection;
+    private boolean mIsChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +171,7 @@ public class MatchDevicesActivity extends BaseActivity {
     @Override
     public void onPreClick() {
         super.onPreClick();
-        finish();
+        backToHome();
     }
 
     @OnClick(R.id.rl_match_auto)
@@ -315,7 +317,8 @@ public class MatchDevicesActivity extends BaseActivity {
                         startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));
                         finishActivities(ActivateBraceletActivity.class, BluetoothOpenActivity.class, MatchDevicesActivity.class);
                     } else {
-                        finish();
+                        mIsChanged = true;
+                        backToHome();
                     }
                 }
             }
@@ -397,5 +400,26 @@ public class MatchDevicesActivity extends BaseActivity {
                 ButterKnife.bind(this, v);
             }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backToHome();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void backToHome() {
+        if (!mIsChanged) {
+            setResult(RESULT_CANCELED);
+            this.finish();
+        } else {
+            // 有值更改
+            setResult(RESULT_OK);
+            this.finish();
+        }
+
     }
 }

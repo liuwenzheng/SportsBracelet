@@ -69,7 +69,6 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     public void onResume() {
         LogModule.i(this.getClass().getSimpleName() + "-->onResume");
         super.onResume();
-        initData();
         wave.setShapeType(WaveView.ShapeType.SQUARE);
         wave.setWaveColor(ContextCompat.getColor(mainActivity, R.color.blue_82f0f3),
                 ContextCompat.getColor(mainActivity, R.color.white_ffffff));
@@ -90,6 +89,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
         mView = inflater.inflate(R.layout.main_tab_01, container, false);
         ButterKnife.bind(this, mView);
         mWaveHelper = new WaveHelper(wave);
+        initData();
         return mView;
     }
 
@@ -174,11 +174,19 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_step_history:
-                startActivity(new Intent(mainActivity, HistoryStepActivity.class));
+                startActivityForResult(new Intent(mainActivity, HistoryStepActivity.class), BTConstants.REQUEST_CODE_HISTORY);
                 mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BTConstants.REQUEST_CODE_HISTORY) {
+            mainActivity.mNeedRefreshData = false;
         }
     }
 }

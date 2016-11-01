@@ -1,9 +1,9 @@
 package com.blestep.sportsbracelet.activity;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,12 +20,15 @@ import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
+
 public class AlarmActivity extends BaseActivity implements OnClickListener {
     private ListView lv_alarm;
-    private ArrayList<Alarm> mAlarms = new ArrayList<Alarm>();
+    private ArrayList<Alarm> mAlarms = new ArrayList<>();
     private AlarmAdapter mAdapter;
     private String[] mAlarmTypes;
     private String[] mAlarmDates;
+    private String mDefaultDatas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,12 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
     }
 
     private void initData() {
+        mAlarms = DBTools.getInstance(this).selectAllAlarm();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < mAlarms.size(); i++) {
+            builder.append(mAlarms.get(i));
+        }
+        mDefaultDatas = builder.toString();
         mAlarmTypes = getResources().getStringArray(R.array.alarm_types);
         mAlarmDates = getResources().getStringArray(R.array.alarm_period);
         mAdapter = new AlarmAdapter();
@@ -71,7 +80,7 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                finish();
+                backToHome();
                 break;
             case R.id.tv_alarm_edit:
                 startActivity(new Intent(this, AlarmEditActivity.class));
@@ -81,6 +90,33 @@ public class AlarmActivity extends BaseActivity implements OnClickListener {
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backToHome();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void backToHome() {
+        if (!TextUtils.isEmpty(mDefaultDatas)) {
+            mAlarms = DBTools.getInstance(this).selectAllAlarm();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < mAlarms.size(); i++) {
+                builder.append(mAlarms.get(i));
+            }
+            if (!mDefaultDatas.equals(builder.toString())) {
+                // 有值更改
+                setResult(RESULT_OK);
+                this.finish();
+                return;
+            }
+        }
+        setResult(RESULT_CANCELED);
+        this.finish();
     }
 
     class AlarmAdapter extends BaseAdapter {

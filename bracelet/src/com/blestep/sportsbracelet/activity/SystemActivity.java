@@ -3,7 +3,9 @@ package com.blestep.sportsbracelet.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,12 +26,18 @@ public class SystemActivity extends Activity {
     TextView tv_time;
     @Bind(R.id.tv_light)
     TextView tv_light;
+    private boolean defaultUnit;
+    private int defaultTime;
+    private int defaultLight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_system);
         ButterKnife.bind(this);
+        defaultUnit = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
+        defaultTime = SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0);
+        defaultLight = SPUtiles.getIntValue(BTConstants.SP_KEY_LIGHT_SYSTEM, 1);
         tvUnit.setText(SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false) ? getString(R.string.bracelet_unit_british) : getString(R.string.bracelet_unit_metric));
         tv_time.setText(SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0) == 0 ?
                 getString(R.string.bracelet_time_format_24) : getString(R.string.bracelet_time_format_12));
@@ -41,7 +49,7 @@ public class SystemActivity extends Activity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                this.finish();
+                backToHome();
                 break;
             case R.id.tv_reset:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -51,7 +59,9 @@ public class SystemActivity extends Activity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                setResult(RESULT_OK);
+                                Intent intent = new Intent();
+                                intent.putExtra("reset", true);
+                                setResult(RESULT_OK, intent);
                                 dialog.dismiss();
                                 SystemActivity.this.finish();
                             }
@@ -88,5 +98,28 @@ public class SystemActivity extends Activity {
                         getString(R.string.bracelet_light_on) : getString(R.string.bracelet_light_off));
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backToHome();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void backToHome() {
+        if (defaultUnit && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)
+                && defaultTime == SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0)
+                && defaultLight == SPUtiles.getIntValue(BTConstants.SP_KEY_LIGHT_SYSTEM, 1)) {
+            setResult(RESULT_CANCELED);
+            this.finish();
+        } else {
+            // 有值更改
+            setResult(RESULT_OK);
+            this.finish();
+        }
+
     }
 }

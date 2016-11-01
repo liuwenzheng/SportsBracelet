@@ -205,12 +205,12 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
                 startActivity(new Intent(mainActivity, PhoneComingActivity.class));
                 break;
             case R.id.rl_alert_alarm:
-                startActivity(new Intent(mainActivity, AlarmActivity.class));
+                startActivityForResult(new Intent(mainActivity, AlarmActivity.class), BTConstants.REQUEST_CODE_ALARM);
                 break;
             case R.id.rl_bind_bracelet:
                 Intent i = new Intent(mainActivity, MatchDevicesActivity.class);
                 i.putExtra("service_disconnection", true);
-                startActivity(i);
+                startActivityForResult(i, BTConstants.REQUEST_CODE_MATCH);
                 break;
             case R.id.rl_bracelet_system:
                 Intent intent = new Intent(mainActivity, SystemActivity.class);
@@ -249,14 +249,30 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == BTConstants.REQUEST_CODE_SYSTEM) {
-                SPUtiles.clearAllData();
-                DBTools.getInstance(mainActivity).deleteAllData();
-                if (mainActivity.getmBtService() != null && mainActivity.getmBtService().mBluetoothGatt != null) {
-                    mainActivity.getmBtService().mBluetoothGatt.close();
-                    mainActivity.getmBtService().mBluetoothGatt = null;
+                if (data.getExtras() != null && data.getBooleanExtra("reset", false)) {
+                    SPUtiles.clearAllData();
+                    DBTools.getInstance(mainActivity).deleteAllData();
+                    if (mainActivity.getmBtService() != null && mainActivity.getmBtService().mBluetoothGatt != null) {
+                        mainActivity.getmBtService().mBluetoothGatt.close();
+                        mainActivity.getmBtService().mBluetoothGatt = null;
+                    }
+                    mainActivity.finish();
+                    mainActivity.startActivity(new Intent(mainActivity, GuideActivity.class));
+                } else {
+                    mainActivity.mNeedRefreshData = true;
                 }
-                mainActivity.finish();
-                mainActivity.startActivity(new Intent(mainActivity, GuideActivity.class));
+            } else if (requestCode == BTConstants.REQUEST_CODE_ALARM) {
+                mainActivity.mNeedRefreshData = true;
+            } else if (requestCode == BTConstants.REQUEST_CODE_MATCH) {
+                mainActivity.mNeedRefreshData = true;
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            if (requestCode == BTConstants.REQUEST_CODE_SYSTEM) {
+                mainActivity.mNeedRefreshData = false;
+            } else if (requestCode == BTConstants.REQUEST_CODE_ALARM) {
+                mainActivity.mNeedRefreshData = false;
+            } else if (requestCode == BTConstants.REQUEST_CODE_MATCH) {
+                mainActivity.mNeedRefreshData = false;
             }
         }
     }

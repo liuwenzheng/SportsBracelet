@@ -74,6 +74,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private List<Fragment> mFragments = new ArrayList<>();
     private ProgressDialog mDialog;
     private BTService mBtService;
+    public boolean mNeedRefreshData = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,13 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     protected void onStart() {
         super.onStart();
         if (mBtService != null && mBtService.isConnDevice() && !mIsConnDevice) {
-            LogModule.i("打开页面同步数据");
-            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+            if (mNeedRefreshData) {
+                LogModule.i("打开页面同步数据");
+                autoPullUpdate(getString(R.string.step_syncdata_waiting));
+            } else {
+                LogModule.i("不需要同步数据");
+                mNeedRefreshData = true;
+            }
         }
     }
 

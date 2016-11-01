@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 	private BTService mBtService;
 	private TextView tv_clear_bracelet, tv_clear_phone;
 	private ImageView iv_back;
+	private boolean mIsChanged;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onClick(final View v) {
 		if (v.getId() == R.id.iv_back) {
-			this.finish();
+			backToHome();
 			return;
 		}
 		AlertDialog.Builder builder = new Builder(this);
@@ -87,6 +89,7 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 									.deleteAllData();
 							ToastUtils.showToast(ClearDataActivity.this,
 									R.string.clear_success);
+							mIsChanged = true;
 							break;
 						case R.id.tv_clear_bracelet:
 							if (mBtService.isConnDevice()) {
@@ -97,6 +100,7 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 								ToastUtils.showToast(ClearDataActivity.this,
 										R.string.clear_fail_conn_device);
 							}
+							mIsChanged = true;
 							break;
 
 						default:
@@ -127,5 +131,26 @@ public class ClearDataActivity extends BaseActivity implements OnClickListener {
 	protected void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			backToHome();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void backToHome() {
+		if (!mIsChanged) {
+			setResult(RESULT_CANCELED);
+			this.finish();
+		} else {
+			// 有值更改
+			setResult(RESULT_OK);
+			this.finish();
+		}
+
 	}
 }

@@ -81,7 +81,13 @@ public class BTConstants {
     public static final String EXTRA_KEY_BATTERY_VALUE = "extra_key_battery_value";
     public static final String EXTRA_KEY_VERSION_VALUE = "extra_key_version_value";
     // request_code
-    public static final int REQUEST_CODE_SYSTEM = 1001;
+    public static final int REQUEST_CODE_SYSTEM = 101;
+    public static final int REQUEST_CODE_ALARM = 102;
+    public static final int REQUEST_CODE_MATCH = 103;
+    public static final int REQUEST_CODE_HISTORY = 104;
+    public static final int REQUEST_CODE_USERINFO = 105;
+    public static final int REQUEST_CODE_TARGET = 106;
+    public static final int REQUEST_CODE_CLEAR = 107;
 
     /**
      * 返回数据header

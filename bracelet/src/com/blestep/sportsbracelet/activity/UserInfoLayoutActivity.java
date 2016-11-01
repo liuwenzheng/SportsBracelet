@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -68,6 +69,7 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
     private DatePickerDialog mDialog;
     private Calendar mCalendar;
     private SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD);
+    private String mDefaultUserInfoStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +197,9 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
                     }
                 }, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                 mCalendar.get(Calendar.DAY_OF_MONTH));
+        StringBuilder builder = new StringBuilder();
+        builder.append(name).append(gender).append(weight).append(height).append(birthday);
+        mDefaultUserInfoStr = builder.toString();
     }
 
     private void setBtnEnable() {
@@ -207,12 +212,12 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                finish();
+                backToHome();
                 break;
             case R.id.tv_user_confirm:
                 // 返回首页
                 saveUserData();
-                finish();
+                backToHome();
                 break;
             case R.id.iv_user_sex:
                 View v = getLayoutInflater().inflate(R.layout.wheelview_gender, null);
@@ -322,5 +327,33 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
         tv_user_weight.setTextColor(getResources().getColor(R.color.green_10b46c));
         SPUtiles.setIntValue(BTConstants.SP_KEY_USER_WEIGHT, Integer.parseInt(tv_user_weight.getTag().toString()));
         setBtnEnable();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backToHome();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void backToHome() {
+        String name = SPUtiles.getStringValue(BTConstants.SP_KEY_USER_NAME, "");
+        int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, -1);
+        int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 0);
+        int weight = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 0);
+        String birthday = SPUtiles.getStringValue(BTConstants.SP_KEY_USER_BIRTHDAT, "");
+        StringBuilder builder = new StringBuilder();
+        builder.append(name).append(gender).append(weight).append(height).append(birthday);
+        if (builder.equals(mDefaultUserInfoStr)) {
+            setResult(RESULT_CANCELED);
+            this.finish();
+        } else {
+            // 有值更改
+            setResult(RESULT_OK);
+            this.finish();
+        }
+
     }
 }

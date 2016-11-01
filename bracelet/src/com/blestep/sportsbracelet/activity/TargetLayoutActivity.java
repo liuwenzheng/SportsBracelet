@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -39,6 +40,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
     TextView tv_target_bike;
     private static final int STEP_UNIT = 200;
     private boolean mIsSetting;
+    private int mDefaultData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
         tv_target_run.setText(getString(R.string.setting_target_minutes, 0));
         tv_target_bike.setText(getString(R.string.setting_target_minutes, 0));
         int aim = SPUtiles.getIntValue(BTConstants.SP_KEY_STEP_AIM, 8000);
+        mDefaultData = aim;
         sb_target.setOnSeekBarChangeListener(this);
         if (aim != 0) {
             tv_target_steps_value.setText(aim + "");
@@ -63,7 +66,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                finish();
+                backToHome();
                 break;
             case R.id.btn_target_finish:
 
@@ -73,7 +76,7 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
                 }
                 if (mIsSetting) {
                     SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.parseInt(tv_target_steps_value.getText().toString()));
-                    finish();
+                    backToHome();
                     return;
                 }
                 SPUtiles.setIntValue(BTConstants.SP_KEY_STEP_AIM, Integer.parseInt(tv_target_steps_value.getText().toString()));
@@ -115,6 +118,27 @@ public class TargetLayoutActivity extends BaseActivity implements SeekBar.OnSeek
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backToHome();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void backToHome() {
+        if (mDefaultData == Integer.parseInt(tv_target_steps_value.getText().toString())) {
+            setResult(RESULT_CANCELED);
+            this.finish();
+        } else {
+            // 有值更改
+            setResult(RESULT_OK);
+            this.finish();
+        }
 
     }
 }
