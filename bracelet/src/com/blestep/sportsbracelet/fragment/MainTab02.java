@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
@@ -11,15 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.activity.MainActivity;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.module.LogModule;
+import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.SleepStatusView;
+
+import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainTab02 extends Fragment {
 
@@ -41,7 +47,14 @@ public class MainTab02 extends Fragment {
     TextView tv_sleep_end_time;
     @Bind(R.id.ssv_sleep_status)
     SleepStatusView ssv_sleep_status;
+    @Bind(R.id.tv_sleep_date)
+    TextView tv_sleep_date;
+    @Bind(R.id.tv_sleep_date_pre)
+    TextView tv_sleep_date_pre;
+    @Bind(R.id.tv_sleep_date_next)
+    TextView tv_sleep_date_next;
     private MainActivity mainActivity;
+    private Calendar mCalendar;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -55,12 +68,22 @@ public class MainTab02 extends Fragment {
         View messageLayout = inflater.inflate(R.layout.main_tab_02, container,
                 false);
         ButterKnife.bind(this, messageLayout);
-        updateView();
+        updateView(Calendar.getInstance());
         return messageLayout;
     }
 
-    public void updateView() {
-        Sleep sleep = DBTools.getInstance(mainActivity).selectCurrentSleep();
+    public void updateView(Calendar calendar) {
+        if (mainActivity == null)
+            return;
+        mCalendar = (Calendar) calendar.clone();
+        Sleep sleep = DBTools.getInstance(mainActivity).selectSleep(calendar);
+        String date = Utils.calendar2strDate(calendar, BTConstants.PATTERN_MM_DD_2);
+        tv_sleep_date.setText(date);
+        if (Utils.calInterval(calendar.getTime(), Calendar.getInstance().getTime()) == 0) {
+            tv_sleep_date_next.setTextColor(ContextCompat.getColor(mainActivity, R.color.grey_758e9a));
+        } else {
+            tv_sleep_date_next.setTextColor(ContextCompat.getColor(mainActivity, R.color.white_ffffff));
+        }
         if (sleep == null) {
             tv_asleep_druation.setText(setSleepDuration(0, 0));
             tv_awake_duration.setText(setSleepDuration(0, 0));
@@ -70,6 +93,7 @@ public class MainTab02 extends Fragment {
             tv_wake_up_time.setText("00:00");
             tv_sleep_start_time.setText("00:00");
             tv_sleep_end_time.setText("00:00");
+            ssv_sleep_status.setData(sleep);
         } else {
             int light = Integer.parseInt(sleep.light);
             int deep = Integer.parseInt(sleep.deep);
@@ -109,5 +133,25 @@ public class MainTab02 extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.tv_sleep_date_pre, R.id.tv_sleep_date_next, R.id.tv_sleep_history})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_sleep_date_pre:
+                mCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                updateView(mCalendar);
+                break;
+            case R.id.tv_sleep_date_next:
+                if (Utils.calInterval(mCalendar.getTime(), Calendar.getInstance().getTime()) == 0) {
+                    return;
+                }
+                mCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                updateView(mCalendar);
+                break;
+            case R.id.tv_sleep_history:
+                // TODO: 2016/11/6 0006 打开睡眠历史
+                break;
+        }
     }
 }

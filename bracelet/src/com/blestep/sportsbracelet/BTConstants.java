@@ -5,6 +5,7 @@ public class BTConstants {
     public static final String PATTERN_HH_MM = "HH:mm";
     public static final String PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
     public static final String PATTERN_MM_DD = "MM/dd";
+    public static final String PATTERN_MM_DD_2 = "MM-dd";
     public static final String PATTERN_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
     // action
     /**

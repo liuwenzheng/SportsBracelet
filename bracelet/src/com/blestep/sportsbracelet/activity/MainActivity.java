@@ -51,6 +51,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -342,7 +343,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         tab01.updateView();
                     }
                     if (tab02 != null && tab02.isVisible()) {
-                        tab02.updateView();
+                        tab02.updateView(Calendar.getInstance());
                     }
                     LogModule.i("同步成功...");
                     int battery = SPUtiles.getIntValue(
