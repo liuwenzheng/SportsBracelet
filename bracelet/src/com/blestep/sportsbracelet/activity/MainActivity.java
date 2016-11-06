@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,7 +20,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.text.style.TypefaceSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,9 +31,8 @@ import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.fragment.MainTab01;
-import com.blestep.sportsbracelet.fragment.MainTab02;
-import com.blestep.sportsbracelet.fragment.MainTab03;
+import com.blestep.sportsbracelet.fragment.MainTabSleep;
+import com.blestep.sportsbracelet.fragment.MainTabSteps;
 import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.service.BTService;
@@ -56,6 +53,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends SlidingFragmentActivity implements OnClickListener {
 
@@ -154,9 +152,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     private TextView log;
     private FrameLayout frame_main_conn_tips, frame_main_tips;
-    private MainTab01 tab01;
-    private MainTab02 tab02;
-    private MainTab03 tab03;
+    private MainTabSteps mTabSteps;
+    private MainTabSleep mTabSleep;
+    // private MainTab03 tab03;
     private Fragment leftMenuFragment, rightMenuFragment;
     private ScrollView sv_log;
     private PullToRefreshViewPager pull_refresh_viewpager;
@@ -339,11 +337,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
                     mIsSyncData = false;
                     pull_refresh_viewpager.onRefreshComplete();
-                    if (tab01 != null && tab01.isVisible()) {
-                        tab01.updateView();
+                    if (mTabSteps != null && mTabSteps.isVisible()) {
+                        mTabSteps.updateView();
                     }
-                    if (tab02 != null && tab02.isVisible()) {
-                        tab02.updateView(Calendar.getInstance());
+                    if (mTabSleep != null && mTabSleep.isVisible()) {
+                        mTabSleep.updateView(Calendar.getInstance());
                     }
                     LogModule.i("同步成功...");
                     int battery = SPUtiles.getIntValue(
@@ -555,11 +553,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     private void initViewPager() {
         mViewPager = pull_refresh_viewpager.getRefreshableView();
-        tab01 = new MainTab01();
-        tab02 = new MainTab02();
-        tab03 = new MainTab03();
-        mFragments.add(tab01);
-        mFragments.add(tab02);
+        mTabSteps = new MainTabSteps();
+        mTabSleep = new MainTabSleep();
+        // tab03 = new MainTab03();
+        mFragments.add(mTabSteps);
+        mFragments.add(mTabSleep);
         // mFragments.add(tab03);
         /**
          * 初始化Adapter
@@ -613,7 +611,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         getSlidingMenu().showSecondaryMenu();
     }
 
-    @Override
+    @OnClick({R.id.frame_main_conn_tips, R.id.tv_header_sleep_title, R.id.tv_header_steps_title})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.frame_main_conn_tips:
@@ -630,6 +628,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 // frame_main_tips.setVisibility(View.VISIBLE);
                 // mDialog = ProgressDialog.show(MainActivity.this, null,
                 // getString(R.string.setting_device), false, false);
+                break;
+            case R.id.tv_header_sleep_title:
+                mViewPager.setCurrentItem(1);
+                break;
+            case R.id.tv_header_steps_title:
+                mViewPager.setCurrentItem(0);
                 break;
 
             default:

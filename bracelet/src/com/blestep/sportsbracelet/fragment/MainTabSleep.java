@@ -1,5 +1,6 @@
 package com.blestep.sportsbracelet.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.activity.HistorySleepActivity;
 import com.blestep.sportsbracelet.activity.MainActivity;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Sleep;
@@ -27,9 +29,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainTab02 extends Fragment {
+public class MainTabSleep extends Fragment {
 
-    @Bind(R.id.tv_asleep_druation)
+    @Bind(R.id.tv_asleep_duration)
     TextView tv_asleep_druation;
     @Bind(R.id.tv_deep_sleep)
     TextView tv_deep_sleep;
@@ -65,7 +67,7 @@ public class MainTab02 extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View messageLayout = inflater.inflate(R.layout.main_tab_02, container,
+        View messageLayout = inflater.inflate(R.layout.main_tab_sleep, container,
                 false);
         ButterKnife.bind(this, messageLayout);
         updateView(Calendar.getInstance());
@@ -98,7 +100,7 @@ public class MainTab02 extends Fragment {
             int light = Integer.parseInt(sleep.light);
             int deep = Integer.parseInt(sleep.deep);
             int awake = Integer.parseInt(sleep.awake);
-            int asleep = light + deep + awake;
+            int asleep = light + deep;
             tv_asleep_druation.setText(setSleepDuration(asleep / 60, asleep % 60));
             tv_awake_duration.setText(setSleepDuration(awake / 60, awake % 60));
             tv_deep_sleep.setText(setSleepDuration(deep / 60, deep % 60));
@@ -150,8 +152,18 @@ public class MainTab02 extends Fragment {
                 updateView(mCalendar);
                 break;
             case R.id.tv_sleep_history:
-                // TODO: 2016/11/6 0006 打开睡眠历史
+                // 打开睡眠历史
+                startActivityForResult(new Intent(mainActivity, HistorySleepActivity.class), BTConstants.REQUEST_CODE_HISTORY);
+                mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BTConstants.REQUEST_CODE_HISTORY) {
+            mainActivity.mNeedRefreshData = false;
         }
     }
 }

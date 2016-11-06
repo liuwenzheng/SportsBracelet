@@ -46,7 +46,7 @@ import android.widget.OverScroller;
 
 import com.blestep.sportsbracelet.R;
 
-public class TimelineChartView extends View {
+public class TimelineChartViewSleep extends View {
 
     private static final String TAG = "TimelineChartView";
 
@@ -58,10 +58,12 @@ public class TimelineChartView extends View {
         }
 
         public String label;
-        public double stepCount;
-        public double stepDuration;
-        public double stepDistance;
-        public double stepCalorie;
+        public String sleepStart;
+        public String sleepEnd;
+        public double sleepDeep;
+        public double sleepLight;
+        public double sleepAwake;
+        public double sleepAsleep;
     }
 
     /**
@@ -85,7 +87,6 @@ public class TimelineChartView extends View {
     private Cursor mCursor;
     private SparseArray<Object[]> mData = new SparseArray<>();
     private double mMaxValue;
-    private double mTargetValue;
     private final Item mItem = new Item();
 
     private final RectF mViewArea = new RectF();
@@ -104,12 +105,10 @@ public class TimelineChartView extends View {
     private Paint mFooterAreaBgPaint;
     private Paint mGraphBottomLinePaint;
 
-
-    private boolean mIsShowTargetDashedLine;
-    private Paint mGraphTargetDashedLinePaint;
-
     private Paint mBarItemBgPaint;
     private Paint mHighlightBarItemBgPaint;
+    private Paint mBarDeepItemBgPaint;
+    private Paint mHighlightBarDeepItemBgPaint;
     private TextPaint mLabelFgPaint;
     private TextPaint mHighlightLabelFgPaint;
 
@@ -171,7 +170,7 @@ public class TimelineChartView extends View {
                     notifyOnSelectionItemChanged();
 
                     // Update the graph view
-                    ViewCompat.postInvalidateOnAnimation(TimelineChartView.this);
+                    ViewCompat.postInvalidateOnAnimation(TimelineChartViewSleep.this);
                     return true;
 
                 // Non-Ui thread
@@ -188,15 +187,15 @@ public class TimelineChartView extends View {
     private final Object mLock = new Object();
 
 
-    public TimelineChartView(Context ctx) {
+    public TimelineChartViewSleep(Context ctx) {
         this(ctx, null, 0);
     }
 
-    public TimelineChartView(Context ctx, AttributeSet attrs) {
+    public TimelineChartViewSleep(Context ctx, AttributeSet attrs) {
         this(ctx, attrs, 0);
     }
 
-    public TimelineChartView(Context ctx, AttributeSet attrs, int defStyleAttr) {
+    public TimelineChartViewSleep(Context ctx, AttributeSet attrs, int defStyleAttr) {
         super(ctx, attrs, defStyleAttr);
         init(ctx, attrs, defStyleAttr);
     }
@@ -211,14 +210,20 @@ public class TimelineChartView extends View {
         mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
         mScroller = new OverScroller(ctx);
 
-        int footerLabelColor = ContextCompat.getColor(getContext(), R.color.tlcStepsFooterLabelColor);
-        int barItemBg = ContextCompat.getColor(getContext(), R.color.tlcStepsBarItemBg);
-        int highlightBarItemBg = ContextCompat.getColor(getContext(), R.color.tlcStepsHighlightBarItemBg);
+        int footerLabelColor = ContextCompat.getColor(getContext(), R.color.tlcSleepFooterLabelColor);
+        int barItemBg = ContextCompat.getColor(getContext(), R.color.tlcSleepBarItemBg);
+        int highlightBarItemBg = ContextCompat.getColor(getContext(), R.color.tlcSleepHighlightBarItemBg);
+        int barDeepItemBg = ContextCompat.getColor(getContext(), R.color.tlcSleepBarDeepItemBg);
+        int highlightBarDeepItemBg = ContextCompat.getColor(getContext(), R.color.tlcSleepHighlightBarDeepItemBg);
 
         mBarItemBgPaint = new Paint();
         mBarItemBgPaint.setColor(barItemBg);
         mHighlightBarItemBgPaint = new Paint();
         mHighlightBarItemBgPaint.setColor(highlightBarItemBg);
+        mBarDeepItemBgPaint = new Paint();
+        mBarDeepItemBgPaint.setColor(barDeepItemBg);
+        mHighlightBarDeepItemBgPaint = new Paint();
+        mHighlightBarDeepItemBgPaint.setColor(highlightBarDeepItemBg);
 
         mFooterBarHeight = res.getDimension(R.dimen.tlcDefFooterBarHeight);
 
@@ -233,13 +238,6 @@ public class TimelineChartView extends View {
         mGraphBottomLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mGraphBottomLinePaint.setColor(Color.WHITE);
         mGraphBottomLinePaint.setStrokeWidth(1);
-        // 目标虚线
-        mGraphTargetDashedLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mGraphTargetDashedLinePaint.setStyle(Paint.Style.STROKE);
-        mGraphTargetDashedLinePaint.setColor(Color.WHITE);
-        mGraphTargetDashedLinePaint.setStrokeWidth(1);
-        PathEffect pathEffect = new DashPathEffect(new float[]{9, 3}, 1);
-        mGraphTargetDashedLinePaint.setPathEffect(pathEffect);
 
 
         // labelPaint抗锯齿，不需要文本缓存
@@ -367,27 +365,6 @@ public class TimelineChartView extends View {
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
-
-
-    /**
-     * 设置是否显示目标值
-     *
-     * @param mIsShowTargetDashedLine
-     */
-    public void setIsShowTargetDashedLine(boolean mIsShowTargetDashedLine) {
-        this.mIsShowTargetDashedLine = mIsShowTargetDashedLine;
-    }
-
-
-    /**
-     * 设置目标值
-     *
-     * @param mTargetValue
-     */
-    public void setTargetValue(double mTargetValue) {
-        this.mTargetValue = mTargetValue;
-    }
-
 
     public void addOnSelectedItemChangedListener(OnSelectedItemChangedListener cb) {
         mOnSelectedItemChangedCallback = cb;
@@ -636,8 +613,8 @@ public class TimelineChartView extends View {
         // 设置范围
         c.clipRect(mViewArea);
         mViewAreaBgShader = new LinearGradient(0, 0, 0, mViewArea.height(),
-                ContextCompat.getColor(getContext(), R.color.tlcStepsGraphBgColorStart),
-                ContextCompat.getColor(getContext(), R.color.tlcStepsGraphBgColorEnd),
+                ContextCompat.getColor(getContext(), R.color.tlcSleepGraphBgColorStart),
+                ContextCompat.getColor(getContext(), R.color.tlcSleepGraphBgColorEnd),
                 Shader.TileMode.CLAMP);
         mViewAreaBgPaint.setShader(mViewAreaBgShader);
         // 绘制区域
@@ -652,43 +629,18 @@ public class TimelineChartView extends View {
         final double maxValue;
         synchronized (mLock) {
             data = mData;
-            if (mIsShowTargetDashedLine && mTargetValue > mMaxValue) {
-                maxValue = mTargetValue;
-            } else {
-                maxValue = mMaxValue;
-            }
+            maxValue = mMaxValue;
         }
         boolean hasData = data.size() > 0;
         if (hasData) {
 
-
             // 计算屏幕内显示的起始结束位置
             computeItemsOnScreen(data.size());
-            // 绘制目标虚线
-            drawTargetLine(c);
             // 绘制柱状图
             drawBarItems(c, data, maxValue);
             // 绘制底部标签
             drawTickLabels(c, data);
 
-        }
-    }
-
-    private void drawTargetLine(Canvas c) {
-        if (mIsShowTargetDashedLine && mTargetValue > 0) {
-            if (mTargetValue > mMaxValue) {
-                Path path = new Path();
-                path.moveTo(0, mTopSpaceHeight);
-                path.lineTo(mGraphArea.width(), mTopSpaceHeight);
-                c.drawPath(path, mGraphTargetDashedLinePaint);
-            } else {
-                float height = mGraphArea.height();
-                float y = (float) (height - (height * ((mTargetValue * 100) / mMaxValue)) / 100) + mTopSpaceHeight;
-                Path path = new Path();
-                path.moveTo(0, y);
-                path.lineTo(mGraphArea.width(), y);
-                c.drawPath(path, mGraphTargetDashedLinePaint);
-            }
         }
     }
 
@@ -699,9 +651,13 @@ public class TimelineChartView extends View {
         final float height = mGraphArea.height();
         final Paint seriesBgPaint;
         final Paint highlightSeriesBgPaint;
+        final Paint seriesDeepBgPaint;
+        final Paint highlightSeriesDeepBgPaint;
         synchronized (mLock) {
             seriesBgPaint = mBarItemBgPaint;
             highlightSeriesBgPaint = mHighlightBarItemBgPaint;
+            seriesDeepBgPaint = mBarDeepItemBgPaint;
+            highlightSeriesDeepBgPaint = mHighlightBarDeepItemBgPaint;
         }
 
         // Apply zoom animation
@@ -710,20 +666,30 @@ public class TimelineChartView extends View {
         final int size = data.size() - 1;
         for (int i = mItemsOnScreen[1]; i >= mItemsOnScreen[0] && i <= data.size(); i--) {
             final float barCenterX = graphCenterX + mCurrentOffset - (mBarWidth * (size - i));
-            // 记步数据
-            double value = (double) data.valueAt(i)[1];
+            // 睡眠时间
+            double value = (double) data.valueAt(i)[6];
+            // 深睡时间
+            double deepValue = (double) data.valueAt(i)[3];
             float barTop = (float) (height - ((height * ((value * 100) / maxValue)) / 100)) + mTopSpaceHeight;
             float barBottom = height;
             float barLeft = barCenterX - halfItemBarWidth;
             float barRight = barCenterX + halfItemBarWidth;
             final Paint paint;
+            final Paint deepPaint;
+            float deepBarTop = (float) (height - ((height * ((deepValue * 100) / maxValue)) / 100)) + mTopSpaceHeight;
             // 判断是否高亮
             paint = barLeft < graphCenterX &&
                     barRight > graphCenterX &&
                     (mLastPosition == mCurrentPosition || (mState != STATE_SCROLLING))
                     ? highlightSeriesBgPaint : seriesBgPaint;
+            // 判断是否高亮
+            deepPaint = barLeft < graphCenterX &&
+                    barRight > graphCenterX &&
+                    (mLastPosition == mCurrentPosition || (mState != STATE_SCROLLING))
+                    ? highlightSeriesDeepBgPaint : seriesDeepBgPaint;
             // 画柱状图
             c.drawRect(barLeft, mGraphArea.top + barTop, barRight, mGraphArea.top + barBottom, paint);
+            c.drawRect(barLeft, mGraphArea.top + deepBarTop, barRight, mGraphArea.top + barBottom, deepPaint);
         }
     }
 
@@ -841,7 +807,7 @@ public class TimelineChartView extends View {
 
 
         // Update the graph view
-        ViewCompat.postInvalidateOnAnimation(TimelineChartView.this);
+        ViewCompat.postInvalidateOnAnimation(TimelineChartViewSleep.this);
     }
 
     private void processData() {
@@ -853,14 +819,16 @@ public class TimelineChartView extends View {
             do {
                 int position = mCursor.getInt(0);
                 String label = mCursor.getString(1);
-                double stepCount = mCursor.getDouble(2);
-                double stepDuration = mCursor.getDouble(3);
-                double stepDistance = mCursor.getDouble(4);
-                double stepCalorie = mCursor.getDouble(5);
-                if (stepCount > max) {
-                    max = stepCount;
+                String start = mCursor.getString(2);
+                String end = mCursor.getString(3);
+                double deep = mCursor.getDouble(4);
+                double light = mCursor.getDouble(5);
+                double awake = mCursor.getDouble(6);
+                double asleep = mCursor.getDouble(7);
+                if (asleep > max) {
+                    max = asleep;
                 }
-                Object[] values = new Object[]{label, stepCount, stepDuration, stepDistance, stepCalorie};
+                Object[] values = new Object[]{label, start, end, deep, light, awake, asleep};
                 data.put(position, values);
             } while (mCursor.moveToNext());
 
@@ -915,10 +883,12 @@ public class TimelineChartView extends View {
 
         // Compute item. Restore original sort before notify
         mItem.label = (String) data[0];
-        mItem.stepCount = (double) data[1];
-        mItem.stepDuration = (double) data[2];
-        mItem.stepDistance = (double) data[3];
-        mItem.stepCalorie = (double) data[4];
+        mItem.sleepStart = (String) data[1];
+        mItem.sleepEnd = (String) data[2];
+        mItem.sleepDeep = (double) data[3];
+        mItem.sleepLight = (double) data[4];
+        mItem.sleepAwake = (double) data[5];
+        mItem.sleepAsleep = (double) data[6];
         return mItem;
     }
 
@@ -930,10 +900,12 @@ public class TimelineChartView extends View {
             mCursor = null;
             if (mItem != null) {
                 mItem.label = "";
-                mItem.stepCount = 0;
-                mItem.stepDuration = 0;
-                mItem.stepDistance = 0;
-                mItem.stepCalorie = 0;
+                mItem.sleepStart = "";
+                mItem.sleepEnd = "";
+                mItem.sleepDeep = 0;
+                mItem.sleepLight = 0;
+                mItem.sleepAwake = 0;
+                mItem.sleepAsleep = 0;
             }
         }
     }

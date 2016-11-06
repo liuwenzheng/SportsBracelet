@@ -15,6 +15,18 @@ public class Sleep implements Serializable {
     public String awake;
     public String record;
 
+
+    public Sleep(String start, String end, String deep, String light, String awake) {
+        this.start = start;
+        this.end = end;
+        this.deep = deep;
+        this.light = light;
+        this.awake = awake;
+    }
+
+    public Sleep() {
+    }
+
     @Override
     public String toString() {
         return "Sleep{" +

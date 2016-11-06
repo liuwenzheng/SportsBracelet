@@ -36,7 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainTab01 extends Fragment implements ICircleProgressValue,
+public class MainTabSteps extends Fragment implements ICircleProgressValue,
         OnClickListener {
     @Bind(R.id.circleView)
     CircleProgressView circleView;
@@ -86,7 +86,7 @@ public class MainTab01 extends Fragment implements ICircleProgressValue,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         LogModule.i(this.getClass().getSimpleName() + "-->onCreateView");
-        mView = inflater.inflate(R.layout.main_tab_01, container, false);
+        mView = inflater.inflate(R.layout.main_tab_steps, container, false);
         ButterKnife.bind(this, mView);
         mWaveHelper = new WaveHelper(wave);
         initData();

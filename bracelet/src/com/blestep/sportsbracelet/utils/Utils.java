@@ -3,7 +3,6 @@ package com.blestep.sportsbracelet.utils;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 
-import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.module.LogModule;
 
 import java.text.SimpleDateFormat;
@@ -151,32 +150,23 @@ public class Utils {
         int eDays = eCalendar.get(Calendar.DAY_OF_YEAR);
 
         // 年
-//        if (cTrim(BTConstants.PATTERN_YYYY_MM_DD).equals("Y")
-//                || cTrim(BTConstants.PATTERN_YYYY_MM_DD).equals("y")) {
-            interval = eYears - sYears;
-            if (eMonths < sMonths) {
+        interval = eYears - sYears;
+        if (eMonths < sMonths) {
+            --interval;
+        }
+        // 月
+        interval = 12 * (eYears - sYears);
+        interval += (eMonths - sMonths);
+        // 日
+        interval = 365 * (eYears - sYears);
+        interval += (eDays - sDays);
+        // 除去闰年天数
+        while (sYears < eYears) {
+            if (isLeapYear(sYears)) {
                 --interval;
             }
-//        }
-        // 月
-//        else if (cTrim(BTConstants.PATTERN_YYYY_MM_DD).equals("M")
-//                || cTrim(BTConstants.PATTERN_YYYY_MM_DD).equals("m")) {
-            interval = 12 * (eYears - sYears);
-            interval += (eMonths - sMonths);
-//        }
-        // 日
-//        else if (cTrim(BTConstants.PATTERN_YYYY_MM_DD).equals("D")
-//                || cTrim(BTConstants.PATTERN_YYYY_MM_DD).equals("d")) {
-            interval = 365 * (eYears - sYears);
-            interval += (eDays - sDays);
-            // 除去闰年天数
-            while (sYears < eYears) {
-                if (isLeapYear(sYears)) {
-                    --interval;
-                }
-                ++sYears;
-            }
-//        }
+            ++sYears;
+        }
         // 如果开始日期更大，则返回负值
         if (reversed) {
             interval = -interval;

@@ -104,11 +104,19 @@
     <color name="guide4_start_6614ac">#6614ac</color>
     <color name="guide4_end_8735cc">#8735cc</color>
 
-    <!-- history-timeLineChartView -->
-    <color name="tlcDefFooterLabelColor">#4c4c4c</color>
-    <color name="tlcDefHighlightBarItemBg">#cbfeff</color>
-    <color name="tlcDefBarItemBg">#82f0f3</color>
-    <color name="tlcDefGraphBgColorStart">#00bdc2</color>
-    <color name="tlcDefGraphBgColorEnd">#00d8de</color>
+    <!-- history-steps-timeLineChartView -->
+    <color name="tlcStepsFooterLabelColor">#4c4c4c</color>
+    <color name="tlcStepsHighlightBarItemBg">#cbfeff</color>
+    <color name="tlcStepsBarItemBg">#82f0f3</color>
+    <color name="tlcStepsGraphBgColorStart">#00bdc2</color>
+    <color name="tlcStepsGraphBgColorEnd">#00d8de</color>
+    <!-- history-sleep-timeLineChartView -->
+    <color name="tlcSleepFooterLabelColor">#4c4c4c</color>
+    <color name="tlcSleepHighlightBarItemBg">#00daff</color>
+    <color name="tlcSleepBarItemBg">#01a1bc</color>
+    <color name="tlcSleepHighlightBarDeepItemBg">#004d6c</color>
+    <color name="tlcSleepBarDeepItemBg">#006a94</color>
+    <color name="tlcSleepGraphBgColorStart">#00334d</color>
+    <color name="tlcSleepGraphBgColorEnd">#0093ab</color>
 
 </resources>
