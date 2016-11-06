@@ -398,22 +398,16 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     if (ack == BTConstants.HEADER_SYNTIMEDATA) {
                         mBtService.syncUserInfoData();
                     } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
+                        // 先同步前四组闹钟数据，没有则发送0
                         mBtService.syncAlarmData();
                     } else if (ack == BTConstants.HEADER_SYNALARM_NEW) {
-                        // mBtService.synSleepTime();
-
-                        // }
-                        // else if (ack == BTConstants.HEADER_SYNSLEEP) {
-                        ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
-                        if (alarms.size() > 4) {
-                            if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
-                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
-                                mBtService.syncAlarmData();
-                            } else {
-                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
-                                mBtService.getBatteryData();
-                            }
+                        if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
+                            // 再同步后四组数据，没有则发送0
+                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
+                            mBtService.syncAlarmData();
                         } else {
+                            // 闹钟同步完后，发送获取电量数据
+                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
                             mBtService.getBatteryData();
                         }
                     } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
