@@ -26,41 +26,38 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/main_left_button" />
 
-            <TextView
-                android:id="@+id/tv_header_center_title"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text=""
-                android:textColor="@color/white_ffffff"
-                android:textSize="18sp"
-                android:visibility="visible" />
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_header_right_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/tv_header_center_title"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="24dp"
-                android:layout_toRightOf="@id/tv_header_center_title"
-                android:text=""
-                android:textColor="@color/grey_95d7d9"
-                android:textSize="14sp"
-                android:visibility="visible" />
+                <TextView
+                    android:id="@+id/tv_header_steps_title"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/main_tab_step"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
 
-            <TextView
-                android:id="@+id/tv_header_left_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/tv_header_center_title"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="24dp"
-                android:layout_toLeftOf="@id/tv_header_center_title"
-                android:text=""
-                android:textColor="@color/grey_95d7d9"
-                android:textSize="14sp"
-                android:visibility="visible" />
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/tv_header_sleep_title"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/main_tab_sleep"
+                    android:textColor="@color/grey_95d7d9"
+                    android:textSize="14sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
 
             <ImageView
                 android:id="@+id/id_iv_right"

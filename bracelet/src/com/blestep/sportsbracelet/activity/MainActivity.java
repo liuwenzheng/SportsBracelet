@@ -1,6 +1,7 @@
 package com.blestep.sportsbracelet.activity;
 
 import android.animation.ArgbEvaluator;
+import android.animation.FloatEvaluator;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -10,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,6 +21,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.text.style.TypefaceSpan;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -29,8 +33,6 @@ import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
-import com.blestep.sportsbracelet.db.DBTools;
-import com.blestep.sportsbracelet.entity.Alarm;
 import com.blestep.sportsbracelet.fragment.MainTab01;
 import com.blestep.sportsbracelet.fragment.MainTab02;
 import com.blestep.sportsbracelet.fragment.MainTab03;
@@ -64,12 +66,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     RelativeLayout rl_main_header;
     @Bind(R.id.rl_main_content)
     RelativeLayout rl_main_content;
-    @Bind(R.id.tv_header_center_title)
-    TextView tv_header_center_title;
-    @Bind(R.id.tv_header_left_title)
-    TextView tv_header_left_title;
-    @Bind(R.id.tv_header_right_title)
-    TextView tv_header_right_title;
+    @Bind(R.id.tv_header_sleep_title)
+    TextView tv_header_sleep_title;
+    @Bind(R.id.tv_header_steps_title)
+    TextView tv_header_steps_title;
     private FragmentPagerAdapter mAdapter;
     private List<Fragment> mFragments = new ArrayList<>();
     private ProgressDialog mDialog;
@@ -210,27 +210,54 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     }
                 });
         rb_indicator_step.setChecked(true);
-        tv_header_left_title.setVisibility(View.GONE);
-        tv_header_center_title.setVisibility(View.VISIBLE);
-        tv_header_center_title.setText(getString(R.string.main_tab_step));
-
-        tv_header_right_title.setVisibility(View.VISIBLE);
-        tv_header_right_title.setText(getString(R.string.main_tab_sleep));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            ArgbEvaluator evaluator = new ArgbEvaluator();
+            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+            FloatEvaluator floatEvaluator = new FloatEvaluator();
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position % 2 == 0) {
                     rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
-                    int bgColor = (int) evaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
+                    int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
                             ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
                     rl_main_header.setBackgroundColor(bgColor);
+                    // 字体颜色
+                    tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                    int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                            ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                    tv_header_steps_title.setTextColor(stepsColor);
+                    tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
+                    int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9),
+                            ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                    tv_header_sleep_title.setTextColor(sleepColor);
+                    // 字体大小
+                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    float stepsSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
+                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    float sleepSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
                 } else {
                     rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
-                    int bgColor = (int) evaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
+                    int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
                             ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
                     rl_main_header.setBackgroundColor(bgColor);
+                    // 字体颜色
+                    tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                    int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5),
+                            ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                    tv_header_steps_title.setTextColor(stepsColor);
+                    tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                    int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                            ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
+                    tv_header_sleep_title.setTextColor(sleepColor);
+                    // 字体大小
+                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    float stepsSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
+                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    float sleepSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
                 }
             }
 
@@ -239,25 +266,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 if (i == 0) {
                     rb_indicator_step.setChecked(true);
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
-                    tv_header_left_title.setVisibility(View.GONE);
-                    tv_header_center_title.setVisibility(View.VISIBLE);
-                    tv_header_center_title.setText(getString(R.string.main_tab_step));
-
-                    tv_header_right_title.setVisibility(View.VISIBLE);
-                    tv_header_right_title.setText(getString(R.string.main_tab_sleep));
-                    tv_header_right_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
                 }
                 if (i == 1) {
                     rb_indicator_sleep.setChecked(true);
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
-                    tv_header_right_title.setVisibility(View.GONE);
-                    tv_header_center_title.setVisibility(View.VISIBLE);
-                    tv_header_center_title.setText(getString(R.string.main_tab_sleep));
-
-                    tv_header_left_title.setVisibility(View.VISIBLE);
-                    tv_header_left_title.setText(getString(R.string.main_tab_step));
-                    tv_header_left_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
-
                 }
             }
 
