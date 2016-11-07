@@ -75,16 +75,15 @@ public class MainTabSleep extends Fragment {
     }
 
     public void updateView(Calendar calendar) {
-        if (mainActivity == null)
-            return;
         mCalendar = (Calendar) calendar.clone();
-        Sleep sleep = DBTools.getInstance(mainActivity).selectSleep(calendar);
+        Sleep sleep = DBTools.getInstance(getActivity()).selectSleep(calendar);
         String date = Utils.calendar2strDate(calendar, BTConstants.PATTERN_MM_DD_2);
-        tv_sleep_date.setText(date);
         if (Utils.calInterval(calendar.getTime(), Calendar.getInstance().getTime()) == 0) {
-            tv_sleep_date_next.setTextColor(ContextCompat.getColor(mainActivity, R.color.grey_758e9a));
+            tv_sleep_date_next.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey_758e9a));
+            tv_sleep_date.setText(getString(R.string.history_today));
         } else {
-            tv_sleep_date_next.setTextColor(ContextCompat.getColor(mainActivity, R.color.white_ffffff));
+            tv_sleep_date_next.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
+            tv_sleep_date.setText(date);
         }
         if (sleep == null) {
             tv_asleep_druation.setText(setSleepDuration(0, 0));

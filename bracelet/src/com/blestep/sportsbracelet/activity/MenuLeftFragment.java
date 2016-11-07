@@ -249,7 +249,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == BTConstants.REQUEST_CODE_SYSTEM) {
-                if (data.getExtras() != null && data.getBooleanExtra("reset", false)) {
+                if (data != null && data.getExtras() != null && data.getBooleanExtra("reset", false)) {
                     SPUtiles.clearAllData();
                     DBTools.getInstance(mainActivity).deleteAllData();
                     if (mainActivity.getmBtService() != null && mainActivity.getmBtService().mBluetoothGatt != null) {

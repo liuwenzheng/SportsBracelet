@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text=""
+                android:text="@string/history_today"
                 android:textColor="@color/white_ffffff"
                 android:textSize="12sp" />
 
@@ -118,12 +118,26 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sleep_asleep_duration"
-                        android:textColor="@color/grey_999999"
-                        android:textSize="10sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="@color/blue_006a94" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/sleep_asleep_duration"
+                            android:textColor="@color/grey_999999"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
 
                     <TextView
                         android:id="@+id/tv_asleep_duration"
@@ -150,12 +164,25 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sleep_deep"
-                        android:textColor="@color/grey_999999"
-                        android:textSize="10sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="@color/blue_01a1bc" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="6dp"
+                            android:text="@string/sleep_deep"
+                            android:textColor="@color/grey_999999"
+                            android:textSize="10sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_deep_sleep"
@@ -182,12 +209,25 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sleep_light"
-                        android:textColor="@color/grey_999999"
-                        android:textSize="10sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="@color/blue_d8a86f" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="6dp"
+                            android:text="@string/sleep_light"
+                            android:textColor="@color/grey_999999"
+                            android:textSize="10sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_light_sleep"
