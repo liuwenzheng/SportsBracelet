@@ -110,7 +110,8 @@ public class SystemActivity extends Activity {
     }
 
     private void backToHome() {
-        if (defaultUnit && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)
+        if (defaultUnit == SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)
+                && SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false)
                 && defaultTime == SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0)
                 && defaultLight == SPUtiles.getIntValue(BTConstants.SP_KEY_LIGHT_SYSTEM, 1)) {
             setResult(RESULT_CANCELED);
