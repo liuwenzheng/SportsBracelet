@@ -286,6 +286,7 @@
     <string name="sleep_deep">全天深睡</string>
     <string name="sleep_duration_unit_hour">小时</string>
     <string name="sleep_duration_unit_min">分钟</string>
+    <string name="sleep_history_stats"><![CDATA[历史统计>]]></string>
     <string-array name="alarm_types">
         <item>吃药</item>
         <item>喝水</item>

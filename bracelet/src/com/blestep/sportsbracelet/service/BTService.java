@@ -133,6 +133,7 @@ public class BTService extends Service implements LeScanCallback {
                 private int sleepRecordCount;
                 private int sleepIndexCount;
                 private Map<Integer, String> sleepMaps = new HashMap<>();
+                private boolean isSleepRecordError;
 
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
@@ -255,6 +256,17 @@ public class BTService extends Service implements LeScanCallback {
                             LogModule.i("手环中的记步总数为：" + stepsCount);
                             SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
                             if (sleepIndexCount > 0) {
+                                if (sleepRecordCount == 0) {
+                                    // 异常情况
+                                    isSleepRecordError = true;
+                                    LogModule.i("睡眠record数据异常，延迟7s发送记步数据命令...");
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getStepData();
+                                        }
+                                    }, 7000);
+                                }
                                 getSleepIndex();
                             } else {
                                 // 没有睡眠数据直接获取记步数据
@@ -281,16 +293,19 @@ public class BTService extends Service implements LeScanCallback {
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:
                             BTModule.updateSleepRecord(formatDatas, getApplicationContext(), sleepMaps);
-                            sleepRecordCount--;
-                            if (sleepRecordCount <= 0) {
-                                sleepMaps.clear();
-                                getStepData();
+                            if (!isSleepRecordError) {
+                                sleepRecordCount--;
+                                if (sleepRecordCount <= 0) {
+                                    getStepData();
+                                }
                             }
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             BTModule.saveStepData(formatDatas, getApplicationContext());
                             stepsCount--;
                             if (stepsCount <= 0) {
+                                isSleepRecordError = false;
+                                sleepMaps.clear();
                                 LogModule.i("延迟1s发送广播更新数据");
                                 mHandler.postDelayed(new Runnable() {
                                     @Override

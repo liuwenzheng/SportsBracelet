@@ -286,6 +286,7 @@
     <string name="sleep_deep">Deep</string>
     <string name="sleep_duration_unit_hour">hour</string>
     <string name="sleep_duration_unit_min">min</string>
+    <string name="sleep_history_stats"><![CDATA[stats>]]></string>
     <string-array name="alarm_types">
         <item>medicine</item>
         <item>water</item>
