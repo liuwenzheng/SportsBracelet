@@ -106,21 +106,17 @@ public class BTConstants {
     // ACK
     public static final int HEADER_BACK_ACK = 150;
     // 同步时间
-    public static final byte HEADER_SYNTIMEDATA = 0x11;
+    public static final int HEADER_SYNTIMEDATA = 17;
     // 同步用户数据
-    public static final byte HEADER_SYNUSERINFO = 0x12;
-    // 同步闹钟
-    public static final byte HEADER_SYNALARM = 0x13;
+    public static final int HEADER_SYNUSERINFO = 18;
     // 获取数据
-    public static final byte HEADER_GETDATA = 0x16;
-    // 初始化触摸按键
-    public static final byte HEADER_SYNTOUCHBUTTON = 0x1B;
+    public static final int HEADER_GETDATA = 22;
     // 单位制式
-    public static final byte HEADER_UNIT_SYSTEM = 0x23;
+    public static final int HEADER_UNIT_SYSTEM = 35;
     // 时间格式
-    public static final byte HEADER_TIME_SYSTEM = 0x24;
+    public static final int HEADER_TIME_SYSTEM = 36;
     // 自动亮屏幕
-    public static final byte HEADER_LIGHT_SYSTEM = 0x25;
+    public static final int HEADER_LIGHT_SYSTEM = 37;
     // 新同步闹钟
-    public static final byte HEADER_SYNALARM_NEW = 0x26;
+    public static final int HEADER_SYNALARM_NEW = 38;
 }

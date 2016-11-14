@@ -74,6 +74,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private ProgressDialog mDialog;
     private BTService mBtService;
     public boolean mNeedRefreshData = true;
+    private static final Object LOCK = new Object();
+    // 超时时间
+    private boolean mIsTimeout;
+    private int mHeader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -504,14 +508,20 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
      */
     private void syncData() {
         mIsSyncData = true;
+        synchronized (LOCK) {
+            mIsTimeout = true;
+        }
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
         new MyHandler(this).postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 mBtService.syncTimeData();
+                mHeader = BTConstants.HEADER_SYNTIMEDATA;
             }
         }, 500);
+        executeNextTask(true,BTConstants.HEADER_GETDATA);
+
         // 10s后若未获取数据自动结束刷新
         // BTService.mHandler.postDelayed(new Runnable() {
         // @Override
@@ -529,6 +539,37 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         // });
         // }
         // }, 10000);
+    }
+
+    private void executeNextTask(boolean b, int headerGetdata) {
+        new MyHandler(this).postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (mIsTimeout) {
+                    switch (mHeader) {
+                        case BTConstants.HEADER_TIME_SYSTEM:
+                            mBtService.syncUserInfoData();
+                            break;
+                        case BTConstants.HEADER_SYNUSERINFO:
+                            // 先同步前四组闹钟数据，没有则发送0
+                            mBtService.syncAlarmData();
+                            break;
+                        case BTConstants.HEADER_SYNALARM_NEW:
+                            if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
+                                // 再同步后四组数据，没有则发送0
+                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
+                                mBtService.syncAlarmData();
+                            } else {
+                                // 闹钟同步完后，发送获取电量数据
+                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
+                                mBtService.getBatteryData();
+                            }
+                            break;
+                    }
+                }
+            }
+        }, 3000);
     }
 
     @Override

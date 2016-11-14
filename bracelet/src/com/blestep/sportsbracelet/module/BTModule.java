@@ -101,24 +101,13 @@ public class BTModule {
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
         byte[] byteArray = new byte[7];
-        byteArray[0] = BTConstants.HEADER_SYNTIMEDATA;
+        byteArray[0] = (byte) BTConstants.HEADER_SYNTIMEDATA;
         byteArray[1] = (byte) (year - 2000);
         byteArray[2] = (byte) month;
         byteArray[3] = (byte) date;
         byteArray[4] = (byte) hour;
         byteArray[5] = (byte) minute;
         byteArray[6] = (byte) second;
-        writeCharacteristicData(mBluetoothGatt, byteArray);
-    }
-
-    /**
-     * 初始化触摸按键
-     *
-     * @param mBluetoothGatt
-     */
-    public static void setTouchButton(BluetoothGatt mBluetoothGatt) {
-        byte[] byteArray = new byte[1];
-        byteArray[0] = BTConstants.HEADER_SYNTOUCHBUTTON;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
@@ -133,11 +122,13 @@ public class BTModule {
         int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
         int age = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_AGE, 5);
         int gender = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_GENDER, 0);
-        byteArray[0] = BTConstants.HEADER_SYNUSERINFO;
+        int stride = 75;
+        byteArray[0] = (byte) BTConstants.HEADER_SYNUSERINFO;
         byteArray[1] = (byte) weight;
         byteArray[2] = (byte) height;
         byteArray[3] = (byte) age;
         byteArray[4] = (byte) gender;
+        byteArray[5] = (byte) stride;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
@@ -148,7 +139,7 @@ public class BTModule {
      */
     public static void setAlarm(Context context, BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[18];
-        byteArray[0] = BTConstants.HEADER_SYNALARM_NEW;
+        byteArray[0] = (byte) BTConstants.HEADER_SYNALARM_NEW;
         ArrayList<Alarm> alarms = DBTools.getInstance(context).selectAllAlarm();
         if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
             // 第一组
@@ -197,7 +188,7 @@ public class BTModule {
      */
     public static void setUnit(Context context, BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_UNIT_SYSTEM;
+        byteArray[0] = (byte) BTConstants.HEADER_UNIT_SYSTEM;
         boolean isBritish = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, false);
         byteArray[1] = isBritish ? (byte) 0x01 : (byte) 0x00;
         writeCharacteristicData(mBluetoothGatt, byteArray);
@@ -210,7 +201,7 @@ public class BTModule {
      */
     public static void setTime(Context context, BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_TIME_SYSTEM;
+        byteArray[0] = (byte) BTConstants.HEADER_TIME_SYSTEM;
         int time_system = SPUtiles.getIntValue(BTConstants.SP_KEY_TIME_SYSTEM, 0);
         byteArray[1] = time_system == 0 ? (byte) 0x00 : (byte) 0x01;
         writeCharacteristicData(mBluetoothGatt, byteArray);
@@ -223,7 +214,7 @@ public class BTModule {
      */
     public static void setLight(Context context, BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_LIGHT_SYSTEM;
+        byteArray[0] = (byte) BTConstants.HEADER_LIGHT_SYSTEM;
         int light_system = SPUtiles.getIntValue(BTConstants.SP_KEY_LIGHT_SYSTEM, 1);
         byteArray[1] = light_system == 0 ? (byte) 0x00 : (byte) 0x01;
         writeCharacteristicData(mBluetoothGatt, byteArray);
@@ -236,7 +227,7 @@ public class BTModule {
      */
     public static void getBatteryData(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x00;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
@@ -248,7 +239,7 @@ public class BTModule {
      */
     public static void getVersionData(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x06;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
@@ -260,7 +251,7 @@ public class BTModule {
      */
     public static void getStepData(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x01;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
@@ -283,7 +274,7 @@ public class BTModule {
      */
     public static void getSleepIndex(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x02;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
@@ -295,7 +286,7 @@ public class BTModule {
      */
     public static void getSleepRecord(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
-        byteArray[0] = BTConstants.HEADER_GETDATA;
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x03;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
