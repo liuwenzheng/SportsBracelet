@@ -347,6 +347,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             executeNextTask(BTConstants.HEADER_BACK_SLEEP_COUNT, 3000);
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_COUNT:
+                            resetSyncMap(header);
                             mBtService.getSleepIndex();
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_INDEX:

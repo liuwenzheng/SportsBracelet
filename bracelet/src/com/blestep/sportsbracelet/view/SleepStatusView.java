@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -68,6 +69,9 @@ public class SleepStatusView extends View {
             int intervalMin = Utils.getIntervalMin(mSleep.start, mSleep.end, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
             mStatusWidth = (float) mWidth / (intervalMin / 5);
             String record = mSleep.record;
+            if (TextUtils.isEmpty(record)) {
+                return;
+            }
             float statusX = 0;
             for (int i = 0, length = record.length(); i < length; i += 2) {
                 String hex = record.substring(i, i + 2);
