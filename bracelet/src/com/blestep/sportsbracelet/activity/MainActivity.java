@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +49,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,9 +75,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private BTService mBtService;
     public boolean mNeedRefreshData = true;
     private static final Object LOCK = new Object();
-    // 超时时间
-    private boolean mIsTimeout;
-    private int mHeader;
+    // 同步状态集合（未同步则跳过执行下一条）
+    private ConcurrentHashMap<Integer, Boolean> mSyncMap = new ConcurrentHashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,8 +100,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
         // filter.addAction(BTConstants.ACTION_LOG);
         registerReceiver(mReceiver, filter);
-        bindService(new Intent(this, BTService.class), mServiceConnection,
-                BIND_AUTO_CREATE);
+        bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -190,28 +188,26 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     private void initListener() {
         frame_main_conn_tips.setOnClickListener(this);
-        pull_refresh_viewpager
-                .setOnRefreshListener(new OnRefreshListener<ViewPager>() {
+        pull_refresh_viewpager.setOnRefreshListener(new OnRefreshListener<ViewPager>() {
 
-                    @Override
-                    public void onRefresh(
-                            PullToRefreshBase<ViewPager> refreshView) {
-                        if (mBtService.isConnDevice()) {
-                            if (!mIsSyncData) {
-                                LogModule.i("下拉刷新同步数据");
-                                syncData();
-                            }
-                        } else {
-                            if (!mIsConnDevice) {
-                                LogModule.i("未连接，先连接手环");
-                                mIsConnDevice = true;
-                                autoPullUpdate(getString(R.string.setting_device));
-                                mBtService.connectBle(SPUtiles.getStringValue(
-                                        BTConstants.SP_KEY_DEVICE_ADDRESS, null));
-                            }
-                        }
+            @Override
+            public void onRefresh(PullToRefreshBase<ViewPager> refreshView) {
+                if (mBtService.isConnDevice()) {
+                    if (!mIsSyncData) {
+                        LogModule.i("下拉刷新同步数据");
+                        syncData();
                     }
-                });
+                } else {
+                    if (!mIsConnDevice) {
+                        LogModule.i("未连接，先连接手环");
+                        mIsConnDevice = true;
+                        autoPullUpdate(getString(R.string.setting_device));
+                        mBtService.connectBle(SPUtiles.getStringValue(
+                                BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+                    }
+                }
+            }
+        });
         rb_indicator_step.setChecked(true);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             ArgbEvaluator argbEvaluator = new ArgbEvaluator();
@@ -283,46 +279,36 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         });
     }
 
-    private BroadcastReceiver
-            mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
-                if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent
-                        .getAction())
-                        || BTConstants.ACTION_CONN_STATUS_DISCONNECTED
-                        .equals(intent.getAction())
-                        || BTConstants.ACTION_DISCOVER_FAILURE.equals(intent
-                        .getAction())) {
-                    if (leftMenuFragment != null
-                            && leftMenuFragment.isVisible()) {
-                        ((MenuLeftFragment) leftMenuFragment)
-                                .updateView(mBtService);
+                if (BTConstants.ACTION_CONN_STATUS_TIMEOUT.equals(intent.getAction())
+                        || BTConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(intent.getAction())
+                        || BTConstants.ACTION_DISCOVER_FAILURE.equals(intent.getAction())) {
+                    if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
+                        ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
                     }
                     mIsConnDevice = false;
                     mIsSyncData = false;
                     LogModule.i("配对失败...");
+                    pull_refresh_viewpager.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.setting_device));
                     pull_refresh_viewpager.onRefreshComplete();
-                    ToastUtils.showToast(MainActivity.this,
-                            R.string.setting_device_conn_failure);
+                    ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
                     frame_main_conn_tips.setVisibility(View.VISIBLE);
                     frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
                     // }
                 }
-                if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent
-                        .getAction())) {
+                if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
                     mIsConnDevice = false;
                     LogModule.i("配对成功...");
-                    if (leftMenuFragment != null
-                            && leftMenuFragment.isVisible()) {
-                        ((MenuLeftFragment) leftMenuFragment)
-                                .updateView(mBtService);
+                    if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
+                        ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
                     }
-                    ToastUtils.showToast(MainActivity.this,
-                            R.string.setting_device_conn_success);
+                    ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
                     pull_refresh_viewpager.onRefreshComplete();
                     autoPullUpdate(getString(R.string.step_syncdata_waiting));
                     frame_main_conn_tips.setVisibility(View.GONE);
@@ -339,104 +325,104 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     // false, false);
                 }
                 if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
-                    mIsSyncData = false;
-                    pull_refresh_viewpager.onRefreshComplete();
-                    if (mTabSteps != null && mTabSteps.isVisible()) {
-                        mTabSteps.updateView();
+                    int header = intent.getIntExtra(BTConstants.EXTRA_KEY_BACK_HEADER, 0);
+                    switch (header) {
+                        case 0:
+                            resetSyncMap(BTConstants.HEADER_BACK_SLEEP_COUNT);
+                            syncSuccess();
+                            break;
+                        case BTConstants.HEADER_FIRMWARE_VERSION:
+                            resetSyncMap(header);
+                            mBtService.getBatteryData();
+                            executeNextTask(BTConstants.HEADER_BACK_RECORD, 3000);
+                            break;
+                        case BTConstants.HEADER_BACK_RECORD:
+                            resetSyncMap(header);
+                            mBtService.getStepData();
+                            executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            break;
+                        case BTConstants.HEADER_BACK_STEP:
+                            resetSyncMap(header);
+                            mBtService.getSleepCount();
+                            executeNextTask(BTConstants.HEADER_BACK_SLEEP_COUNT, 3000);
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_COUNT:
+                            mBtService.getSleepIndex();
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_INDEX:
+                            resetSyncMap(header);
+                            mBtService.getSleepRecord();
+                            executeNextTask(BTConstants.HEADER_BACK_SLEEP_RECORD, 5000);
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_RECORD:
+                            resetSyncMap(header);
+                            syncSuccess();
+                            break;
                     }
-                    if (mTabSleep != null && mTabSleep.isVisible()) {
-                        mTabSleep.updateView(Calendar.getInstance());
-                    }
-                    LogModule.i("同步成功...");
-                    int battery = SPUtiles.getIntValue(
-                            BTConstants.SP_KEY_BATTERY, 0);
-                    LogModule.i("电量为" + battery + "%");
-                    frame_main_tips.setVisibility(View.GONE);
-                    if (leftMenuFragment != null
-                            && leftMenuFragment.isVisible()) {
-                        ((MenuLeftFragment) leftMenuFragment)
-                                .updateView(mBtService);
-                    }
-                    ToastUtils.showToast(MainActivity.this,
-                            R.string.syn_success);
-                    // mBtService.getSleepIndex();
-                    // if (mDialog != null) {
-                    // mDialog.dismiss();
-                    // }
-                    // 每天初始化一次触摸按钮
-//                    Calendar calendar = Calendar.getInstance();
-//                    SimpleDateFormat sdf = new SimpleDateFormat(
-//                            BTConstants.PATTERN_YYYY_MM_DD);
-//                    String dateStr = sdf.format(calendar.getTime());
-//                    if (!TextUtils.isEmpty(SPUtiles.getStringValue(
-//                            BTConstants.SP_KEY_TOUCHBUTTON, ""))
-//                            && SPUtiles.getStringValue(
-//                            BTConstants.SP_KEY_TOUCHBUTTON, "").equals(
-//                            dateStr)) {
-//                        return;
-//                    } else {
-//                        mBtService.synTouchButton();
-//                        SPUtiles.setStringValue(BTConstants.SP_KEY_TOUCHBUTTON,
-//                                dateStr);
-//                    }
-                    mBtService.getVersionData();
-                }
-                if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
-                    String strLog = intent.getStringExtra("log");
-                    log.setText(log.getText().toString() + "\n" + strLog);
-                }
-                if (BTConstants.ACTION_REFRESH_DATA_BATTERY.equals(intent
-                        .getAction())) {
-                    int battery = intent.getIntExtra(
-                            BTConstants.EXTRA_KEY_BATTERY_VALUE, 0);
-                    if (battery == 0) {
-                        return;
-                    }
-                    SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
-                    mBtService.getSleepIndex();
-                }
-                if (BTConstants.ACTION_REFRESH_DATA_VERSION.equals(intent
-                        .getAction())) {
-                    mBtService.syncUnit();
-                    String version = intent.getStringExtra(BTConstants.EXTRA_KEY_VERSION_VALUE);
-                    if (TextUtils.isEmpty(version)) {
-                        return;
-                    }
-                    SPUtiles.setStringValue(BTConstants.SP_KEY_VERSION, version);
                 }
                 if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
-                    int ack = intent.getIntExtra(
-                            BTConstants.EXTRA_KEY_ACK_VALUE, 0);
-                    if (ack == 0) {
-                        return;
-                    }
+                    int ack = intent.getIntExtra(BTConstants.EXTRA_KEY_ACK_VALUE, 0);
                     if (ack == BTConstants.HEADER_SYNTIMEDATA) {
+                        resetSyncMap(ack);
                         mBtService.syncUserInfoData();
+                        executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
                     } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
+                        resetSyncMap(ack);
                         // 先同步前四组闹钟数据，没有则发送0
                         mBtService.syncAlarmData();
+                        executeNextTask(BTConstants.HEADER_SYNALARM_NEW, 3000);
                     } else if (ack == BTConstants.HEADER_SYNALARM_NEW) {
+                        resetSyncMap(ack);
                         if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
                             // 再同步后四组数据，没有则发送0
                             SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
                             mBtService.syncAlarmData();
                         } else {
-                            // 闹钟同步完后，发送获取电量数据
+                            // 闹钟同步完后，发送单位数据
                             SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
-                            mBtService.getBatteryData();
+                            mBtService.syncUnit();
+                            executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
                         }
                     } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
+                        resetSyncMap(ack);
                         mBtService.syncTime();
+                        executeNextTask(BTConstants.HEADER_TIME_SYSTEM, 3000);
                     } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
+                        resetSyncMap(ack);
                         mBtService.syncLight();
+                        executeNextTask(BTConstants.HEADER_LIGHT_SYSTEM, 3000);
                     } else if (ack == BTConstants.HEADER_LIGHT_SYSTEM) {
-                        LogModule.i("数据更新完毕！");
+                        resetSyncMap(ack);
+                        mBtService.getVersionData();
+                        executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
                     }
+                }
+                if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
+                    String strLog = intent.getStringExtra("log");
+                    log.setText(log.getText().toString() + "\n" + strLog);
                 }
             }
 
         }
     };
+
+    private void syncSuccess() {
+        mIsSyncData = false;
+        LogModule.i("同步成功...");
+        pull_refresh_viewpager.onRefreshComplete();
+        if (mTabSteps != null && mTabSteps.isVisible()) {
+            mTabSteps.updateView();
+        }
+        if (mTabSleep != null && mTabSleep.isVisible()) {
+            mTabSleep.updateView(Calendar.getInstance());
+        }
+        if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
+            ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
+        }
+        frame_main_tips.setVisibility(View.GONE);
+        ToastUtils.showToast(MainActivity.this, R.string.syn_success);
+    }
+
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -508,68 +494,80 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
      */
     private void syncData() {
         mIsSyncData = true;
-        synchronized (LOCK) {
-            mIsTimeout = true;
-        }
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
         new MyHandler(this).postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 mBtService.syncTimeData();
-                mHeader = BTConstants.HEADER_SYNTIMEDATA;
+                executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
             }
         }, 500);
-        executeNextTask(true,BTConstants.HEADER_GETDATA);
-
-        // 10s后若未获取数据自动结束刷新
-        // BTService.mHandler.postDelayed(new Runnable() {
-        // @Override
-        // public void run() {
-        // runOnUiThread(new Runnable() {
-        //
-        // @Override
-        // public void run() {
-        // if (pull_refresh_viewpager.isRefreshing()) {
-        // LogModule.e("10s后未获得手环数据！！！");
-        // pull_refresh_viewpager.onRefreshComplete();
-        // }
-        //
-        // }
-        // });
-        // }
-        // }, 10000);
     }
 
-    private void executeNextTask(boolean b, int headerGetdata) {
+    // 设置超时任务，如果未收到回复，执行下条命令
+    private void executeNextTask(final int headerGetdata, int delayMillis) {
+        mSyncMap.put(headerGetdata, true);
         new MyHandler(this).postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                if (mIsTimeout) {
-                    switch (mHeader) {
-                        case BTConstants.HEADER_TIME_SYSTEM:
+                if (mSyncMap.get(headerGetdata)) {
+                    switch (headerGetdata) {
+                        case BTConstants.HEADER_SYNTIMEDATA:
+                            LogModule.i("同步时间超时，发送同步用户数据命令");
                             mBtService.syncUserInfoData();
                             break;
                         case BTConstants.HEADER_SYNUSERINFO:
-                            // 先同步前四组闹钟数据，没有则发送0
+                            LogModule.i("同步用户数据超时，发送同步闹钟命令");
                             mBtService.syncAlarmData();
                             break;
                         case BTConstants.HEADER_SYNALARM_NEW:
-                            if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
-                                // 再同步后四组数据，没有则发送0
-                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
-                                mBtService.syncAlarmData();
-                            } else {
-                                // 闹钟同步完后，发送获取电量数据
-                                SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
-                                mBtService.getBatteryData();
-                            }
+                            LogModule.i("同步闹钟超时，发送同步单位命令");
+                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
+                            mBtService.syncUnit();
+                            break;
+                        case BTConstants.HEADER_UNIT_SYSTEM:
+                            LogModule.i("同步单位超时，发送同步时间格式命令");
+                            mBtService.syncTime();
+                            break;
+                        case BTConstants.HEADER_TIME_SYSTEM:
+                            LogModule.i("同步时间格式超时，发送同步翻腕亮屏命令");
+                            mBtService.syncLight();
+                            break;
+                        case BTConstants.HEADER_LIGHT_SYSTEM:
+                            LogModule.i("同步翻腕亮屏超时，发送获取版本信息命令");
+                            mBtService.getVersionData();
+                            break;
+                        case BTConstants.HEADER_FIRMWARE_VERSION:
+                            LogModule.i("同步获取版本信息超时，发送获取电量命令");
+                            mBtService.getBatteryData();
+                            break;
+                        case BTConstants.HEADER_BACK_RECORD:
+                            LogModule.i("同步获取电量超时，发送获取记步命令");
+                            mBtService.getStepData();
+                            break;
+                        case BTConstants.HEADER_BACK_STEP:
+                            LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
+                            mBtService.getSleepCount();
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_COUNT:
+                            LogModule.i("同步获取睡眠总数超时，提示同步成功！");
+                            syncSuccess();
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_RECORD:
+                            LogModule.i("同步获取睡眠record超时，提示同步成功！");
+                            syncSuccess();
                             break;
                     }
                 }
             }
-        }, 3000);
+        }, delayMillis);
+    }
+
+    // 重置超时任务
+    private void resetSyncMap(int headerGetdata) {
+        mSyncMap.put(headerGetdata, false);
     }
 
     @Override
@@ -694,7 +692,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             public void run() {
                 pull_refresh_viewpager.setRefreshing();
             }
-        }, 500);
+        }, 1500);
     }
 
     @Override

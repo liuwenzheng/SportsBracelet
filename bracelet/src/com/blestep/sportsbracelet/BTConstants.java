@@ -81,6 +81,7 @@ public class BTConstants {
     public static final String EXTRA_KEY_ACK_VALUE = "extra_key_ack_value";
     public static final String EXTRA_KEY_BATTERY_VALUE = "extra_key_battery_value";
     public static final String EXTRA_KEY_VERSION_VALUE = "extra_key_version_value";
+    public static final String EXTRA_KEY_BACK_HEADER = "extra_key_back_header";
     // request_code
     public static final int REQUEST_CODE_SYSTEM = 101;
     public static final int REQUEST_CODE_ALARM = 102;
@@ -105,6 +106,8 @@ public class BTConstants {
     public static final int HEADER_BACK_SLEEP_RECORD = 148;
     // ACK
     public static final int HEADER_BACK_ACK = 150;
+    // 睡眠总数
+    public static final int HEADER_BACK_SLEEP_COUNT = 165;
     // 同步时间
     public static final int HEADER_SYNTIMEDATA = 17;
     // 同步用户数据

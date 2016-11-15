@@ -346,7 +346,7 @@ public class UserInfoLayoutActivity extends BaseActivity implements UserUnitMana
         String birthday = SPUtiles.getStringValue(BTConstants.SP_KEY_USER_BIRTHDAT, "");
         StringBuilder builder = new StringBuilder();
         builder.append(name).append(gender).append(weight).append(height).append(birthday);
-        if (builder.equals(mDefaultUserInfoStr)) {
+        if (builder.toString().equals(mDefaultUserInfoStr)) {
             setResult(RESULT_CANCELED);
             this.finish();
         } else {

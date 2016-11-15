@@ -117,7 +117,7 @@ public class BTModule {
      * @param mBluetoothGatt
      */
     public static void setUserInfo(BluetoothGatt mBluetoothGatt) {
-        byte[] byteArray = new byte[5];
+        byte[] byteArray = new byte[6];
         int weight = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_WEIGHT, 30);
         int height = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_HEIGHT, 100);
         int age = SPUtiles.getIntValue(BTConstants.SP_KEY_USER_AGE, 5);
@@ -288,6 +288,18 @@ public class BTModule {
         byte[] byteArray = new byte[2];
         byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = 0x03;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
+     * 获取睡眠总数
+     *
+     * @param mBluetoothGatt
+     */
+    public static void getSleepCount(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
+        byteArray[1] = 0x12;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
