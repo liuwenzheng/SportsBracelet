@@ -517,43 +517,62 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     switch (headerGetdata) {
                         case BTConstants.HEADER_SYNTIMEDATA:
                             LogModule.i("同步时间超时，发送同步用户数据命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.syncUserInfoData();
+                            executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
                             break;
                         case BTConstants.HEADER_SYNUSERINFO:
                             LogModule.i("同步用户数据超时，发送同步闹钟命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.syncAlarmData();
+                            executeNextTask(BTConstants.HEADER_SYNALARM_NEW, 3000);
                             break;
                         case BTConstants.HEADER_SYNALARM_NEW:
                             LogModule.i("同步闹钟超时，发送同步单位命令");
+                            resetSyncMap(headerGetdata);
                             SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
                             mBtService.syncUnit();
+                            executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
                             break;
                         case BTConstants.HEADER_UNIT_SYSTEM:
                             LogModule.i("同步单位超时，发送同步时间格式命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.syncTime();
+                            executeNextTask(BTConstants.HEADER_TIME_SYSTEM, 3000);
                             break;
                         case BTConstants.HEADER_TIME_SYSTEM:
                             LogModule.i("同步时间格式超时，发送同步翻腕亮屏命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.syncLight();
+                            executeNextTask(BTConstants.HEADER_LIGHT_SYSTEM, 3000);
                             break;
                         case BTConstants.HEADER_LIGHT_SYSTEM:
                             LogModule.i("同步翻腕亮屏超时，发送获取版本信息命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.getVersionData();
+                            executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
                             break;
                         case BTConstants.HEADER_FIRMWARE_VERSION:
                             LogModule.i("同步获取版本信息超时，发送获取电量命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.getBatteryData();
+                            executeNextTask(BTConstants.HEADER_BACK_RECORD, 3000);
                             break;
                         case BTConstants.HEADER_BACK_RECORD:
                             LogModule.i("同步获取电量超时，发送获取记步命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.getStepData();
+                            executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
+                            resetSyncMap(headerGetdata);
                             mBtService.getSleepCount();
+                            executeNextTask(BTConstants.HEADER_BACK_SLEEP_COUNT, 3000);
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_COUNT:
                             LogModule.i("同步获取睡眠总数超时，提示同步成功！");
+                            resetSyncMap(headerGetdata);
                             syncSuccess();
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:

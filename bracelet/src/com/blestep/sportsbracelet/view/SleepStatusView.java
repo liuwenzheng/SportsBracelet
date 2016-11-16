@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.utils.Utils;
@@ -66,21 +65,23 @@ public class SleepStatusView extends View {
         if (mSleep != null) {
             // 红色背景，默认清醒
             canvas.drawRect(0, 0, mWidth, mHeight, mBgPaint);
-            int intervalMin = Utils.getIntervalMin(mSleep.start, mSleep.end, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
-            mStatusWidth = (float) mWidth / (intervalMin / 5);
+            // int intervalMin = Utils.getIntervalMin(mSleep.start, mSleep.end, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
             String record = mSleep.record;
             if (TextUtils.isEmpty(record)) {
                 return;
             }
+            // record的长度/2再乘以20就是总睡眠时间，再/5就是5分钟睡眠长度
+            mStatusWidth = (float) mWidth / (record.length() * 2);
             float statusX = 0;
             for (int i = 0, length = record.length(); i < length; i += 2) {
                 String hex = record.substring(i, i + 2);
                 // 转换为二进制
                 String binary = Utils.hexString2binaryString(hex);
-                for (int j = 0, l = binary.length(); j < l; j += 2) {
+                for (int j = binary.length(); j > 0; ) {
                     if (statusX >= mWidth) {
                         break;
                     }
+                    j -= 2;
                     String status = binary.substring(j, j + 2);
                     if ("01".equals(status)) {
                         // 浅睡
