@@ -152,8 +152,8 @@ public class MainTabSleep extends Fragment {
                 break;
             case R.id.tv_sleep_history:
                 // 打开睡眠历史
-//                startActivityForResult(new Intent(mainActivity, HistorySleepActivity.class), BTConstants.REQUEST_CODE_HISTORY);
-//                mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                startActivityForResult(new Intent(mainActivity, HistorySleepActivity.class), BTConstants.REQUEST_CODE_HISTORY);
+                mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
         }
     }
