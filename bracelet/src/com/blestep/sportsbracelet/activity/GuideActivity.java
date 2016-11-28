@@ -1,7 +1,10 @@
 package com.blestep.sportsbracelet.activity;
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +22,7 @@ import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.base.BaseActivity;
 import com.blestep.sportsbracelet.fragment.GuideTipsFragment;
 import com.blestep.sportsbracelet.utils.SPUtiles;
+import com.blestep.sportsbracelet.utils.ToastUtils;
 import com.blestep.sportsbracelet.view.ControlScrollViewPager;
 import com.blestep.sportsbracelet.view.GradientLinearView;
 import com.umeng.analytics.MobclickAgent;
@@ -48,6 +52,7 @@ public class GuideActivity extends BaseActivity {
     private int[] colors = new int[8];
     private List<Fragment> views = new ArrayList<>();
     private ArgbEvaluator mArgbEvaluator;
+    private static final int PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,42 @@ public class GuideActivity extends BaseActivity {
             return;
         }
         MobclickAgent.setDebugMode(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[]{
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                                , Manifest.permission.READ_PHONE_STATE
+                                , Manifest.permission.READ_CONTACTS
+                                , Manifest.permission.RECEIVE_SMS}
+                        , PERMISSION_REQUEST_CODE);
+                return;
+            }
+        }
+        initContentView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        ToastUtils.showToast(GuideActivity.this, "This app needs these permissions!");
+                        GuideActivity.this.finish();
+                        return;
+                    }
+                }
+                initContentView();
+            }
+        }
+    }
+
+    private void initContentView() {
         if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_FIRST_OPEN, true)) {
             setContentView(R.layout.splash_pass);
             new Thread() {
