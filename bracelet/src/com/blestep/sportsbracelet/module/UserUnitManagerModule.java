@@ -98,7 +98,6 @@ public class UserUnitManagerModule {
         builder.setNegativeButton(
                 R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.heightFinished();
                         boolean isBritish = selectedHeightUnit == 1;
                         if (!isBritish) {
                             heightValue = Integer.parseInt(wv_height_cm.getSelectedText());
@@ -125,6 +124,7 @@ public class UserUnitManagerModule {
                             }
 
                         }
+                        listener.heightFinished();
                         SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, isBritish);
                         dialog.dismiss();
                     }
@@ -213,7 +213,6 @@ public class UserUnitManagerModule {
 
         builder.setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                listener.weightFinished();
                 boolean isBritish = selectedWeightUnit == 1;
                 if (!isBritish) {
                     weightValue = Integer.parseInt(wv_weight_kg.getSelectedText());
@@ -241,6 +240,7 @@ public class UserUnitManagerModule {
                                 activity.getString(R.string.setting_userinfo_height_unit_british)));
                     }
                 }
+                listener.weightFinished();
                 SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_BRITISH_UNIT, isBritish);
                 dialog.dismiss();
             }
