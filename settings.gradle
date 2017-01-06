@@ -1,1 +1,1 @@
-include ':bracelet', ':WheelView',':WaveView'
+include ':bracelet', ':WheelView',':WaveView','StikkyHeader'
