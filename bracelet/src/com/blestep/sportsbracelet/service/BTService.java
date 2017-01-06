@@ -226,6 +226,7 @@ public class BTService extends Service implements LeScanCallback {
                     if (data == null || data.length == 0) {
                         return;
                     }
+                    LogModule.i("接收数据：");
                     String[] formatDatas = Utils.formatData(data, characteristic);
                     // StringBuilder stringBuilder = new
                     // StringBuilder(formatDatas.length);

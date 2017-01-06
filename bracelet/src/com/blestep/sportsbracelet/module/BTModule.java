@@ -468,6 +468,8 @@ public class BTModule {
         if (characteristic == null) {
             return;
         }
+        LogModule.i("发送数据：");
+        Utils.formatData(byteArray, null);
         characteristic.setValue(byteArray);
         characteristic
                 .setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
