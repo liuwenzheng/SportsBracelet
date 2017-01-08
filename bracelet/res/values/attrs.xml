@@ -168,4 +168,7 @@
         <attr name="gbcLabelColor" format="color" />
         <attr name="gbcLabelAxisSpace" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="DashedLineAttrs">
+        <attr name="dashedLineColor" format="color" />
+    </declare-styleable>
 </resources>

@@ -58,17 +58,26 @@
     <color name="grey_e5e5e5">#e5e5e5</color>
     <color name="grey_a3adb5">#a3adb5</color>
     <color name="grey_758e9a">#758e9a</color>
+    <color name="grey_b4e7d9">#b4e7d9</color>
     <color name="red_ec4300">#ec4300</color>
     <color name="red_e05b5e">#e05b5e</color>
     <color name="red_d75c70">#d75c70</color>
     <color name="red_fe82b5">#fe82b5</color>
     <color name="red_ea2e00">#ea2e00</color>
     <color name="red_f20c00">#f20c00</color>
+    <color name="red_ce0101">#ce0101</color>
+    <color name="red_f20000">#f20000</color>
+    <color name="red_ff6363">#ff6363</color>
     <color name="green_10b46c">#10b46c</color>
+    <color name="green_00af6b">#00af6b</color>
+    <color name="green_00e5a7">#00e5a7</color>
     <color name="orange_ff9c00">#ff9c00</color>
     <color name="orange_ff7500">#ff7500</color>
+    <color name="orange_ff7800">#ff7800</color>
+    <color name="orange_ffa517">#ffa517</color>
     <color name="yellow_ffcc00">#ffcc00</color>
     <color name="yellow_fffc00">#fffc00</color>
+    <color name="yellow_fbe105">#fbe105</color>
 
     <!-- test -->
     <color name="black_000000">#000000</color>

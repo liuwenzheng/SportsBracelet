@@ -9,6 +9,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
 public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 
+	private boolean isScrollToHeader = true;
+
 	public PullToRefreshViewPager(Context context) {
 		super(context);
 	}
@@ -39,7 +41,7 @@ public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 		// return refreshableView.getCurrentItem() == 0;
 		// }
 
-		return true;
+		return isScrollToHeader;
 	}
 
 	@Override
@@ -52,5 +54,13 @@ public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 		// }
 
 		return false;
+	}
+
+	public boolean isScrollToHeader() {
+		return isScrollToHeader;
+	}
+
+	public void setScrollToHeader(boolean scrollToHeader) {
+		isScrollToHeader = scrollToHeader;
 	}
 }

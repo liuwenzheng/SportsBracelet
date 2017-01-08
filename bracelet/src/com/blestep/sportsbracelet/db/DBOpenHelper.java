@@ -21,6 +21,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_STEP);
         db.execSQL(CREATE_TABLE_ALARM);
         db.execSQL(CREATE_TABLE_SLEEP);
+        db.execSQL(CREATE_TABLE_HEART_RATE);
         LogModule.i("创建数据库");
     }
 
@@ -91,4 +92,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             + DBConstants.SLEEP_FIELD_AWAKE + " TEXT,"
             // 睡眠记录
             + DBConstants.SLEEP_FIELD_RECORD + " TEXT);";
+    // 心率表
+    private static final String CREATE_TABLE_HEART_RATE = "CREATE TABLE "
+            + DBConstants.TABLE_NAME_HEART_RATE
+            // id
+            + " (" + DBConstants.HEART_RATE_FIELD_ID
+            + " INTEGER primary key autoincrement, "
+            // 时间
+            + DBConstants.HEART_RATE_FIELD_TIME + " TEXT,"
+            // 心率
+            + DBConstants.HEART_RATE_FIELD_VALUE + " TEXT);";
 }

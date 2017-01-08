@@ -12,12 +12,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -25,11 +25,12 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
+import com.blestep.sportsbracelet.base.BaseHandler;
+import com.blestep.sportsbracelet.fragment.MainTabHeartRate;
 import com.blestep.sportsbracelet.fragment.MainTabSleep;
 import com.blestep.sportsbracelet.fragment.MainTabSteps;
 import com.blestep.sportsbracelet.module.BTModule;
@@ -45,7 +46,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.umeng.analytics.MobclickAgent;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -59,6 +59,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     @Bind(R.id.rb_indicator_step)
     RadioButton rb_indicator_step;
+    @Bind(R.id.rb_indicator_heart_rate)
+    RadioButton rb_indicator_heart_rate;
     @Bind(R.id.rb_indicator_sleep)
     RadioButton rb_indicator_sleep;
     @Bind(R.id.rl_main_header)
@@ -69,7 +71,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     TextView tv_header_sleep_title;
     @Bind(R.id.tv_header_steps_title)
     TextView tv_header_steps_title;
-    private FragmentPagerAdapter mAdapter;
+    @Bind(R.id.tv_header_heart_rate_title)
+    TextView tv_header_heart_rate_title;
+    private FragmentStatePagerAdapter mAdapter;
     private List<Fragment> mFragments = new ArrayList<>();
     private ProgressDialog mDialog;
     private BTService mBtService;
@@ -77,6 +81,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private static final Object LOCK = new Object();
     // 同步状态集合（未同步则跳过执行下一条）
     private ConcurrentHashMap<Integer, Boolean> mSyncMap = new ConcurrentHashMap<>();
+    private boolean mHeartRateShow;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         filter.setPriority(100);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
         // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
-        // filter.addAction(BTConstants.ACTION_LOG);
         registerReceiver(mReceiver, filter);
         bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -152,13 +156,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         this.mBtService = mBtService;
     }
 
-    private TextView log;
     private FrameLayout frame_main_conn_tips, frame_main_tips;
     private MainTabSteps mTabSteps;
     private MainTabSleep mTabSleep;
-    // private MainTab03 tab03;
+    private MainTabHeartRate mTabHeartRate;
     private Fragment leftMenuFragment, rightMenuFragment;
-    private ScrollView sv_log;
     private PullToRefreshViewPager pull_refresh_viewpager;
     private ViewPager mViewPager;
     private boolean mIsConnDevice = false;
@@ -174,16 +176,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         frame_main_conn_tips.setVisibility(View.GONE);
         frame_main_tips = (FrameLayout) findViewById(R.id.frame_main_tips);
         frame_main_tips.setVisibility(View.GONE);
+    }
 
-        log = (TextView) findViewById(R.id.log);
-        sv_log = (ScrollView) findViewById(R.id.sv_log);
-        // if (LogModule.debug) {
-        // sv_log.setVisibility(View.VISIBLE);
-        // log.setVisibility(View.VISIBLE);
-        // } else {
-        sv_log.setVisibility(View.GONE);
-        log.setVisibility(View.GONE);
-        // }
+    public void setPullToRefreshViewEnable(boolean enable) {
+        pull_refresh_viewpager.setScrollToHeader(enable);
     }
 
     private void initListener() {
@@ -195,7 +191,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 if (mBtService.isConnDevice()) {
                     if (!mIsSyncData) {
                         LogModule.i("下拉刷新同步数据");
-                        syncData();
+                        syncAllData();
                     }
                 } else {
                     if (!mIsConnDevice) {
@@ -215,48 +211,133 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position % 2 == 0) {
-                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
-                    int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
-                            ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
-                    rl_main_header.setBackgroundColor(bgColor);
-                    // 字体颜色
-                    tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
-                    int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
-                            ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
-                    tv_header_steps_title.setTextColor(stepsColor);
-                    tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
-                    int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9),
-                            ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
-                    tv_header_sleep_title.setTextColor(sleepColor);
-                    // 字体大小
-                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                    float stepsSize = floatEvaluator.evaluate(positionOffset, 18, 14);
-                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
-                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    float sleepSize = floatEvaluator.evaluate(positionOffset, 14, 18);
-                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
+                if (!mHeartRateShow) {
+                    if (position % 2 == 0) {
+                        rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
+                                ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                        rl_main_header.setBackgroundColor(bgColor);
+                        // 字体颜色
+                        tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                        tv_header_steps_title.setTextColor(stepsColor);
+                        tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
+                        int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9),
+                                ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        tv_header_sleep_title.setTextColor(sleepColor);
+                        // 字体大小
+                        tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        float stepsSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                        tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                        float sleepSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
+                    } else {
+                        rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
+                                ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                        rl_main_header.setBackgroundColor(bgColor);
+                        // 字体颜色
+                        tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                        int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5),
+                                ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        tv_header_steps_title.setTextColor(stepsColor);
+                        tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
+                        tv_header_sleep_title.setTextColor(sleepColor);
+                        // 字体大小
+                        tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                        float stepsSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                        tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        float sleepSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
+                    }
                 } else {
-                    rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
-                    int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
-                            ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
-                    rl_main_header.setBackgroundColor(bgColor);
-                    // 字体颜色
-                    tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
-                    int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5),
-                            ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
-                    tv_header_steps_title.setTextColor(stepsColor);
-                    tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
-                    int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
-                            ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
-                    tv_header_sleep_title.setTextColor(sleepColor);
-                    // 字体大小
-                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    float stepsSize = floatEvaluator.evaluate(positionOffset, 14, 18);
-                    tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
-                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                    float sleepSize = floatEvaluator.evaluate(positionOffset, 18, 14);
-                    tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
+                    if (position % 3 == 0) {
+                        rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
+                                ContextCompat.getColor(MainActivity.this, R.color.green_00af6b));
+                        rl_main_header.setBackgroundColor(bgColor);
+                        // 字体颜色
+                        tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9));
+                        tv_header_steps_title.setTextColor(stepsColor);
+
+                        tv_header_heart_rate_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
+                        int heartRateColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9),
+                                ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        tv_header_heart_rate_title.setTextColor(heartRateColor);
+
+                        tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9));
+                        int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_95d7d9),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9));
+                        tv_header_sleep_title.setTextColor(sleepColor);
+                        // 字体大小
+                        tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        float stepsSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                        tv_header_steps_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, stepsSize);
+                        tv_header_heart_rate_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                        float heartRateSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                        tv_header_heart_rate_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, heartRateSize);
+                    } else if (position % 3 == 1) {
+                        rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.green_00af6b));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.green_00af6b),
+                                ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                        rl_main_header.setBackgroundColor(bgColor);
+                        // 字体颜色
+                        tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9));
+                        int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                        tv_header_steps_title.setTextColor(stepsColor);
+
+                        tv_header_heart_rate_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        int heartRateColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                        tv_header_heart_rate_title.setTextColor(heartRateColor);
+
+                        tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9));
+                        int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9),
+                                ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        tv_header_sleep_title.setTextColor(sleepColor);
+                        // 字体大小
+                        tv_header_heart_rate_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        float heartRateSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                        tv_header_heart_rate_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, heartRateSize);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                        float sleepSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
+                    } else if (position % 3 == 2) {
+                        rl_main_header.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
+                                ContextCompat.getColor(MainActivity.this, R.color.green_00af6b));
+                        rl_main_header.setBackgroundColor(bgColor);
+                        // 字体颜色
+                        tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                        int stepsColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9));
+                        tv_header_steps_title.setTextColor(stepsColor);
+
+                        tv_header_heart_rate_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
+                        int heartRateColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5),
+                                ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        tv_header_heart_rate_title.setTextColor(heartRateColor);
+
+                        tv_header_sleep_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.white_ffffff));
+                        int sleepColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.white_ffffff),
+                                ContextCompat.getColor(MainActivity.this, R.color.grey_b4e7d9));
+                        tv_header_sleep_title.setTextColor(sleepColor);
+                        // 字体大小
+                        tv_header_heart_rate_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                        float heartRateSize = floatEvaluator.evaluate(positionOffset, 14, 18);
+                        tv_header_heart_rate_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, heartRateSize);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        float sleepSize = floatEvaluator.evaluate(positionOffset, 18, 14);
+                        tv_header_sleep_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, sleepSize);
+                    }
                 }
             }
 
@@ -267,6 +348,15 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
                 }
                 if (i == 1) {
+                    if (mHeartRateShow) {
+                        rb_indicator_heart_rate.setChecked(true);
+                        rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.green_00af6b));
+                    } else {
+                        rb_indicator_sleep.setChecked(true);
+                        rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                    }
+                }
+                if (i == 2) {
                     rb_indicator_sleep.setChecked(true);
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
                 }
@@ -317,7 +407,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     // mDialog.dismiss();
                     // }
                     LogModule.i("配对完开始同步数据");
-                    // syncData();
+                    // syncAllData();
                     // frame_main_tips.setText(R.string.step_syncdata_waiting);
                     // frame_main_tips.setVisibility(View.VISIBLE);
                     // mDialog = ProgressDialog.show(MainActivity.this, null,
@@ -328,7 +418,23 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     int header = intent.getIntExtra(BTConstants.EXTRA_KEY_BACK_HEADER, 0);
                     switch (header) {
                         case 0:
-                            resetSyncMap(BTConstants.HEADER_BACK_SLEEP_COUNT);
+                            resetSyncMap(BTConstants.HEADER_BACK_COUNT);
+                            int heartRateCount = intent.getIntExtra("heartRateCount", 0);
+                            if (mHeartRateShow && heartRateCount != 0) {
+                                LogModule.i("支持心率且心率有数据");
+                                mBtService.setHeartRateInterval();
+                                executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
+                            } else {
+                                syncSuccess();
+                            }
+                            break;
+                        case BTConstants.TYPE_SET_HEART_RATE_INTERVAL:
+                            resetSyncMap(header);
+                            mBtService.getHeartRate();
+                            executeNextTask(BTConstants.TYPE_GET_HEART_RATE, 3000);
+                            break;
+                        case BTConstants.HEADER_HEART_RATE:
+                            resetSyncMap(BTConstants.TYPE_GET_HEART_RATE);
                             syncSuccess();
                             break;
                         case BTConstants.HEADER_FIRMWARE_VERSION:
@@ -343,10 +449,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             resetSyncMap(header);
-                            mBtService.getSleepCount();
-                            executeNextTask(BTConstants.HEADER_BACK_SLEEP_COUNT, 3000);
+                            mBtService.getDataCount();
+                            executeNextTask(BTConstants.HEADER_BACK_COUNT, 3000);
                             break;
-                        case BTConstants.HEADER_BACK_SLEEP_COUNT:
+                        case BTConstants.HEADER_BACK_COUNT:
                             resetSyncMap(header);
                             mBtService.getSleepIndex();
                             break;
@@ -363,7 +469,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 }
                 if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
                     int ack = intent.getIntExtra(BTConstants.EXTRA_KEY_ACK_VALUE, 0);
-                    if (ack == BTConstants.HEADER_SYNTIMEDATA) {
+                    if (ack == BTConstants.HEADER_BACK_INSIDE_VERSION) {
+                        resetSyncMap(ack);
+                        createView();
+                        mBtService.syncTimeData();
+                        executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
+                    } else if (ack == BTConstants.HEADER_SYNTIMEDATA) {
                         resetSyncMap(ack);
                         mBtService.syncUserInfoData();
                         executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
@@ -398,10 +509,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
                     }
                 }
-                if (BTConstants.ACTION_LOG.equals(intent.getAction())) {
-                    String strLog = intent.getStringExtra("log");
-                    log.setText(log.getText().toString() + "\n" + strLog);
-                }
             }
 
         }
@@ -416,6 +523,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         }
         if (mTabSleep != null && mTabSleep.isVisible()) {
             mTabSleep.updateView(Calendar.getInstance());
+        }
+        if (mTabHeartRate != null && mTabHeartRate.isVisible()) {
+            mTabHeartRate.updateView();
         }
         if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
             ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
@@ -451,7 +561,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         if (mBtService.isConnDevice()) {
             LogModule.i("已经连接手环开始同步数据");
             autoPullUpdate(getString(R.string.step_syncdata_waiting));
-            // syncData();
+            // syncAllData();
             frame_main_conn_tips.setVisibility(View.GONE);
             // frame_main_tips.setText(R.string.step_syncdata_waiting);
             // frame_main_tips.setVisibility(View.VISIBLE);
@@ -472,36 +582,31 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         }
     }
 
-    private static class MyHandler extends Handler {
-        private WeakReference<MainActivity> weakReference;
+    private MyHandler mHandler = new MyHandler(this);
 
-        public MyHandler(MainActivity activity) {
-            weakReference = new WeakReference<>(activity);
+    private static class MyHandler extends BaseHandler<MainActivity> {
+
+        public MyHandler(MainActivity mainActivity) {
+            super(mainActivity);
         }
 
-
         @Override
-        public void handleMessage(Message msg) {
-            MainActivity activity = weakReference.get();
-            super.handleMessage(msg);
-            if (activity != null) {
-                // ...
-            }
+        protected void handleMessage(MainActivity mainActivity, Message msg) {
         }
     }
 
     /**
      * 同步数据
      */
-    private void syncData() {
+    private void syncAllData() {
         mIsSyncData = true;
         // 5.0偶尔会出现获取不到数据的情况，这时候延迟发送命令，解决问题
-        new MyHandler(this).postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                mBtService.syncTimeData();
-                executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
+                mBtService.getInsideVersion();
+                executeNextTask(BTConstants.HEADER_BACK_INSIDE_VERSION, 3000);
             }
         }, 500);
     }
@@ -509,12 +614,18 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     // 设置超时任务，如果未收到回复，执行下条命令
     private void executeNextTask(final int headerGetdata, int delayMillis) {
         mSyncMap.put(headerGetdata, true);
-        new MyHandler(this).postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 if (mSyncMap.get(headerGetdata)) {
                     switch (headerGetdata) {
+                        case BTConstants.HEADER_BACK_INSIDE_VERSION:
+                            LogModule.i("同步内部版本超时，发送同步时间命令");
+                            resetSyncMap(headerGetdata);
+                            mBtService.syncTimeData();
+                            executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
+                            break;
                         case BTConstants.HEADER_SYNTIMEDATA:
                             LogModule.i("同步时间超时，发送同步用户数据命令");
                             resetSyncMap(headerGetdata);
@@ -567,16 +678,27 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         case BTConstants.HEADER_BACK_STEP:
                             LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
                             resetSyncMap(headerGetdata);
-                            mBtService.getSleepCount();
-                            executeNextTask(BTConstants.HEADER_BACK_SLEEP_COUNT, 3000);
+                            mBtService.getDataCount();
+                            executeNextTask(BTConstants.HEADER_BACK_COUNT, 3000);
                             break;
-                        case BTConstants.HEADER_BACK_SLEEP_COUNT:
+                        case BTConstants.HEADER_BACK_COUNT:
                             LogModule.i("同步获取睡眠总数超时，提示同步成功！");
                             resetSyncMap(headerGetdata);
                             syncSuccess();
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:
                             LogModule.i("同步获取睡眠record超时，提示同步成功！");
+                            syncSuccess();
+                            break;
+                        case BTConstants.TYPE_SET_HEART_RATE_INTERVAL:
+                            LogModule.i("同步心率间隔超时，发送获取心率命令");
+                            resetSyncMap(headerGetdata);
+                            mBtService.getHeartRate();
+                            executeNextTask(BTConstants.TYPE_GET_HEART_RATE, 3000);
+                            break;
+                        case BTConstants.TYPE_GET_HEART_RATE:
+                            LogModule.i("同步获取心率超时，提示同步成功！");
+                            resetSyncMap(headerGetdata);
                             syncSuccess();
                             break;
                     }
@@ -612,27 +734,67 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     private void initViewPager() {
         mViewPager = pull_refresh_viewpager.getRefreshableView();
-        mTabSteps = new MainTabSteps();
-        mTabSleep = new MainTabSleep();
-        // tab03 = new MainTab03();
-        mFragments.add(mTabSteps);
-        mFragments.add(mTabSleep);
-        // mFragments.add(tab03);
         /**
          * 初始化Adapter
          */
-        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        mAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getCount() {
                 return mFragments.size();
             }
 
             @Override
-            public Fragment getItem(int arg0) {
-                return mFragments.get(arg0);
+            public Fragment getItem(int position) {
+                return mFragments.get(position);
+            }
+
+            @Override
+            public int getItemPosition(Object object) {
+                return PagerAdapter.POSITION_NONE;
             }
         };
         mViewPager.setAdapter(mAdapter);
+        createView();
+        mViewPager.setOffscreenPageLimit(2);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 创建页面
+     */
+    private void createView() {
+        mHeartRateShow = SPUtiles.getBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+        if (mFragments.isEmpty()) {
+            mTabSteps = new MainTabSteps();
+            mTabHeartRate = new MainTabHeartRate();
+            mTabSleep = new MainTabSleep();
+            mFragments.add(mTabSteps);
+            if (mHeartRateShow) {
+                mFragments.add(mTabHeartRate);
+                rb_indicator_heart_rate.setVisibility(View.VISIBLE);
+                tv_header_heart_rate_title.setVisibility(View.VISIBLE);
+            }
+            mFragments.add(mTabSleep);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            if (mFragments.size() == 2) {
+                if (mHeartRateShow) {
+                    mFragments.add(1, mTabHeartRate);
+                    mAdapter.notifyDataSetChanged();
+                    rb_indicator_heart_rate.setVisibility(View.VISIBLE);
+                    tv_header_heart_rate_title.setVisibility(View.VISIBLE);
+                }
+            }
+            if (mFragments.size() == 3) {
+                if (!mHeartRateShow) {
+                    mFragments.remove(mTabHeartRate);
+                    mAdapter.notifyDataSetChanged();
+                    rb_indicator_heart_rate.setVisibility(View.GONE);
+                    tv_header_heart_rate_title.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     private void initRightMenu() {
@@ -670,7 +832,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         getSlidingMenu().showSecondaryMenu();
     }
 
-    @OnClick({R.id.frame_main_conn_tips, R.id.tv_header_sleep_title, R.id.tv_header_steps_title})
+    @OnClick({R.id.frame_main_conn_tips, R.id.tv_header_sleep_title, R.id.tv_header_steps_title, R.id.tv_header_heart_rate_title})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.frame_main_conn_tips:
@@ -689,6 +851,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 // getString(R.string.setting_device), false, false);
                 break;
             case R.id.tv_header_sleep_title:
+                mViewPager.setCurrentItem(mHeartRateShow ? 2 : 1);
+                break;
+            case R.id.tv_header_heart_rate_title:
                 mViewPager.setCurrentItem(1);
                 break;
             case R.id.tv_header_steps_title:

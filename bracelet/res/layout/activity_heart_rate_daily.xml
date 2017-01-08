@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dashedLine="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="54dp"
+        android:background="@color/green_00af6b">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的心率"
+            android:textColor="@color/white_ffffff"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <View style="@style/divider_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/heart_rate_header_height_min"
+        android:background="@color/green_00af6b">
+
+        <TextView
+            android:id="@+id/tv_heart_rate_present"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="0"
+            android:textColor="@color/white_ffffff"
+            android:textSize="40sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_heart_rate_present"
+            android:layout_toRightOf="@id/tv_heart_rate_present"
+            android:text="次/分"
+            android:textColor="@color/white_ffffff"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_heart_rate_present"
+            android:layout_centerHorizontal="true"
+            android:text="上次检测结果"
+            android:textColor="@color/white_ffffff"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:gravity="center"
+        android:text="数据分析"
+        android:textColor="@color/grey_333333"
+        android:textSize="15sp" />
+
+    <View
+        style="@style/divider_line"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="5dp"
+        android:text="\t\t\t\t正常人安静状态下每分钟心跳的次数，一般为60-100次/分；参考下图了解自己在不同运动强度下的心率区间"
+        android:textColor="@color/grey_999999"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_header_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/view_start"
+            android:layout_width="2dp"
+            android:layout_height="@dimen/heart_rate_level_height"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/gradient_heart_rate_daily_start" />
+
+
+        <View
+            android:id="@+id/view_max"
+            android:layout_width="2dp"
+            android:layout_height="@dimen/heart_rate_level_height"
+            android:layout_below="@id/view_start"
+            android:layout_centerHorizontal="true"
+            android:background="@color/red_f20000" />
+
+
+        <View
+            android:id="@+id/view_high"
+            android:layout_width="2dp"
+            android:layout_height="@dimen/heart_rate_level_height"
+            android:layout_below="@id/view_max"
+            android:layout_centerHorizontal="true"
+            android:background="@color/red_ff6363" />
+
+
+        <View
+            android:id="@+id/view_low"
+            android:layout_width="2dp"
+            android:layout_height="@dimen/heart_rate_level_height"
+            android:layout_below="@id/view_high"
+            android:layout_centerHorizontal="true"
+            android:background="@color/orange_ff7800" />
+
+
+        <View
+            android:id="@+id/view_min"
+            android:layout_width="2dp"
+            android:layout_height="@dimen/heart_rate_level_height"
+            android:layout_below="@id/view_low"
+            android:layout_centerHorizontal="true"
+            android:background="@color/orange_ffa517" />
+
+
+        <View
+            android:id="@+id/view_end"
+            android:layout_width="2dp"
+            android:layout_height="@dimen/heart_rate_level_height"
+            android:layout_below="@id/view_min"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/gradient_heart_rate_daily_end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_max"
+            android:layout_alignTop="@id/view_max"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/view_max"
+            android:gravity="center_vertical"
+            android:text="峰值"
+            android:textColor="@color/red_f20000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_max"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/view_start"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="-20dp"
+            android:layout_toLeftOf="@id/view_start"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/red_f20000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_high"
+            android:layout_alignTop="@id/view_high"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/view_high"
+            android:gravity="center_vertical"
+            android:text="心肺"
+            android:textColor="@color/red_ff6363"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_high"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/view_max"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="-20dp"
+            android:layout_toLeftOf="@id/view_max"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/red_ff6363"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_low"
+            android:layout_alignTop="@id/view_low"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/view_low"
+            android:gravity="center_vertical"
+            android:text="燃脂"
+            android:textColor="@color/orange_ff7800"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_low"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/view_high"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="-20dp"
+            android:layout_toLeftOf="@id/view_high"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/orange_ff7800"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_min"
+            android:layout_alignTop="@id/view_min"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/view_min"
+            android:gravity="center_vertical"
+            android:text="热身"
+            android:textColor="@color/orange_ffa517"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_min"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/view_low"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="-20dp"
+            android:layout_toLeftOf="@id/view_low"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/orange_ffa517"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_end"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/view_min"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="-20dp"
+            android:layout_toLeftOf="@id/view_min"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/yellow_fbe105"
+            android:textSize="14sp" />
+
+        <com.blestep.sportsbracelet.view.DashedLine
+            android:layout_width="24dp"
+            android:layout_height="4dp"
+            android:layout_below="@id/view_start"
+            android:layout_marginTop="-2dp"
+            android:layout_toLeftOf="@id/view_start"
+            dashedLine:dashedLineColor="@color/red_f20000" />
+
+        <com.blestep.sportsbracelet.view.DashedLine
+            android:layout_width="24dp"
+            android:layout_height="4dp"
+            android:layout_below="@id/view_max"
+            android:layout_marginTop="-2dp"
+            android:layout_toLeftOf="@id/view_max"
+            dashedLine:dashedLineColor="@color/red_ff6363" />
+
+        <com.blestep.sportsbracelet.view.DashedLine
+            android:layout_width="24dp"
+            android:layout_height="4dp"
+            android:layout_below="@id/view_high"
+            android:layout_marginTop="-2dp"
+            android:layout_toLeftOf="@id/view_high"
+            dashedLine:dashedLineColor="@color/orange_ff7800" />
+
+        <com.blestep.sportsbracelet.view.DashedLine
+            android:layout_width="24dp"
+            android:layout_height="4dp"
+            android:layout_below="@id/view_low"
+            android:layout_marginTop="-2dp"
+            android:layout_toLeftOf="@id/view_low"
+            dashedLine:dashedLineColor="@color/orange_ffa517" />
+
+        <com.blestep.sportsbracelet.view.DashedLine
+            android:layout_width="24dp"
+            android:layout_height="4dp"
+            android:layout_below="@id/view_min"
+            android:layout_marginTop="-2dp"
+            android:layout_toLeftOf="@id/view_min"
+            dashedLine:dashedLineColor="@color/yellow_fbe105" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_start"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-4dp"
+            android:src="@drawable/heart_rate_level_1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_max"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-4dp"
+            android:src="@drawable/heart_rate_level_2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_high"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-4dp"
+            android:src="@drawable/heart_rate_level_3" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_low"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-4dp"
+            android:src="@drawable/heart_rate_level_4" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_min"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-4dp"
+            android:src="@drawable/heart_rate_level_5" />
+
+
+    </RelativeLayout>
+</LinearLayout>

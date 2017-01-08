@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainTabSleep extends Fragment {
-
+    private static final String TAG = "MainTabSleep";
     @Bind(R.id.tv_asleep_duration)
     TextView tv_asleep_druation;
     @Bind(R.id.tv_deep_sleep)
@@ -60,13 +60,14 @@ public class MainTabSleep extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        LogModule.i(this.getClass().getSimpleName() + "-->onActivityCreated");
+        LogModule.i(TAG + "-->onActivityCreated");
         mainActivity = (MainActivity) getActivity();
         super.onActivityCreated(savedInstanceState);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        LogModule.i(TAG + "-->onCreateView");
         View messageLayout = inflater.inflate(R.layout.main_tab_sleep, container,
                 false);
         ButterKnife.bind(this, messageLayout);
@@ -133,6 +134,7 @@ public class MainTabSleep extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        LogModule.i(TAG + "-->onDestroyView");
         ButterKnife.unbind(this);
     }
 

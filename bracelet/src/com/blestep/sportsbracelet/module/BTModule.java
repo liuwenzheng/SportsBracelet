@@ -13,6 +13,7 @@ import android.content.Intent;
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.Alarm;
+import com.blestep.sportsbracelet.entity.HeartRate;
 import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.utils.SPUtiles;
@@ -84,6 +85,44 @@ public class BTModule {
         mBluetoothAdapter.startLeScan(mLeScanCallback);
         // mBluetoothAdapter.startLeScan(new UUID[] { SERVIE_UUID },
         // mLeScanCallback);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 设置心率间隔
+     */
+    public static void getHeartRate(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
+        byteArray[1] = (byte) BTConstants.TYPE_GET_HEART_RATE;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 设置心率间隔
+     */
+    public static void setHeartRateInterval(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[3];
+        int interval = SPUtiles.getIntValue(BTConstants.SP_KEY_HEART_RATE_INTERVAL, 2);
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
+        byteArray[1] = (byte) BTConstants.TYPE_SET_HEART_RATE_INTERVAL;
+        byteArray[2] = (byte) interval;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 获取内部版本号
+     */
+    public static void getInsideVersion(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
+        byteArray[1] = (byte) BTConstants.HEADER_BACK_INSIDE_VERSION;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
     /**
@@ -296,10 +335,10 @@ public class BTModule {
      *
      * @param mBluetoothGatt
      */
-    public static void getSleepCount(BluetoothGatt mBluetoothGatt) {
+    public static void getDataCount(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
         byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
-        byteArray[1] = 0x12;
+        byteArray[1] = (byte) BTConstants.TYPE_GET_COUNT;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
@@ -512,31 +551,19 @@ public class BTModule {
         String calories0 = formatDatas[14];
         String dateStr = sdf.format(date);
         LogModule.e("日期：" + dateStr);
-        Intent intent = new Intent(BTConstants.ACTION_LOG);
-        intent.putExtra("log", "日期：" + dateStr);
-        context.sendBroadcast(intent);
 
         String count = Utils.decodeToString(sb.toString());
         LogModule.e("步数：" + count);
-        intent.putExtra("log", "步数：" + count);
-        context.sendBroadcast(intent);
 
         String duration = Utils.decodeToString(duration1 + duration0);
         LogModule.e("时长：" + duration);
-        intent.putExtra("log", "时长：" + duration);
-        context.sendBroadcast(intent);
 
         String distance = new DecimalFormat().format(Integer.parseInt(Utils
                 .decodeToString(distance1 + distance0)) * 0.1);
         LogModule.e("距离：" + distance);
-        intent.putExtra("log", "距离：" + distance);
-        context.sendBroadcast(intent);
 
         String calories = Utils.decodeToString(calories1 + calories0);
         LogModule.e("卡路里：" + Utils.decodeToString(calories1 + calories0));
-        intent.putExtra("log",
-                "卡路里：" + Utils.decodeToString(calories1 + calories0));
-        context.sendBroadcast(intent);
 
         Step step = new Step();
         step.date = dateStr;
@@ -549,6 +576,47 @@ public class BTModule {
         } else {
             // 更新全部记录
             DBTools.getInstance(context).updateStep(step);
+        }
+    }
+
+    /**
+     * 解析保存更新心率数据
+     *
+     * @param formatDatas
+     * @param context
+     */
+    public static void saveHeartRateData(String[] formatDatas, Context context) {
+        SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
+        Calendar calendar = Calendar.getInstance();
+        for (int i = 0; i < 3; i++) {
+            String year = formatDatas[i * 6 + 2];
+            String month = formatDatas[i * 6 + 3];
+            String day = formatDatas[i * 6 + 4];
+            String hour = formatDatas[i * 6 + 5];
+            String min = formatDatas[i * 6 + 6];
+            String value = formatDatas[i * 6 + 7];
+            if (Integer.parseInt(Utils.decodeToString(year)) == 0) {
+                continue;
+            }
+            calendar.set(2000 + Integer.parseInt(Utils.decodeToString(year)),
+                    Integer.parseInt(Utils.decodeToString(month)) - 1,
+                    Integer.parseInt(Utils.decodeToString(day)),
+                    Integer.parseInt(Utils.decodeToString(hour)),
+                    Integer.parseInt(Utils.decodeToString(min)));
+            Date time = calendar.getTime();
+            String heartRateTime = sdf.format(time);
+            LogModule.e("心率时间 ：" + heartRateTime);
+            String heartRateValue = Utils.decodeToString(value);
+            LogModule.e("心率值 ：" + heartRateValue);
+            HeartRate heartRate = new HeartRate();
+            heartRate.time = heartRateTime;
+            heartRate.value = heartRateValue;
+            if (!DBTools.getInstance(context).isHeartRateExist(heartRate.time)) {
+                DBTools.getInstance(context).insertHeartRate(heartRate);
+            } else {
+                // 更新全部记录
+                DBTools.getInstance(context).updateHeartRate(heartRate);
+            }
         }
     }
 

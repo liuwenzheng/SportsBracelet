@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/lv_heart_rate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_ffffff"
+        android:divider="@color/grey_d9d9d9"
+        android:dividerHeight="1px"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:scrollbars="none" />
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/heart_rate_header_height"
+        android:background="@drawable/heart_rate_bg_gradient">
+
+        <ImageView
+            android:id="@+id/iv_heart_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/heart_rate_icon" />
+
+        <RelativeLayout
+            android:id="@+id/rl_header_rate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_heart_rate"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/tv_heart_rate_present"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white_ffffff"
+                android:textSize="40sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tv_heart_rate_present"
+                android:layout_toRightOf="@id/tv_heart_rate_present"
+                android:text="次/分"
+                android:textColor="@color/white_ffffff"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_heart_rate_present"
+                android:layout_centerHorizontal="true"
+                android:text="上次检测结果"
+                android:textColor="@color/white_ffffff"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_heart_rate_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:padding="16dp"
+            android:text="检测说明 >"
+            android:textColor="@color/white_ffffff"
+            android:textSize="10sp" />
+    </RelativeLayout>
+</FrameLayout>

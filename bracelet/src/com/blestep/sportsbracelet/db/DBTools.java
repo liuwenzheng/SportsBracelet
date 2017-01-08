@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.entity.Alarm;
+import com.blestep.sportsbracelet.entity.HeartRate;
 import com.blestep.sportsbracelet.entity.Sleep;
 import com.blestep.sportsbracelet.entity.Step;
 import com.blestep.sportsbracelet.utils.Utils;
@@ -229,6 +230,22 @@ public class DBTools {
         return sleeps;
     }
 
+    public ArrayList<HeartRate> selectAllHeartRate() {
+        Cursor cursor = db.query(DBConstants.TABLE_NAME_HEART_RATE, null, null,
+                null, null, null, null);
+        ArrayList<HeartRate> heartRates = new ArrayList<>();
+        for (int i = cursor.getCount() - 1; i >= 0; i--) {
+            cursor.moveToPosition(i);
+            HeartRate heartRate = new HeartRate();
+            heartRate.time = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.HEART_RATE_FIELD_TIME));
+            heartRate.value = cursor.getString(cursor
+                    .getColumnIndex(DBConstants.HEART_RATE_FIELD_VALUE));
+            heartRates.add(heartRate);
+        }
+        return heartRates;
+    }
+
     public long insertStep(Step step) {
         ContentValues cv = new ContentValues();
         cv.put(DBConstants.STEP_FIELD_DATE, step.date);
@@ -263,6 +280,14 @@ public class DBTools {
         return row;
     }
 
+    public long insertHeartRate(HeartRate heartRate) {
+        ContentValues cv = new ContentValues();
+        cv.put(DBConstants.HEART_RATE_FIELD_TIME, heartRate.time);
+        cv.put(DBConstants.HEART_RATE_FIELD_VALUE, heartRate.value);
+        long row = db.insert(DBConstants.TABLE_NAME_HEART_RATE, null, cv);
+        return row;
+    }
+
     public void deleteStep(int id) {
         String where = DBConstants.STEP_FIELD_ID + " = ?";
         String[] whereValue = {Integer.toString(id)};
@@ -294,6 +319,20 @@ public class DBTools {
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + DBConstants.TABLE_NAME_SLEEP + " WHERE "
                 + DBConstants.SLEEP_FIELD_DATE + " = ?", args);
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        } else {
+            cursor.close();
+            return true;
+        }
+    }
+
+    public boolean isHeartRateExist(String time) {
+        String[] args = new String[]{time};
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + DBConstants.TABLE_NAME_HEART_RATE + " WHERE "
+                + DBConstants.HEART_RATE_FIELD_TIME + " = ?", args);
         if (cursor.getCount() == 0) {
             cursor.close();
             return false;
@@ -340,10 +379,20 @@ public class DBTools {
         db.update(DBConstants.TABLE_NAME_SLEEP, cv, where, whereValue);
     }
 
+    public void updateHeartRate(HeartRate heartRate) {
+        String where = DBConstants.HEART_RATE_FIELD_TIME + " = ?";
+        String[] whereValue = {heartRate.time};
+        ContentValues cv = new ContentValues();
+        cv.put(DBConstants.HEART_RATE_FIELD_TIME, heartRate.time);
+        cv.put(DBConstants.HEART_RATE_FIELD_VALUE, heartRate.value);
+        db.update(DBConstants.TABLE_NAME_HEART_RATE, cv, where, whereValue);
+    }
+
     public void deleteAllData() {
         db.delete(DBConstants.TABLE_NAME_STEP, null, null);
         db.delete(DBConstants.TABLE_NAME_ALARM, null, null);
         db.delete(DBConstants.TABLE_NAME_SLEEP, null, null);
+        db.delete(DBConstants.TABLE_NAME_HEART_RATE, null, null);
     }
 
     // drop table;

@@ -33,8 +33,6 @@ public class BTConstants {
     public static final String ACTION_REFRESH_DATA_VERSION = "action_refresh_data_version";
     // 连接超时
     public static final String ACTION_CONN_STATUS_TIMEOUT = "action_conn_status_timeout";
-    // log
-    public static final String ACTION_LOG = "action_log";
 
     public static final String ACTION_PHONE_STATE = "android.intent.action.PHONE_STATE";
     public static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
@@ -70,6 +68,8 @@ public class BTConstants {
     public static final String SP_KEY_TIME_SYSTEM = "sp_key_time_system";
     public static final String SP_KEY_LIGHT_SYSTEM = "sp_key_light_system";
     public static final String SP_KEY_ALARM_SYNC_FINISH = "sp_key_alarm_sync_finish";
+    public static final String SP_KEY_HEART_RATE_SHOW = "sp_key_heart_rate_show";
+    public static final String SP_KEY_HEART_RATE_INTERVAL = "sp_key_heart_rate_interval";
     // Extra_key
     /**
      * intent传值key
@@ -90,6 +90,9 @@ public class BTConstants {
     public static final int REQUEST_CODE_USERINFO = 105;
     public static final int REQUEST_CODE_TARGET = 106;
     public static final int REQUEST_CODE_CLEAR = 107;
+    public static final int REQUEST_CODE_HEART_RATE_EXPLAIN = 108;
+    public static final int REQUEST_CODE_HEART_RATE_INTERVAL = 109;
+    public static final int REQUEST_CODE_HEART_RATE_DAILY = 110;
 
     /**
      * 返回数据header
@@ -106,14 +109,26 @@ public class BTConstants {
     public static final int HEADER_BACK_SLEEP_RECORD = 148;
     // ACK
     public static final int HEADER_BACK_ACK = 150;
-    // 睡眠总数
-    public static final int HEADER_BACK_SLEEP_COUNT = 165;
+    // 获取睡眠index，睡眠record，心率总数
+    public static final int HEADER_BACK_COUNT = 165;
+    // 设置心率间隔
+    public static final int HEADER_BACK_HEART_RATE = 164;
+    // 心率记录
+    public static final int HEADER_HEART_RATE = 168;
+    // 获取内部版本号
+    public static final int HEADER_BACK_INSIDE_VERSION = 9;
     // 同步时间
     public static final int HEADER_SYNTIMEDATA = 17;
     // 同步用户数据
     public static final int HEADER_SYNUSERINFO = 18;
+    // 获取总数据
+    public static final int TYPE_GET_COUNT = 18;
     // 获取数据
     public static final int HEADER_GETDATA = 22;
+    // 心率间隔
+    public static final int TYPE_SET_HEART_RATE_INTERVAL = 23;
+    // 读取心率
+    public static final int TYPE_GET_HEART_RATE = 24;
     // 单位制式
     public static final int HEADER_UNIT_SYSTEM = 35;
     // 时间格式

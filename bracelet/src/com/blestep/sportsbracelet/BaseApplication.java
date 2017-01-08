@@ -37,17 +37,6 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MobclickAgent.setCatchUncaughtExceptions(true);
-        // 初始化数据库
-        DBTools.getInstance(getApplicationContext());
-        // 初始化SharedPreference
-        SPUtiles.getInstance(getApplicationContext());
-        // 启动蓝牙服务
-        startService(new Intent(this, BTService.class));
-        // 初始化蓝牙适配器
-        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext()
-                .getSystemService(Context.BLUETOOTH_SERVICE);
-        BTModule.mBluetoothAdapter = bluetoothManager.getAdapter();
-        Thread.setDefaultUncaughtExceptionHandler(new BTUncaughtExceptionHandler());
         // 初始化Xlog
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {// 优先保存到SD卡中
             PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + appFolder;
@@ -59,6 +48,17 @@ public class BaseApplication extends Application {
                 .build();
         LogConfiguration config = new LogConfiguration.Builder().tag("iFit360").build();
         XLog.init(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.NONE, config, new AndroidPrinter(), filePrinter);
+        // 初始化数据库
+        DBTools.getInstance(getApplicationContext());
+        // 初始化SharedPreference
+        SPUtiles.getInstance(getApplicationContext());
+        // 启动蓝牙服务
+        startService(new Intent(this, BTService.class));
+        // 初始化蓝牙适配器
+        BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext()
+                .getSystemService(Context.BLUETOOTH_SERVICE);
+        BTModule.mBluetoothAdapter = bluetoothManager.getAdapter();
+        Thread.setDefaultUncaughtExceptionHandler(new BTUncaughtExceptionHandler());
     }
 
     public class BTUncaughtExceptionHandler implements

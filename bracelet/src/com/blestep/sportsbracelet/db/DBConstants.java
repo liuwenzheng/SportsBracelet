@@ -26,4 +26,9 @@ public class DBConstants {
     public static final String SLEEP_FIELD_LIGHT = "light";
     public static final String SLEEP_FIELD_AWAKE = "awake";
     public static final String SLEEP_FIELD_RECORD = "record";
+    // 心率
+    public static final String TABLE_NAME_HEART_RATE = "heart_rate";
+    public static final String HEART_RATE_FIELD_ID = "id";
+    public static final String HEART_RATE_FIELD_TIME = "time";
+    public static final String HEART_RATE_FIELD_VALUE = "value";
 }

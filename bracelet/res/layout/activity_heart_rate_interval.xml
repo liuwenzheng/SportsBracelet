@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="58dp"
+        android:background="@color/grey_f4f4f4">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="心率设置"
+            android:textColor="@color/grey_323232"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_heart_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <RadioButton
+            android:id="@+id/rb_heart_rate_close"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:text="关闭" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_heart_rate_10"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:text="10分钟" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_heart_rate_20"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:text="20分钟" />
+
+        <View style="@style/divider_line" />
+
+        <RadioButton
+            android:id="@+id/rb_heart_rate_30"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/alarm_checked_selector"
+            android:text="30分钟" />
+
+        <View style="@style/divider_line" />
+    </RadioGroup>
+</LinearLayout>

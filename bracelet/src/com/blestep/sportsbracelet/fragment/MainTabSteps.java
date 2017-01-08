@@ -38,6 +38,7 @@ import butterknife.OnClick;
 
 public class MainTabSteps extends Fragment implements ICircleProgressValue,
         OnClickListener {
+    private static final String TAG = "MainTabSteps";
     @Bind(R.id.circleView)
     CircleProgressView circleView;
     @Bind(R.id.tv_step)
@@ -60,14 +61,14 @@ public class MainTabSteps extends Fragment implements ICircleProgressValue,
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        LogModule.i(this.getClass().getSimpleName() + "-->onActivityCreated");
+        LogModule.i(TAG + "-->onActivityCreated");
         mainActivity = (MainActivity) getActivity();
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onResume() {
-        LogModule.i(this.getClass().getSimpleName() + "-->onResume");
+        LogModule.i(TAG + "-->onResume");
         super.onResume();
         wave.setShapeType(WaveView.ShapeType.SQUARE);
         wave.setWaveColor(ContextCompat.getColor(mainActivity, R.color.blue_82f0f3),
@@ -77,7 +78,7 @@ public class MainTabSteps extends Fragment implements ICircleProgressValue,
 
     @Override
     public void onPause() {
-        LogModule.i(this.getClass().getSimpleName() + "-->onPause");
+        LogModule.i(TAG + "-->onPause");
         super.onPause();
         mWaveHelper.cancel();
     }
@@ -85,7 +86,7 @@ public class MainTabSteps extends Fragment implements ICircleProgressValue,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        LogModule.i(this.getClass().getSimpleName() + "-->onCreateView");
+        LogModule.i(TAG + "-->onCreateView");
         mView = inflater.inflate(R.layout.main_tab_steps, container, false);
         ButterKnife.bind(this, mView);
         mWaveHelper = new WaveHelper(wave);
@@ -166,7 +167,7 @@ public class MainTabSteps extends Fragment implements ICircleProgressValue,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LogModule.i(this.getClass().getSimpleName() + "-->onDestroyView");
+        LogModule.i(TAG + "-->onDestroyView");
         ButterKnife.unbind(this);
     }
 

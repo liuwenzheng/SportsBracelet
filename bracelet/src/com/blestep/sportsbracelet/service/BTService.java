@@ -132,6 +132,7 @@ public class BTService extends Service implements LeScanCallback {
                 private int stepsCount;
                 private int sleepRecordCount;
                 private int sleepIndexCount;
+                private int heartRateCount;
                 private Map<Integer, String> sleepMaps = new HashMap<>();
 
                 public void onConnectionStateChange(BluetoothGatt gatt,
@@ -240,23 +241,54 @@ public class BTService extends Service implements LeScanCallback {
                         case BTConstants.HEADER_BACK_ACK:
                             // 同步数据返回头
                             int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
+                            // 如果内部版本号V0V1V2的V1的bit0为真代表有心率 为假代表没心率  其他位保留
+                            if (ack == BTConstants.HEADER_BACK_INSIDE_VERSION) {
+                                try {
+                                    String rateShow = formatDatas[3].substring(formatDatas[3].length() - 1, formatDatas[3].length());
+                                    if (Integer.parseInt(rateShow) == 1) {
+                                        SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, true);
+                                    } else {
+                                        SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                    }
+                                } catch (Exception e) {
+                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                }
+                            }
                             intent = new Intent(BTConstants.ACTION_ACK);
                             intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
                             BTService.this.sendBroadcast(intent);
                             break;
-                        case BTConstants.HEADER_BACK_SLEEP_COUNT:
-                            // 获取睡眠总数返回头
-                            sleepIndexCount = Integer.parseInt(Utils.decodeToString(formatDatas[2]));
-                            LogModule.i("手环中的睡眠index总数为：" + sleepIndexCount);
-                            sleepRecordCount = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
-                            LogModule.i("手环中的睡眠record总数为：" + sleepRecordCount);
-                            if (sleepIndexCount == 0) {
+                        case BTConstants.HEADER_BACK_HEART_RATE:
+                            // 同步数据返回头
+                            int heartRate = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
+                            if (heartRate == BTConstants.TYPE_SET_HEART_RATE_INTERVAL) {
                                 intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, heartRate);
                                 BTService.this.sendBroadcast(intent);
-                            } else {
-                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                                BTService.this.sendBroadcast(intent);
+                            }
+                            break;
+                        case BTConstants.HEADER_BACK_COUNT:
+                            // 同步数据返回头
+                            int back = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
+                            if (back == BTConstants.TYPE_GET_COUNT) {
+                                // 获取睡眠总数返回头
+                                sleepIndexCount = Integer.parseInt(Utils.decodeToString(formatDatas[2]));
+                                LogModule.i("手环中的睡眠index总数为：" + sleepIndexCount);
+                                sleepRecordCount = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
+                                LogModule.i("手环中的睡眠record总数为：" + sleepRecordCount);
+                                heartRateCount = Integer.parseInt(Utils.decodeToString(formatDatas[4]));
+                                LogModule.i("手环中的心率总数为：" + heartRateCount);
+                                if (sleepIndexCount == 0) {
+                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                    intent.putExtra("heartRateCount", heartRateCount);
+                                    BTService.this.sendBroadcast(intent);
+                                } else {
+                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                    intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
+                                    BTService.this.sendBroadcast(intent);
+                                }
+                            } else if (back == BTConstants.TYPE_GET_HEART_RATE) {
+                                LogModule.i("开始接收心率数据");
                             }
                             break;
                         case BTConstants.HEADER_BACK_RECORD:
@@ -322,6 +354,20 @@ public class BTService extends Service implements LeScanCallback {
                                 }
                             }
                             break;
+                        case BTConstants.HEADER_HEART_RATE:
+                            // 获取心率返回头
+                            BTModule.saveHeartRateData(formatDatas, getApplicationContext());
+                            if (heartRateCount > 0) {
+                                heartRateCount--;
+                                if (heartRateCount <= 0) {
+                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                    intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
+                                    BTService.this.sendBroadcast(intent);
+                                } else {
+                                    LogModule.i("还有" + heartRateCount + "条心率数据未同步");
+                                }
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -364,6 +410,33 @@ public class BTService extends Service implements LeScanCallback {
             sendBroadcast(intent);
             // mDevices.add(bleDevice);
         }
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 读取心率
+     */
+    public void getHeartRate() {
+        BTModule.getHeartRate(mBluetoothGatt);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 设置心率间隔
+     */
+    public void setHeartRateInterval() {
+        BTModule.setHeartRateInterval(mBluetoothGatt);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 获取内部版本号
+     */
+    public void getInsideVersion() {
+        BTModule.getInsideVersion(mBluetoothGatt);
     }
 
     /**
@@ -432,8 +505,8 @@ public class BTService extends Service implements LeScanCallback {
     /**
      * 获取手环睡眠总数
      */
-    public void getSleepCount() {
-        BTModule.getSleepCount(mBluetoothGatt);
+    public void getDataCount() {
+        BTModule.getDataCount(mBluetoothGatt);
     }
 
     /**
@@ -475,6 +548,9 @@ public class BTService extends Service implements LeScanCallback {
         String address = SPUtiles.getStringValue(
                 BTConstants.SP_KEY_DEVICE_ADDRESS, null);
         if (address == null) {
+            return false;
+        }
+        if (mBluetoothGatt == null) {
             return false;
         }
         int connState = bluetoothManager.getConnectionState(
