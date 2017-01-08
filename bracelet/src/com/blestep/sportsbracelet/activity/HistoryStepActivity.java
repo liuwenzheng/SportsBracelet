@@ -308,6 +308,7 @@ public class HistoryStepActivity extends BaseActivity {
         int position = 0;
         while (startDay.compareTo(mToday) <= 0) {
             int week = Utils.getWeekInChina(startDay);
+            int year = startDay.get(Calendar.YEAR);
             Object[] item = new Object[6];
             item[0] = position;
             String startWeekDay = "", endWeekDay = "";
@@ -329,6 +330,11 @@ public class HistoryStepActivity extends BaseActivity {
                 distance += Double.parseDouble(step.distance);
                 calories += Double.parseDouble(step.calories);
                 startDay.add(Calendar.DAY_OF_MONTH, 1);
+                // 跨年了，周变了
+                if (year != startDay.get(Calendar.YEAR)) {
+                    year = startDay.get(Calendar.YEAR);
+                    week = Utils.getWeekInChina(startDay);
+                }
             }
             if (week == Utils.getWeekInChina(mToday)) {
                 item[1] = getString(R.string.history_this_week);

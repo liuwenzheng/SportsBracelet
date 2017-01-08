@@ -19,8 +19,6 @@ import com.blestep.sportsbracelet.utils.InMemoryCursor;
 import com.blestep.sportsbracelet.utils.Utils;
 import com.blestep.sportsbracelet.view.TimelineChartViewSleep;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -363,6 +361,7 @@ public class HistorySleepActivity extends BaseActivity {
         int position = 0;
         while (startDay.compareTo(mToday) <= 0) {
             int week = Utils.getWeekInChina(startDay);
+            int year = startDay.get(Calendar.YEAR);
             Object[] item = new Object[8];
             item[0] = position;
             String startWeekDay = "", endWeekDay = "";
@@ -399,6 +398,11 @@ public class HistorySleepActivity extends BaseActivity {
                 awake += Double.parseDouble(sleep.awake);
                 asleep += Double.parseDouble(sleep.deep) + Double.parseDouble(sleep.light);
                 startDay.add(Calendar.DAY_OF_MONTH, 1);
+                // 跨年了，周变了
+                if (year != startDay.get(Calendar.YEAR)) {
+                    year = startDay.get(Calendar.YEAR);
+                    week = Utils.getWeekInChina(startDay);
+                }
             }
             if (week == Utils.getWeekInChina(mToday)) {
                 item[1] = getString(R.string.history_this_week);
