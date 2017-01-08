@@ -39,6 +39,7 @@ import com.blestep.sportsbracelet.service.BTService;
 import com.blestep.sportsbracelet.service.BTService.LocalBinder;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.ToastUtils;
+import com.blestep.sportsbracelet.utils.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.extras.PullToRefreshViewPager;
@@ -444,8 +445,18 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             break;
                         case BTConstants.HEADER_BACK_RECORD:
                             resetSyncMap(header);
-                            mBtService.getStepData();
-                            executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            // 判断是否已同步过当天数据
+                            String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                            String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+                            if (syncDate.equals(currentDate)) {
+                                LogModule.i("同步过当天数据");
+                                mBtService.getCurrentData();
+                                executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
+                            } else {
+                                LogModule.i("未同步过当天数据");
+                                mBtService.getStepData();
+                                executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            }
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             resetSyncMap(header);
@@ -464,6 +475,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:
                             resetSyncMap(header);
                             syncSuccess();
+                            break;
+                        case BTConstants.TYPE_GET_CURRENT:
+                            resetSyncMap(header);
                             break;
                     }
                 }
@@ -517,6 +531,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private void syncSuccess() {
         mIsSyncData = false;
         LogModule.i("同步成功...");
+        // 同步了全部数据
+        SPUtiles.setStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD));
         pull_refresh_viewpager.onRefreshComplete();
         if (mTabSteps != null && mTabSteps.isVisible()) {
             mTabSteps.updateView();
@@ -672,8 +688,18 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         case BTConstants.HEADER_BACK_RECORD:
                             LogModule.i("同步获取电量超时，发送获取记步命令");
                             resetSyncMap(headerGetdata);
-                            mBtService.getStepData();
-                            executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            // 判断是否已同步过当天数据
+                            String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                            String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+                            if (syncDate.equals(currentDate)) {
+                                LogModule.i("同步过当天数据");
+                                mBtService.getCurrentData();
+                                executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
+                            } else {
+                                LogModule.i("未同步过当天数据");
+                                mBtService.getStepData();
+                                executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            }
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
@@ -698,6 +724,11 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             break;
                         case BTConstants.TYPE_GET_HEART_RATE:
                             LogModule.i("同步获取心率超时，提示同步成功！");
+                            resetSyncMap(headerGetdata);
+                            syncSuccess();
+                            break;
+                        case BTConstants.TYPE_GET_CURRENT:
+                            LogModule.i("同步获取当天数据超时，提示同步成功！");
                             resetSyncMap(headerGetdata);
                             syncSuccess();
                             break;

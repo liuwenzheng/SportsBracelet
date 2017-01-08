@@ -122,7 +122,7 @@ public class SystemActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BTConstants.REQUEST_CODE_HEART_RATE_INTERVAL) {
-            if (requestCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 String interval = data.getStringExtra("interval");
                 tvHeartRate.setText(interval);
             }

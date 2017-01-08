@@ -289,6 +289,18 @@ public class BTService extends Service implements LeScanCallback {
                                 }
                             } else if (back == BTConstants.TYPE_GET_HEART_RATE) {
                                 LogModule.i("开始接收心率数据");
+                            } else if (back == BTConstants.TYPE_GET_CURRENT) {
+                                LogModule.i("开始接收当天数据");
+                                stepsCount = 0;
+                                sleepIndexCount = Integer.parseInt(Utils.decodeToString(formatDatas[2]));
+                                LogModule.i("手环中的当天睡眠index总数为：" + sleepIndexCount);
+                                sleepRecordCount = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
+                                LogModule.i("手环中的当天睡眠record总数为：" + sleepRecordCount);
+                                heartRateCount = Integer.parseInt(Utils.decodeToString(formatDatas[4]));
+                                LogModule.i("手环中的当天心率总数为：" + heartRateCount);
+                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, back);
+                                BTService.this.sendBroadcast(intent);
                             }
                             break;
                         case BTConstants.HEADER_BACK_RECORD:
@@ -314,6 +326,9 @@ public class BTService extends Service implements LeScanCallback {
                             BTService.this.sendBroadcast(intent);
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_INDEX:
+                            if (sleepIndexCount == 0) {
+                                return;
+                            }
                             // 获取睡眠index返回头
                             BTModule.saveSleepIndex(formatDatas, getApplicationContext(), sleepMaps);
                             sleepIndexCount--;
@@ -326,6 +341,9 @@ public class BTService extends Service implements LeScanCallback {
                             }
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:
+                            if (sleepRecordCount == 0) {
+                                return;
+                            }
                             // 获取睡眠record返回头
                             BTModule.updateSleepRecord(formatDatas, getApplicationContext(), sleepMaps);
                             if (sleepRecordCount > 0) {
@@ -341,6 +359,9 @@ public class BTService extends Service implements LeScanCallback {
                             }
                             break;
                         case BTConstants.HEADER_BACK_STEP:
+                            if (stepsCount == 0 ) {
+                                return;
+                            }
                             // 获取记步返回头
                             BTModule.saveStepData(formatDatas, getApplicationContext());
                             if (stepsCount > 0) {
@@ -410,6 +431,15 @@ public class BTService extends Service implements LeScanCallback {
             sendBroadcast(intent);
             // mDevices.add(bleDevice);
         }
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
+     * @Description 获取当天数据
+     */
+    public void getCurrentData() {
+        BTModule.getCurrentData(mBluetoothGatt);
     }
 
     /**

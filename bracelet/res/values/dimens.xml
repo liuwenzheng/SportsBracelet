@@ -51,5 +51,6 @@
     <dimen name="heart_rate_header_height_min">135dp</dimen>
     <dimen name="heart_rate_item_height">56dp</dimen>
     <dimen name="heart_rate_level_height">45dp</dimen>
+    <dimen name="heart_rate_image_width">240dp</dimen>
 
 </resources>

@@ -88,7 +88,7 @@ public class MainTabHeartRate extends Fragment implements AdapterView.OnItemClic
             View tv_header = getHeader().findViewById(R.id.rl_header_rate);
             int top = tv_header.getTop();
             int offset = top - Utils.dip2px(mainActivity, 30);
-            image.setPivotX(200);
+            image.setPivotX(getResources().getDimensionPixelSize(R.dimen.heart_rate_image_width) / 2);
             image.setPivotY(0);
             return AnimatorBuilder.create().applyRotationX(image, 70).applyTranslation(image, 0, 0).applyFade(image, 0).applyTranslation(tv_header, 0, -offset);
         }

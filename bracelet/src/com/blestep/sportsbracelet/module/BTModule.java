@@ -90,6 +90,18 @@ public class BTModule {
     /**
      * @Date 2017/1/7
      * @Author wenzheng.liu
+     * @Description 获取当天数据
+     */
+    public static void getCurrentData(BluetoothGatt mBluetoothGatt) {
+        byte[] byteArray = new byte[2];
+        byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
+        byteArray[1] = (byte) BTConstants.TYPE_GET_CURRENT;
+        writeCharacteristicData(mBluetoothGatt, byteArray);
+    }
+
+    /**
+     * @Date 2017/1/7
+     * @Author wenzheng.liu
      * @Description 设置心率间隔
      */
     public static void getHeartRate(BluetoothGatt mBluetoothGatt) {

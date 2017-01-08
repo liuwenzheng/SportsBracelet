@@ -70,6 +70,7 @@ public class BTConstants {
     public static final String SP_KEY_ALARM_SYNC_FINISH = "sp_key_alarm_sync_finish";
     public static final String SP_KEY_HEART_RATE_SHOW = "sp_key_heart_rate_show";
     public static final String SP_KEY_HEART_RATE_INTERVAL = "sp_key_heart_rate_interval";
+    public static final String SP_KEY_CURRENT_SYNC_DATE = "sp_key_current_sync_date";
     // Extra_key
     /**
      * intent传值key
@@ -123,6 +124,8 @@ public class BTConstants {
     public static final int HEADER_SYNUSERINFO = 18;
     // 获取总数据
     public static final int TYPE_GET_COUNT = 18;
+    // 获取当天
+    public static final int TYPE_GET_CURRENT = 19;
     // 获取数据
     public static final int HEADER_GETDATA = 22;
     // 心率间隔

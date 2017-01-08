@@ -22,7 +22,7 @@
 
         <ImageView
             android:id="@+id/iv_heart_rate"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/heart_rate_image_width"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
@@ -39,8 +39,8 @@
                 android:id="@+id/tv_heart_rate_present"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
                 android:layout_centerHorizontal="true"
+                android:text="0"
                 android:textColor="@color/white_ffffff"
                 android:textSize="40sp" />
 
