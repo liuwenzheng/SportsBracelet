@@ -61,7 +61,7 @@
     <string name="main_exit_tips_confirm">确定</string>
     <string name="main_exit_tips_cancel">取消</string>
     <!-- step -->
-    <string name="step_syncdata_waiting">正在同步数据…</string>
+    <string name="step_syncdata_waiting">正在同步数据%1$s</string>
     <string name="step_history">历史</string>
     <string name="step_duration">用时</string>
     <string name="step_distance">距离</string>

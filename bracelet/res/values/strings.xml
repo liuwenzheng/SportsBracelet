@@ -61,7 +61,7 @@
     <string name="main_exit_tips_confirm">Ok</string>
     <string name="main_exit_tips_cancel">Cancel</string>
     <!-- step -->
-    <string name="step_syncdata_waiting">Syncing data…</string>
+    <string name="step_syncdata_waiting">Syncing data%1$s</string>
     <string name="step_history">History</string>
     <string name="step_duration">Time</string>
     <string name="step_distance">Distance</string>

@@ -291,7 +291,7 @@ public class BTService extends Service implements LeScanCallback {
                                 LogModule.i("开始接收心率数据");
                             } else if (back == BTConstants.TYPE_GET_CURRENT) {
                                 LogModule.i("开始接收当天数据");
-                                stepsCount = 0;
+                                stepsCount = 1;
                                 sleepIndexCount = Integer.parseInt(Utils.decodeToString(formatDatas[2]));
                                 LogModule.i("手环中的当天睡眠index总数为：" + sleepIndexCount);
                                 sleepRecordCount = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
@@ -359,17 +359,21 @@ public class BTService extends Service implements LeScanCallback {
                             }
                             break;
                         case BTConstants.HEADER_BACK_STEP:
-                            if (stepsCount == 0 ) {
-                                return;
-                            }
                             // 获取记步返回头
                             BTModule.saveStepData(formatDatas, getApplicationContext());
                             if (stepsCount > 0) {
                                 stepsCount--;
                                 if (stepsCount <= 0) {
-                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                    intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                                    BTService.this.sendBroadcast(intent);
+                                    // 判断是否已同步过当天数据
+                                    String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                                    String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+                                    if (!syncDate.equals(currentDate)) {
+                                        intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                        intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
+                                        BTService.this.sendBroadcast(intent);
+                                    } else {
+                                        LogModule.i("已同步当天记步数据");
+                                    }
                                 } else {
                                     LogModule.i("还有" + stepsCount + "条记步数据未同步");
                                 }
@@ -387,6 +391,10 @@ public class BTService extends Service implements LeScanCallback {
                                 } else {
                                     LogModule.i("还有" + heartRateCount + "条心率数据未同步");
                                 }
+                            } else {
+                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
+                                BTService.this.sendBroadcast(intent);
                             }
                             break;
                         default:

@@ -2,6 +2,7 @@ package com.blestep.sportsbracelet.activity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.FloatEvaluator;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -84,6 +85,12 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private ConcurrentHashMap<Integer, Boolean> mSyncMap = new ConcurrentHashMap<>();
     private boolean mHeartRateShow;
 
+    private int mSyncProgress;
+    private ValueAnimator mProgressAnimator;
+    public static final long SYNC_DURATION_START = 10000L;
+    public static final long SYNC_DURATION_MIDDLE = 5000L;
+    public static final long SYNC_DURATION_END = 1000L;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +121,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         if (mBtService != null && mBtService.isConnDevice() && !mIsConnDevice) {
             if (mNeedRefreshData) {
                 LogModule.i("打开页面同步数据");
-                autoPullUpdate(getString(R.string.step_syncdata_waiting));
+                autoPullUpdate(getString(R.string.step_syncdata_waiting, 0 + "%"));
             } else {
                 LogModule.i("不需要同步数据");
                 mNeedRefreshData = true;
@@ -190,7 +197,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             @Override
             public void onRefresh(PullToRefreshBase<ViewPager> refreshView) {
                 if (mBtService.isConnDevice()) {
-                    if (!mIsSyncData) {
+                    if (!mIsSyncData && !mIsConnDevice) {
+                        resetProgress(SYNC_DURATION_START);
                         LogModule.i("下拉刷新同步数据");
                         syncAllData();
                     }
@@ -347,19 +355,27 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 if (i == 0) {
                     rb_indicator_step.setChecked(true);
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
+                    setPullToRefreshViewEnable(true);
                 }
                 if (i == 1) {
                     if (mHeartRateShow) {
                         rb_indicator_heart_rate.setChecked(true);
                         rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.green_00af6b));
+                        if (mTabHeartRate.getScrollY() > 0) {
+                            setPullToRefreshViewEnable(false);
+                        } else {
+                            setPullToRefreshViewEnable(true);
+                        }
                     } else {
                         rb_indicator_sleep.setChecked(true);
                         rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                        setPullToRefreshViewEnable(true);
                     }
                 }
                 if (i == 2) {
                     rb_indicator_sleep.setChecked(true);
                     rl_main_content.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
+                    setPullToRefreshViewEnable(true);
                 }
             }
 
@@ -383,6 +399,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     }
                     mIsConnDevice = false;
                     mIsSyncData = false;
+                    if (mProgressAnimator != null) {
+                        mProgressAnimator.cancel();
+                    }
+                    mSyncProgress = 0;
                     LogModule.i("配对失败...");
                     pull_refresh_viewpager.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.setting_device));
                     pull_refresh_viewpager.onRefreshComplete();
@@ -395,13 +415,17 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                 }
                 if (BTConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
                     mIsConnDevice = false;
+                    if (mProgressAnimator != null) {
+                        mProgressAnimator.cancel();
+                    }
+                    mSyncProgress = 0;
                     LogModule.i("配对成功...");
                     if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
                         ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
                     }
                     ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_success);
                     pull_refresh_viewpager.onRefreshComplete();
-                    autoPullUpdate(getString(R.string.step_syncdata_waiting));
+                    autoPullUpdate(getString(R.string.step_syncdata_waiting, 0 + "%"));
                     frame_main_conn_tips.setVisibility(View.GONE);
                     frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
@@ -457,6 +481,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                                 mBtService.getStepData();
                                 executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
                             }
+                            resetProgress(SYNC_DURATION_MIDDLE);
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             resetSyncMap(header);
@@ -521,6 +546,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         resetSyncMap(ack);
                         mBtService.getVersionData();
                         executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
+                        resetProgress(SYNC_DURATION_MIDDLE);
                     }
                 }
             }
@@ -530,10 +556,13 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     private void syncSuccess() {
         mIsSyncData = false;
+        if (mProgressAnimator != null) {
+            mProgressAnimator.cancel();
+        }
+        resetProgress(500, 100);
         LogModule.i("同步成功...");
         // 同步了全部数据
         SPUtiles.setStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD));
-        pull_refresh_viewpager.onRefreshComplete();
         if (mTabSteps != null && mTabSteps.isVisible()) {
             mTabSteps.updateView();
         }
@@ -576,7 +605,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private void isConnService() {
         if (mBtService.isConnDevice()) {
             LogModule.i("已经连接手环开始同步数据");
-            autoPullUpdate(getString(R.string.step_syncdata_waiting));
+            autoPullUpdate(getString(R.string.step_syncdata_waiting, 0 + "%"));
             // syncAllData();
             frame_main_conn_tips.setVisibility(View.GONE);
             // frame_main_tips.setText(R.string.step_syncdata_waiting);
@@ -678,6 +707,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             resetSyncMap(headerGetdata);
                             mBtService.getVersionData();
                             executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
+                            resetProgress(SYNC_DURATION_MIDDLE);
                             break;
                         case BTConstants.HEADER_FIRMWARE_VERSION:
                             LogModule.i("同步获取版本信息超时，发送获取电量命令");
@@ -700,6 +730,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                                 mBtService.getStepData();
                                 executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
                             }
+                            resetProgress(SYNC_DURATION_MIDDLE);
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
@@ -910,6 +941,37 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             }
         }, 1500);
     }
+
+    private void resetProgress(long duration) {
+        if (mProgressAnimator != null) {
+            mProgressAnimator.cancel();
+        }
+        resetProgress(duration, 99);
+    }
+
+    private void resetProgress(long duration, int end) {
+        mProgressAnimator = ValueAnimator.ofInt(mSyncProgress, end);
+        mProgressAnimator.setDuration(duration);
+        mProgressAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mSyncProgress = (int) animation.getAnimatedValue();
+                pull_refresh_viewpager.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.step_syncdata_waiting, mSyncProgress + "%"));
+                if (mSyncProgress == 100) {
+                    pull_refresh_viewpager.onRefreshComplete();
+                    pull_refresh_viewpager.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            pull_refresh_viewpager.getLoadingLayoutProxy().setRefreshingLabel(getString(R.string.step_syncdata_waiting, 0 + "%"));
+                            mSyncProgress = 0;
+                        }
+                    }, 500);
+                }
+            }
+        });
+        mProgressAnimator.start();
+    }
+
 
     @Override
     public void onBackPressed() {
