@@ -33,6 +33,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blestep.sportsbracelet.R;
@@ -48,7 +49,7 @@ public abstract class LoadingLayout extends FrameLayout implements
 
     static final Interpolator ANIMATION_INTERPOLATOR = new LinearInterpolator();
 
-    private FrameLayout mInnerLayout;
+    private RelativeLayout mInnerLayout;
 
     protected final ImageView mHeaderImage;
     protected final ProgressBar mHeaderProgress;
@@ -83,7 +84,7 @@ public abstract class LoadingLayout extends FrameLayout implements
                 break;
         }
 
-        mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
+        mInnerLayout = (RelativeLayout) findViewById(R.id.fl_inner);
         mHeaderText = (TextView) mInnerLayout
                 .findViewById(R.id.pull_to_refresh_text);
         mHeaderProgress = (ProgressBar) mInnerLayout

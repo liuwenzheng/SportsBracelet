@@ -61,7 +61,7 @@
     <string name="main_exit_tips_confirm">确定</string>
     <string name="main_exit_tips_cancel">取消</string>
     <!-- step -->
-    <string name="step_syncdata_waiting">正在同步数据%1$s</string>
+    <string name="step_syncdata_waiting">正在同步数据…%1$s</string>
     <string name="step_history">历史</string>
     <string name="step_duration">用时</string>
     <string name="step_distance">距离</string>
@@ -287,6 +287,26 @@
     <string name="sleep_duration_unit_hour">小时</string>
     <string name="sleep_duration_unit_min">分钟</string>
     <string name="sleep_history_stats"><![CDATA[历史统计>]]></string>
+    <string name="heart_rate_setting">心率设置</string>
+    <string name="heart_rate_off">关闭</string>
+    <string name="heart_rate_10mins">10分钟</string>
+    <string name="heart_rate_20mins">20分钟</string>
+    <string name="heart_rate_30mins">30分钟</string>
+    <string name="heart_rate_daily">我的心率</string>
+    <string name="heart_rate_unit">次/分</string>
+    <string name="heart_rate_zones">数据分析</string>
+    <string name="heart_rate_zones_info">\t\t\t\t正常人安静状态下每分钟心跳的次数，一般为60-100次/分；参考下图了解自己在不同运动强度下的心率区间</string>
+    <string name="heart_rate_peak">峰值</string>
+    <string name="heart_rate_cardio">心肺</string>
+    <string name="heart_rate_fat_burn">燃脂</string>
+    <string name="heart_rate_warm_up">热身</string>
+    <string name="heart_rate_last_result">上次检测结果</string>
+    <string name="heart_rate_measuring"><![CDATA[检测说明 >]]></string>
+    <string name="heart_rate_title">心率</string>
+    <string name="heart_rate_date_format">MM月dd日 HH:mm</string>
+    <string name="heart_rate_manual_measuring">检测说明</string>
+    <string name="heart_rate_explain">测试时请勿走动，首先轻触手环触点切换模式，待界面出现心率图标（如下图），心率图标开始闪烁检测开始</string>
+    <string name="heart_rate_end">屏幕出现数字检测结束</string>
     <string-array name="alarm_types">
         <item>吃药</item>
         <item>喝水</item>

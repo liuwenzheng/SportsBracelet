@@ -65,7 +65,7 @@ public class HeartRateDailyActivity extends BaseActivity {
             } else if (value <= low && value > min) {
                 marginTop += levelHeight * 2;
                 marginTop += (low - value) * levelHeight / (low - min);
-            } else if (value <= min && value > end) {
+            } else if (value <= min && value > end)  {
                 marginTop += levelHeight * 3;
                 marginTop += (min - value) * levelHeight / (min - end);
             } else {

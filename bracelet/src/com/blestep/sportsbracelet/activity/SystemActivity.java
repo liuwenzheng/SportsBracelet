@@ -49,13 +49,13 @@ public class SystemActivity extends Activity {
                 getString(R.string.bracelet_light_on) : getString(R.string.bracelet_light_off));
         String interval = null;
         if (defaultInterval == 0) {
-            interval = "关闭";
+            interval = getString(R.string.heart_rate_off);
         } else if (defaultInterval == 1) {
-            interval = "10分钟";
+            interval = getString(R.string.heart_rate_10mins);
         } else if (defaultInterval == 2) {
-            interval = "20分钟";
+            interval = getString(R.string.heart_rate_20mins);
         } else if (defaultInterval == 3) {
-            interval = "30分钟";
+            interval = getString(R.string.heart_rate_30mins);
         }
         tvHeartRate.setText(interval);
     }

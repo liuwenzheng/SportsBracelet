@@ -136,6 +136,9 @@ public class MainTabHeartRate extends Fragment implements AdapterView.OnItemClic
     }
 
     public int getScrollY() {
+        if (lvHeartRate == null) {
+            return 0;
+        }
         View c = lvHeartRate.getChildAt(0);
         if (c == null) {
             return 0;

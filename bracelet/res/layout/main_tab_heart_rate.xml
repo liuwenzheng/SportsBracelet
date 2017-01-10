@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/tv_heart_rate_present"
                 android:layout_toRightOf="@id/tv_heart_rate_present"
-                android:text="次/分"
+                android:text="@string/heart_rate_unit"
                 android:textColor="@color/white_ffffff"
                 android:textSize="10sp" />
 
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_heart_rate_present"
                 android:layout_centerHorizontal="true"
-                android:text="上次检测结果"
+                android:text="@string/heart_rate_last_result"
                 android:textColor="@color/white_ffffff"
                 android:textSize="10sp" />
         </RelativeLayout>
@@ -70,7 +70,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:padding="16dp"
-            android:text="检测说明 >"
+            android:text="@string/heart_rate_measuring"
             android:textColor="@color/white_ffffff"
             android:textSize="10sp" />
     </RelativeLayout>

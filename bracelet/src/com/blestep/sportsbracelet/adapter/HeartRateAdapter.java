@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.blestep.sportsbracelet.BTConstants;
 import com.blestep.sportsbracelet.R;
 import com.blestep.sportsbracelet.entity.HeartRate;
+import com.blestep.sportsbracelet.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * @Date 2017/1/7
@@ -57,7 +60,8 @@ public class HeartRateAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tvTime.setText(heartRate.time);
+        Calendar calendar = Utils.strDate2Calendar(heartRate.time, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
+        holder.tvTime.setText(Utils.calendar2strDate(calendar, mContext.getString(R.string.heart_rate_date_format)));
         holder.tvValue.setText(heartRate.value);
         return convertView;
     }

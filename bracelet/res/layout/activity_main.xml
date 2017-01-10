@@ -47,7 +47,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="心率"
+                android:text="@string/heart_rate_title"
                 android:textColor="@color/grey_95d7d9"
                 android:textSize="14sp"
                 android:visibility="gone" />

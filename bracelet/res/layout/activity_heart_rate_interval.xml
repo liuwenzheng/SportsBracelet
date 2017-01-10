@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="心率设置"
+            android:text="@string/heart_rate_setting"
             android:textColor="@color/grey_323232"
             android:textSize="18sp" />
     </RelativeLayout>
@@ -42,7 +42,7 @@
             android:layout_height="50dp"
             android:button="@null"
             android:drawableRight="@drawable/alarm_checked_selector"
-            android:text="关闭" />
+            android:text="@string/heart_rate_off" />
 
         <View style="@style/divider_line" />
 
@@ -52,7 +52,7 @@
             android:layout_height="50dp"
             android:button="@null"
             android:drawableRight="@drawable/alarm_checked_selector"
-            android:text="10分钟" />
+            android:text="@string/heart_rate_10mins" />
 
         <View style="@style/divider_line" />
 
@@ -62,7 +62,7 @@
             android:layout_height="50dp"
             android:button="@null"
             android:drawableRight="@drawable/alarm_checked_selector"
-            android:text="20分钟" />
+            android:text="@string/heart_rate_20mins" />
 
         <View style="@style/divider_line" />
 
@@ -72,7 +72,7 @@
             android:layout_height="50dp"
             android:button="@null"
             android:drawableRight="@drawable/alarm_checked_selector"
-            android:text="30分钟" />
+            android:text="@string/heart_rate_30mins" />
 
         <View style="@style/divider_line" />
     </RadioGroup>

@@ -121,13 +121,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:text="心率设置" />
+            android:text="@string/heart_rate_setting" />
 
         <TextView
             android:id="@+id/tv_heart_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20分钟" />
+            android:text="" />
     </LinearLayout>
 
     <View style="@style/divider_line" />

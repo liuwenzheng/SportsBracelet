@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="12月6日 16:16"
+        android:text=""
         android:textColor="@color/grey_999999"
         android:textSize="12sp" />
 
@@ -23,7 +23,7 @@
             android:id="@+id/tv_heart_rate_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="180"
+            android:text=""
             android:textColor="@color/grey_333333"
             android:textSize="15sp" />
 
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/tv_heart_rate_value"
             android:layout_toRightOf="@id/tv_heart_rate_value"
-            android:text="次/分"
+            android:text="@string/heart_rate_unit"
             android:textColor="@color/grey_999999"
             android:textSize="12sp" />
     </RelativeLayout>

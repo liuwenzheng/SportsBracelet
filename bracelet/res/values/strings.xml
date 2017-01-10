@@ -61,7 +61,7 @@
     <string name="main_exit_tips_confirm">Ok</string>
     <string name="main_exit_tips_cancel">Cancel</string>
     <!-- step -->
-    <string name="step_syncdata_waiting">Syncing data%1$s</string>
+    <string name="step_syncdata_waiting">Syncing data…%1$s</string>
     <string name="step_history">History</string>
     <string name="step_duration">Time</string>
     <string name="step_distance">Distance</string>
@@ -287,6 +287,26 @@
     <string name="sleep_duration_unit_hour">hour</string>
     <string name="sleep_duration_unit_min">min</string>
     <string name="sleep_history_stats"><![CDATA[stats>]]></string>
+    <string name="heart_rate_setting">automatic Heart Rate measure</string>
+    <string name="heart_rate_off">Off</string>
+    <string name="heart_rate_10mins">10 mins</string>
+    <string name="heart_rate_20mins">20 mins</string>
+    <string name="heart_rate_30mins">30 mins</string>
+    <string name="heart_rate_daily">Heart Rate</string>
+    <string name="heart_rate_unit">bpm</string>
+    <string name="heart_rate_zones">Your Heart Rate Zones</string>
+    <string name="heart_rate_zones_info">\t\t\t\tZones are calculated based on a max heat rate of 220 bpm minus your age</string>
+    <string name="heart_rate_peak">Peak</string>
+    <string name="heart_rate_cardio">Cardio</string>
+    <string name="heart_rate_fat_burn">Fat burn</string>
+    <string name="heart_rate_warm_up">Warm up</string>
+    <string name="heart_rate_last_result">Last result</string>
+    <string name="heart_rate_measuring"><![CDATA[Measuring >]]></string>
+    <string name="heart_rate_title">Heart</string>
+    <string name="heart_rate_date_format">dd/MM HH:mm</string>
+    <string name="heart_rate_manual_measuring">Manual Measuring</string>
+    <string name="heart_rate_explain">Fasten the band above the wrist Tap the button, until the heart rate icon appears</string>
+    <string name="heart_rate_end">waiting for several seconds your heart rate will show on the screen，after measured</string>
     <string-array name="alarm_types">
         <item>medicine</item>
         <item>water</item>
