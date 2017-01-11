@@ -117,11 +117,12 @@ public class BTModule {
      * @Description 设置心率间隔
      */
     public static void setHeartRateInterval(BluetoothGatt mBluetoothGatt) {
-        byte[] byteArray = new byte[3];
+        byte[] byteArray = new byte[4];
         int interval = SPUtiles.getIntValue(BTConstants.SP_KEY_HEART_RATE_INTERVAL, 2);
         byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
         byteArray[1] = (byte) BTConstants.TYPE_SET_HEART_RATE_INTERVAL;
         byteArray[2] = (byte) interval;
+        byteArray[3] = 0;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 

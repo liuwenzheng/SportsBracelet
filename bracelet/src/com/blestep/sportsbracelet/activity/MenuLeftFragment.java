@@ -107,7 +107,7 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 
     private void startFindBandShake() {
         tv_alert_find_band_time.setVisibility(View.VISIBLE);
-        tv_alert_find_band.setText("正在搜索手环...");
+        tv_alert_find_band.setText(R.string.bracelet_searching);
         new Thread(new Runnable() {
             @Override
             public void run() {

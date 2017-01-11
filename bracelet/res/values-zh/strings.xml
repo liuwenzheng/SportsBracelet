@@ -307,6 +307,7 @@
     <string name="heart_rate_manual_measuring">检测说明</string>
     <string name="heart_rate_explain">测试时请勿走动，首先轻触手环触点切换模式，待界面出现心率图标（如下图），心率图标开始闪烁检测开始</string>
     <string name="heart_rate_end">屏幕出现数字检测结束</string>
+    <string name="bracelet_searching">正在搜索手环…</string>
     <string-array name="alarm_types">
         <item>吃药</item>
         <item>喝水</item>

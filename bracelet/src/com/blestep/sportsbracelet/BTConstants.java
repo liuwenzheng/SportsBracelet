@@ -110,10 +110,10 @@ public class BTConstants {
     public static final int HEADER_BACK_SLEEP_RECORD = 148;
     // ACK
     public static final int HEADER_BACK_ACK = 150;
-    // 获取睡眠index，睡眠record，心率总数
-    public static final int HEADER_BACK_COUNT = 165;
-    // 设置心率间隔
-    public static final int HEADER_BACK_HEART_RATE = 164;
+    // 设置成功
+    public static final int HEADER_BACK_SUCCESS = 165;
+    // 设置错误
+    public static final int HEADER_BACK_ERROR = 164;
     // 心率记录
     public static final int HEADER_HEART_RATE = 168;
     // 获取内部版本号

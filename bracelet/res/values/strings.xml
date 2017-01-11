@@ -307,6 +307,7 @@
     <string name="heart_rate_manual_measuring">Manual Measuring</string>
     <string name="heart_rate_explain">Fasten the band above the wrist Tap the button, until the heart rate icon appears</string>
     <string name="heart_rate_end">waiting for several seconds your heart rate will show on the screen，after measured</string>
+    <string name="bracelet_searching">Search…</string>
     <string-array name="alarm_types">
         <item>medicine</item>
         <item>water</item>

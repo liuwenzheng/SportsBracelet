@@ -258,16 +258,12 @@ public class BTService extends Service implements LeScanCallback {
                             intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
                             BTService.this.sendBroadcast(intent);
                             break;
-                        case BTConstants.HEADER_BACK_HEART_RATE:
+                        case BTConstants.HEADER_BACK_ERROR:
                             // 同步数据返回头
                             int heartRate = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
-                            if (heartRate == BTConstants.TYPE_SET_HEART_RATE_INTERVAL) {
-                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, heartRate);
-                                BTService.this.sendBroadcast(intent);
-                            }
+                            LogModule.i("error header:" + heartRate);
                             break;
-                        case BTConstants.HEADER_BACK_COUNT:
+                        case BTConstants.HEADER_BACK_SUCCESS:
                             // 同步数据返回头
                             int back = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
                             if (back == BTConstants.TYPE_GET_COUNT) {
@@ -287,6 +283,10 @@ public class BTService extends Service implements LeScanCallback {
                                     intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
                                     BTService.this.sendBroadcast(intent);
                                 }
+                            } else if (back == BTConstants.TYPE_SET_HEART_RATE_INTERVAL) {
+                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
+                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, back);
+                                BTService.this.sendBroadcast(intent);
                             } else if (back == BTConstants.TYPE_GET_HEART_RATE) {
                                 LogModule.i("开始接收心率数据");
                             } else if (back == BTConstants.TYPE_GET_CURRENT) {

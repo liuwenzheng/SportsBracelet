@@ -14,16 +14,22 @@
         android:paddingRight="12dp"
         android:scrollbars="none" />
 
+
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/heart_rate_header_height"
-        android:background="@drawable/heart_rate_bg_gradient">
+        android:layout_height="@dimen/heart_rate_header_height">
+
+        <FrameLayout
+            android:id="@+id/frame_bg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/heart_rate_header_height"
+            android:background="@drawable/heart_rate_bg_gradient" />
 
         <ImageView
             android:id="@+id/iv_heart_rate"
             android:layout_width="@dimen/heart_rate_image_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/heart_rate_image_height"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:src="@drawable/heart_rate_icon" />

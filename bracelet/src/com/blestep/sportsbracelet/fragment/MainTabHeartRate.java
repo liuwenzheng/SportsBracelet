@@ -85,12 +85,19 @@ public class MainTabHeartRate extends Fragment implements AdapterView.OnItemClic
         @Override
         public AnimatorBuilder getAnimatorBuilder() {
             View image = getHeader().findViewById(R.id.iv_heart_rate);
-            View tv_header = getHeader().findViewById(R.id.rl_header_rate);
-            int top = tv_header.getTop();
+            View rl_header = getHeader().findViewById(R.id.rl_header_rate);
+            View frame_bg = getHeader().findViewById(R.id.frame_bg);
+            int top = rl_header.getTop();
             int offset = top - Utils.dip2px(mainActivity, 30);
-            image.setPivotX(getResources().getDimensionPixelSize(R.dimen.heart_rate_image_width) / 2);
-            image.setPivotY(0);
-            return AnimatorBuilder.create().applyRotationX(image, 70).applyTranslation(image, 0, 0).applyFade(image, 0).applyTranslation(tv_header, 0, -offset);
+//            image.setPivotX(getResources().getDimensionPixelSize(R.dimen.heart_rate_image_width) / 2);
+//            image.setPivotY(0);
+            return AnimatorBuilder.create()
+//                    .applyRotationX(image, 70)
+                    .applyScale(image, 1, 0)
+                    .applyTranslation(image, 0, Utils.dip2px(mainActivity, 80))
+                    .applyTranslation(frame_bg, 0, 0)
+//                    .applyFade(image, 0)
+                    .applyTranslation(rl_header, 0, -offset);
         }
     };
 
@@ -149,7 +156,7 @@ public class MainTabHeartRate extends Fragment implements AdapterView.OnItemClic
     }
 
     private void initDate() {
-        mLists = new ArrayList<>();
+        mLists = DBTools.getInstance(getActivity()).selectAllHeartRate();
         mAdapter = new HeartRateAdapter(getActivity(), mLists);
         lvHeartRate.setAdapter(mAdapter);
         lvHeartRate.setOnItemClickListener(this);
