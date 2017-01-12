@@ -86,9 +86,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
 
     private int mSyncProgress;
     private ValueAnimator mProgressAnimator;
-    public static final long SYNC_DURATION_START = 10000L;
-    public static final long SYNC_DURATION_MIDDLE = 5000L;
-    public static final long SYNC_DURATION_END = 1000L;
+    public static final long SYNC_DURATION_START = 20000L;
+    public static final long SYNC_DURATION_FAST = 10000L;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -221,8 +220,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (!mHeartRateShow) {
                     if (position % 2 == 0) {
-                        ll_main_parent.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
-                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
+                        ll_main_parent.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2),
                                 ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
                         ll_main_parent.setBackgroundColor(bgColor);
                         // 字体颜色
@@ -244,7 +243,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     } else {
                         ll_main_parent.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00334d));
                         int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00334d),
-                                ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
+                                ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
                         ll_main_parent.setBackgroundColor(bgColor);
                         // 字体颜色
                         tv_header_steps_title.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.grey_a3adb5));
@@ -265,8 +264,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     }
                 } else {
                     if (position % 3 == 0) {
-                        ll_main_parent.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb));
-                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_04b6bb),
+                        ll_main_parent.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2));
+                        int bgColor = (int) argbEvaluator.evaluate(positionOffset, ContextCompat.getColor(MainActivity.this, R.color.blue_00bdc2),
                                 ContextCompat.getColor(MainActivity.this, R.color.green_00af6b));
                         ll_main_parent.setBackgroundColor(bgColor);
                         // 字体颜色
@@ -488,7 +487,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                                 mBtService.getStepData();
                                 executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
                             }
-                            resetProgress(SYNC_DURATION_MIDDLE);
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             resetSyncMap(header);
@@ -500,13 +498,17 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             mBtService.getSleepIndex();
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_INDEX:
-                            resetSyncMap(header);
-                            mBtService.getSleepRecord();
-                            executeNextTask(BTConstants.HEADER_BACK_SLEEP_RECORD, 5000);
+                            if (!mIsSyncCurrent) {
+                                resetSyncMap(header);
+                                mBtService.getSleepRecord();
+                                executeNextTask(BTConstants.HEADER_BACK_SLEEP_RECORD, 5000);
+                            }
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:
-                            resetSyncMap(header);
-                            syncSuccess();
+                            if (!mIsSyncCurrent) {
+                                resetSyncMap(header);
+                                syncSuccess();
+                            }
                             break;
                         case BTConstants.TYPE_GET_CURRENT:
                             resetSyncMap(header);
@@ -540,6 +542,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
                             mBtService.syncUnit();
                             executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
+                            resetProgress(SYNC_DURATION_FAST);
                         }
                     } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
                         resetSyncMap(ack);
@@ -553,7 +556,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                         resetSyncMap(ack);
                         mBtService.getVersionData();
                         executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
-                        resetProgress(SYNC_DURATION_MIDDLE);
                     }
                 }
             }
@@ -583,7 +585,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
         }
         frame_main_tips.setVisibility(View.GONE);
-        ToastUtils.showToast(MainActivity.this, R.string.syn_success);
+        // ToastUtils.showToast(MainActivity.this, R.string.syn_success);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -696,6 +698,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
                             mBtService.syncUnit();
                             executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
+                            resetProgress(SYNC_DURATION_FAST);
                             break;
                         case BTConstants.HEADER_UNIT_SYSTEM:
                             LogModule.i("同步单位超时，发送同步时间格式命令");
@@ -714,7 +717,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             resetSyncMap(headerGetdata);
                             mBtService.getVersionData();
                             executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
-                            resetProgress(SYNC_DURATION_MIDDLE);
                             break;
                         case BTConstants.HEADER_FIRMWARE_VERSION:
                             LogModule.i("同步获取版本信息超时，发送获取电量命令");
@@ -744,7 +746,6 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                                 mBtService.getStepData();
                                 executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
                             }
-                            resetProgress(SYNC_DURATION_MIDDLE);
                             break;
                         case BTConstants.HEADER_BACK_STEP:
                             LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
@@ -758,8 +759,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             syncSuccess();
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_RECORD:
-                            LogModule.i("同步获取睡眠record超时，提示同步成功！");
-                            syncSuccess();
+                            if (!mIsSyncCurrent) {
+                                LogModule.i("同步获取睡眠record超时，提示同步成功！");
+                                syncSuccess();
+                            }
                             break;
                         case BTConstants.TYPE_SET_HEART_RATE_INTERVAL:
                             LogModule.i("同步心率间隔超时，发送获取心率命令");

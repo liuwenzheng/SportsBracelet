@@ -24,13 +24,17 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.blestep.sportsbracelet.BTConstants;
+import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.BleDevice;
+import com.blestep.sportsbracelet.entity.HeartRate;
 import com.blestep.sportsbracelet.module.BTModule;
 import com.blestep.sportsbracelet.module.LogModule;
 import com.blestep.sportsbracelet.utils.SPUtiles;
 import com.blestep.sportsbracelet.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -134,6 +138,7 @@ public class BTService extends Service implements LeScanCallback {
                 private int sleepIndexCount;
                 private int heartRateCount;
                 private Map<Integer, String> sleepMaps = new HashMap<>();
+                private ArrayList<HeartRate> heartRates = new ArrayList<>();
 
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
@@ -381,10 +386,18 @@ public class BTService extends Service implements LeScanCallback {
                             break;
                         case BTConstants.HEADER_HEART_RATE:
                             // 获取心率返回头
-                            BTModule.saveHeartRateData(formatDatas, getApplicationContext());
+                            BTModule.saveHeartRateData(formatDatas, getApplicationContext(), heartRates);
                             if (heartRateCount > 0) {
                                 heartRateCount--;
                                 if (heartRateCount <= 0) {
+                                    if (!heartRates.isEmpty()) {
+                                        // 排序
+                                        Collections.sort(heartRates);
+                                        // 插入
+                                        DBTools.getInstance(getApplicationContext()).insertHeartRates(heartRates);
+                                        // 清空
+                                        heartRates.clear();
+                                    }
                                     intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
                                     intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
                                     BTService.this.sendBroadcast(intent);

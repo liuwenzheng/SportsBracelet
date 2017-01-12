@@ -122,6 +122,10 @@ public class BTConstants {
     public static final int HEADER_SYNTIMEDATA = 17;
     // 同步用户数据
     public static final int HEADER_SYNUSERINFO = 18;
+    // 获取睡眠index
+    public static final int TYPE_GET_SLEEP_INDEX = 2;
+    // 获取睡眠record
+    public static final int TYPE_GET_SLEEP_RECORD = 3;
     // 获取总数据
     public static final int TYPE_GET_COUNT = 18;
     // 获取当天

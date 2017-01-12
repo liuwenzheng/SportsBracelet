@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:paddingBottom="10dp"
-    android:paddingTop="10dp" >
+    android:paddingTop="10dp">
 
     <TextView
         android:id="@+id/tv_device_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.0"
+        android:layout_weight="1.5"
         android:gravity="left"
+        android:singleLine="true"
         android:text=""
         android:textColor="@color/black_333333"
         android:textSize="15sp" />
@@ -29,9 +30,9 @@
     <ImageView
         android:id="@+id/iv_device_checked"
         android:layout_width="0dp"
-        android:layout_weight="1.0"
         android:layout_height="wrap_content"
-        android:src="@drawable/match_device_checked_false"
-        android:gravity="right" />
+        android:layout_weight="1.0"
+        android:gravity="right"
+        android:src="@drawable/match_device_checked_false" />
 
 </LinearLayout>

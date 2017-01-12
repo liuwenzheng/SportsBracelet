@@ -327,7 +327,7 @@ public class BTModule {
     public static void getSleepIndex(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
         byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
-        byteArray[1] = 0x02;
+        byteArray[1] = (byte) BTConstants.TYPE_GET_SLEEP_INDEX;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
@@ -339,7 +339,7 @@ public class BTModule {
     public static void getSleepRecord(BluetoothGatt mBluetoothGatt) {
         byte[] byteArray = new byte[2];
         byteArray[0] = (byte) BTConstants.HEADER_GETDATA;
-        byteArray[1] = 0x03;
+        byteArray[1] = (byte) BTConstants.TYPE_GET_SLEEP_RECORD;
         writeCharacteristicData(mBluetoothGatt, byteArray);
     }
 
@@ -597,8 +597,9 @@ public class BTModule {
      *
      * @param formatDatas
      * @param context
+     * @param heartRates
      */
-    public static void saveHeartRateData(String[] formatDatas, Context context) {
+    public static void saveHeartRateData(String[] formatDatas, Context context, ArrayList<HeartRate> heartRates) {
         SimpleDateFormat sdf = new SimpleDateFormat(BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
         Calendar calendar = Calendar.getInstance();
         for (int i = 0; i < 3; i++) {
@@ -625,7 +626,7 @@ public class BTModule {
             heartRate.time = heartRateTime;
             heartRate.value = heartRateValue;
             if (!DBTools.getInstance(context).isHeartRateExist(heartRate.time)) {
-                DBTools.getInstance(context).insertHeartRate(heartRate);
+                heartRates.add(heartRate);
             } else {
                 // 更新全部记录
                 DBTools.getInstance(context).updateHeartRate(heartRate);

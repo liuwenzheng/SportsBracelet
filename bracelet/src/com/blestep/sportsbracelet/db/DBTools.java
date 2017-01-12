@@ -234,8 +234,7 @@ public class DBTools {
         Cursor cursor = db.query(DBConstants.TABLE_NAME_HEART_RATE, null, null,
                 null, null, null, null);
         ArrayList<HeartRate> heartRates = new ArrayList<>();
-        for (int i = cursor.getCount() - 1; i >= 0; i--) {
-            cursor.moveToPosition(i);
+        while (cursor.moveToNext()) {
             HeartRate heartRate = new HeartRate();
             heartRate.time = cursor.getString(cursor
                     .getColumnIndex(DBConstants.HEART_RATE_FIELD_TIME));
@@ -286,6 +285,23 @@ public class DBTools {
         cv.put(DBConstants.HEART_RATE_FIELD_VALUE, heartRate.value);
         long row = db.insert(DBConstants.TABLE_NAME_HEART_RATE, null, cv);
         return row;
+    }
+
+    public void insertHeartRates(ArrayList<HeartRate> heartRates) {
+        db.beginTransaction();
+        try {
+            for (HeartRate heartRate : heartRates) {
+                ContentValues cv = new ContentValues();
+                cv.put(DBConstants.HEART_RATE_FIELD_TIME, heartRate.time);
+                cv.put(DBConstants.HEART_RATE_FIELD_VALUE, heartRate.value);
+                db.insert(DBConstants.TABLE_NAME_HEART_RATE, null, cv);
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void deleteStep(int id) {
