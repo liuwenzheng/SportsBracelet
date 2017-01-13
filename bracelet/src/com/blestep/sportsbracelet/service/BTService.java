@@ -143,8 +143,7 @@ public class BTService extends Service implements LeScanCallback {
                 public void onConnectionStateChange(BluetoothGatt gatt,
                                                     int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
-                    LogModule.e("onConnectionStateChange...status:" + status
-                            + "...newState:" + newState);
+                    LogModule.e("onConnectionStateChange...status:" + status + "...newState:" + newState);
                     switch (newState) {
                         case BluetoothProfile.STATE_CONNECTED:
                             if (status == GATT_ERROR_TIMEOUT) {
@@ -171,8 +170,7 @@ public class BTService extends Service implements LeScanCallback {
                                 return;
                             }
                             disConnectBle();
-                            Intent intent = new Intent(
-                                    BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
+                            Intent intent = new Intent(BTConstants.ACTION_CONN_STATUS_DISCONNECTED);
                             sendOrderedBroadcast(intent, null);
                             // 2016/7/9 当来电提醒打开时才启动重连机制
                             if (SPUtiles.getBooleanValue(BTConstants.SP_KEY_COMING_PHONE_ALERT, false) && !mIsReconnect) {
