@@ -234,7 +234,8 @@ public class DBTools {
         Cursor cursor = db.query(DBConstants.TABLE_NAME_HEART_RATE, null, null,
                 null, null, null, null);
         ArrayList<HeartRate> heartRates = new ArrayList<>();
-        while (cursor.moveToNext()) {
+        for (int i = cursor.getCount() - 1; i >= 0; i--) {
+            cursor.moveToPosition(i);
             HeartRate heartRate = new HeartRate();
             heartRate.time = cursor.getString(cursor
                     .getColumnIndex(DBConstants.HEART_RATE_FIELD_TIME));

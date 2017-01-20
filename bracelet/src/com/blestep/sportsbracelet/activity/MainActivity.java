@@ -470,8 +470,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             resetSyncMap(header);
                             // 判断是否已同步过当天数据
                             String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                            boolean isold = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
                             String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
-                            if (syncDate.equals(currentDate)) {
+                            if (syncDate.equals(currentDate) && !isold) {
                                 mIsSyncCurrent = true;
                                 LogModule.i("同步过当天数据");
                                 if (mHeartRateShow) {
@@ -676,6 +677,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     switch (headerGetdata) {
                         case BTConstants.HEADER_BACK_INSIDE_VERSION:
                             LogModule.i("同步内部版本超时，发送同步时间命令");
+                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_OLD, true);
                             resetSyncMap(headerGetdata);
                             mBtService.syncTimeData();
                             executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
@@ -729,8 +731,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                             resetSyncMap(headerGetdata);
                             // 判断是否已同步过当天数据
                             String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                            boolean isold = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
                             String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
-                            if (syncDate.equals(currentDate)) {
+                            if (syncDate.equals(currentDate) && !isold) {
                                 mIsSyncCurrent = true;
                                 LogModule.i("同步过当天数据");
                                 if (mHeartRateShow) {

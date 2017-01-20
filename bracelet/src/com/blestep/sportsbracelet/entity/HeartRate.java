@@ -21,10 +21,10 @@ public class HeartRate implements Serializable, Comparable<HeartRate> {
         Calendar calendar = Utils.strDate2Calendar(time, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
         Calendar anotherCalendar = Utils.strDate2Calendar(another.time, BTConstants.PATTERN_YYYY_MM_DD_HH_MM);
         if (calendar.getTime().getTime() > anotherCalendar.getTime().getTime()) {
-            return -1;
+            return 1;
         }
         if (calendar.getTime().getTime() < anotherCalendar.getTime().getTime()) {
-            return 1;
+            return -1;
         }
         return 0;
     }

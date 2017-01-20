@@ -71,6 +71,7 @@ public class BTConstants {
     public static final String SP_KEY_HEART_RATE_SHOW = "sp_key_heart_rate_show";
     public static final String SP_KEY_HEART_RATE_INTERVAL = "sp_key_heart_rate_interval";
     public static final String SP_KEY_CURRENT_SYNC_DATE = "sp_key_current_sync_date";
+    public static final String SP_KEY_IS_OLD = "sp_key_is_old";
     // Extra_key
     /**
      * intent传值key

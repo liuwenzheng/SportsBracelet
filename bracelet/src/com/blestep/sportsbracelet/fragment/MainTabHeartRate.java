@@ -188,7 +188,7 @@ public class MainTabHeartRate extends Fragment implements AdapterView.OnItemClic
                     int minHeight = getResources().getDimensionPixelSize(R.dimen.heart_rate_header_height_min);
                     int itemHeight = getResources().getDimensionPixelSize(R.dimen.heart_rate_item_height);
                     int footHeight = height - minHeight - heartRates.size() * itemHeight;
-                    if (footHeight > 0) {
+                    if (footHeight > 0 && itemHeight > 0 && heartRates.size() > 0) {
                         View v = new View(getActivity());
                         v.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, footHeight));
                         lvHeartRate.addFooterView(v);

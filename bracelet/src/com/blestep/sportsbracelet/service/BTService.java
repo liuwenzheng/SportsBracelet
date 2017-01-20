@@ -246,15 +246,23 @@ public class BTService extends Service implements LeScanCallback {
                             int ack = Integer.parseInt(Utils.decodeToString(formatDatas[1]));
                             // 如果内部版本号V0V1V2的V1的bit0为真代表有心率 为假代表没心率  其他位保留
                             if (ack == BTConstants.HEADER_BACK_INSIDE_VERSION) {
-                                try {
-                                    String rateShow = formatDatas[3].substring(formatDatas[3].length() - 1, formatDatas[3].length());
-                                    if (Integer.parseInt(rateShow) == 1) {
-                                        SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, true);
-                                    } else {
+                                if (formatDatas.length > 4) {
+                                    LogModule.i("手环支持同步当天数据");
+                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
+                                    try {
+                                        String rateShow = formatDatas[3].substring(formatDatas[3].length() - 1, formatDatas[3].length());
+                                        if (Integer.parseInt(rateShow) == 1) {
+                                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, true);
+                                        } else {
+                                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                        }
+                                    } catch (Exception e) {
                                         SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
                                     }
-                                } catch (Exception e) {
+                                } else {
+                                    LogModule.i("手环不支持同步当天数据");
                                     SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_OLD, true);
                                 }
                             }
                             intent = new Intent(BTConstants.ACTION_ACK);
