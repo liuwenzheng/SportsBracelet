@@ -51,7 +51,6 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -78,11 +77,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
     private ProgressDialog mDialog;
     private BTService mBtService;
     public boolean mNeedRefreshData = true;
-    private static final Object LOCK = new Object();
-    // 同步状态集合（未同步则跳过执行下一条）
-    private ConcurrentHashMap<Integer, Boolean> mSyncMap = new ConcurrentHashMap<>();
     private boolean mHeartRateShow;
-    private boolean mIsSyncCurrent;
 
     private int mSyncProgress;
     private ValueAnimator mProgressAnimator;
@@ -106,9 +101,10 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         filter.addAction(BTConstants.ACTION_ACK);
         filter.addAction(BTConstants.ACTION_REFRESH_DATA_BATTERY);
         filter.addAction(BTConstants.ACTION_REFRESH_DATA_VERSION);
+        filter.addAction(BTConstants.ACTION_REFRESH_PROGRESS);
+        filter.addAction(BTConstants.ACTION_SYNC_SUCCESS);
+        filter.addAction(BTConstants.ACTION_CREATE_VIEW);
         filter.setPriority(100);
-        // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_INDEX);
-        // filter.addAction(BTConstants.ACTION_REFRESH_DATA_SLEEP_RECORD);
         registerReceiver(mReceiver, filter);
         bindService(new Intent(this, BTService.class), mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -433,131 +429,14 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     // getString(R.string.step_syncdata_waiting),
                     // false, false);
                 }
-                if (BTConstants.ACTION_REFRESH_DATA.equals(intent.getAction())) {
-                    int header = intent.getIntExtra(BTConstants.EXTRA_KEY_BACK_HEADER, 0);
-                    switch (header) {
-                        case 0:
-                            resetSyncMap(BTConstants.HEADER_BACK_SUCCESS);
-                            int heartRateCount = intent.getIntExtra("heartRateCount", 0);
-                            if (mHeartRateShow && heartRateCount != 0) {
-                                LogModule.i("支持心率且心率有数据");
-                                mBtService.setHeartRateInterval();
-                                executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
-                            } else {
-                                syncSuccess();
-                            }
-                            break;
-                        case BTConstants.TYPE_SET_HEART_RATE_INTERVAL:
-                            resetSyncMap(header);
-                            if (mIsSyncCurrent) {
-                                mBtService.getCurrentData();
-                                executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
-                            } else {
-                                mBtService.getHeartRate();
-                                executeNextTask(BTConstants.TYPE_GET_HEART_RATE, 3000);
-                            }
-                            break;
-                        case BTConstants.HEADER_HEART_RATE:
-                            resetSyncMap(BTConstants.TYPE_GET_HEART_RATE);
-                            syncSuccess();
-                            break;
-                        case BTConstants.HEADER_FIRMWARE_VERSION:
-                            resetSyncMap(header);
-                            mBtService.getBatteryData();
-                            executeNextTask(BTConstants.HEADER_BACK_RECORD, 3000);
-                            break;
-                        case BTConstants.HEADER_BACK_RECORD:
-                            resetSyncMap(header);
-                            // 判断是否已同步过当天数据
-                            String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
-                            boolean isold = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
-                            String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
-                            if (syncDate.equals(currentDate) && !isold) {
-                                mIsSyncCurrent = true;
-                                LogModule.i("同步过当天数据");
-                                if (mHeartRateShow) {
-                                    LogModule.i("支持心率同步间隔");
-                                    mBtService.setHeartRateInterval();
-                                    executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
-                                } else {
-                                    mBtService.getCurrentData();
-                                    executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
-                                }
-                            } else {
-                                LogModule.i("未同步过当天数据");
-                                mBtService.getStepData();
-                                executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
-                            }
-                            break;
-                        case BTConstants.HEADER_BACK_STEP:
-                            resetSyncMap(header);
-                            mBtService.getDataCount();
-                            executeNextTask(BTConstants.HEADER_BACK_SUCCESS, 3000);
-                            break;
-                        case BTConstants.HEADER_BACK_SUCCESS:
-                            resetSyncMap(header);
-                            mBtService.getSleepIndex();
-                            break;
-                        case BTConstants.HEADER_BACK_SLEEP_INDEX:
-                            if (!mIsSyncCurrent) {
-                                resetSyncMap(header);
-                                mBtService.getSleepRecord();
-                                executeNextTask(BTConstants.HEADER_BACK_SLEEP_RECORD, 5000);
-                            }
-                            break;
-                        case BTConstants.HEADER_BACK_SLEEP_RECORD:
-                            if (!mIsSyncCurrent) {
-                                resetSyncMap(header);
-                                syncSuccess();
-                            }
-                            break;
-                        case BTConstants.TYPE_GET_CURRENT:
-                            resetSyncMap(header);
-                            break;
-                    }
+                if (BTConstants.ACTION_REFRESH_PROGRESS.equals(intent.getAction())) {
+                    resetProgress(SYNC_DURATION_FAST);
                 }
-                if (BTConstants.ACTION_ACK.equals(intent.getAction())) {
-                    int ack = intent.getIntExtra(BTConstants.EXTRA_KEY_ACK_VALUE, 0);
-                    if (ack == BTConstants.HEADER_BACK_INSIDE_VERSION) {
-                        resetSyncMap(ack);
-                        createView();
-                        mBtService.syncTimeData();
-                        executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
-                    } else if (ack == BTConstants.HEADER_SYNTIMEDATA) {
-                        resetSyncMap(ack);
-                        mBtService.syncUserInfoData();
-                        executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
-                    } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
-                        resetSyncMap(ack);
-                        // 先同步前四组闹钟数据，没有则发送0
-                        mBtService.syncAlarmData();
-                        executeNextTask(BTConstants.HEADER_SYNALARM_NEW, 3000);
-                    } else if (ack == BTConstants.HEADER_SYNALARM_NEW) {
-                        resetSyncMap(ack);
-                        if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
-                            // 再同步后四组数据，没有则发送0
-                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
-                            mBtService.syncAlarmData();
-                        } else {
-                            // 闹钟同步完后，发送单位数据
-                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
-                            mBtService.syncUnit();
-                            executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
-                            resetProgress(SYNC_DURATION_FAST);
-                        }
-                    } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
-                        resetSyncMap(ack);
-                        mBtService.syncTime();
-                        executeNextTask(BTConstants.HEADER_TIME_SYSTEM, 3000);
-                    } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
-                        resetSyncMap(ack);
-                        mBtService.syncLight();
-                        executeNextTask(BTConstants.HEADER_LIGHT_SYSTEM, 3000);
-                    } else if (ack == BTConstants.HEADER_LIGHT_SYSTEM) {
-                        resetSyncMap(ack);
-                        mBtService.getVersionData();
-                        executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
-                    }
+                if (BTConstants.ACTION_SYNC_SUCCESS.equals(intent.getAction())) {
+                    syncSuccess();
+                }
+                if (BTConstants.ACTION_CREATE_VIEW.equals(intent.getAction())) {
+                    createView();
                 }
             }
 
@@ -661,142 +540,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
             @Override
             public void run() {
                 mBtService.getInsideVersion();
-                executeNextTask(BTConstants.HEADER_BACK_INSIDE_VERSION, 3000);
             }
         }, 500);
-    }
-
-    // 设置超时任务，如果未收到回复，执行下条命令
-    private void executeNextTask(final int headerGetdata, int delayMillis) {
-        mSyncMap.put(headerGetdata, true);
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                if (mSyncMap.get(headerGetdata)) {
-                    switch (headerGetdata) {
-                        case BTConstants.HEADER_BACK_INSIDE_VERSION:
-                            LogModule.i("同步内部版本超时，发送同步时间命令");
-                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_OLD, true);
-                            resetSyncMap(headerGetdata);
-                            mBtService.syncTimeData();
-                            executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
-                            break;
-                        case BTConstants.HEADER_SYNTIMEDATA:
-                            LogModule.i("同步时间超时，发送同步用户数据命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.syncUserInfoData();
-                            executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
-                            break;
-                        case BTConstants.HEADER_SYNUSERINFO:
-                            LogModule.i("同步用户数据超时，发送同步闹钟命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.syncAlarmData();
-                            executeNextTask(BTConstants.HEADER_SYNALARM_NEW, 3000);
-                            break;
-                        case BTConstants.HEADER_SYNALARM_NEW:
-                            LogModule.i("同步闹钟超时，发送同步单位命令");
-                            resetSyncMap(headerGetdata);
-                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
-                            mBtService.syncUnit();
-                            executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
-                            resetProgress(SYNC_DURATION_FAST);
-                            break;
-                        case BTConstants.HEADER_UNIT_SYSTEM:
-                            LogModule.i("同步单位超时，发送同步时间格式命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.syncTime();
-                            executeNextTask(BTConstants.HEADER_TIME_SYSTEM, 3000);
-                            break;
-                        case BTConstants.HEADER_TIME_SYSTEM:
-                            LogModule.i("同步时间格式超时，发送同步翻腕亮屏命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.syncLight();
-                            executeNextTask(BTConstants.HEADER_LIGHT_SYSTEM, 3000);
-                            break;
-                        case BTConstants.HEADER_LIGHT_SYSTEM:
-                            LogModule.i("同步翻腕亮屏超时，发送获取版本信息命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.getVersionData();
-                            executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
-                            break;
-                        case BTConstants.HEADER_FIRMWARE_VERSION:
-                            LogModule.i("同步获取版本信息超时，发送获取电量命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.getBatteryData();
-                            executeNextTask(BTConstants.HEADER_BACK_RECORD, 3000);
-                            break;
-                        case BTConstants.HEADER_BACK_RECORD:
-                            LogModule.i("同步获取电量超时，发送获取记步命令");
-                            resetSyncMap(headerGetdata);
-                            // 判断是否已同步过当天数据
-                            String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
-                            boolean isold = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
-                            String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
-                            if (syncDate.equals(currentDate) && !isold) {
-                                mIsSyncCurrent = true;
-                                LogModule.i("同步过当天数据");
-                                if (mHeartRateShow) {
-                                    LogModule.i("支持心率同步间隔");
-                                    mBtService.setHeartRateInterval();
-                                    executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
-                                } else {
-                                    mBtService.getCurrentData();
-                                    executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
-                                }
-                            } else {
-                                LogModule.i("未同步过当天数据");
-                                mBtService.getStepData();
-                                executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
-                            }
-                            break;
-                        case BTConstants.HEADER_BACK_STEP:
-                            LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
-                            resetSyncMap(headerGetdata);
-                            mBtService.getDataCount();
-                            executeNextTask(BTConstants.HEADER_BACK_SUCCESS, 3000);
-                            break;
-                        case BTConstants.HEADER_BACK_SUCCESS:
-                            LogModule.i("同步获取睡眠总数超时，提示同步成功！");
-                            resetSyncMap(headerGetdata);
-                            syncSuccess();
-                            break;
-                        case BTConstants.HEADER_BACK_SLEEP_RECORD:
-                            if (!mIsSyncCurrent) {
-                                LogModule.i("同步获取睡眠record超时，提示同步成功！");
-                                syncSuccess();
-                            }
-                            break;
-                        case BTConstants.TYPE_SET_HEART_RATE_INTERVAL:
-                            LogModule.i("同步心率间隔超时，发送获取心率命令");
-                            resetSyncMap(headerGetdata);
-                            if (mIsSyncCurrent) {
-                                mBtService.getCurrentData();
-                                executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
-                            } else {
-                                mBtService.getHeartRate();
-                                executeNextTask(BTConstants.TYPE_GET_HEART_RATE, 3000);
-                            }
-                            break;
-                        case BTConstants.TYPE_GET_HEART_RATE:
-                            LogModule.i("同步获取心率超时，提示同步成功！");
-                            resetSyncMap(headerGetdata);
-                            syncSuccess();
-                            break;
-                        case BTConstants.TYPE_GET_CURRENT:
-                            LogModule.i("同步获取当天数据超时，提示同步成功！");
-                            resetSyncMap(headerGetdata);
-                            syncSuccess();
-                            break;
-                    }
-                }
-            }
-        }, delayMillis);
-    }
-
-    // 重置超时任务
-    private void resetSyncMap(int headerGetdata) {
-        mSyncMap.put(headerGetdata, false);
     }
 
     @Override

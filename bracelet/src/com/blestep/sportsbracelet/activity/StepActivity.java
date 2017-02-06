@@ -32,7 +32,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+@Deprecated
 public class StepActivity extends BaseActivity implements OnItemClickListener,
 		ICircleProgressValue {
 	private CircleProgressView circleView;

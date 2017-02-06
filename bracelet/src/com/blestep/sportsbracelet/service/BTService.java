@@ -15,8 +15,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.telephony.SmsMessage;
@@ -24,6 +24,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.blestep.sportsbracelet.BTConstants;
+import com.blestep.sportsbracelet.base.BaseHandler;
 import com.blestep.sportsbracelet.db.DBTools;
 import com.blestep.sportsbracelet.entity.BleDevice;
 import com.blestep.sportsbracelet.entity.HeartRate;
@@ -37,6 +38,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,8 +46,23 @@ public class BTService extends Service implements LeScanCallback {
     private boolean mIsStartScan = false;
     private static final long SCAN_PERIOD = 5000;
     private static final int GATT_ERROR_TIMEOUT = 133;
+    // 同步状态集合（未同步则跳过执行下一条）
+    private ConcurrentHashMap<Integer, Boolean> mSyncMap = new ConcurrentHashMap<>();
+    private ServiceHandler mHandler = new ServiceHandler(this);
 
-    public static Handler mHandler;
+    private static class ServiceHandler extends BaseHandler<BTService> {
+
+        public ServiceHandler(BTService service) {
+            super(service);
+        }
+
+        @Override
+        protected void handleMessage(BTService service, Message msg) {
+        }
+    }
+
+    private boolean mHeartRateShow;
+    private boolean mIsSyncCurrent;
     // private ArrayList<BleDevice> mDevices;
     public BluetoothGatt mBluetoothGatt;
     private BluetoothGattCallback mGattCallback;
@@ -55,7 +72,6 @@ public class BTService extends Service implements LeScanCallback {
 
     @Override
     public void onCreate() {
-        mHandler = new Handler(getApplication().getMainLooper());
         LogModule.i("创建BTService...onCreate");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -148,18 +164,13 @@ public class BTService extends Service implements LeScanCallback {
                         case BluetoothProfile.STATE_CONNECTED:
                             if (status == GATT_ERROR_TIMEOUT) {
                                 disConnectBle();
-                                Intent intent = new Intent(
-                                        BTConstants.ACTION_CONN_STATUS_TIMEOUT);
+                                Intent intent = new Intent(BTConstants.ACTION_CONN_STATUS_TIMEOUT);
                                 sendBroadcast(intent);
                             } else {
                                 if (mBluetoothGatt == null) {
-                                    BluetoothDevice device = BTModule.mBluetoothAdapter
-                                            .getRemoteDevice(SPUtiles
-                                                    .getStringValue(
-                                                            BTConstants.SP_KEY_DEVICE_ADDRESS,
-                                                            null));
-                                    mBluetoothGatt = device.connectGatt(
-                                            BTService.this, false, mGattCallback);
+                                    BluetoothDevice device = BTModule.mBluetoothAdapter.getRemoteDevice(
+                                            SPUtiles.getStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS, null));
+                                    mBluetoothGatt = device.connectGatt(BTService.this, false, mGattCallback);
                                     return;
                                 }
                                 mBluetoothGatt.discoverServices();
@@ -192,14 +203,12 @@ public class BTService extends Service implements LeScanCallback {
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent intent = new Intent(
-                                        BTConstants.ACTION_DISCOVER_SUCCESS);
+                                Intent intent = new Intent(BTConstants.ACTION_DISCOVER_SUCCESS);
                                 sendOrderedBroadcast(intent, null);
                             }
                         }, 1000);
                     } else {
-                        Intent intent = new Intent(
-                                BTConstants.ACTION_DISCOVER_FAILURE);
+                        Intent intent = new Intent(BTConstants.ACTION_DISCOVER_FAILURE);
                         sendBroadcast(intent);
                     }
                 }
@@ -252,22 +261,63 @@ public class BTService extends Service implements LeScanCallback {
                                     try {
                                         String rateShow = formatDatas[3].substring(formatDatas[3].length() - 1, formatDatas[3].length());
                                         if (Integer.parseInt(rateShow) == 1) {
-                                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, true);
+                                            mHeartRateShow = true;
+                                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, mHeartRateShow);
                                         } else {
-                                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                            mHeartRateShow = false;
+                                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, mHeartRateShow);
                                         }
                                     } catch (Exception e) {
-                                        SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                        mHeartRateShow = false;
+                                        SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, mHeartRateShow);
                                     }
                                 } else {
                                     LogModule.i("手环不支持同步当天数据");
-                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, false);
+                                    mHeartRateShow = false;
+                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_HEART_RATE_SHOW, mHeartRateShow);
                                     SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_OLD, true);
                                 }
+                                resetSyncMap(ack);
+                                intent = new Intent(BTConstants.ACTION_CREATE_VIEW);
+                                BTService.this.sendBroadcast(intent);
+                                syncTimeData();
+                                executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
+                            } else if (ack == BTConstants.HEADER_SYNTIMEDATA) {
+                                resetSyncMap(ack);
+                                syncUserInfoData();
+                                executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
+                            } else if (ack == BTConstants.HEADER_SYNUSERINFO) {
+                                resetSyncMap(ack);
+                                // 先同步前四组闹钟数据，没有则发送0
+                                syncAlarmData();
+                                executeNextTask(BTConstants.HEADER_SYNALARM_NEW, 3000);
+                            } else if (ack == BTConstants.HEADER_SYNALARM_NEW) {
+                                resetSyncMap(ack);
+                                if (!SPUtiles.getBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false)) {
+                                    // 再同步后四组数据，没有则发送0
+                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, true);
+                                    syncAlarmData();
+                                } else {
+                                    // 闹钟同步完后，发送单位数据
+                                    SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
+                                    syncUnit();
+                                    executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
+                                    intent = new Intent(BTConstants.ACTION_REFRESH_PROGRESS);
+                                    BTService.this.sendBroadcast(intent);
+                                }
+                            } else if (ack == BTConstants.HEADER_UNIT_SYSTEM) {
+                                resetSyncMap(ack);
+                                syncTime();
+                                executeNextTask(BTConstants.HEADER_TIME_SYSTEM, 3000);
+                            } else if (ack == BTConstants.HEADER_TIME_SYSTEM) {
+                                resetSyncMap(ack);
+                                syncLight();
+                                executeNextTask(BTConstants.HEADER_LIGHT_SYSTEM, 3000);
+                            } else if (ack == BTConstants.HEADER_LIGHT_SYSTEM) {
+                                resetSyncMap(ack);
+                                getVersionData();
+                                executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
                             }
-                            intent = new Intent(BTConstants.ACTION_ACK);
-                            intent.putExtra(BTConstants.EXTRA_KEY_ACK_VALUE, ack);
-                            BTService.this.sendBroadcast(intent);
                             break;
                         case BTConstants.HEADER_BACK_ERROR:
                             // 同步数据返回头
@@ -286,18 +336,28 @@ public class BTService extends Service implements LeScanCallback {
                                 heartRateCount = Integer.parseInt(Utils.decodeToString(formatDatas[4]));
                                 LogModule.i("手环中的心率总数为：" + heartRateCount);
                                 if (sleepIndexCount == 0) {
-                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                    intent.putExtra("heartRateCount", heartRateCount);
-                                    BTService.this.sendBroadcast(intent);
+                                    resetSyncMap(BTConstants.HEADER_BACK_SUCCESS);
+                                    if (mHeartRateShow && heartRateCount != 0) {
+                                        LogModule.i("支持心率且心率有数据");
+                                        setHeartRateInterval();
+                                        executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
+                                    } else {
+                                        intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                                        BTService.this.sendBroadcast(intent);
+                                    }
                                 } else {
-                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                    intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                                    BTService.this.sendBroadcast(intent);
+                                    resetSyncMap(header);
+                                    getSleepIndex();
                                 }
                             } else if (back == BTConstants.TYPE_SET_HEART_RATE_INTERVAL) {
-                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, back);
-                                BTService.this.sendBroadcast(intent);
+                                resetSyncMap(back);
+                                if (mIsSyncCurrent) {
+                                    getCurrentData();
+                                    executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
+                                } else {
+                                    getHeartRate();
+                                    executeNextTask(BTConstants.TYPE_GET_HEART_RATE, 3000);
+                                }
                             } else if (back == BTConstants.TYPE_GET_HEART_RATE) {
                                 LogModule.i("开始接收心率数据");
                             } else if (back == BTConstants.TYPE_GET_CURRENT) {
@@ -309,9 +369,7 @@ public class BTService extends Service implements LeScanCallback {
                                 LogModule.i("手环中的当天睡眠record总数为：" + sleepRecordCount);
                                 heartRateCount = Integer.parseInt(Utils.decodeToString(formatDatas[4]));
                                 LogModule.i("手环中的当天心率总数为：" + heartRateCount);
-                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, back);
-                                BTService.this.sendBroadcast(intent);
+                                resetSyncMap(back);
                             }
                             break;
                         case BTConstants.HEADER_BACK_RECORD:
@@ -321,9 +379,27 @@ public class BTService extends Service implements LeScanCallback {
                             int battery = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
                             LogModule.i("电量为" + battery + "%");
                             SPUtiles.setIntValue(BTConstants.SP_KEY_BATTERY, battery);
-                            intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                            intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                            BTService.this.sendBroadcast(intent);
+                            resetSyncMap(header);
+                            // 判断是否已同步过当天数据
+                            String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                            boolean isold = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
+                            String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+                            if (syncDate.equals(currentDate) && !isold) {
+                                mIsSyncCurrent = true;
+                                LogModule.i("同步过当天数据");
+                                if (mHeartRateShow) {
+                                    LogModule.i("支持心率同步间隔");
+                                    setHeartRateInterval();
+                                    executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
+                                } else {
+                                    getCurrentData();
+                                    executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
+                                }
+                            } else {
+                                LogModule.i("未同步过当天数据");
+                                getStepData();
+                                executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            }
                             break;
                         case BTConstants.HEADER_FIRMWARE_VERSION:
                             // 获取版本号返回头
@@ -332,9 +408,9 @@ public class BTService extends Service implements LeScanCallback {
                             int revision = Integer.parseInt(Utils.decodeToString(formatDatas[3]));
                             String version = String.format("%s.%s.%s", major, minor, revision);
                             SPUtiles.setStringValue(BTConstants.SP_KEY_VERSION, version);
-                            intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                            intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                            BTService.this.sendBroadcast(intent);
+                            resetSyncMap(header);
+                            getBatteryData();
+                            executeNextTask(BTConstants.HEADER_BACK_RECORD, 3000);
                             break;
                         case BTConstants.HEADER_BACK_SLEEP_INDEX:
                             if (sleepIndexCount == 0) {
@@ -344,9 +420,11 @@ public class BTService extends Service implements LeScanCallback {
                             BTModule.saveSleepIndex(formatDatas, getApplicationContext(), sleepMaps);
                             sleepIndexCount--;
                             if (sleepIndexCount <= 0) {
-                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                                BTService.this.sendBroadcast(intent);
+                                if (!mIsSyncCurrent) {
+                                    resetSyncMap(header);
+                                    getSleepRecord();
+                                    executeNextTask(BTConstants.HEADER_BACK_SLEEP_RECORD, 5000);
+                                }
                             } else {
                                 LogModule.i("还有" + sleepIndexCount + "条睡眠index数据未同步");
                             }
@@ -361,9 +439,11 @@ public class BTService extends Service implements LeScanCallback {
                                 sleepRecordCount--;
                                 if (sleepRecordCount <= 0) {
                                     sleepMaps.clear();
-                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                    intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                                    BTService.this.sendBroadcast(intent);
+                                    if (!mIsSyncCurrent) {
+                                        resetSyncMap(header);
+                                        intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                                        BTService.this.sendBroadcast(intent);
+                                    }
                                 } else {
                                     LogModule.i("还有" + sleepRecordCount + "条睡眠record数据未同步");
                                 }
@@ -376,12 +456,12 @@ public class BTService extends Service implements LeScanCallback {
                                 stepsCount--;
                                 if (stepsCount <= 0) {
                                     // 判断是否已同步过当天数据
-                                    String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
-                                    String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
-                                    if (!syncDate.equals(currentDate)) {
-                                        intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                        intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
-                                        BTService.this.sendBroadcast(intent);
+                                    String syncDateStr = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                                    String currentDateStr = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+                                    if (!syncDateStr.equals(currentDateStr)) {
+                                        resetSyncMap(header);
+                                        getDataCount();
+                                        executeNextTask(BTConstants.HEADER_BACK_SUCCESS, 3000);
                                     } else {
                                         LogModule.i("已同步当天记步数据");
                                     }
@@ -404,15 +484,15 @@ public class BTService extends Service implements LeScanCallback {
                                         // 清空
                                         heartRates.clear();
                                     }
-                                    intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                    intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
+                                    resetSyncMap(BTConstants.TYPE_GET_HEART_RATE);
+                                    intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
                                     BTService.this.sendBroadcast(intent);
                                 } else {
                                     LogModule.i("还有" + heartRateCount + "条心率数据未同步");
                                 }
                             } else {
-                                intent = new Intent(BTConstants.ACTION_REFRESH_DATA);
-                                intent.putExtra(BTConstants.EXTRA_KEY_BACK_HEADER, header);
+                                resetSyncMap(BTConstants.TYPE_GET_HEART_RATE);
+                                intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
                                 BTService.this.sendBroadcast(intent);
                             }
                             break;
@@ -494,6 +574,7 @@ public class BTService extends Service implements LeScanCallback {
      */
     public void getInsideVersion() {
         BTModule.getInsideVersion(mBluetoothGatt);
+        executeNextTask(BTConstants.HEADER_BACK_INSIDE_VERSION, 3000);
     }
 
     /**
@@ -899,4 +980,143 @@ public class BTService extends Service implements LeScanCallback {
             }
         }
     };
+
+    // 设置超时任务，如果未收到回复，执行下条命令
+    private void executeNextTask(final int headerGetdata, int delayMillis) {
+        mSyncMap.put(headerGetdata, true);
+        mHandler.postDelayed(new Runnable() {
+            Intent intent;
+
+            @Override
+            public void run() {
+                if (mSyncMap.get(headerGetdata)) {
+                    switch (headerGetdata) {
+                        case BTConstants.HEADER_BACK_INSIDE_VERSION:
+                            LogModule.i("同步内部版本超时，发送同步时间命令");
+                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_IS_OLD, true);
+                            resetSyncMap(headerGetdata);
+                            syncTimeData();
+                            executeNextTask(BTConstants.HEADER_SYNTIMEDATA, 3000);
+                            break;
+                        case BTConstants.HEADER_SYNTIMEDATA:
+                            LogModule.i("同步时间超时，发送同步用户数据命令");
+                            resetSyncMap(headerGetdata);
+                            syncUserInfoData();
+                            executeNextTask(BTConstants.HEADER_SYNUSERINFO, 3000);
+                            break;
+                        case BTConstants.HEADER_SYNUSERINFO:
+                            LogModule.i("同步用户数据超时，发送同步闹钟命令");
+                            resetSyncMap(headerGetdata);
+                            syncAlarmData();
+                            executeNextTask(BTConstants.HEADER_SYNALARM_NEW, 3000);
+                            break;
+                        case BTConstants.HEADER_SYNALARM_NEW:
+                            LogModule.i("同步闹钟超时，发送同步单位命令");
+                            resetSyncMap(headerGetdata);
+                            SPUtiles.setBooleanValue(BTConstants.SP_KEY_ALARM_SYNC_FINISH, false);
+                            syncUnit();
+                            executeNextTask(BTConstants.HEADER_UNIT_SYSTEM, 3000);
+                            intent = new Intent(BTConstants.ACTION_REFRESH_PROGRESS);
+                            sendBroadcast(intent);
+                            break;
+                        case BTConstants.HEADER_UNIT_SYSTEM:
+                            LogModule.i("同步单位超时，发送同步时间格式命令");
+                            resetSyncMap(headerGetdata);
+                            syncTime();
+                            executeNextTask(BTConstants.HEADER_TIME_SYSTEM, 3000);
+                            break;
+                        case BTConstants.HEADER_TIME_SYSTEM:
+                            LogModule.i("同步时间格式超时，发送同步翻腕亮屏命令");
+                            resetSyncMap(headerGetdata);
+                            syncLight();
+                            executeNextTask(BTConstants.HEADER_LIGHT_SYSTEM, 3000);
+                            break;
+                        case BTConstants.HEADER_LIGHT_SYSTEM:
+                            LogModule.i("同步翻腕亮屏超时，发送获取版本信息命令");
+                            resetSyncMap(headerGetdata);
+                            getVersionData();
+                            executeNextTask(BTConstants.HEADER_FIRMWARE_VERSION, 3000);
+                            break;
+                        case BTConstants.HEADER_FIRMWARE_VERSION:
+                            LogModule.i("同步获取版本信息超时，发送获取电量命令");
+                            resetSyncMap(headerGetdata);
+                            getBatteryData();
+                            executeNextTask(BTConstants.HEADER_BACK_RECORD, 3000);
+                            break;
+                        case BTConstants.HEADER_BACK_RECORD:
+                            LogModule.i("同步获取电量超时，发送获取记步命令");
+                            resetSyncMap(headerGetdata);
+                            // 判断是否已同步过当天数据
+                            String syncDate = SPUtiles.getStringValue(BTConstants.SP_KEY_CURRENT_SYNC_DATE, "");
+                            boolean isold = SPUtiles.getBooleanValue(BTConstants.SP_KEY_IS_OLD, false);
+                            String currentDate = Utils.calendar2strDate(Calendar.getInstance(), BTConstants.PATTERN_YYYY_MM_DD);
+                            if (syncDate.equals(currentDate) && !isold) {
+                                mIsSyncCurrent = true;
+                                LogModule.i("同步过当天数据");
+                                if (mHeartRateShow) {
+                                    LogModule.i("支持心率同步间隔");
+                                    setHeartRateInterval();
+                                    executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
+                                } else {
+                                    getCurrentData();
+                                    executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
+                                }
+                            } else {
+                                LogModule.i("未同步过当天数据");
+                                getStepData();
+                                executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
+                            }
+                            break;
+                        case BTConstants.HEADER_BACK_STEP:
+                            LogModule.i("同步获取记步超时，发送获取睡眠总数命令");
+                            resetSyncMap(headerGetdata);
+                            getDataCount();
+                            executeNextTask(BTConstants.HEADER_BACK_SUCCESS, 3000);
+                            break;
+                        case BTConstants.HEADER_BACK_SUCCESS:
+                            LogModule.i("同步获取睡眠总数超时，提示同步成功！");
+                            resetSyncMap(headerGetdata);
+                            intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                            sendBroadcast(intent);
+                            break;
+                        case BTConstants.HEADER_BACK_SLEEP_RECORD:
+                            if (!mIsSyncCurrent) {
+                                LogModule.i("同步获取睡眠record超时，提示同步成功！");
+                                intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                                sendBroadcast(intent);
+                            }
+                            break;
+                        case BTConstants.TYPE_SET_HEART_RATE_INTERVAL:
+                            LogModule.i("同步心率间隔超时，发送获取心率命令");
+                            resetSyncMap(headerGetdata);
+                            if (mIsSyncCurrent) {
+                                getCurrentData();
+                                executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
+                            } else {
+                                getHeartRate();
+                                executeNextTask(BTConstants.TYPE_GET_HEART_RATE, 3000);
+                            }
+                            break;
+                        case BTConstants.TYPE_GET_HEART_RATE:
+                            LogModule.i("同步获取心率超时，提示同步成功！");
+                            resetSyncMap(headerGetdata);
+                            intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                            sendBroadcast(intent);
+                            break;
+                        case BTConstants.TYPE_GET_CURRENT:
+                            LogModule.i("同步获取当天数据超时，提示同步成功！");
+                            resetSyncMap(headerGetdata);
+                            intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                            sendBroadcast(intent);
+                            break;
+                    }
+                }
+            }
+        }, delayMillis);
+    }
+
+    // 重置超时任务
+    private void resetSyncMap(int headerGetdata) {
+        mSyncMap.put(headerGetdata, false);
+    }
 }

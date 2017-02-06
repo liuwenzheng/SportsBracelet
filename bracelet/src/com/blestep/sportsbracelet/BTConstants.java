@@ -23,16 +23,18 @@ public class BTConstants {
     public static final String ACTION_REFRESH_DATA = "action_refresh_data";
     // 刷新电量数据
     public static final String ACTION_REFRESH_DATA_BATTERY = "action_refresh_data_battery";
-    // 刷新睡眠指数
-    public static final String ACTION_REFRESH_DATA_SLEEP_INDEX = "action_refresh_data_sleep_index";
-    // 刷新睡眠记录
-    public static final String ACTION_REFRESH_DATA_SLEEP_RECORD = "action_refresh_data_sleep_record";
     // 手环应答
     public static final String ACTION_ACK = "action_ack";
     // 刷新版本号
     public static final String ACTION_REFRESH_DATA_VERSION = "action_refresh_data_version";
     // 连接超时
     public static final String ACTION_CONN_STATUS_TIMEOUT = "action_conn_status_timeout";
+    // 刷新进度
+    public static final String ACTION_REFRESH_PROGRESS = "action_refresh_progress";
+    // 同步成功
+    public static final String ACTION_SYNC_SUCCESS = "action_sync_success";
+    // 创建页面
+    public static final String ACTION_CREATE_VIEW = "action_create_view";
 
     public static final String ACTION_PHONE_STATE = "android.intent.action.PHONE_STATE";
     public static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
