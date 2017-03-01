@@ -171,6 +171,7 @@ public class MainTabHeartRate extends Fragment implements AdapterView.OnItemClic
 
 
     public void updateView() {
+        LogModule.i("刷新心率页面");
         mLists.clear();
         final ArrayList<HeartRate> heartRates = DBTools.getInstance(getActivity()).selectAllHeartRate();
         if (!heartRates.isEmpty()) {

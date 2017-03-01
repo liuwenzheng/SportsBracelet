@@ -23,4 +23,15 @@ public class Step implements Serializable {
     public String duration;
     public String distance;
     public String calories;
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "date='" + date + '\'' +
+                ", count='" + count + '\'' +
+                ", duration='" + duration + '\'' +
+                ", distance='" + distance + '\'' +
+                ", calories='" + calories + '\'' +
+                '}';
+    }
 }

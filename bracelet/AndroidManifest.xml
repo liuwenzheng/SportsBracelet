@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blestep.sportsbracelet"
     android:versionCode="21"
-    android:versionName="2.5.0">
+    android:versionName="2.6.0">
 
     <uses-sdk
         android:minSdkVersion="18"

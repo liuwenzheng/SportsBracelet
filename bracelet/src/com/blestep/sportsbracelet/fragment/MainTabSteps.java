@@ -122,8 +122,10 @@ public class MainTabSteps extends Fragment implements ICircleProgressValue,
     }
 
     public void updateView() {
+        LogModule.i("刷新记步页面");
         Step step = DBTools.getInstance(mainActivity).selectCurrentStep();
         if (step != null) {
+            LogModule.i(step.toString());
             circleView.setValueAnimated(Float.parseFloat(step.count));
             String duration = step.duration;
             if (Utils.isNotEmpty(duration)) {

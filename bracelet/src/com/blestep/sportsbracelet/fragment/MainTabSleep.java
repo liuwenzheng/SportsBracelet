@@ -76,6 +76,7 @@ public class MainTabSleep extends Fragment {
     }
 
     public void updateView(Calendar calendar) {
+        LogModule.i("刷新睡眠页面");
         mCalendar = (Calendar) calendar.clone();
         Sleep sleep = DBTools.getInstance(getActivity()).selectSleep(calendar);
         String date = Utils.calendar2strDate(calendar, BTConstants.PATTERN_MM_DD_2);
