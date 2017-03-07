@@ -111,9 +111,9 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int i = 5;
+                int i = 6;
                 while (i > 0) {
-                    if (i == 5 || i == 3) {
+                    if (i == 6 || i == 3) {
                         mBtService.shakeFindBand();
                     }
                     Message message = mHandler.obtainMessage();

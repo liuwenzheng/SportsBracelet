@@ -335,8 +335,8 @@ public class BTService extends Service implements LeScanCallback {
                                 LogModule.i("手环中的睡眠record总数为：" + sleepRecordCount);
                                 heartRateCount = Integer.parseInt(Utils.decodeToString(formatDatas[4]));
                                 LogModule.i("手环中的心率总数为：" + heartRateCount);
+                                resetSyncMap(header);
                                 if (sleepIndexCount == 0) {
-                                    resetSyncMap(BTConstants.HEADER_BACK_SUCCESS);
                                     if (mHeartRateShow && heartRateCount != 0) {
                                         LogModule.i("支持心率且心率有数据");
                                         setHeartRateInterval();
@@ -346,7 +346,6 @@ public class BTService extends Service implements LeScanCallback {
                                         BTService.this.sendBroadcast(intent);
                                     }
                                 } else {
-                                    resetSyncMap(header);
                                     getSleepIndex();
                                 }
                             } else if (back == BTConstants.TYPE_SET_HEART_RATE_INTERVAL) {
@@ -396,6 +395,7 @@ public class BTService extends Service implements LeScanCallback {
                                     executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
                                 }
                             } else {
+                                mIsSyncCurrent = false;
                                 LogModule.i("未同步过当天数据");
                                 getStepData();
                                 executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);
@@ -441,8 +441,14 @@ public class BTService extends Service implements LeScanCallback {
                                     sleepMaps.clear();
                                     if (!mIsSyncCurrent) {
                                         resetSyncMap(header);
-                                        intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
-                                        BTService.this.sendBroadcast(intent);
+                                        if (mHeartRateShow && heartRateCount != 0) {
+                                            LogModule.i("支持心率且心率有数据");
+                                            setHeartRateInterval();
+                                            executeNextTask(BTConstants.TYPE_SET_HEART_RATE_INTERVAL, 3000);
+                                        } else {
+                                            intent = new Intent(BTConstants.ACTION_SYNC_SUCCESS);
+                                            BTService.this.sendBroadcast(intent);
+                                        }
                                     }
                                 } else {
                                     LogModule.i("还有" + sleepRecordCount + "条睡眠record数据未同步");
@@ -1062,6 +1068,7 @@ public class BTService extends Service implements LeScanCallback {
                                     executeNextTask(BTConstants.TYPE_GET_CURRENT, 5000);
                                 }
                             } else {
+                                mIsSyncCurrent = false;
                                 LogModule.i("未同步过当天数据");
                                 getStepData();
                                 executeNextTask(BTConstants.HEADER_BACK_STEP, 5000);

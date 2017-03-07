@@ -46,7 +46,7 @@ public class BaseApplication extends Application {
         }
         Printer filePrinter = new FilePrinter.Builder(PATH_LOGCAT)
                 .fileNameGenerator(new DateFileNameGenerator())
-                .logFlattener(new PatternFlattener("{d yyyy-MM-dd hh:mm:ss} {l}/{t}: {m}"))
+                .logFlattener(new PatternFlattener("{d yyyy-MM-dd HH:mm:ss} {l}/{t}: {m}"))
                 .build();
         LogConfiguration config = new LogConfiguration.Builder().tag("iFit360").build();
         XLog.init(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.NONE, config, new AndroidPrinter(), filePrinter);
