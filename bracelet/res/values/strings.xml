@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">iFit360</string>
+    <string name="app_name">GO</string>
     <string name="confirm">confirm</string>
     <string name="cancel">cancel</string>
     <!-- splash -->
@@ -166,7 +166,7 @@
     <string name="about_title">About</string>
     <string name="about_app">App version</string>
     <string name="about_firmware">Firmware Version</string>
-    <string name="about_company">Moko Technology Ltd </string>
+    <string name="about_company">TUNES L.L.C</string>
     <string name="about_company_english"></string>
     <!-- pull -->
     <string name="pull_to_refresh_pull_label">Pull down to refresh…</string>
@@ -222,7 +222,7 @@
     <string name="guide_smart_alarms">Smart alarms</string>
     <string name="guide_cloud_sync">Cloud sync</string>
     <string name="guide_start">start</string>
-    <string name="activate_title">Power on iFit360</string>
+    <string name="activate_title">Power on GO</string>
     <string name="activate_content">Long press the button for 5 seconds.The band is\nactivated when "Hello" shows up</string>
     <string name="bluetooth_open_false">Activate Bluetooth</string>
     <string name="bluetooth_open_true">Activate Bluetooth</string>
