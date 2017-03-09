@@ -200,24 +200,26 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             case R.id.rl_alert_coming_call:
-                startActivity(new Intent(mainActivity, PhoneComingActivity.class));
+                startActivityForResult(new Intent(mainActivity, PhoneComingActivity.class), BTConstants.REQUEST_CODE_PHONE_ALERT);
                 break;
             case R.id.rl_alert_alarm:
                 startActivityForResult(new Intent(mainActivity, AlarmActivity.class), BTConstants.REQUEST_CODE_ALARM);
                 break;
             case R.id.rl_bind_bracelet:
-                Intent i = new Intent(mainActivity, MatchDevicesActivity.class);
-                i.putExtra("service_disconnection", true);
-                startActivityForResult(i, BTConstants.REQUEST_CODE_MATCH);
+                intent = new Intent(mainActivity, MatchDevicesActivity.class);
+                intent.putExtra("service_disconnection", true);
+                startActivityForResult(intent, BTConstants.REQUEST_CODE_MATCH);
                 break;
             case R.id.rl_bracelet_system:
-                Intent intent = new Intent(mainActivity, SystemActivity.class);
+                intent = new Intent(mainActivity, SystemActivity.class);
                 startActivityForResult(intent, BTConstants.REQUEST_CODE_SYSTEM);
                 break;
             case R.id.rl_about:
-                startActivity(new Intent(mainActivity, AboutActivity.class));
+                intent = new Intent(mainActivity, AboutActivity.class);
+                startActivityForResult(intent, BTConstants.REQUEST_CODE_ABOUT);
                 break;
             case R.id.rl_alert_find_band:
                 if (mainActivity.getmBtService() != null) {
@@ -272,6 +274,10 @@ public class MenuLeftFragment extends Fragment implements OnClickListener {
             } else if (requestCode == BTConstants.REQUEST_CODE_ALARM) {
                 mainActivity.mNeedRefreshData = false;
             } else if (requestCode == BTConstants.REQUEST_CODE_MATCH) {
+                mainActivity.mNeedRefreshData = false;
+            } else if (requestCode == BTConstants.REQUEST_CODE_ABOUT) {
+                mainActivity.mNeedRefreshData = false;
+            } else if (requestCode == BTConstants.REQUEST_CODE_PHONE_ALERT) {
                 mainActivity.mNeedRefreshData = false;
             }
         }

@@ -158,7 +158,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         this.mBtService = mBtService;
     }
 
-    private FrameLayout frame_main_conn_tips, frame_main_tips;
+    private FrameLayout frame_main_conn_tips;
+    //    private FrameLayout frame_main_tips;
     private MainTabSteps mTabSteps;
     private MainTabSleep mTabSleep;
     private MainTabHeartRate mTabHeartRate;
@@ -176,8 +177,8 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         initViewPager();
         frame_main_conn_tips = (FrameLayout) findViewById(R.id.frame_main_conn_tips);
         frame_main_conn_tips.setVisibility(View.GONE);
-        frame_main_tips = (FrameLayout) findViewById(R.id.frame_main_tips);
-        frame_main_tips.setVisibility(View.GONE);
+//        frame_main_tips = (FrameLayout) findViewById(R.id.frame_main_tips);
+//        frame_main_tips.setVisibility(View.GONE);
     }
 
     public void setPullToRefreshViewEnable(boolean enable) {
@@ -200,6 +201,9 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     if (!mIsConnDevice) {
                         LogModule.i("未连接，先连接手环");
                         mIsConnDevice = true;
+                        if (frame_main_conn_tips.getVisibility() == View.VISIBLE) {
+                            frame_main_conn_tips.setVisibility(View.GONE);
+                        }
                         autoPullUpdate(getString(R.string.setting_device));
                         mBtService.connectBle(SPUtiles.getStringValue(
                                 BTConstants.SP_KEY_DEVICE_ADDRESS, null));
@@ -398,7 +402,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     pull_refresh_viewpager.onRefreshComplete();
                     ToastUtils.showToast(MainActivity.this, R.string.setting_device_conn_failure);
                     frame_main_conn_tips.setVisibility(View.VISIBLE);
-                    frame_main_tips.setVisibility(View.GONE);
+//                    frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
                     // }
@@ -417,7 +421,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
                     pull_refresh_viewpager.onRefreshComplete();
                     autoPullUpdate(getString(R.string.step_syncdata_waiting, 0 + "%"));
                     frame_main_conn_tips.setVisibility(View.GONE);
-                    frame_main_tips.setVisibility(View.GONE);
+//                    frame_main_tips.setVisibility(View.GONE);
                     // if (mDialog != null) {
                     // mDialog.dismiss();
                     // }
@@ -464,7 +468,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
         if (leftMenuFragment != null && leftMenuFragment.isVisible()) {
             ((MenuLeftFragment) leftMenuFragment).updateView(mBtService);
         }
-        frame_main_tips.setVisibility(View.GONE);
+//        frame_main_tips.setVisibility(View.GONE);
         // ToastUtils.showToast(MainActivity.this, R.string.syn_success);
     }
 
@@ -704,7 +708,7 @@ public class MainActivity extends SlidingFragmentActivity implements OnClickList
      */
     private void autoPullUpdate(String tips) {
         pull_refresh_viewpager.getLoadingLayoutProxy().setRefreshingLabel(tips);
-        new MyHandler(this).postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {

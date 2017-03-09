@@ -97,6 +97,8 @@ public class BTConstants {
     public static final int REQUEST_CODE_HEART_RATE_EXPLAIN = 108;
     public static final int REQUEST_CODE_HEART_RATE_INTERVAL = 109;
     public static final int REQUEST_CODE_HEART_RATE_DAILY = 110;
+    public static final int REQUEST_CODE_ABOUT = 111;
+    public static final int REQUEST_CODE_PHONE_ALERT = 112;
 
     /**
      * 返回数据header
