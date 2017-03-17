@@ -31,7 +31,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 public class BaseApplication extends Application {
-    private static final String appFolder = "iFit360";
+    private static final String appFolder = "fitpolo";
     private static String PATH_LOGCAT;
 
     @Override
@@ -48,7 +48,7 @@ public class BaseApplication extends Application {
                 .fileNameGenerator(new DateFileNameGenerator())
                 .logFlattener(new PatternFlattener("{d yyyy-MM-dd HH:mm:ss} {l}/{t}: {m}"))
                 .build();
-        LogConfiguration config = new LogConfiguration.Builder().tag("iFit360").build();
+        LogConfiguration config = new LogConfiguration.Builder().tag("fitpolo").build();
         XLog.init(BuildConfig.DEBUG ? LogLevel.ALL : LogLevel.NONE, config, new AndroidPrinter(), filePrinter);
         // 初始化数据库
         DBTools.getInstance(getApplicationContext());

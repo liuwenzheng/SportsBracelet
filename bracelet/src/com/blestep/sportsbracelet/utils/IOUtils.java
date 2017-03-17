@@ -1,5 +1,7 @@
 package com.blestep.sportsbracelet.utils;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,10 +9,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import android.os.Environment;
-
 public class IOUtils {
-	public static final String CRASH_FILE = "iFit360_crash_log.txt";
+	public static final String CRASH_FILE = "fitpolo_crash_log.txt";
 
 	/**
 	 * 判断SDCard是否存在 [当没有外挂SD卡时，内置ROM也被识别为存在sd卡]
