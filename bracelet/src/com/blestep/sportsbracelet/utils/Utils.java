@@ -340,4 +340,14 @@ public class Utils {
         }
         return bString;
     }
+
+    /**
+     * byte2HexString
+     *
+     * @param b
+     * @return
+     */
+    public static String byte2HexString(byte b) {
+        return String.format("%02X", b);
+    }
 }

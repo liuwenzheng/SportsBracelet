@@ -539,6 +539,9 @@ public class BTService extends Service implements LeScanCallback {
             bleDevice.name = device.getName();
             bleDevice.address = device.getAddress();
             bleDevice.rssi = rssi;
+            bleDevice.scanRecord = scanRecord;
+//            LogModule.i("蓝牙广播数据：");
+//            Utils.formatData(scanRecord, null);
             Intent intent = new Intent(BTConstants.ACTION_BLE_DEVICES_DATA);
             intent.putExtra("device", bleDevice);
             sendBroadcast(intent);

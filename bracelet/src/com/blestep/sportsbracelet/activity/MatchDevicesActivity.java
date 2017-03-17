@@ -11,6 +11,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.TextUtils;
+import android.text.method.ReplacementTransformationMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -67,6 +70,8 @@ public class MatchDevicesActivity extends BaseActivity {
     ListView lv_match_devices;
     @Bind(R.id.tv_match_tips_failure)
     TextView tv_match_tips_failure;
+    @Bind(R.id.et_match_verify_code)
+    EditText et_match_verify_code;
 
     private BTService mBtService;
     private DeviceAdapter mAdapter;
@@ -104,6 +109,25 @@ public class MatchDevicesActivity extends BaseActivity {
         filter.addAction(BTConstants.ACTION_DISCOVER_FAILURE);
         filter.setPriority(200);
         registerReceiver(mReceiver, filter);
+        et_match_verify_code.setTransformationMethod(new InputLowerToUpper());
+    }
+
+    /**
+     * EditText小写字母自动转大写
+     */
+    public class InputLowerToUpper extends ReplacementTransformationMethod {
+        @Override
+        protected char[] getOriginal() {
+            char[] lower = {'a', 'b', 'c', 'd', 'e', 'f'};
+            return lower;
+        }
+
+        @Override
+        protected char[] getReplacement() {
+            char[] upper = {'A', 'B', 'C', 'D', 'E', 'F'};
+            return upper;
+        }
+
     }
 
     @Override
@@ -254,7 +278,35 @@ public class MatchDevicesActivity extends BaseActivity {
                         mAdapter.notifyDataSetChanged();
                     }
                     // 判断是否有正在敲击的手环，有则开始配对
-                    if (Utils.isNotEmpty(bleDevice.name) && bleDevice.name.lastIndexOf("-D") > 0) {
+//                    if (Utils.isNotEmpty(bleDevice.name) && bleDevice.name.lastIndexOf("-D") > 0) {
+                    String macCode;
+                    byte[] scanRecord = bleDevice.scanRecord;
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < scanRecord.length; i++) {
+                        sb.append(Utils.byte2HexString(scanRecord[i]));
+                        if (i < scanRecord.length - 1) {
+                            sb.append(" ");
+                        }
+                        if (i % 15 == 1)
+                            sb.append("\n");
+                    }
+                    LogModule.i(sb.toString());
+                    int index = 0;
+                    for (int i = 0; i < scanRecord.length; i++) {
+                        if ("0A".equals(Utils.byte2HexString(scanRecord[i]))
+                                && "FF".equals(Utils.byte2HexString(scanRecord[i + 1]))) {
+                            index = i + 6;
+                            break;
+                        }
+                    }
+                    if (index == 0) {
+                        return;
+                    }
+                    macCode = Utils.byte2HexString(scanRecord[index]) + Utils.byte2HexString(scanRecord[index + 1]);
+                    LogModule.i(macCode);
+                    String verifyCode = et_match_verify_code.getText().toString().toUpperCase();
+                    if (!TextUtils.isEmpty(verifyCode) && !TextUtils.isEmpty(macCode)
+                            && verifyCode.equals(macCode)) {
                         LogModule.i("可以配对...");
                         mIsScanContinue = true;
                         mScanDevice = bleDevice;
@@ -311,7 +363,7 @@ public class MatchDevicesActivity extends BaseActivity {
                     SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_ADDRESS,
                             mScanDevice == null ? mDevices.get(mPosition).address : mScanDevice.address);
                     SPUtiles.setStringValue(BTConstants.SP_KEY_DEVICE_NAME,
-                            mScanDevice == null ? mDevices.get(mPosition).name : mScanDevice.name.substring(0, mScanDevice.name.indexOf("-D")));
+                            mScanDevice == null ? mDevices.get(mPosition).name : mScanDevice.name);
                     // showInitUI();
                     if (!mIsDisConnection) {
                         startActivity(new Intent(MatchDevicesActivity.this, UserInfoLayoutActivity.class));

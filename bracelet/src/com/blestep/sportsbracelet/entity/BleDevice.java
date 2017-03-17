@@ -9,6 +9,7 @@ public class BleDevice implements Serializable, Comparable<BleDevice> {
 	public String name;
 	public boolean isChecked;
 	public int rssi;
+	public byte[] scanRecord;
 
 	@Override
 	public int compareTo(BleDevice another) {
